@@ -18228,7 +18228,7 @@ async function main() {
   plot(time, data);
 }
 var roundData = function(val, suffix, precision = 2) {
-  if (val == null || val == undefined) {
+  if (val == null || val == undefined || val == "null") {
     return "no data";
   } else {
     return val.toFixed(precision) + suffix;

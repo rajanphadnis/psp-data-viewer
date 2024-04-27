@@ -47,8 +47,8 @@ async function main() {
   plot(time, data);
 }
 
-function roundData(val: number, suffix: string, precision: number = 2) {
-  if (val == null || val == undefined) {
+function roundData(val: any, suffix: string, precision: number = 2) {
+  if (val == null || val == undefined || val == "null") {
     return "no data";
   } else {
     return val.toFixed(precision) + suffix;
