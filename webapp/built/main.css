@@ -1,0 +1,56 @@
+:root {
+    --night-sky: #252526;
+    --rush: #daaa00;
+    --moondust: #f2efe9;
+    --bm-gold: #cfb991;
+    --aged: #8e6f3e;
+    --field: #ddb945;
+    --dust: #ebd99f;
+    --steel: #555960;
+    --cool-gray: #6f727b;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    background-color: rgb(29, 29, 29);
+}
+
+div {
+    margin: 0;
+    padding: 0;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: rgb(29, 29, 29);
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover {
+    background-color: #111;
+}
+
+.u-select {
+    background-color: rgba(117, 117, 117, 0.45) !important;
+}
+
+.u-value,
+.u-label {
+    color: white;
+}
