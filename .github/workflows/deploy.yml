@@ -1,4 +1,4 @@
-name: "[CD:Production] Build and Release - Web"
+name: "[CD:Production:Web] Build and Release"
 on:
   push:
       tags:
@@ -48,7 +48,7 @@ jobs:
             NEW_NAME="${TAGNAME//v/}"
             echo GHA_NEW_TAG_NAME=$NEW_NAME >> "$GITHUB_ENV"
         - name: Tag/Release search
-          run: echo "GHA_V_COUNTER=$(grep '${{ format('version{0}', ':') }} ${{ env.GHA_NEW_TAG_NAME }}' pubspec.yaml | wc -l)" >> "$GITHUB_ENV"
+          run: echo "GHA_V_COUNTER=$(grep '${{ format('version{0}', ':') }} ${{ env.GHA_NEW_TAG_NAME }}' webapp/pubspec.yaml | wc -l)" >> "$GITHUB_ENV"
           shell: bash
         - name: Tag Output
           run: |
@@ -71,8 +71,8 @@ jobs:
         - name: Get version code
           id: version-code-gen
           run: |
-            awk '/${{ format('version{0}', ':') }} ${{ env.GHA_NEW_TAG_NAME }}/ {print}' pubspec.yaml | awk -F '+' '{print $NF}'
-            temp_GHA_VERSION_CODE="$(awk '/${{ format('version{0}', ':') }} ${{ env.GHA_NEW_TAG_NAME }}/ {print}' pubspec.yaml | awk -F '+' '{print $NF}')"
+            awk '/${{ format('version{0}', ':') }} ${{ env.GHA_NEW_TAG_NAME }}/ {print}' webapp/pubspec.yaml | awk -F '+' '{print $NF}'
+            temp_GHA_VERSION_CODE="$(awk '/${{ format('version{0}', ':') }} ${{ env.GHA_NEW_TAG_NAME }}/ {print}' webapp/pubspec.yaml | awk -F '+' '{print $NF}')"
             echo GHA_VERSION_CODE="$(echo $temp_GHA_VERSION_CODE | tr -d -c 0-9)" >> "$GITHUB_OUTPUT"
 
   build-and-release-web:
@@ -92,8 +92,9 @@ jobs:
         cache: true
         architecture: x64
     - name: Build Web App
+      working-directory: ./webapp
       run: flutter build web
-    - name: Release Web App  
+    - name: Release Web App 
       uses: FirebaseExtended/action-hosting-deploy@v0
       with:
         repoToken: ${{ secrets.GITHUB_TOKEN }}
