@@ -1,0 +1,2 @@
+firebase_functions~=0.1.0
+psp-liquids-daq-parser>=0.0.7
