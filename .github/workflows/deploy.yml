@@ -46,7 +46,7 @@ jobs:
             NEW_NAME="${TAGNAME//v/}"
             echo GHA_NEW_TAG_NAME=$NEW_NAME >> "$GITHUB_ENV"
         - name: Tag/Release search
-          run: echo "GHA_V_COUNTER=$(grep '${{ format('version{0}', ':') }} ${{ env.GHA_NEW_TAG_NAME }}' webapp/pubspec.yaml | wc -l)" >> "$GITHUB_ENV"
+          run: echo "GHA_V_COUNTER=$(grep '${{ format('"version"{0}', ':') }} "${{ env.GHA_NEW_TAG_NAME }}"' webapp/pubspec.yaml | wc -l)" >> "$GITHUB_ENV"
           shell: bash
         - name: Tag Output
           run: |
@@ -60,18 +60,18 @@ jobs:
             tag_name: ${{ github.ref_name }}
             github_token: ${{ secrets.GITHUB_TOKEN }}
             delete_release: true
-        - name: Find '${{ github.ref_name }}' in pubspec.yaml
+        - name: Find '${{ github.ref_name }}' in package.json
           if: env.GHA_V_COUNTER == '0'
           uses: actions/github-script@v2.1.0
           with:
             script: |
                 core.setFailed('pubspec.yaml not updated to new version ${{ env.GHA_NEW_TAG_NAME }}!')
-        - name: Get version code
-          id: version-code-gen
-          run: |
-            awk '/${{ format('version{0}', ':') }} ${{ env.GHA_NEW_TAG_NAME }}/ {print}' webapp/pubspec.yaml | awk -F '+' '{print $NF}'
-            temp_GHA_VERSION_CODE="$(awk '/${{ format('version{0}', ':') }} ${{ env.GHA_NEW_TAG_NAME }}/ {print}' webapp/pubspec.yaml | awk -F '+' '{print $NF}')"
-            echo GHA_VERSION_CODE="$(echo $temp_GHA_VERSION_CODE | tr -d -c 0-9)" >> "$GITHUB_OUTPUT"
+        # - name: Get version code
+        #   id: version-code-gen
+        #   run: |
+        #     awk '/${{ format('version{0}', ':') }} ${{ env.GHA_NEW_TAG_NAME }}/ {print}' webapp/pubspec.yaml | awk -F '+' '{print $NF}'
+        #     temp_GHA_VERSION_CODE="$(awk '/${{ format('version{0}', ':') }} ${{ env.GHA_NEW_TAG_NAME }}/ {print}' webapp/pubspec.yaml | awk -F '+' '{print $NF}')"
+        #     echo GHA_VERSION_CODE="$(echo $temp_GHA_VERSION_CODE | tr -d -c 0-9)" >> "$GITHUB_OUTPUT"
 
   build-and-release-web:
     runs-on: ubuntu-latest
