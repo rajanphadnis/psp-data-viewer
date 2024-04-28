@@ -46,7 +46,7 @@ jobs:
             NEW_NAME="${TAGNAME//v/}"
             echo GHA_NEW_TAG_NAME=$NEW_NAME >> "$GITHUB_ENV"
         - name: Tag/Release search
-          run: echo "GHA_V_COUNTER=$(grep '${{ format('"version"{0}', ':') }} "${{ env.GHA_NEW_TAG_NAME }}"' webapp/pubspec.yaml | wc -l)" >> "$GITHUB_ENV"
+          run: echo "GHA_V_COUNTER=$(grep '${{ format('"version"{0}', ':') }} "${{ env.GHA_NEW_TAG_NAME }}"' webapp/package.json | wc -l)" >> "$GITHUB_ENV"
           shell: bash
         - name: Tag Output
           run: |
