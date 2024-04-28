@@ -66,12 +66,6 @@ jobs:
           with:
             script: |
                 core.setFailed('pubspec.yaml not updated to new version ${{ env.GHA_NEW_TAG_NAME }}!')
-        # - name: Get version code
-        #   id: version-code-gen
-        #   run: |
-        #     awk '/${{ format('version{0}', ':') }} ${{ env.GHA_NEW_TAG_NAME }}/ {print}' webapp/pubspec.yaml | awk -F '+' '{print $NF}'
-        #     temp_GHA_VERSION_CODE="$(awk '/${{ format('version{0}', ':') }} ${{ env.GHA_NEW_TAG_NAME }}/ {print}' webapp/pubspec.yaml | awk -F '+' '{print $NF}')"
-        #     echo GHA_VERSION_CODE="$(echo $temp_GHA_VERSION_CODE | tr -d -c 0-9)" >> "$GITHUB_OUTPUT"
 
   build-and-release-web:
     runs-on: ubuntu-latest
