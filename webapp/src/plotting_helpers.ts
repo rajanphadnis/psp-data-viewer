@@ -74,7 +74,7 @@ export function plot(
       },
     ],
   };
-
+  document.getElementById("plot")!.innerHTML = "";
   let uplot = new uPlot(opts, toPlot, document.getElementById("plot")!);
   window.addEventListener("resize", (e) => {
     uplot.setSize(getSize());
@@ -84,6 +84,6 @@ export function plot(
 function getSize() {
   return {
     width: document.getElementById("plot")!.offsetWidth - 10,
-    height: window.innerHeight - 150,
+    height: window.innerHeight - 90,
   };
 }

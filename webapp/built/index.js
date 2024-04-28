@@ -885,11 +885,11 @@ var openDB = function(name, version, { blocked, upgrade, blocking, terminated } 
   if (blocked) {
     request.addEventListener("blocked", (event) => blocked(event.oldVersion, event.newVersion, event));
   }
-  openPromise.then((db) => {
+  openPromise.then((db2) => {
     if (terminated)
-      db.addEventListener("close", () => terminated());
+      db2.addEventListener("close", () => terminated());
     if (blocking) {
-      db.addEventListener("versionchange", (event) => blocking(event.oldVersion, event.newVersion, event));
+      db2.addEventListener("versionchange", (event) => blocking(event.oldVersion, event.newVersion, event));
     }
   }).catch(() => {
   });
@@ -1025,11 +1025,11 @@ var registerVersion = function(libraryKeyOrName, version, variant) {
 var getDbPromise = function() {
   if (!dbPromise) {
     dbPromise = openDB(DB_NAME, DB_VERSION, {
-      upgrade: (db, oldVersion) => {
+      upgrade: (db2, oldVersion) => {
         switch (oldVersion) {
           case 0:
             try {
-              db.createObjectStore(STORE_NAME);
+              db2.createObjectStore(STORE_NAME);
             } catch (e) {
               console.warn(e);
             }
@@ -1045,8 +1045,8 @@ var getDbPromise = function() {
 };
 async function readHeartbeatsFromIndexedDB(app) {
   try {
-    const db = await getDbPromise();
-    const tx = db.transaction(STORE_NAME);
+    const db2 = await getDbPromise();
+    const tx = db2.transaction(STORE_NAME);
     const result = await tx.objectStore(STORE_NAME).get(computeKey(app));
     await tx.done;
     return result;
@@ -1063,8 +1063,8 @@ async function readHeartbeatsFromIndexedDB(app) {
 }
 async function writeHeartbeatsToIndexedDB(app, heartbeatObject) {
   try {
-    const db = await getDbPromise();
-    const tx = db.transaction(STORE_NAME, "readwrite");
+    const db2 = await getDbPromise();
+    const tx = db2.transaction(STORE_NAME, "readwrite");
     const objectStore = tx.objectStore(STORE_NAME);
     await objectStore.put(heartbeatObject, computeKey(app));
     await tx.done;
@@ -1632,7 +1632,7 @@ var ab = function(a, b, c, d, e, f) {
   if (a.addEventListener)
     oa || (e = h), e === undefined && (e = false), a.addEventListener(b.toString(), d, e);
   else if (a.attachEvent)
-    a.attachEvent(db(b.toString()), d);
+    a.attachEvent(db2(b.toString()), d);
   else if (a.addListener && a.removeListener)
     a.addListener(d);
   else
@@ -1669,12 +1669,12 @@ var gb = function(a) {
       Ua(b.i, a);
     else {
       var { type: c, proxy: d } = a;
-      b.removeEventListener ? b.removeEventListener(c, d, a.capture) : b.detachEvent ? b.detachEvent(db(c), d) : b.addListener && b.removeListener && b.removeListener(d);
+      b.removeEventListener ? b.removeEventListener(c, d, a.capture) : b.detachEvent ? b.detachEvent(db2(c), d) : b.addListener && b.removeListener && b.removeListener(d);
       (c = bb(b)) ? (Ua(c, a), c.h == 0 && (c.src = null, b[Va] = null)) : Ma(a);
     }
   }
 };
-var db = function(a) {
+var db2 = function(a) {
   return a in Wa ? Wa[a] : Wa[a] = "on" + a;
 };
 var eb = function(a, b) {
@@ -14238,8 +14238,8 @@ var Ce = new WeakMap;
   }, "PUBLIC").setMultipleInstances(true)), registerVersion(S2, "4.6.1", e), registerVersion(S2, "4.6.1", "esm2017");
 })();
 // src/db_interaction.ts
-async function getSensorData(db2, test, dataset, fromCache) {
-  const docRef = doc(db2, test, dataset);
+async function getSensorData(dataset, fromCache) {
+  const docRef = doc(db, test_name, dataset);
   let docSnap;
   if (fromCache) {
     try {
@@ -14255,10 +14255,12 @@ async function getSensorData(db2, test, dataset, fromCache) {
   const time = docData["time"];
   const data = docData["data"];
   const scale = docData["unit"];
+  activeDatasets.cached.push(dataset);
+  console.log(activeDatasets);
   return [time, data, scale];
 }
-async function getTestInfo(db2, test_name) {
-  const docRef = doc(db2, test_name, "general");
+async function getTestInfo() {
+  const docRef = doc(db, test_name, "general");
   let docSnap;
   try {
     docSnap = await getDocFromCache(docRef);
@@ -18325,6 +18327,7 @@ function plot(toPlot, series) {
       }
     ]
   };
+  document.getElementById("plot").innerHTML = "";
   let uplot = new uPlot(opts, toPlot, document.getElementById("plot"));
   window.addEventListener("resize", (e) => {
     uplot.setSize(getSize());
@@ -18333,7 +18336,7 @@ function plot(toPlot, series) {
 var getSize = function() {
   return {
     width: document.getElementById("plot").offsetWidth - 10,
-    height: window.innerHeight - 150
+    height: window.innerHeight - 90
   };
 };
 
@@ -18355,14 +18358,56 @@ var datasetPlottingColors = [
   pspColors.steel
 ];
 
+// src/dataset_selector.ts
+function writeSelectorList(datasets) {
+  const selectorDiv = document.getElementById("dataset-selector");
+  selectorDiv.innerHTML = "";
+  for (let i = 0;i < datasets.length; i++) {
+    const dataset = datasets[i];
+    let buttonInnerHTML;
+    if (activeDatasets.to_add.includes(dataset)) {
+      buttonInnerHTML = "-";
+    } else if (activeDatasets.loading.includes(dataset)) {
+      buttonInnerHTML = "l";
+    } else {
+      buttonInnerHTML = "+";
+    }
+    const list_div = document.createElement("div");
+    list_div.classList.add("datasetListDiv");
+    let list_text = document.createElement("p");
+    let list_button = document.createElement("button");
+    list_text.innerHTML = dataset;
+    list_button.innerHTML = buttonInnerHTML;
+    list_div.appendChild(list_text);
+    list_div.appendChild(list_button);
+    selectorDiv.appendChild(list_div);
+    list_button.addEventListener("click", async (e) => {
+      await buttonClickHandler(dataset);
+    });
+  }
+}
+async function buttonClickHandler(dataset) {
+  if (activeDatasets.to_add.includes(dataset)) {
+    const index = activeDatasets.to_add.indexOf(dataset, 0);
+    if (index > -1) {
+      activeDatasets.to_add.splice(index, 1);
+    }
+  } else if (activeDatasets.loading.includes(dataset)) {
+    console.log("data already loading!");
+  } else {
+    activeDatasets.to_add.push(dataset);
+  }
+  await update();
+}
+
 // src/plotting.ts
-async function plotDatasets(db2, test_name, datasets, old_datasets) {
+async function plotDatasets(datasets) {
   let series = [{}];
   let toPlot = [];
   for (let i = 0;i < datasets.length; i++) {
     const dataset = datasets[i];
-    const fromCache = old_datasets.includes(dataset);
-    const [time, data, scale] = await getSensorData(db2, test_name, dataset, fromCache);
+    const fromCache = activeDatasets.cached.includes(dataset);
+    const [time, data, scale] = await getSensorData(dataset, fromCache);
     toPlot[0] = time;
     toPlot.push(data);
     series.push({
@@ -18377,33 +18422,102 @@ async function plotDatasets(db2, test_name, datasets, old_datasets) {
   console.log("done");
   plot(toPlot, series);
 }
+async function update() {
+  await plotDatasets(activeDatasets.to_add);
+  writeSelectorList(activeDatasets.all);
+}
+
+// src/browser_fxns.ts
+var getQueryVariable = function(variable) {
+  var query2 = window.location.search.substring(1);
+  var vars = query2.split("&");
+  for (var i = 0;i < vars.length; i++) {
+    var pair = vars[i].split("=");
+    if (decodeURIComponent(pair[0]) == variable) {
+      return decodeURIComponent(pair[1]);
+    }
+  }
+};
+function getTestName() {
+  let param = location.pathname;
+  if (param == undefined || param == "/" || param.length <= 2) {
+    param = "/short-duration-hotfire-1/";
+  }
+  return param.slice(1, -1);
+}
+function initAdded() {
+  let param = getQueryVariable("b64");
+  if (param == undefined || param == "") {
+    activeDatasets.to_add = [];
+  } else {
+    const decodedList = decode(param);
+    activeDatasets.to_add = decodedList.split(",");
+  }
+}
+function getSharelink() {
+  const bufferString = activeDatasets.to_add.join(",");
+  let b64;
+  if (bufferString == undefined || bufferString == "") {
+    return location.origin + location.pathname;
+  } else {
+    b64 = encode(activeDatasets.to_add.join(","));
+  }
+  const sharelink_base = location.origin + location.pathname + "?b64=" + b64;
+  return sharelink_base;
+}
+var fallbackCopyTextToClipboard = function(text) {
+  var textArea = document.createElement("textarea");
+  textArea.value = text;
+  textArea.style.top = "0";
+  textArea.style.left = "0";
+  textArea.style.position = "fixed";
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  try {
+    var successful = document.execCommand("copy");
+    var msg = successful ? "successful" : "unsuccessful";
+    console.log("Fallback: Copying text command was " + msg);
+  } catch (err) {
+    console.error("Fallback: Oops, unable to copy", err);
+  }
+  document.body.removeChild(textArea);
+};
+function copyTextToClipboard(text) {
+  if (!navigator.clipboard) {
+    fallbackCopyTextToClipboard(text);
+    return;
+  }
+  navigator.clipboard.writeText(text).then(async function() {
+    console.log("Async: Copying to clipboard was successful!");
+    const modButton = document.getElementById("addBtn");
+    modButton.innerHTML = "Copied!";
+    await delay(1500);
+    modButton.innerHTML = "Share";
+  }, function(err) {
+    console.error("Async: Could not copy text: ", err);
+  });
+}
+var decode = (str) => atob(str);
+var encode = (str) => btoa(str);
+var delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 // src/index.ts
 async function main() {
-  const test_name = "short-duration-hotfire-1";
-  const [datasets, name3, test_article] = await getTestInfo(db2, test_name);
+  const [datasets, name3, test_article] = await getTestInfo();
+  activeDatasets.all = datasets;
   const titleElement = document.getElementById("title");
   const modButton = document.getElementById("addBtn");
   const plotDiv = document.getElementById("plot");
   const selectorDiv = document.getElementById("dataset-selector");
   titleElement.innerHTML = "PSP Data Viewer::" + test_article + "::" + name3;
   modButton.style.display = "block";
-  modButton.addEventListener("click", (e) => {
+  modButton.addEventListener("click", async (e) => {
+    const sharelink = getSharelink();
+    copyTextToClipboard(sharelink);
+    console.log(sharelink);
   });
-  console.log(datasets);
-  for (let i = 0;i < datasets.length; i++) {
-    const dataset = datasets[i];
-    const list_div = document.createElement("div");
-    list_div.classList.add("datasetListDiv");
-    let list_text = document.createElement("p");
-    let list_button = document.createElement("button");
-    list_text.innerHTML = dataset;
-    list_button.innerHTML = "+";
-    list_div.appendChild(list_text);
-    list_div.appendChild(list_button);
-    selectorDiv.appendChild(list_div);
-  }
-  await plotDatasets(db2, test_name, datasets, datasets);
+  update();
 }
 var firebaseConfig = {
   apiKey: "AIzaSyAmJytERQ1hnORHswd-j07WhpTYH7yu6fA",
@@ -18414,7 +18528,15 @@ var firebaseConfig = {
   appId: "1:493859450932:web:e4e3c67f0f46316c555a61"
 };
 var app5 = initializeApp(firebaseConfig);
-var db2 = initializeFirestore(app5, {
+db = initializeFirestore(app5, {
   localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
 });
+activeDatasets = {
+  to_add: [],
+  loading: [],
+  cached: [],
+  all: []
+};
+test_name = getTestName();
+initAdded();
 main();

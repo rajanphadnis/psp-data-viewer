@@ -3,8 +3,9 @@ import { join, type AlignedData } from "uplot";
 import { getSensorData } from "./db_interaction";
 import { legendRound, plot } from "./plotting_helpers";
 import { datasetPlottingColors, pspColors } from "./theming";
+import { writeSelectorList } from "./dataset_selector";
 
-export async function plotDatasets(db: Firestore, test_name: string, datasets: string[], old_datasets: string[]) {
+export async function plotDatasets(datasets: string[]) {
   let series: (
     | {}
     | {
@@ -19,8 +20,8 @@ export async function plotDatasets(db: Firestore, test_name: string, datasets: s
   let toPlot: any = [];
   for (let i = 0; i < datasets.length; i++) {
     const dataset: string = datasets[i];
-    const fromCache: boolean = old_datasets.includes(dataset);
-    const [time, data, scale] = await getSensorData(db, test_name, dataset, fromCache);
+    const fromCache: boolean = activeDatasets.cached.includes(dataset);
+    const [time, data, scale] = await getSensorData(dataset, fromCache);
     toPlot[0] = time;
     toPlot.push(data);
     series.push({
@@ -34,4 +35,10 @@ export async function plotDatasets(db: Firestore, test_name: string, datasets: s
   }
   console.log("done");
   plot(toPlot, series);
+}
+
+
+export async function update() {
+  await plotDatasets(activeDatasets.to_add);
+  writeSelectorList(activeDatasets.all);
 }

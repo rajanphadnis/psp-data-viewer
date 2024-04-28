@@ -9,6 +9,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "buffer": "^6.0.3",
     "firebase": "^10.11.1",
     "uplot": "^1.6.30"
   }

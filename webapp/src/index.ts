@@ -1,9 +1,12 @@
 import { initializeApp } from "firebase/app";
 import { Firestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from "firebase/firestore";
 import { type AlignedData } from "uplot";
-import { getSensorData, getTestInfo } from "./db_interaction";
+import { getSensorData, getTestInfo, getTestList } from "./db_interaction";
 import { legendRound, plot } from "./plotting_helpers";
-import { plotDatasets } from "./plotting";
+import { plotDatasets, update } from "./plotting";
+import { writeSelectorList } from "./dataset_selector";
+import type { DatasetStatus } from "./types";
+import { copyTextToClipboard, getSharelink, getTestName, initAdded } from "./browser_fxns";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAmJytERQ1hnORHswd-j07WhpTYH7yu6fA",
@@ -15,36 +18,38 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db: Firestore = initializeFirestore(app, {
-  localCache: persistentLocalCache(/*settings*/ { tabManager: persistentMultipleTabManager() }),
+declare global {
+  var activeDatasets: DatasetStatus;
+  var test_name: string;
+  var db: Firestore;
+}
+db = initializeFirestore(app, {
+  localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
 });
+activeDatasets = {
+  to_add: [],
+  loading: [],
+  cached: [],
+  all: [],
+};
+test_name = getTestName();
+initAdded();
 
 async function main() {
-  const test_name: string = "short-duration-hotfire-1";
-
-  const [datasets, name, test_article] = await getTestInfo(db, test_name);
+  const [datasets, name, test_article] = await getTestInfo();
+  activeDatasets.all = datasets;
   const titleElement = document.getElementById("title")!;
   const modButton = document.getElementById("addBtn")!;
   const plotDiv = document.getElementById("plot")!;
   const selectorDiv = document.getElementById("dataset-selector")!;
   titleElement.innerHTML = "PSP Data Viewer::" + test_article + "::" + name;
   modButton.style.display = "block";
-  modButton.addEventListener("click", (e) => {});
-  console.log(datasets);
-  for (let i = 0; i < datasets.length; i++) {
-    const dataset: string = datasets[i];
-    const list_div = document.createElement("div");
-    list_div.classList.add("datasetListDiv");
-    let list_text = document.createElement("p");
-    let list_button = document.createElement("button");
-    list_text.innerHTML = dataset;
-    list_button.innerHTML = "+";
-    list_div.appendChild(list_text);
-    list_div.appendChild(list_button);
-    selectorDiv.appendChild(list_div);
-  }
-  // const datasets: string[] = ["pt-ox-02", "pt-fu-02"];
-  await plotDatasets(db, test_name, datasets, datasets);
+  modButton.addEventListener("click", async (e) => {
+    const sharelink: string = getSharelink();
+    copyTextToClipboard(sharelink);
+    console.log(sharelink);
+  });
+  update();
 }
 
 main();

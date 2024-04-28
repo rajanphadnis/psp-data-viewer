@@ -16,6 +16,8 @@ body {
     margin: 0;
     padding: 0;
     background-color: var(--background-color);
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 div {
@@ -73,7 +75,8 @@ div {
 #dataset-selector {
     width: 10%;
     height: 90%;
-    overflow: scroll;
+    overflow: auto;
+    padding-top: 20px;
 }
 
 .datasetListDiv {
