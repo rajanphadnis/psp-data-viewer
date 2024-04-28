@@ -2,20 +2,23 @@
 <html>
 
 <head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono" />
     <link rel="stylesheet" href="./uPlot.min.css">
     <link rel="stylesheet" href="./main.css">
+    <link rel="stylesheet" href="./uplot_override.css">
 </head>
 
 <body>
     <div id="navBar">
-        <ul>
-            <li><a class="active" href="#home">Home</a></li>
-            <li><a href="#news">News</a></li>
-            <li><a href="#contact">Contact</a></li>
-            <li><a href="#about">About</a></li>
-        </ul>
+        <div id="title">Loading...</div>
+        <button id="addBtn">Modify</button>
     </div>
-    <div id="plot"></div>
+    <div id="main">
+        <div id="plot"></div>
+        <div id="dataset-selector"></div>
+    </div>
+
 
 </body>
 <script src="/index.js"></script>

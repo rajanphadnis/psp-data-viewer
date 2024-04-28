@@ -7030,10 +7030,28 @@ async function __PRIVATE_ensureOfflineComponents(e) {
 async function __PRIVATE_ensureOnlineComponents(e) {
   return e._onlineComponents || (e._uninitializedComponentsProvider ? (__PRIVATE_logDebug("FirestoreClient", "Using user provided OnlineComponentProvider"), await __PRIVATE_setOnlineComponentProvider(e, e._uninitializedComponentsProvider._online)) : (__PRIVATE_logDebug("FirestoreClient", "Using default OnlineComponentProvider"), await __PRIVATE_setOnlineComponentProvider(e, new OnlineComponentProvider))), e._onlineComponents;
 }
+var __PRIVATE_getLocalStore = function(e) {
+  return __PRIVATE_ensureOfflineComponents(e).then((e2) => e2.localStore);
+};
 async function __PRIVATE_getEventManager(e) {
   const t = await __PRIVATE_ensureOnlineComponents(e), n = t.eventManager;
   return n.onListen = __PRIVATE_syncEngineListen.bind(null, t.syncEngine), n.onUnlisten = __PRIVATE_syncEngineUnlisten.bind(null, t.syncEngine), n.onFirstRemoteStoreListen = __PRIVATE_triggerRemoteStoreListen.bind(null, t.syncEngine), n.onLastRemoteStoreUnlisten = __PRIVATE_triggerRemoteStoreUnlisten.bind(null, t.syncEngine), n;
 }
+var __PRIVATE_firestoreClientGetDocumentFromLocalCache = function(e, t) {
+  const n = new __PRIVATE_Deferred;
+  return e.asyncQueue.enqueueAndForget(async () => async function __PRIVATE_readDocumentFromCache(e2, t2, n2) {
+    try {
+      const r2 = await function __PRIVATE_localStoreReadDocument(e3, t3) {
+        const n3 = __PRIVATE_debugCast(e3);
+        return n3.persistence.runTransaction("read document", "readonly", (e4) => n3.localDocuments.getDocument(e4, t3));
+      }(e2, t2);
+      r2.isFoundDocument() ? n2.resolve(r2) : r2.isNoDocument() ? n2.resolve(null) : n2.reject(new FirestoreError(C2.UNAVAILABLE, "Failed to get document from cache. (However, this document may exist on the server. Run again without setting 'source' in the GetOptions to attempt to retrieve the document from the server.)"));
+    } catch (e3) {
+      const r2 = __PRIVATE_wrapInUserErrorIfRecoverable(e3, `Failed to get document '${t2} from cache`);
+      n2.reject(r2);
+    }
+  }(await __PRIVATE_getLocalStore(e), t, n)), n.promise;
+};
 var __PRIVATE_firestoreClientGetDocumentViaSnapshotListener = function(e, t, n = {}) {
   const r2 = new __PRIVATE_Deferred;
   return e.asyncQueue.enqueueAndForget(async () => function __PRIVATE_readDocumentViaSnapshotListener(e2, t2, n2, r3, i) {
@@ -7170,6 +7188,11 @@ var getDoc = function(e) {
   e = __PRIVATE_cast(e, DocumentReference);
   const t = __PRIVATE_cast(e.firestore, Firestore);
   return __PRIVATE_firestoreClientGetDocumentViaSnapshotListener(ensureFirestoreConfigured(t), e._key).then((n) => __PRIVATE_convertToDocSnapshot(t, e, n));
+};
+var getDocFromCache = function(e) {
+  e = __PRIVATE_cast(e, DocumentReference);
+  const t = __PRIVATE_cast(e.firestore, Firestore), n = ensureFirestoreConfigured(t), r2 = new __PRIVATE_ExpUserDataWriter(t);
+  return __PRIVATE_firestoreClientGetDocumentFromLocalCache(n, e._key).then((n2) => new DocumentSnapshot(t, r2, e._key, n2, new SnapshotMetadata(n2 !== null && n2.hasLocalMutations, true), e.converter));
 };
 var __PRIVATE_convertToDocSnapshot = function(e, t, n) {
   const r2 = n.docs.get(t._key), i = new __PRIVATE_ExpUserDataWriter(e);
@@ -14214,6 +14237,42 @@ var Ce = new WeakMap;
     }, r2), s._setSettings(r2), s;
   }, "PUBLIC").setMultipleInstances(true)), registerVersion(S2, "4.6.1", e), registerVersion(S2, "4.6.1", "esm2017");
 })();
+// src/db_interaction.ts
+async function getSensorData(db2, test, dataset, fromCache) {
+  const docRef = doc(db2, test, dataset);
+  let docSnap;
+  if (fromCache) {
+    try {
+      docSnap = await getDocFromCache(docRef);
+    } catch (e) {
+      console.log("cache miss:", e);
+      docSnap = await getDoc(docRef);
+    }
+  } else {
+    docSnap = await getDoc(docRef);
+  }
+  const docData = docSnap.data();
+  const time = docData["time"];
+  const data = docData["data"];
+  const scale = docData["unit"];
+  return [time, data, scale];
+}
+async function getTestInfo(db2, test_name) {
+  const docRef = doc(db2, test_name, "general");
+  let docSnap;
+  try {
+    docSnap = await getDocFromCache(docRef);
+  } catch (e) {
+    console.log("cache miss:", e);
+    docSnap = await getDoc(docRef);
+  }
+  const docData = docSnap.data();
+  const datasets = docData["datasets"];
+  const name3 = docData["name"];
+  const test_article = docData["test_article"];
+  return [datasets, name3, test_article];
+}
+
 // node_modules/uplot/dist/uPlot.esm.js
 var setPxRatio = function() {
   let _pxRatio = devicePixelRatio;
@@ -18205,50 +18264,18 @@ uPlot.sync = _sync;
   paths.spline = monotoneCubic;
 }
 
-// src/index.ts
-async function main() {
-  const firebaseConfig = {
-    apiKey: "AIzaSyAmJytERQ1hnORHswd-j07WhpTYH7yu6fA",
-    authDomain: "psp-portfolio-f1205.firebaseapp.com",
-    projectId: "psp-portfolio-f1205",
-    storageBucket: "psp-portfolio-f1205.appspot.com",
-    messagingSenderId: "493859450932",
-    appId: "1:493859450932:web:e4e3c67f0f46316c555a61"
-  };
-  const app5 = initializeApp(firebaseConfig);
-  const db2 = initializeFirestore(app5, {
-    localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
-  });
-  const docRef = doc(db2, "short-duration-hotfire-1", "pt-ox-02");
-  const docSnap = await getDoc(docRef);
-  const docData = docSnap.data();
-  const time = docData["time"];
-  const data = docData["data"];
-  console.log("done");
-  plot(time, data);
-}
-var roundData = function(val, suffix, precision = 2) {
+// src/plotting_helpers.ts
+function legendRound(val, suffix, precision = 2) {
   if (val == null || val == undefined || val == "null") {
     return "no data";
   } else {
     return val.toFixed(precision) + suffix;
   }
-};
-var plot = function(time, data) {
-  let toPlot = [time, data];
+}
+function plot(toPlot, series) {
   let opts = {
     ...getSize(),
-    series: [
-      {},
-      {
-        label: "pt-ox-202",
-        value: (self2, rawValue) => roundData(rawValue, " psi"),
-        stroke: "red",
-        width: 2,
-        scale: "psi",
-        spanGaps: true
-      }
-    ],
+    series,
     axes: [
       {
         stroke: "#fff",
@@ -18271,18 +18298,123 @@ var plot = function(time, data) {
           show: true,
           stroke: "#80808080"
         }
+      },
+      {
+        scale: "degrees",
+        values: (u, vals, space) => vals.map((v3) => +v3.toFixed(1) + "degrees"),
+        stroke: "#fff",
+        grid: {
+          stroke: "#ffffff20"
+        },
+        ticks: {
+          show: true,
+          stroke: "#80808080"
+        }
+      },
+      {
+        scale: "lbf",
+        values: (u, vals, space) => vals.map((v3) => +v3.toFixed(1) + "lbf"),
+        stroke: "#fff",
+        grid: {
+          stroke: "#ffffff20"
+        },
+        ticks: {
+          show: true,
+          stroke: "#80808080"
+        }
       }
     ]
   };
-  let uplot = new uPlot(opts, toPlot, document.body);
+  let uplot = new uPlot(opts, toPlot, document.getElementById("plot"));
   window.addEventListener("resize", (e) => {
     uplot.setSize(getSize());
   });
-};
+}
 var getSize = function() {
   return {
-    width: window.innerWidth,
+    width: document.getElementById("plot").offsetWidth - 10,
     height: window.innerHeight - 150
   };
 };
+
+// src/theming.ts
+var pspColors = {
+  "night-sky": "#252526",
+  rush: "#DAAA00",
+  moondust: "#F2EFE9",
+  "bm-gold": "#CFB991",
+  aged: "#8E6F3E",
+  field: "#DDB945",
+  dust: "#EBD99F",
+  steel: "#555960",
+  "cool-gray": "#6F727B"
+};
+var datasetPlottingColors = [
+  pspColors.field,
+  pspColors["bm-gold"],
+  pspColors.steel
+];
+
+// src/plotting.ts
+async function plotDatasets(db2, test_name, datasets, old_datasets) {
+  let series = [{}];
+  let toPlot = [];
+  for (let i = 0;i < datasets.length; i++) {
+    const dataset = datasets[i];
+    const fromCache = old_datasets.includes(dataset);
+    const [time, data, scale] = await getSensorData(db2, test_name, dataset, fromCache);
+    toPlot[0] = time;
+    toPlot.push(data);
+    series.push({
+      label: dataset,
+      value: (self2, rawValue) => legendRound(rawValue, " " + scale),
+      stroke: datasetPlottingColors[i],
+      width: 2,
+      scale,
+      spanGaps: true
+    });
+  }
+  console.log("done");
+  plot(toPlot, series);
+}
+
+// src/index.ts
+async function main() {
+  const test_name = "short-duration-hotfire-1";
+  const [datasets, name3, test_article] = await getTestInfo(db2, test_name);
+  const titleElement = document.getElementById("title");
+  const modButton = document.getElementById("addBtn");
+  const plotDiv = document.getElementById("plot");
+  const selectorDiv = document.getElementById("dataset-selector");
+  titleElement.innerHTML = "PSP Data Viewer::" + test_article + "::" + name3;
+  modButton.style.display = "block";
+  modButton.addEventListener("click", (e) => {
+  });
+  console.log(datasets);
+  for (let i = 0;i < datasets.length; i++) {
+    const dataset = datasets[i];
+    const list_div = document.createElement("div");
+    list_div.classList.add("datasetListDiv");
+    let list_text = document.createElement("p");
+    let list_button = document.createElement("button");
+    list_text.innerHTML = dataset;
+    list_button.innerHTML = "+";
+    list_div.appendChild(list_text);
+    list_div.appendChild(list_button);
+    selectorDiv.appendChild(list_div);
+  }
+  await plotDatasets(db2, test_name, datasets, datasets);
+}
+var firebaseConfig = {
+  apiKey: "AIzaSyAmJytERQ1hnORHswd-j07WhpTYH7yu6fA",
+  authDomain: "psp-portfolio-f1205.firebaseapp.com",
+  projectId: "psp-portfolio-f1205",
+  storageBucket: "psp-portfolio-f1205.appspot.com",
+  messagingSenderId: "493859450932",
+  appId: "1:493859450932:web:e4e3c67f0f46316c555a61"
+};
+var app5 = initializeApp(firebaseConfig);
+var db2 = initializeFirestore(app5, {
+  localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
+});
 main();

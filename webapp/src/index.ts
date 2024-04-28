@@ -1,121 +1,50 @@
 import { initializeApp } from "firebase/app";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  Firestore,
-  doc,
-  getDoc,
-  initializeFirestore,
-  persistentLocalCache,
-  persistentMultipleTabManager,
-} from "firebase/firestore";
-import uPlot, { pxRatio, type AlignedData } from "uplot";
+import { Firestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from "firebase/firestore";
+import { type AlignedData } from "uplot";
+import { getSensorData, getTestInfo } from "./db_interaction";
+import { legendRound, plot } from "./plotting_helpers";
+import { plotDatasets } from "./plotting";
 
-let pspColors = {
-  "night-sky": "#252526",
-  rush: "#DAAA00",
-  moondust: "#F2EFE9",
-  "bm-gold": "#CFB991",
-  aged: "#8E6F3E",
-  field: "#DDB945",
-  dust: "#EBD99F",
-  steel: "#555960",
-  "cool-gray": "#6F727B",
+const firebaseConfig = {
+  apiKey: "AIzaSyAmJytERQ1hnORHswd-j07WhpTYH7yu6fA",
+  authDomain: "psp-portfolio-f1205.firebaseapp.com",
+  projectId: "psp-portfolio-f1205",
+  storageBucket: "psp-portfolio-f1205.appspot.com",
+  messagingSenderId: "493859450932",
+  appId: "1:493859450932:web:e4e3c67f0f46316c555a61",
 };
 
+const app = initializeApp(firebaseConfig);
+const db: Firestore = initializeFirestore(app, {
+  localCache: persistentLocalCache(/*settings*/ { tabManager: persistentMultipleTabManager() }),
+});
+
 async function main() {
-  const firebaseConfig = {
-    apiKey: "AIzaSyAmJytERQ1hnORHswd-j07WhpTYH7yu6fA",
-    authDomain: "psp-portfolio-f1205.firebaseapp.com",
-    projectId: "psp-portfolio-f1205",
-    storageBucket: "psp-portfolio-f1205.appspot.com",
-    messagingSenderId: "493859450932",
-    appId: "1:493859450932:web:e4e3c67f0f46316c555a61",
-  };
+  const test_name: string = "short-duration-hotfire-1";
 
-  const app = initializeApp(firebaseConfig);
-  const db: Firestore = initializeFirestore(app, {
-    localCache: persistentLocalCache(/*settings*/ { tabManager: persistentMultipleTabManager() }),
-  });
-  const docRef = doc(db, "short-duration-hotfire-1", "pt-ox-02");
-  const docSnap = await getDoc(docRef);
-  const docData = docSnap.data()!;
-  const time = docData["time"];
-  const data = docData["data"];
-  console.log("done");
-  plot(time, data);
-}
-
-function roundData(val: any, suffix: string, precision: number = 2) {
-  if (val == null || val == undefined || val == "null") {
-    return "no data";
-  } else {
-    return val.toFixed(precision) + suffix;
+  const [datasets, name, test_article] = await getTestInfo(db, test_name);
+  const titleElement = document.getElementById("title")!;
+  const modButton = document.getElementById("addBtn")!;
+  const plotDiv = document.getElementById("plot")!;
+  const selectorDiv = document.getElementById("dataset-selector")!;
+  titleElement.innerHTML = "PSP Data Viewer::" + test_article + "::" + name;
+  modButton.style.display = "block";
+  modButton.addEventListener("click", (e) => {});
+  console.log(datasets);
+  for (let i = 0; i < datasets.length; i++) {
+    const dataset: string = datasets[i];
+    const list_div = document.createElement("div");
+    list_div.classList.add("datasetListDiv");
+    let list_text = document.createElement("p");
+    let list_button = document.createElement("button");
+    list_text.innerHTML = dataset;
+    list_button.innerHTML = "+";
+    list_div.appendChild(list_text);
+    list_div.appendChild(list_button);
+    selectorDiv.appendChild(list_div);
   }
-}
-
-function plot(time: number[], data: number[]) {
-  let toPlot: AlignedData = [time, data];
-  let opts = {
-    ...getSize(),
-    series: [
-      {},
-      {
-        label: "pt-ox-202",
-        value: (self: any, rawValue: number) => roundData(rawValue, " psi"),
-        stroke: "red",
-        width: 2,
-        scale: "psi",
-        spanGaps: true,
-      },
-    ],
-    axes: [
-      {
-        stroke: "#fff",
-        grid: {
-          stroke: "#ffffff20",
-        },
-        ticks: {
-          show: true,
-          stroke: "#80808080",
-        },
-      },
-      {
-        scale: "psi",
-        values: (u: any, vals: any[], space: any) => vals.map((v) => +v.toFixed(1) + "psi"),
-        stroke: "#fff",
-        grid: {
-          stroke: "#ffffff20",
-        },
-        ticks: {
-          show: true,
-          stroke: "#80808080",
-        },
-      },
-    ],
-    // scales: {
-    //   x: {
-    //     time: true,
-    //   },
-    //   y: {
-    //     auto: true,
-    //     // range: [-1.5, 1.5],
-    //   },
-    // }
-  };
-
-  let uplot = new uPlot(opts, toPlot, document.body);
-  window.addEventListener("resize", (e) => {
-    uplot.setSize(getSize());
-  });
-}
-
-function getSize() {
-  return {
-    width: window.innerWidth,
-    height: window.innerHeight - 150,
-  };
+  // const datasets: string[] = ["pt-ox-02", "pt-fu-02"];
+  await plotDatasets(db, test_name, datasets, datasets);
 }
 
 main();

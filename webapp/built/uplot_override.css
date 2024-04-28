@@ -1,0 +1,8 @@
+.u-select {
+    background-color: rgba(117, 117, 117, 0.45) !important;
+}
+
+.u-value,
+.u-label {
+    color: white;
+}

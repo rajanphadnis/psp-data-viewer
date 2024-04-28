@@ -8,13 +8,14 @@
     --dust: #ebd99f;
     --steel: #555960;
     --cool-gray: #6f727b;
+    --background-color: rgb(29, 29, 29);
 }
 
 html,
 body {
     margin: 0;
     padding: 0;
-    background-color: rgb(29, 29, 29);
+    background-color: var(--background-color);
 }
 
 div {
@@ -22,35 +23,64 @@ div {
     padding: 0;
 }
 
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: rgb(29, 29, 29);
-}
-
-li {
-    float: left;
-}
-
-li a {
-    display: block;
+#navBar {
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-top: 1em;
+    padding-bottom: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    font-family: "IBM Plex Mono", monospace;
     color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
 }
 
-li a:hover {
-    background-color: #111;
+#title {
+    font-weight: bold;
+    font-size: larger;
 }
 
-.u-select {
-    background-color: rgba(117, 117, 117, 0.45) !important;
+#addBtn {
+    background-color: var(--rush);
+    color: white;
+    padding: 0.5em;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: "IBM Plex Mono", monospace;
+    display: none;
 }
 
-.u-value,
-.u-label {
+#addBtn:hover {
+    background-color: var(--field);
+}
+
+#main {
+    display: flex;
+    flex-direction: row;
+}
+
+#plot {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: auto;
+    padding-left: auto;
+}
+
+#dataset-selector {
+    width: 10%;
+    height: 90%;
+    overflow: scroll;
+}
+
+.datasetListDiv {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "IBM Plex Mono", monospace;
     color: white;
 }
