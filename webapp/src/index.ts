@@ -1,12 +1,11 @@
 import { initializeApp } from "firebase/app";
 import { Firestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from "firebase/firestore";
-import { type AlignedData } from "uplot";
-import { getSensorData, getTestInfo, getTestList } from "./db_interaction";
-import { legendRound, plot } from "./plotting_helpers";
-import { plotDatasets, update } from "./plotting";
-import { writeSelectorList } from "./dataset_selector";
+import { getTestInfo, getGeneralTestInfo } from "./db_interaction";
+import { update } from "./plotting";
 import type { DatasetStatus } from "./types";
 import { copyTextToClipboard, getSharelink, getTestName, initAdded } from "./browser_fxns";
+import { loader } from "./html_components";
+import { initModal, setKnownTests } from "./modal";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAmJytERQ1hnORHswd-j07WhpTYH7yu6fA",
@@ -32,19 +31,26 @@ activeDatasets = {
   cached: [],
   all: [],
 };
-test_name = getTestName();
-initAdded();
+
+initModal();
 
 async function main() {
+  document.getElementById("status")!.innerHTML = loader;
+  const [tests, default_url] = await getGeneralTestInfo();
+  setKnownTests(tests, default_url);
+  test_name = getTestName(default_url);
+  initAdded();
   const [datasets, name, test_article] = await getTestInfo();
-  activeDatasets.all = datasets;
+  activeDatasets.all = datasets.sort((a, b) => a.localeCompare(b));
   const titleElement = document.getElementById("title")!;
-  const modButton = document.getElementById("addBtn")!;
+  const sharelinkButton = document.getElementById("sharelinkButton")!;
   const plotDiv = document.getElementById("plot")!;
   const selectorDiv = document.getElementById("dataset-selector")!;
+  const tabTitle = document.getElementById("tabTitle")!;
   titleElement.innerHTML = "PSP Data Viewer::" + test_article + "::" + name;
-  modButton.style.display = "block";
-  modButton.addEventListener("click", async (e) => {
+  tabTitle.innerHTML = test_article + "::" + name;
+  sharelinkButton.style.opacity = "1";
+  sharelinkButton.addEventListener("click", async (e) => {
     const sharelink: string = getSharelink();
     copyTextToClipboard(sharelink);
     console.log(sharelink);

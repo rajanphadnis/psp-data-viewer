@@ -10,10 +10,11 @@ function getQueryVariable(variable: string) {
   // alert("Query Variable " + variable + " not found");
 }
 
-export function getTestName(): string {
+export function getTestName(default_redirect: string): string {
   let param = location.pathname;
   if (param == undefined || param == "/" || param.length <= 2) {
-    param = "/short-duration-hotfire-1/";
+    param = "/" + default_redirect + "/";
+    window.location.href = location.origin + param;
   }
   return param.slice(1, -1);
 }
@@ -74,7 +75,7 @@ export function copyTextToClipboard(text: string) {
   }
   navigator.clipboard.writeText(text).then(async function() {
     console.log('Async: Copying to clipboard was successful!');
-    const modButton = document.getElementById("addBtn")!;
+    const modButton = document.getElementById("sharelinkButton")!;
     modButton.innerHTML = "Copied!";
     await delay(1500);
     modButton.innerHTML = "Share";

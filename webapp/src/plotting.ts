@@ -4,6 +4,7 @@ import { getSensorData } from "./db_interaction";
 import { legendRound, plot } from "./plotting_helpers";
 import { datasetPlottingColors, pspColors } from "./theming";
 import { writeSelectorList } from "./dataset_selector";
+import { loader, check_mark } from "./html_components";
 
 export async function plotDatasets(datasets: string[]) {
   let series: (
@@ -39,6 +40,8 @@ export async function plotDatasets(datasets: string[]) {
 
 
 export async function update() {
+  document.getElementById("status")!.innerHTML = loader;
   await plotDatasets(activeDatasets.to_add);
   writeSelectorList(activeDatasets.all);
+  document.getElementById("status")!.innerHTML = check_mark;
 }

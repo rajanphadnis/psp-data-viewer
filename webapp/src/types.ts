@@ -4,3 +4,6 @@ export interface DatasetStatus {
     cached: string[];
     all: string[];
 }
+export interface AllTests {
+    [key: string]: string;
+ }
