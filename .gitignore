@@ -6,3 +6,4 @@ webapp/.env.dev
 .firebase/hosting.**
 webapp/firebase-debug.log
 webapp/src/generated_app_check_secret.ts
+functions/psp-portfolio-f1205-6da58e02b7b8.json
