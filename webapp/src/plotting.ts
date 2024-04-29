@@ -34,7 +34,6 @@ export async function plotDatasets(datasets: string[]) {
       spanGaps: true,
     });
   }
-  console.log("done");
   plot(toPlot, series);
 }
 

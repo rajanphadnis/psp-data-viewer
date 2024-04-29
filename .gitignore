@@ -4,3 +4,5 @@
 webapp/bun.lockb
 webapp/.env.dev
 .firebase/hosting.**
+webapp/firebase-debug.log
+webapp/src/generated_app_check_secret.ts
