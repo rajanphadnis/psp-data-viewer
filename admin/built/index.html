@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="tabTitle">Admin Dashboard</title>
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel=preconnect href="https://fonts.googleapis.com/" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@40,400,0,0&display=swap" />
+    <link rel="stylesheet" href="/main.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="/modal.css" crossorigin="anonymous">
+    <link rel="icon" href="/images/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" href="/images/favicon-16x16.png" sizes="16x16" />
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
+</head>
+
+<body>
+    <div id="testSwitcherModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close">&times;</span>
+                <h2>Choose Test</h2>
+            </div>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+    <div id="navBar">
+        <div style="display:flex; flex-direction: row; justify-content: start; align-items: center;">
+            <div id="title">[Admin Console] PSP Data Viewer</div>
+        </div>
+        <!-- <div id="toolbar">
+            <button id="downloadCSV" class="toolbar_button">
+                <span class="material-symbols-outlined">
+                    table_view
+                </span>
+            </button>
+            <button id="downloadImage" class="toolbar_button">
+                <span class="material-symbols-outlined">
+                    download
+                </span>
+            </button>
+            <button id="copyImage" class="toolbar_button">
+                <span class="material-symbols-outlined">
+                    content_copy
+                </span>
+            </button>
+        </div> -->
+        <div style="display:flex; flex-direction: row; justify-content: end; align-items: center;">
+            <div id="status"></div>
+            <button title="Copy link that points to the current plot config" id="sharelinkButton">New Test</button>
+        </div>
+    </div>
+    <div id="main">
+        <div id="tests"></div>
+        <div id="test-info"></div>
+    </div>
+</body>
+<script src="/index.js"></script>
+
+</html>

@@ -1,0 +1,150 @@
+:root {
+    --night-sky: #252526;
+    --rush: #daaa00;
+    --moondust: #f2efe9;
+    --bm-gold: #cfb991;
+    --aged: #8e6f3e;
+    --field: #ddb945;
+    --dust: #ebd99f;
+    --steel: #555960;
+    --cool-gray: #6f727b;
+    --background-color: rgb(29, 29, 29);
+}
+
+.material-symbols-outlined {
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 40;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    padding-left: 5px;
+    color: white;
+    font-family: "IBM Plex Mono", monospace;
+    /* font-weight: bold; */
+    /* padding-right: 5px; */
+}
+
+div {
+    margin: 0;
+    padding: 0;
+}
+
+#navBar {
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-top: 0.5em;
+    padding-bottom: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    font-family: "IBM Plex Mono", monospace;
+    color: white;
+}
+
+#title {
+    font-weight: bold;
+    font-size: larger;
+}
+
+#sharelinkButton {
+    background-color: var(--rush);
+    color: black;
+    padding: 0.5em;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: "IBM Plex Mono", monospace;
+    display: block;
+    opacity: 1;
+}
+
+#sharelinkButton:hover {
+    background-color: var(--field);
+}
+
+.toolbar_button {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    margin: 0px;
+    font-size: 16px;
+    font-weight: bold;
+    font-family: "IBM Plex Mono", monospace;
+    display: block;
+    opacity: 0;
+    padding-top: 4px;
+    border: 0.5px solid black;
+    color: black;
+    background-color: var(--rush);
+    cursor: pointer;
+    text-align: center;
+}
+
+.toolbar_button:hover {
+    background-color: var(--field);
+}
+
+#toolbar {
+    display: flex;
+    flex-direction: row;
+    margin: 0%;
+    padding: 0%;
+    justify-content: center;
+    align-items: center;
+}
+
+#main {
+    display: flex;
+    flex-direction: row;
+}
+
+#tests {
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: auto;
+    padding-left: auto;
+    background-color: var(--background-color);
+}
+
+#test-info {
+    width: 40%;
+    max-height: calc(100vh - 100px);
+    overflow: auto;
+    padding-top: 20px;
+    scrollbar-color: white transparent;
+    scrollbar-gutter: stable;
+}
+
+.loader {
+    border: 3px solid var(--background-color);
+    border-radius: 50%;
+    border-top: 3px solid var(--field);
+    width: 15px;
+    height: 15px;
+    -webkit-animation: spin 2s linear infinite;
+    /* Safari */
+    animation: spin 0.5s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.green_check {
+    color: greenyellow;
+}
+
+#status {
+    padding-right: 20px;
+    text-align: center;
+}

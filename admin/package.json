@@ -1,0 +1,19 @@
+{
+    "name": "admin",
+    "module": "src/index.ts",
+    "type": "module",
+    "devDependencies": {
+        "@types/bun": "latest"
+    },
+    "peerDependencies": {
+        "typescript": "^5.0.0"
+    },
+    "dependencies": {
+        "firebase": "^10.11.1"
+    },
+    "scripts": {
+        "debug-watch": "bun --watch build ./src/index.ts --outdir ./built",
+        "debug": "bun run --env-file=.env.dev ./build_tools/compile.ts",
+        "prod": "bun run --env-file=.env.prod.publish ./build_tools/compile.ts"
+    }
+}

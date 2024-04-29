@@ -7,3 +7,8 @@ webapp/.env.dev
 webapp/firebase-debug.log
 webapp/src/generated_app_check_secret.ts
 functions/psp-portfolio-f1205-6da58e02b7b8.json
+admin/src/generated_app_check_secret.ts
+admin/.env.dev
+admin/built/index.js
+admin/bun.lockb
+admin/firebase-debug.log
