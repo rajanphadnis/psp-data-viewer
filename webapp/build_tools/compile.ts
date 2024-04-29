@@ -6,9 +6,21 @@ function syncWriteFile(filename: string, data: any) {
     flag: "w",
   });
 }
+
+const appKey = Bun.env.APP_CHECK_KEY;
+let toWrite: string | boolean;
+
+if((appKey).toString() == "false") {
+  toWrite = false;
+}
+else {
+  toWrite = '"' + appKey + '"';
+}
+
+
 syncWriteFile(
   "../src/generated_app_check_secret.ts",
-  'export const appCheckSecret: string | boolean = "' + Bun.env.APP_CHECK_KEY + '";'
+  'export const appCheckSecret: string | boolean = ' + toWrite + ';'
 );
 await Bun.build({
   entrypoints: ["./src/index.ts"],
