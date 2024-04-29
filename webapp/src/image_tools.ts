@@ -38,7 +38,7 @@ export async function plotSnapshot(type: string) {
   can.height = height;
   can.style.width = Math.ceil(rect.width) + "px";
   can.style.height = Math.ceil(rect.height) + "px";
-  //   document.body.appendChild(can);
+    // document.body.appendChild(can);
 
   let img = new Image();
   img.crossOrigin = "Anonymous";
@@ -53,11 +53,7 @@ export async function plotSnapshot(type: string) {
   let svgBase64 = "data:image/svg+xml;base64," + btoa(svgXml);
 
   img.addEventListener("load", () => {
-    ctx.drawImage(img, 0, 0);
-  });
-  img.src = svgBase64;
-  //   await delay(1000);
-  let pngBlob1: Blob;
+    ctx.drawImage(img, 0, 0);let pngBlob1: Blob;
   can.toBlob(
     function (blob) {
       pngBlob1 = blob!;
@@ -71,4 +67,6 @@ export async function plotSnapshot(type: string) {
     "image/png",
     1
   );
+  });
+  img.src = svgBase64; 
 }
