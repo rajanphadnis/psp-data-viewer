@@ -20,7 +20,7 @@ db = firestore.client()
 # if test_name == "":
 #     raise RuntimeError
 
-test_name = "short-duration-hotfire-1"
+test_name = "cms_sd_hotfire_1_hf"
 
 parsed_datasets: dict[
     str,
@@ -46,45 +46,46 @@ all_time: list[float] = parsed_datasets["time"]
 
 available_datasets: list[str] = []
 
-# for dataset in parsed_datasets:
-dataset = "pt-fu-02"
-if dataset != "time":
-    data: list[float] = parsed_datasets[dataset].data.tolist()
-    time: list[float] = all_time[: len(data)]
-    df = pd.DataFrame.from_dict({"time": time, "data": data})
-    # thing = df.iloc[::250, :]
-    print("writing csv...")
-    df.to_csv(dataset+".csv", lineterminator="\n",index=False)
-    print("compressing...")
-    c_time = gc.ValuesEncoder.encode_all(all_time)
-    c_data = gc.ValuesEncoder.encode_all(data)
+for dataset in parsed_datasets:
+# dataset = "pt-fu-02"
+    if dataset != "time":
+        data: list[float] = parsed_datasets[dataset].data.tolist()
+        time: list[float] = all_time[: len(data)]
+        df = pd.DataFrame.from_dict({"time": time, "data": data})
+        df_cut = df.head(20*1000)
+        thing = df_cut.iloc[::10, :]
+        # print("writing csv...")
+        # df.to_csv(dataset+".csv", lineterminator="\n",index=False)
+        # print("compressing...")
+        # c_time = gc.ValuesEncoder.encode_all(all_time)
+        # c_data = gc.ValuesEncoder.encode_all(data)
 
 
-    # scale = "psi"
-    # if "tc" in dataset:
-    #     scale = "deg"
-    # if "pi-" in dataset or "reed-" in dataset:
-    #     scale = "bin"
-    # if "fms" in dataset:
-    #     scale = "lbf"
-    # if "rtd" in dataset:
-    #     scale = "V"
-    # doc_ref = db.collection(test_name).document(dataset)
-    # doc_ref.set({"time_offset": (time[0])})
-    # doc_ref.set(
-    #     {
-    #         "data": thing["data"].to_list(),
-    #         "time": thing["time"].to_list(),
-    #         "unit": scale,
-    #     },
-    #     merge=True,
-    # )
-    # available_datasets.append(dataset)
-    # print(dataset)
+        scale = "psi"
+        if "tc" in dataset:
+            scale = "deg"
+        if "pi-" in dataset or "reed-" in dataset:
+            scale = "bin"
+        if "fms" in dataset:
+            scale = "lbf"
+        if "rtd" in dataset:
+            scale = "V"
+        doc_ref = db.collection(test_name).document(dataset)
+        doc_ref.set({"time_offset": (time[0])})
+        doc_ref.set(
+            {
+                "data": thing["data"].to_list(),
+                "time": thing["time"].to_list(),
+                "unit": scale,
+            },
+            merge=True,
+        )
+        available_datasets.append(dataset)
+        print(dataset)
         # print(dataset)
 
-# doc_ref = db.collection(test_name).document("general")
-# doc_ref.set({"datasets": available_datasets}, merge=True)
+doc_ref = db.collection(test_name).document("general")
+doc_ref.set({"datasets": available_datasets, "test_article": "CMS", "gse_article":"BCLS", "name": "[Autosequence Data] Hotfire 1 (2s)"}, merge=True)
 
 # for sensornet_data in sensornet_datasets:
 #     dict_to_write.update({

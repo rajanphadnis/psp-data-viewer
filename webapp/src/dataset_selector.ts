@@ -1,6 +1,8 @@
+import { updateStatus } from "./browser_fxns";
 import { loader, check_mark } from "./html_components";
 import { update } from "./plotting";
 import { pspColors } from "./theming";
+import { loadingStatus } from "./types";
 
 export function writeSelectorList(datasets: string[]) {
   const selectorDiv = document.getElementById("dataset-selector")!;
@@ -9,20 +11,22 @@ export function writeSelectorList(datasets: string[]) {
     const dataset: string = datasets[i];
     let buttonInnerHTML: string;
     let buttonColor: string;
+    let list_text = document.createElement("p");
+    let list_button = document.createElement("button");
     if (activeDatasets.to_add.includes(dataset)) {
       buttonInnerHTML = "-";
       buttonColor = pspColors.aged;
+      list_text.classList.toggle("available", false);
     } else if (activeDatasets.loading.includes(dataset)) {
-      buttonInnerHTML = "l";
-      buttonColor = pspColors.aged;
+      buttonInnerHTML = loader;
+      buttonColor = pspColors["night-sky"];
     } else {
       buttonInnerHTML = "+";
       buttonColor = pspColors.rush;
+      list_text.classList.toggle("available", true);
     }
     const list_div = document.createElement("div");
     list_div.classList.add("datasetListDiv");
-    let list_text = document.createElement("p");
-    let list_button = document.createElement("button");
     list_button.classList.add("datasetListButton");
     list_text.innerHTML = dataset;
     list_button.innerHTML = buttonInnerHTML;
@@ -30,6 +34,9 @@ export function writeSelectorList(datasets: string[]) {
     list_div.appendChild(list_text);
     list_div.appendChild(list_button);
     selectorDiv.appendChild(list_div);
+    list_text.addEventListener("click", async (e) => {
+      await buttonClickHandler(dataset);
+    });
     list_button.addEventListener("click", async (e) => {
       await buttonClickHandler(dataset);
     });
@@ -37,7 +44,7 @@ export function writeSelectorList(datasets: string[]) {
 }
 
 export async function buttonClickHandler(dataset: string) {
-  document.getElementById("status")!.innerHTML = loader;
+  updateStatus(loadingStatus.LOADING);
   if (activeDatasets.to_add.includes(dataset)) {
     const index = activeDatasets.to_add.indexOf(dataset, 0);
     if (index > -1) {
@@ -49,5 +56,5 @@ export async function buttonClickHandler(dataset: string) {
     activeDatasets.to_add.push(dataset);
   }
   await update();
-  document.getElementById("status")!.innerHTML = check_mark;
+  updateStatus(loadingStatus.DONE);
 }

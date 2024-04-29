@@ -49,7 +49,7 @@ div {
 
 #sharelinkButton {
     background-color: var(--rush);
-    color: white;
+    color: black;
     padding: 0.5em;
     font-size: 16px;
     border: none;
@@ -64,6 +64,36 @@ div {
     background-color: var(--field);
 }
 
+.toolbar_button {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    margin: 0px;
+    font-size: 16px;
+    font-weight: bold;
+    font-family: "IBM Plex Mono", monospace;
+    display: block;
+    opacity: 0;
+    padding-top: 4px;
+    border: 0.5px solid black;
+    color: black;
+    background-color: var(--rush);
+    cursor: pointer;
+    text-align: center;
+}
+
+.toolbar_button:hover {
+    background-color: var(--field);
+}
+
+#toolbar {
+    display: flex;
+    flex-direction: row;
+    margin: 0%;
+    padding: 0%;
+    justify-content: center;
+    align-items: center;
+}
+
 #main {
     display: flex;
     flex-direction: row;
@@ -75,6 +105,7 @@ div {
     margin-right: auto;
     padding-left: auto;
     padding-left: auto;
+    background-color: var(--background-color);
 }
 
 #dataset-selector {
@@ -93,7 +124,8 @@ div {
     align-items: center;
     font-family: "IBM Plex Mono", monospace;
     color: white;
-    padding-top: 5px;
+    padding-top: 2.5px;
+    padding-bottom: 2.5px;
     /* padding-bottom: 5px; */
     padding-right: 5px;
 }
@@ -102,6 +134,7 @@ div {
     padding: 0;
     margin: 0;
     font-size: small;
+    cursor: pointer;
 }
 
 .datasetListButton {
@@ -113,7 +146,7 @@ div {
     font-family: "IBM Plex Mono", monospace;
     font-weight: bold;
     text-align: center;
-    color: white;
+    color: black;
 }
 
 .loader {
@@ -150,7 +183,7 @@ div {
     padding-top: 4px;
     /* border: 4px solid var(--rush); */
     border: none;
-    color: white;
+    color: black;
     background-color: var(--rush);
     cursor: pointer;
     text-align: center;
@@ -163,16 +196,6 @@ div {
 
 #switch-test p {
     margin: 0;
-}
-
-.u-select {
-    background-color: rgba(117, 117, 117, 0.45) !important;
-}
-
-.u-value,
-.u-label,
-.u-series {
-    color: white;
 }
 
 .modal {
@@ -253,7 +276,8 @@ div {
     color: white;
     font-family: "IBM Plex Mono", monospace;
     font-weight: bold;
-    max-height: 10vh;
+    max-height: 20vh;
+    overflow: auto;
 }
 
 .modal_button {
@@ -273,4 +297,9 @@ div {
 
 .defaultTestModal {
     color: rgb(182, 182, 182);
+}
+
+.available {
+    text-decoration: line-through;
+    color: rgb(143, 143, 143);
 }

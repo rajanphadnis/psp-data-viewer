@@ -98,7 +98,8 @@
 }
 
 .u-select {
-    background: rgba(0, 0, 0, 0.07);
+    /* background: rgba(0, 0, 0, 0.07); */
+    background-color: rgba(117, 117, 117, 0.45);
     position: absolute;
     pointer-events: none;
 }

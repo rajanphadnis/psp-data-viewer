@@ -5,19 +5,13 @@ export interface DatasetStatus {
   all: string[];
 }
 export interface AllTests {
-  [key: string]: string;
-}
-declare module "bun" {
-  interface Env {
-    APP_CHECK_KEY: string | boolean;
-  }
-  interface ProcessEnv {
-    APP_CHECK_KEY: string | boolean;
-  }
+  id: string;
+  name: string;
+  test_article: string;
+  gse_article: string;
 }
 
-namespace NodeJS {
-  interface ProcessEnv {
-    APP_CHECK_KEY: string | boolean;
-  }
+export const enum loadingStatus {
+  LOADING,
+  DONE
 }

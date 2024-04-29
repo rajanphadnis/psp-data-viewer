@@ -19,14 +19,15 @@ export function initModal() {
   };
 }
 
-export function setKnownTests(test: AllTests, default_url: String): void {
+export function setKnownTests(tests: AllTests[], default_url: String): void {
   const modalBody = document.getElementById("modal-body")!;
-  for (let [id, title] of Object.entries(test)) {
+  for (let i = 0; i < tests.length; i++) {
+    const test = tests[i];
     let isDefault: boolean = false;
-    if (id == default_url) {
+    if (test.id == default_url) {
       isDefault = true;
     }
-    const buttonElement = createModalButton(title, id, isDefault);
+    const buttonElement = createModalButton(test.test_article + ":" + test.gse_article + ":" + test.name, test.id, isDefault);
     modalBody.appendChild(buttonElement);
   }
 }
@@ -38,7 +39,7 @@ function createModalButton(title: string, id: string, isDefault: boolean) {
   button.innerHTML = title + (isDefault ? defaultText : "");
   button.addEventListener("click", (e) => {
     document.getElementById("testSwitcherModal")!.style.display = "none";
-    if (!isDefault) {
+    if (location.pathname != "/" + id + "/") {
       window.location.href = location.origin + "/" + id + "/";
     }
   });

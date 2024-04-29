@@ -5,6 +5,9 @@ import { legendRound, plot } from "./plotting_helpers";
 import { datasetPlottingColors, pspColors } from "./theming";
 import { writeSelectorList } from "./dataset_selector";
 import { loader, check_mark } from "./html_components";
+import { updateStatus } from "./browser_fxns";
+import { loadingStatus } from "./types";
+import { updateFeatures } from "./toolbar";
 
 export async function plotDatasets(datasets: string[]) {
   let series: (
@@ -39,8 +42,9 @@ export async function plotDatasets(datasets: string[]) {
 
 
 export async function update() {
-  document.getElementById("status")!.innerHTML = loader;
+  updateStatus(loadingStatus.LOADING);
   await plotDatasets(activeDatasets.to_add);
   writeSelectorList(activeDatasets.all);
-  document.getElementById("status")!.innerHTML = check_mark;
+  updateFeatures();
+  updateStatus(loadingStatus.DONE);
 }

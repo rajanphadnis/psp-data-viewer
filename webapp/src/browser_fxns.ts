@@ -1,3 +1,7 @@
+import { check_mark, loader } from "./html_components";
+import { plotSnapshot } from "./image_tools";
+import { loadingStatus } from "./types";
+
 function getQueryVariable(variable: string) {
   var query = window.location.search.substring(1);
   var vars = query.split("&");
@@ -10,7 +14,7 @@ function getQueryVariable(variable: string) {
   // alert("Query Variable " + variable + " not found");
 }
 
-export function getTestName(default_redirect: string): string {
+export function getTestID(default_redirect: string): string {
   let param = location.pathname;
   if (param == undefined || param == "/" || param.length <= 2) {
     param = "/" + default_redirect + "/";
@@ -19,7 +23,7 @@ export function getTestName(default_redirect: string): string {
   return param.slice(1, -1);
 }
 
-export function initAdded(): void {
+export function getSharelinkList(): void {
   let param = getQueryVariable("b64");
   if (param == undefined || param == "") {
     activeDatasets.to_add = [];
@@ -48,7 +52,7 @@ const encode = (str: string): string => btoa(str);
 function fallbackCopyTextToClipboard(text: string) {
   var textArea = document.createElement("textarea");
   textArea.value = text;
-  
+
   // Avoid scrolling to bottom
   textArea.style.top = "0";
   textArea.style.left = "0";
@@ -59,11 +63,11 @@ function fallbackCopyTextToClipboard(text: string) {
   textArea.select();
 
   try {
-    var successful = document.execCommand('copy');
-    var msg = successful ? 'successful' : 'unsuccessful';
-    console.log('Fallback: Copying text command was ' + msg);
+    var successful = document.execCommand("copy");
+    var msg = successful ? "successful" : "unsuccessful";
+    console.log("Fallback: Copying text command was " + msg);
   } catch (err) {
-    console.error('Fallback: Oops, unable to copy', err);
+    console.error("Fallback: Oops, unable to copy", err);
   }
 
   document.body.removeChild(textArea);
@@ -73,14 +77,33 @@ export function copyTextToClipboard(text: string) {
     fallbackCopyTextToClipboard(text);
     return;
   }
-  navigator.clipboard.writeText(text).then(async function() {
-    console.log('Async: Copying to clipboard was successful!');
-    const modButton = document.getElementById("sharelinkButton")!;
-    modButton.innerHTML = "Copied!";
-    await delay(1500);
-    modButton.innerHTML = "Share";
-  }, function(err) {
-    console.error('Async: Could not copy text: ', err);
-  });
+  navigator.clipboard.writeText(text).then(
+    async function () {
+      console.log("Async: Copying to clipboard was successful!");
+      const modButton = document.getElementById("sharelinkButton")!;
+      modButton.innerHTML = "Copied!";
+      await delay(1500);
+      modButton.innerHTML = "Share";
+    },
+    function (err) {
+      console.error("Async: Could not copy text: ", err);
+    }
+  );
 }
-const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+export const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+
+export function setTitle(name: string, test_article: string, gse_article: string) {
+  const titleElement = document.getElementById("title")!;
+  const tabTitle = document.getElementById("tabTitle")!;
+  titleElement.innerHTML = "PSP Data Viewer::" + test_article + ":" + gse_article + ":" + name;
+  tabTitle.innerHTML = test_article + "::" + name;
+}
+
+export function updateStatus(status: loadingStatus) {
+  if (status == loadingStatus.LOADING) {
+    document.getElementById("status")!.innerHTML = loader;
+  }
+  if (status == loadingStatus.DONE) {
+    document.getElementById("status")!.innerHTML = check_mark;
+  }
+}

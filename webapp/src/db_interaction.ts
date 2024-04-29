@@ -2,7 +2,7 @@ import { Firestore, doc, getDoc, getDocFromCache } from "firebase/firestore";
 import type { AllTests } from "./types";
 
 export async function getSensorData(dataset: string, fromCache: boolean): Promise<[number[], number[], string]> {
-  const docRef = doc(db, test_name, dataset);
+  const docRef = doc(db, test_id, dataset);
   let docSnap;
   if (fromCache) {
     try {
@@ -22,8 +22,8 @@ export async function getSensorData(dataset: string, fromCache: boolean): Promis
   return [time, data, scale];
 }
 
-export async function getTestInfo(): Promise<[string[], string, string]> {
-  const docRef = doc(db, test_name, "general");
+export async function getTestInfo(): Promise<[string[], string, string, string]> {
+  const docRef = doc(db, test_id, "general");
   let docSnap;
   try {
     docSnap = await getDocFromCache(docRef);
@@ -35,14 +35,15 @@ export async function getTestInfo(): Promise<[string[], string, string]> {
   const datasets: string[] = docData["datasets"];
   const name: string = docData["name"];
   const test_article: string = docData["test_article"];
-  return [datasets, name, test_article];
+  const gse_article: string = docData["gse_article"];
+  return [datasets, name, test_article, gse_article];
 }
 
-export async function getGeneralTestInfo(): Promise<[AllTests, string]> {
+export async function getGeneralTestInfo(): Promise<[AllTests[], string]> {
   const docRef = doc(db, "general", "tests");
   let docSnap = await getDoc(docRef);
   const docData = docSnap.data()!;
-  const tests: AllTests = docData["tests"];
+  const tests: AllTests[] = docData["visible"];
   const default_url: string = docData["default"];
   return [tests, default_url];
 }

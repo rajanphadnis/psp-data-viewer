@@ -103,7 +103,7 @@ export function plot(
     ],
   };
   document.getElementById("plot")!.innerHTML = "";
-  let uplot = new uPlot(opts, toPlot, document.getElementById("plot")!);
+  uplot = new uPlot(opts, toPlot, document.getElementById("plot")!);
   window.addEventListener("resize", (e) => {
     uplot.setSize(getSize());
   });

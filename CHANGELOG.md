@@ -1,3 +1,12 @@
+## v0.0.4
+Added image export and toolbar framework
+
+### Changed
+- Added ability to export image to clipboard
+- Added ability to download image
+- Added toolbar framework
+- Separated plot colors for future customization
+
 ## v0.0.3
 Added App Check
 
