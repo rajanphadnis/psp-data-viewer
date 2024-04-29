@@ -79,12 +79,12 @@ export function plot(
         scale: "bin",
         values: (u: any, vals: any[], space: any) => vals.map((v) => +v.toFixed(1)),
         stroke: "#fff",
-        grid: {
-          stroke: "#ffffff20",
-        },
+        // grid: {
+        //   stroke: "#ffffff20",
+        // },
         side: 1,
         ticks: {
-          show: true,
+          show: false,
           stroke: "#80808080",
         },
       },

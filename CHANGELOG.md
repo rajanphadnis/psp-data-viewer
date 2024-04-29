@@ -1,3 +1,9 @@
+## v0.0.3
+Added App Check
+
+### Changed
+- Added Firebase App Check
+
 ## v0.0.2
 Initial release.
 

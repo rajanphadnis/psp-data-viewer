@@ -1,0 +1,1 @@
+export const appCheckSecret: string | boolean = false;

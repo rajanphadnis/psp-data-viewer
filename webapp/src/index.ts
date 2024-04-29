@@ -1,37 +1,26 @@
-import { initializeApp } from "firebase/app";
-import { Firestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from "firebase/firestore";
+import { Firestore } from "firebase/firestore";
 import { getTestInfo, getGeneralTestInfo } from "./db_interaction";
 import { update } from "./plotting";
 import type { DatasetStatus } from "./types";
 import { copyTextToClipboard, getSharelink, getTestName, initAdded } from "./browser_fxns";
 import { loader } from "./html_components";
 import { initModal, setKnownTests } from "./modal";
+import { initFirebase } from "./firebase_init";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAmJytERQ1hnORHswd-j07WhpTYH7yu6fA",
-  authDomain: "psp-portfolio-f1205.firebaseapp.com",
-  projectId: "psp-portfolio-f1205",
-  storageBucket: "psp-portfolio-f1205.appspot.com",
-  messagingSenderId: "493859450932",
-  appId: "1:493859450932:web:e4e3c67f0f46316c555a61",
-};
-
-const app = initializeApp(firebaseConfig);
 declare global {
   var activeDatasets: DatasetStatus;
   var test_name: string;
   var db: Firestore;
+  var FIREBASE_APPCHECK_DEBUG_TOKEN: boolean | string | undefined;
 }
-db = initializeFirestore(app, {
-  localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
-});
+
 activeDatasets = {
   to_add: [],
   loading: [],
   cached: [],
   all: [],
 };
-
+initFirebase();
 initModal();
 
 async function main() {
