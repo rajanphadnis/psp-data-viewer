@@ -65,7 +65,7 @@ jobs:
           uses: actions/github-script@v2.1.0
           with:
             script: |
-                core.setFailed('pubspec.yaml not updated to new version ${{ env.GHA_NEW_TAG_NAME_WEBAPP }}!')
+                core.setFailed('webapp/package.json not updated to new version ${{ env.GHA_NEW_TAG_NAME_WEBAPP }}!')
   version-check-admin:
     runs-on: ubuntu-latest
     outputs:
@@ -97,7 +97,7 @@ jobs:
           uses: actions/github-script@v2.1.0
           with:
             script: |
-                core.setFailed('pubspec.yaml not updated to new version ${{ env.GHA_NEW_TAG_NAME_ADMIN }}!')
+                core.setFailed('admin/package.json not updated to new version ${{ env.GHA_NEW_TAG_NAME_ADMIN }}!')
 
   build-and-release-webapp:
     runs-on: ubuntu-latest
