@@ -7,9 +7,13 @@
     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
     <link rel=preconnect href="https://fonts.googleapis.com/" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono&display=swap" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@40,400,0,0&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@40,400,0,0&display=swap" media="print" onload="this.media='all'" crossorigin />
+    <!-- <link rel="stylesheet" href="/fonts.css" crossorigin="anonymous"> -->
     <link rel="stylesheet" href="/main.css" crossorigin="anonymous">
     <link rel="stylesheet" href="/modal.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="/status.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="/tests.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="/articles.css" crossorigin="anonymous">
     <link rel="icon" href="/images/favicon-32x32.png" sizes="32x32" />
     <link rel="icon" href="/images/favicon-16x16.png" sizes="16x16" />
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
@@ -47,13 +51,36 @@
             </button>
         </div> -->
         <div style="display:flex; flex-direction: row; justify-content: end; align-items: center;">
-            <div id="status"></div>
+            <div id="status">
+                <div class="loader"></div>
+            </div>
             <button title="Copy link that points to the current plot config" id="sharelinkButton">New Test</button>
         </div>
     </div>
     <div id="main">
-        <div id="tests"></div>
-        <div id="test-info"></div>
+        <div id="left-main">
+            <div id="top-main">
+                <div id="tests"></div>
+                <div id="test-info"></div>
+            </div>
+            <div id="bottom-main">
+                <div id="articles">
+                    <p>
+                        <span class="section-title">Articles:</span>
+                    </p>
+                    <div style="display: flex;flex-direction: column;justify-content: space-around;align-items: center;height: calc(100% - 57px);">
+                        <button class="article_button" id="test_article_button">Test Article</button>
+                        <!-- </br> -->
+                        <button class="article_button" id="gse_article_button">GSE Article</button>
+                    </div>
+
+                </div>
+                <div id="articles-info"></div>
+            </div>
+        </div>
+        <div id="right-main">
+            <div id="dataset"></div>
+        </div>
     </div>
 </body>
 <script src="/index.js"></script>

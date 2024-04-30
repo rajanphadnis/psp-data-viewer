@@ -20,11 +20,8 @@ body {
     margin: 0;
     padding: 0;
     background-color: var(--background-color);
-    padding-left: 5px;
     color: white;
     font-family: "IBM Plex Mono", monospace;
-    /* font-weight: bold; */
-    /* padding-right: 5px; */
 }
 
 div {
@@ -100,51 +97,95 @@ div {
 #main {
     display: flex;
     flex-direction: row;
+    height: calc(100vh - 46px);
+    max-height: calc(100vh - 46px);
+}
+
+#left-main {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 60%;
+    /* max-height: calc((100vh - 46px) / 2); */
+}
+
+#right-main {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 40%;
+}
+
+#top-main,
+#bottom-main {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    /* max-height: calc((100vh - 46px) / 2); */
+    /* overflow: auto; */
 }
 
 #tests {
-    width: 60%;
+    width: 50%;
     margin-left: auto;
     margin-right: auto;
     padding-left: auto;
     padding-left: auto;
     background-color: var(--background-color);
+    border-bottom: 1px solid white;
+    border-right: 1px solid white;
 }
 
 #test-info {
-    width: 40%;
-    max-height: calc(100vh - 100px);
+    width: 50%;
+    border-bottom: 1px solid white;
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#articles {
+    width: 30%;
+    /* margin-left: auto;
+    margin-right: auto;
+    padding-left: auto;
+    padding-left: auto; */
+    background-color: var(--background-color);
+    border-right: 1px solid white;
+    border-top: 1px solid white;
+}
+
+#tests,
+#test-info,
+#articles,
+#articles-info,
+#dataset {
     overflow: auto;
-    padding-top: 20px;
     scrollbar-color: white transparent;
-    scrollbar-gutter: stable;
+    /* scrollbar-gutter: stable; */
 }
 
-.loader {
-    border: 3px solid var(--background-color);
-    border-radius: 50%;
-    border-top: 3px solid var(--field);
-    width: 15px;
-    height: 15px;
-    -webkit-animation: spin 2s linear infinite;
-    /* Safari */
-    animation: spin 0.5s linear infinite;
+#articles-info {
+    width: 70%;
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+    border-top: 1px solid white;
 }
 
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
+#dataset {
+    width: calc(100% - 1px);
+    border-left: 1px solid white;
+    height: 100%;
+    /* border-top: 1px solid white; */
 }
 
-.green_check {
-    color: greenyellow;
-}
-
-#status {
-    padding-right: 20px;
-    text-align: center;
+.section-title {
+    font-size: larger;
+    font-family: "IBM Plex Mono", monospace;
+    color: white;
+    margin-left: 15px;
+    /* text-decoration: underline; */
+    border-bottom: 2px solid currentColor;
 }
