@@ -1,18 +1,18 @@
 {
-    "projects": {
-        "default": "psp-portfolio-f1205"
-    },
-    "targets": {
-        "psp-portfolio-f1205": {
-            "hosting": {
-                "webapp": [
-                    "psp-portfolio-f1205"
-                ],
-                "admin": [
-                    "psp-admin-portfolio"
-                ]
-            }
-        }
-    },
-    "etags": {}
+  "projects": {
+    "default": "psp-portfolio-f1205"
+  },
+  "targets": {
+    "psp-portfolio-f1205": {
+      "hosting": {
+        "webapp": [
+          "psp-portfolio-f1205"
+        ],
+        "admin": [
+          "psp-admin-portfolio"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
