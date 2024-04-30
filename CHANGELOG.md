@@ -1,3 +1,9 @@
+## v0.0.5
+Added Admin Console framework
+
+### Changed
+- Added Admin Console framework
+
 ## v0.0.4
 Added image export and toolbar framework
 
