@@ -2,6 +2,7 @@ import { ReCaptchaEnterpriseProvider, initializeAppCheck } from "firebase/app-ch
 import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from "firebase/firestore";
 import { appCheckSecret } from "./generated_app_check_secret";
 import { initializeApp } from "firebase/app";
+import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAmJytERQ1hnORHswd-j07WhpTYH7yu6fA",
@@ -22,4 +23,6 @@ export function initFirebase() {
   db = initializeFirestore(app, {
     localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
   });
+  functions = getFunctions(app);
+  connectFunctionsEmulator(functions, "127.0.0.1", 5001);
 }

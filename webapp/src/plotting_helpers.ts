@@ -53,7 +53,7 @@ export function plot(
       },
       {
         scale: "deg",
-        values: (u: any, vals: any[], space: any) => vals.map((v) => +v.toFixed(1) + "degrees"),
+        values: (u: any, vals: any[], space: any) => vals.map((v) => +v.toFixed(1) + "F"),
         stroke: "#fff",
         grid: {
           stroke: "#ffffff20",

@@ -178,7 +178,8 @@ div {
     text-align: center;
 }
 
-#switch-test {
+#switch-test,
+#resetCache {
     margin-left: 20px;
     padding-top: 4px;
     /* border: 4px solid var(--rush); */
@@ -190,13 +191,16 @@ div {
     font-size: smaller;
 }
 
-#switch-test:hover {
+#switch-test:hover,
+#resetCache:hover {
     background-color: var(--field);
 }
 
-#switch-test p {
+
+/* #switch-test,
+#resetCache p {
     margin: 0;
-}
+} */
 
 .modal {
     display: none;

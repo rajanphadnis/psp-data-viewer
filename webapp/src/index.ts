@@ -7,6 +7,7 @@ import { initModal, setKnownTests } from "./modal";
 import { initFirebase } from "./firebase_init";
 import type uPlot from "uplot";
 import { setupEventListeners } from "./toolbar";
+import { getFunctions, type Functions } from "firebase/functions";
 
 declare global {
   var activeDatasets: DatasetStatus;
@@ -14,8 +15,8 @@ declare global {
   var db: Firestore;
   var FIREBASE_APPCHECK_DEBUG_TOKEN: boolean | string | undefined;
   var uplot: uPlot;
+  var functions: Functions;
 }
-
 activeDatasets = {
   to_add: [],
   loading: [],

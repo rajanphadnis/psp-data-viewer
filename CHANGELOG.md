@@ -1,3 +1,9 @@
+## v0.0.6
+Added "Clear Cache and Restart button"
+
+### Changed
+- Added "Clear Cache and Restart button"
+
 ## v0.0.5
 Added Admin Console framework
 

@@ -33,16 +33,16 @@ export function getSharelinkList(): void {
   }
 }
 
-export function getSharelink(): string {
+export function getSharelink(): [string, string] {
   const bufferString = activeDatasets.to_add.join(",");
   let b64: string;
   if (bufferString == undefined || bufferString == "") {
-    return location.origin + location.pathname;
+    return [location.origin + location.pathname, ""];
   } else {
     b64 = encode(activeDatasets.to_add.join(","));
   }
   const sharelink_base = location.origin + location.pathname + "?b64=" + b64;
-  return sharelink_base;
+  return [sharelink_base, b64];
 }
 
 const decode = (str: string): string => atob(str);

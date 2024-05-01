@@ -1,5 +1,6 @@
+import { httpsCallable } from "firebase/functions";
 import { getSharelink, copyTextToClipboard, updateStatus, delay } from "./browser_fxns";
-import { check_mark } from "./html_components";
+import { check_mark, loader } from "./html_components";
 import { plotSnapshot } from "./image_tools";
 import { loadingStatus } from "./types";
 
@@ -7,10 +8,39 @@ const sharelinkButton: HTMLButtonElement = document.getElementById("sharelinkBut
 const downloadImageButton: HTMLButtonElement = document.getElementById("downloadImage")! as HTMLButtonElement;
 const copyImageButton: HTMLButtonElement = document.getElementById("copyImage")! as HTMLButtonElement;
 const csvButton: HTMLButtonElement = document.getElementById("downloadCSV")! as HTMLButtonElement;
+const resetButton: HTMLButtonElement = document.getElementById("resetCache")! as HTMLButtonElement;
 
 export function setupEventListeners() {
+  resetButton.addEventListener("click", async (e) => {
+    updateStatus(loadingStatus.LOADING);
+    localStorage.clear();
+    sessionStorage.clear();
+    const dbs = await window.indexedDB.databases();
+    dbs.forEach(async db => {
+        await window.indexedDB.deleteDatabase(db.name!);
+    });
+    const [link, b64] = getSharelink();
+    window.location.href = link;
+  });
+  // csvButton.addEventListener("click", (e) => {
+  //   updateStatus(loadingStatus.LOADING);
+  //   csvButton.innerHTML = loader;
+  //   const createCSV = httpsCallable(functions, "createCSV");
+  //   const [sharelink, b64]: [string, string] = getSharelink();
+  //   console.log(b64);
+  //   createCSV({ b64: b64.toString(), test_name: "tessst" }).then(async (result) => {
+  //     const data: any = result.data;
+  //     // const message = data.csv_fields;
+  //     console.log(data);
+  //     updateStatus(loadingStatus.DONE);
+  //     csvButton.innerHTML = check_mark;
+  //     await delay(1500);
+  //     csvButton.innerHTML = '<span class="material-symbols-outlined">table_view</span>';
+  //   });
+  // });
+
   sharelinkButton.addEventListener("click", async (e) => {
-    const sharelink: string = getSharelink();
+    const [sharelink, b64]: [string, string] = getSharelink();
     copyTextToClipboard(sharelink);
     console.log(sharelink);
   });
