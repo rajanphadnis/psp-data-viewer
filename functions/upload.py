@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 # Use a service account.
 cred: credentials.Certificate = credentials.Certificate(
-    "./psp-portfolio-f1205-6da58e02b7b8.json"
+    "./psp-portfolio-key.json"
 )
 
 app: App = firebase_admin.initialize_app(cred)
@@ -21,42 +21,44 @@ db = firestore.client()
 # if test_name == "":
 #     raise RuntimeError
 
-test_name = "cms_whoopsie_hf_hf"
+test_name = "cms_whoopsie_preop"
 
 parsed_datasets: dict[
     str,
     daq.AnalogChannelData | daq.DigitalChannelData | daq.SensorNetData | list[float],
 ] = daq.parseTDMS(
     5,
-    1714536122000,
-    file_path_custom="C:\\Users\\rajan\\Desktop\\PSP_Data\\whoopsie\\DataLog_2024-0501-0002-02_CMS_Data_Wiring_5.tdms",
+    1714534081000,
+    file_path_custom="C:\\Users\\rajan\\Desktop\\PSP_Data\\whoopsie\\DataLog_2024-0430-2328-01_CMS_Data_Wiring_5.tdms",
 )
 parsed_datasets.update(
     daq.parseTDMS(
         6,
-        1714536122000,
-        file_path_custom="C:\\Users\\rajan\\Desktop\\PSP_Data\\whoopsie\\DataLog_2024-0501-0002-02_CMS_Data_Wiring_6.tdms",
+        1714534081000,
+        file_path_custom="C:\\Users\\rajan\\Desktop\\PSP_Data\\whoopsie\\DataLog_2024-0430-2328-01_CMS_Data_Wiring_6.tdms",
     )
 )
 
+[channels, df_const] = daq.extendDatasets(parsed_datasets)
+
 dict_to_write: dict[str, list[float]] = {}
 
-all_time: list[float] = parsed_datasets["time"]
+all_time: list[float] = df_const["time"]
 
 available_datasets: list[str] = []
 
 # parsed_datasets = daq.parseCSV(1714536122000, file_path_custom="C:\\Users\\rajan\\Desktop\\PSP_Data\\whoopsie\\reduced_sensornet_data.csv")
 
 
-for dataset in parsed_datasets:
+for dataset in df_const:
 # dataset = "pt-fu-02"
     if dataset != "time":
-        data: list[float] = parsed_datasets[dataset].data.tolist()
+        data: list[float] = df_const[dataset]
         # time: list[float] = parsed_datasets[dataset].time.tolist()
         time: list[float] = all_time[: len(data)]
         df = pd.DataFrame.from_dict({"time": time, "data": data})
-        df_cut = df.head(15*1000)
-        thing = df_cut.iloc[::4, :]
+        # df_cut = df.head(15*1000)
+        thing = df.iloc[::500, :]
         # print("writing csv...")
         # df.to_csv(dataset+".csv", lineterminator="\n",index=False)
         # print("compressing...")
@@ -86,7 +88,7 @@ for dataset in parsed_datasets:
         available_datasets.append(dataset)
         print(dataset)
 
-# doc_ref = db.collection(test_name).document("general")
-# doc_ref.set({"datasets": available_datasets, "test_article": "CMS", "gse_article":"BCLS", "name": "[HF:HF] Whoopsie"}, merge=True)
+doc_ref = db.collection(test_name).document("general")
+doc_ref.set({"datasets": available_datasets, "test_article": "CMS", "gse_article":"BCLS", "name": "Whoopsie (Per-Op)"}, merge=True)
 
 

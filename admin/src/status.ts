@@ -1,5 +1,6 @@
+import { check_mark } from "./icons";
 import { loadingStatus } from "./types";
-import { check_mark, loader } from "./web_components";
+import { loader } from "./web_components";
 
 export function updateStatus(status: loadingStatus) {
   if (status == loadingStatus.LOADING) {

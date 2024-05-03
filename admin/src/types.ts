@@ -4,6 +4,7 @@ export interface TestDetails {
     test_article: string;
     gse_article: string;
     datasets?: string[];
+    custom_channels?: string[]
 }
 
 export const enum loadingStatus {
@@ -14,4 +15,9 @@ export const enum loadingStatus {
   export const enum articleType {
     GSE,
     TEST
+  }
+  export const enum operationType {
+    ADD,
+    REMOVE,
+    INIT
   }

@@ -47,7 +47,7 @@ div {
     font-size: larger;
 }
 
-#sharelinkButton {
+#newTestButton {
     background-color: var(--rush);
     color: black;
     padding: 0.5em;
@@ -60,7 +60,7 @@ div {
     opacity: 1;
 }
 
-#sharelinkButton:hover {
+#newTestButton:hover {
     background-color: var(--field);
 }
 
@@ -174,11 +174,47 @@ div {
     border-top: 1px solid white;
 }
 
+.articles_info_div {
+    background-color: var(--background-color);
+    padding-left: 15px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.articles_info_div:hover {
+    background-color: var(--steel);
+}
+
 #dataset {
     width: calc(100% - 1px);
     border-left: 1px solid white;
     height: 100%;
     /* border-top: 1px solid white; */
+}
+
+.dataset_item_div {
+    background-color: var(--background-color);
+    padding-left: 15px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dataset_item_div:hover {
+    background-color: var(--steel);
+}
+
+.dataset_item_span {
+    color: var(--cool-gray);
 }
 
 .section-title {

@@ -1,13 +1,17 @@
 import { doc, getDoc, getDocFromCache } from "firebase/firestore";
 import type { TestDetails } from "./types";
 
-export async function getTestArticles(): Promise<void> {
+export async function getTestArticles(cache: boolean = true): Promise<void> {
   const docRef = doc(db, "general", "articles");
   let docSnap;
-  try {
-    docSnap = await getDocFromCache(docRef);
-  } catch (e) {
-    console.log("cache miss:", e);
+  if (cache) {
+    try {
+      docSnap = await getDocFromCache(docRef);
+    } catch (e) {
+      console.log("cache miss:", e);
+      docSnap = await getDoc(docRef);
+    }
+  } else {
     docSnap = await getDoc(docRef);
   }
   const docData = docSnap.data()!;
@@ -15,28 +19,37 @@ export async function getTestArticles(): Promise<void> {
   test_articles = docData["test"];
 }
 
-export async function getTests(): Promise<[TestDetails[], string]> {
+export async function getTests(cache: boolean = true): Promise<[TestDetails[], string]> {
   const docRef = doc(db, "general", "tests");
   let docSnap;
-  try {
-    docSnap = await getDocFromCache(docRef);
-  } catch (e) {
-    console.log("cache miss:", e);
+  if (cache) {
+    try {
+      docSnap = await getDocFromCache(docRef);
+    } catch (e) {
+      console.log("cache miss:", e);
+      docSnap = await getDoc(docRef);
+    }
+  } else {
     docSnap = await getDoc(docRef);
   }
+
   const docData = docSnap.data()!;
   const default_test: string = docData["default"];
   const test_articles: TestDetails[] = docData["visible"];
   return [test_articles, default_test];
 }
 
-export async function getSpecificTest(id:string) {
+export async function getSpecificTest(id: string, cache: boolean = true): Promise<TestDetails> {
   const docRef = doc(db, id, "general");
   let docSnap;
-  try {
-    docSnap = await getDocFromCache(docRef);
-  } catch (e) {
-    console.log("cache miss:", e);
+  if (cache) {
+    try {
+      docSnap = await getDocFromCache(docRef);
+    } catch (e) {
+      console.log("cache miss:", e);
+      docSnap = await getDoc(docRef);
+    }
+  } else {
     docSnap = await getDoc(docRef);
   }
   const docData = docSnap.data()!;
@@ -49,7 +62,8 @@ export async function getSpecificTest(id:string) {
     name: name,
     gse_article: gse_article,
     test_article: test_article,
-    datasets: datasets
-  }
+    datasets: datasets,
+    custom_channels: [],
+  };
   return toReturn;
 }

@@ -1,5 +1,6 @@
 import { getSpecificTest } from "./db_interaction";
 import { updateStatus } from "./status";
+import { saveTestData } from "./tests";
 import { articleType, loadingStatus, type TestDetails } from "./types";
 
 export function generateTestEntries() {
@@ -26,21 +27,23 @@ export function generateTestEntries() {
   }
 }
 
-export async function updateTestDisplay() {
+export async function updateTestDisplay(cache: boolean = true) {
   updateStatus(loadingStatus.LOADING);
   generateTestEntries();
   generateTestPanel(selected_test);
-  selected_test = await getSpecificTest(selected_test.id);
+  selected_test = await getSpecificTest(selected_test.id, cache);
   generateDatasetPanel(selected_test);
   updateStatus(loadingStatus.DONE);
 }
 
 function generateTestPanelField(
-  name: string,
-  field: string,
+  test_name: string,
+  field_name: string,
+  field_id: string,
   isDropdown: boolean,
   knownValue?: string,
-  list?: string[]
+  list?: string[],
+  disabled: boolean = false
 ) {
   const field_div = document.createElement("div");
   const field_label = document.createElement("label");
@@ -56,15 +59,30 @@ function generateTestPanelField(
     }
   }
   const field_text = document.createElement("input");
+  field_text.disabled = disabled;
   field_div.classList.add("test-field-div");
   field_text.classList.add("test-field-text");
   field_label.classList.add("test-field-label");
   field_select.classList.add("test-field-select");
-  field_label.innerHTML = field;
+  field_select.id = test_name + "_field_" + field_id;
+  field_label.innerHTML = field_name;
   if (knownValue != undefined) {
     field_text.value = knownValue.toString();
+    try {
+      field_select.value = knownValue.toString();
+    } catch (e) {
+      console.log("no error");
+    }
   }
-  field_text.id = name + "_field_" + field;
+  field_text.id = test_name + "_field_" + field_id;
+  field_text.addEventListener("change", (e) => {
+    const saveButton = document.getElementById("panel_save_button")!;
+    saveButton.style.visibility = "visible";
+  });
+  field_select.addEventListener("change", (e) => {
+    const saveButton = document.getElementById("panel_save_button")!;
+    saveButton.style.visibility = "visible";
+  });
   field_div.appendChild(field_label);
   if (isDropdown) {
     field_div.appendChild(field_select);
@@ -79,18 +97,34 @@ export function generateTestPanel(test: TestDetails) {
   panel_div.innerHTML = "";
   panel_div.appendChild(generateTitle("Test Details:"));
   const encap_div = document.createElement("div");
-  encap_div.appendChild(generateTestPanelField(test.id, "ID", false, test.id));
-  encap_div.appendChild(generateTestPanelField(test.id, "Name", false, test.name));
-  encap_div.appendChild(generateTestPanelField(test.id, "Test Article", true, test.test_article, test_articles));
-  encap_div.appendChild(generateTestPanelField(test.id, "GSE Article", true, test.id, gse_articles));
+  encap_div.appendChild(generateTestPanelField(test.id, "ID", "id", false, test.id, [], true));
+  encap_div.appendChild(generateTestPanelField(test.id, "Name", "name", false, test.name));
+  encap_div.appendChild(
+    generateTestPanelField(test.id, "Test Article", "test_article", true, test.test_article, test_articles)
+  );
+  encap_div.appendChild(generateTestPanelField(test.id, "GSE Article", "gse_article", true, test.gse_article, gse_articles));
   const panel_save_button = document.createElement("button");
   panel_save_button.innerHTML = "Save";
   panel_save_button.classList.add("test-panel-save");
+  panel_save_button.id = "panel_save_button";
+  panel_save_button.style.visibility = "hidden"
+  panel_save_button.addEventListener("click", (e: MouseEvent) => {
+    const nameElement = document.getElementById(test.id + "_field_name")! as HTMLInputElement;
+    const testElement = document.getElementById(test.id + "_field_test_article")! as HTMLSelectElement;
+    const gseElement = document.getElementById(test.id + "_field_gse_article")! as HTMLSelectElement;
+    saveTestData(
+      test.id,
+      test.id,
+      nameElement.value,
+      gseElement.options[gseElement.selectedIndex].value,
+      testElement.options[testElement.selectedIndex].value
+    );
+  });
   panel_div.appendChild(encap_div);
   panel_div.appendChild(panel_save_button);
 }
 
-export const check_mark: string = '<span class="material-symbols-outlined green_check">done</span>';
+// export const check_mark: string = '<span class="material-symbols-outlined green_check">done</span>';
 
 export const loader: string = '<div class="loader"></div>';
 
@@ -110,9 +144,14 @@ export function generateArticlePanel(article: articleType) {
   list.appendChild(generateTitle(selected_text + " Articles:"));
   for (let i = 0; i < selected_list.length; i++) {
     const test = selected_list[i];
+    const div = document.createElement("div");
     const panel_p = document.createElement("p");
+    const article_span = document.createElement("span");
+    div.classList.add("articles_info_div");
     panel_p.innerHTML = test;
-    list.appendChild(panel_p);
+    div.appendChild(panel_p);
+    div.appendChild(article_span);
+    list.appendChild(div);
   }
 }
 
@@ -129,10 +168,22 @@ function generateDatasetPanel(test: TestDetails) {
   const panel_div = document.getElementById("dataset")!;
   panel_div.innerHTML = "";
   panel_div.appendChild(generateTitle("Test Datasets:"));
-  for (let i = 0; i < test.datasets!.length; i++) {
-    const dataset = test.datasets![i];
+  const sorted = test.datasets!.sort();
+  for (let i = 0; i < sorted.length; i++) {
+    const dataset = sorted[i];
+    const div = document.createElement("div");
     const panel_p = document.createElement("p");
+    const detail_span = document.createElement("span");
     panel_p.innerHTML = dataset;
-    panel_div.appendChild(panel_p);
+    if (test.custom_channels!.includes(dataset)) {
+      detail_span.innerHTML = "Custom";
+    } else {
+      detail_span.innerHTML = "Recorded";
+    }
+    detail_span.classList.add("dataset_item_span");
+    div.classList.add("dataset_item_div");
+    div.appendChild(panel_p);
+    div.appendChild(detail_span);
+    panel_div.appendChild(div);
   }
 }

@@ -22,22 +22,22 @@ export function setupEventListeners() {
     const [link, b64] = getSharelink();
     window.location.href = link;
   });
-  // csvButton.addEventListener("click", (e) => {
-  //   updateStatus(loadingStatus.LOADING);
-  //   csvButton.innerHTML = loader;
-  //   const createCSV = httpsCallable(functions, "createCSV");
-  //   const [sharelink, b64]: [string, string] = getSharelink();
-  //   console.log(b64);
-  //   createCSV({ b64: b64.toString(), test_name: "tessst" }).then(async (result) => {
-  //     const data: any = result.data;
-  //     // const message = data.csv_fields;
-  //     console.log(data);
-  //     updateStatus(loadingStatus.DONE);
-  //     csvButton.innerHTML = check_mark;
-  //     await delay(1500);
-  //     csvButton.innerHTML = '<span class="material-symbols-outlined">table_view</span>';
-  //   });
-  // });
+  csvButton.addEventListener("click", (e) => {
+    updateStatus(loadingStatus.LOADING);
+    csvButton.innerHTML = loader;
+    const createCSV = httpsCallable(functions, "createCSV");
+    const [sharelink, b64]: [string, string] = getSharelink();
+    console.log(b64);
+    createCSV({ b64: b64.toString(), test_name: "tessst" }).then(async (result) => {
+      const data: any = result.data;
+      // const message = data.csv_fields;
+      console.log(data);
+      updateStatus(loadingStatus.DONE);
+      csvButton.innerHTML = check_mark;
+      await delay(1500);
+      csvButton.innerHTML = '<span class="material-symbols-outlined">table_view</span>';
+    });
+  });
 
   sharelinkButton.addEventListener("click", async (e) => {
     const [sharelink, b64]: [string, string] = getSharelink();
@@ -65,9 +65,9 @@ export function setupEventListeners() {
 }
 
 export function updateFeatures() {
-  // csvButton.style.opacity = "1";
-  // csvButton.disabled = false;
-  // csvButton.style.cursor = "pointer";
+  csvButton.style.opacity = "1";
+  csvButton.disabled = false;
+  csvButton.style.cursor = "pointer";
 
   sharelinkButton.style.opacity = "1";
   sharelinkButton.disabled = false;
