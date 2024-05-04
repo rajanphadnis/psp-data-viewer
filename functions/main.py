@@ -12,7 +12,10 @@ import base64
 import datetime
 from google.cloud import storage
 from google.oauth2 import service_account
-
+import firebase_admin
+from firebase_admin import credentials, firestore, App
+import pandas as pd
+from psp_liquids_daq_parser import parseCSV, parseTDMS, AnalogChannelData, DigitalChannelData, SensorNetData, extendDatasets
 from google.cloud.storage import Client, transfer_manager
 
 from functions.createTest_helpers import downloadFromGDrive, organizeTDMSFiles
@@ -57,23 +60,67 @@ def createTest(req: https_fn.CallableRequest) -> Any:
     test_id: str = data["test_id"]
     test_article: str = data["test_article"]
     gse_article: str = data["gse_article"]
-    url_pair: list[str] = data["url_pairs"]
+    url_pairs: list[str] = data["url_pairs"]
     file_names: list[str] = []
-    # output = "C:\\Users\\rajan\\Desktop\\psp-platform\\functions\\test_small.tdms"
-    # for url in url_pair:
-    #     # url = "https://drive.google.com/file/d/1-K6kYFNGwkccVDpCWeNJHEILtO-naTVs/view?usp=sharing"
-    #     # url_big = "https://drive.google.com/file/d/1Fqfqqwd9GL9sjCOnsgoKou55RBKDQs6L/view?usp=drive_link"
-    #     file_name = gdown.download(url=url, fuzzy=True)
-    #     file_names.append(file_name)
-    #     print(file_name)
+    
     print("downloading...")
     cpus = cpu_count()
-    results = ThreadPool(cpus - 1).imap_unordered(downloadFromGDrive, url_pair)
+    results = ThreadPool(cpus - 1).imap_unordered(downloadFromGDrive, url_pairs)
     for result in results:
         file_names.append(result)
         print('downloaded:', result)
 
-    (file_names, timestamps) = organizeTDMSFiles(file_names)
+    (file_names, starting_timestamps) = organizeTDMSFiles(file_names)
+    parsed_datasets: dict[
+        str,
+        AnalogChannelData | DigitalChannelData | SensorNetData | list[float],
+    ] = []
+    parsed_datasets.update(parseTDMS(0,starting_timestamps[-1], file_path_custom=file_names[-1]))
+    parsed_datasets.update(parseTDMS(0,starting_timestamps[-2], file_path_custom=file_names[-2]))
+
+    [channels, df_const] = extendDatasets(parsed_datasets)
+
+    db = firestore.client()
+    dict_to_write: dict[str, list[float]] = {}
+    all_time: list[float] = df_const["time"]
+    available_datasets: list[str] = []
+    for dataset in df_const:
+        if dataset != "time":
+            data: list[float] = df_const[dataset]
+            # time: list[float] = parsed_datasets[dataset].time.tolist()
+            time: list[float] = all_time[: len(data)]
+            df = pd.DataFrame.from_dict({"time": time, "data": data})
+            # df_cut = df.head(15*1000)
+            thing = df.iloc[::500, :]
+            # print("writing csv...")
+            # df.to_csv(dataset+".csv", lineterminator="\n",index=False)
+
+
+            scale = "psi"
+            if "tc" in dataset:
+                scale = "deg"
+            if "pi-" in dataset or "reed-" in dataset or "_state" in dataset:
+                scale = "bin"
+            if "fms" in dataset:
+                scale = "lbf"
+            if "rtd" in dataset:
+                scale = "V"
+            doc_ref = db.collection(test_name).document(dataset)
+            doc_ref.set({"time_offset": (time[0])})
+            doc_ref.set(
+                {
+                    "data": thing["data"].to_list(),
+                    "time": thing["time"].to_list(),
+                    "unit": scale,
+                },
+                merge=True,
+            )
+            available_datasets.append(dataset)
+            print(dataset)
+
+    doc_ref = db.collection(test_name).document("general")
+    doc_ref.set({"datasets": available_datasets, "test_article": "CMS", "gse_article":"BCLS", "name": test_name}, merge=True)
+
 
     storage_client = storage.Client()
     bucket = storage_client.bucket("psp-data-viewer-storage")
@@ -88,5 +135,5 @@ def createTest(req: https_fn.CallableRequest) -> Any:
             print("Failed to upload {} due to exception: {}".format(name, result))
         else:
             print("Uploaded {} to {}.".format(name, bucket.name))
-    return {"name": test_name, "first_url": url_pair[0]}
+    return {"name": test_name, "first_url": url_pairs[0]}
 
