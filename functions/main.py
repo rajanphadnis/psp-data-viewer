@@ -34,7 +34,7 @@ from createTest_helpers import downloadFromGDrive, organizeFiles
 app: App = initialize_app()
 
 
-@https_fn.on_call(secrets=["GOOGLE_ADC"])
+@https_fn.on_call(secrets=["GOOGLE_ADC"], timeout_sec=540, memory=options.MemoryOption.GB_8, cpu=2)
 def createCSV(req: https_fn.CallableRequest) -> Any:
     data = req.data
     base64_data: str = data["b64"]
@@ -47,7 +47,7 @@ def createCSV(req: https_fn.CallableRequest) -> Any:
     credentials = service_account.Credentials.from_service_account_file("adc.json")
     storage_client = storage.Client(credentials=credentials)
     bucket = storage_client.bucket(bucket_name)
-    all_channels_pickle_blob = bucket.blob(test_id + "/test_data/all_channels.pickle")
+    all_channels_pickle_blob = bucket.blob(test_id + "/all_channels.pickle")
     all_channels_pickle_blob.download_to_filename("all_channels.pickle")
     print("unpickling expanded datasets...")
     with open("all_channels.pickle", "rb") as f:
@@ -97,7 +97,7 @@ def createCSV(req: https_fn.CallableRequest) -> Any:
             return url
 
 
-@https_fn.on_call(timeout_sec=540, memory=options.MemoryOption.GB_2)
+@https_fn.on_call(timeout_sec=540, memory=options.MemoryOption.GB_8, cpu=2)
 def createTest(req: https_fn.CallableRequest) -> Any:
     data = req.data
     test_name: str = data["test_name"]
@@ -125,10 +125,10 @@ def createTest(req: https_fn.CallableRequest) -> Any:
         parsed_datasets.update(parseCSV(file_path_custom=csv_filenames[-1]))
     [channels, max_length, data_as_dict] = extendDatasets(parsed_datasets)
     print("pickling data...")
-    with open("test_data/all_channels.pickle", "wb") as f:
+    with open("all_channels.pickle", "wb") as f:
         pickle.dump(data_as_dict, f, pickle.HIGHEST_PROTOCOL)
     print("pickled data")
-    file_names.append("test_data/all_channels.pickle")
+    file_names.append("all_channels.pickle")
 
     db = firestore.client()
     dict_to_write: dict[str, list[float]] = {}

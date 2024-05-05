@@ -10,7 +10,9 @@
             "venv",
             ".git",
             "firebase-debug.log",
-            "firebase-debug.*.log"
+            "firebase-debug.*.log",
+            "test_data",
+            "psp-portfolio-key.json"
         ]
     }],
     "hosting": [{
