@@ -1,3 +1,11 @@
+## v0.0.7
+Added initial functions for createing new tests and getting csv files
+
+### Changed
+- Added getCSV()
+- Added createTest()
+
+
 ## v0.0.6
 Added "Clear Cache and Restart button"
 

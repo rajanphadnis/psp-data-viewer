@@ -28,7 +28,7 @@ export function setupEventListeners() {
     const createCSV = httpsCallable(functions, "createCSV");
     const [sharelink, b64]: [string, string] = getSharelink();
     console.log(b64);
-    createCSV({ b64: b64.toString(), test_name: "tessst" }).then(async (result) => {
+    createCSV({ b64: b64.toString(), test_id: test_id }).then(async (result) => {
       const data: any = result.data;
       // const message = data.csv_fields;
       console.log(data);
