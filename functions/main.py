@@ -44,6 +44,7 @@ def createCSV(req: https_fn.CallableRequest) -> Any:
     #     return False
     # else:
     #     decoded_string = base64.b64decode(str(base64_data)).decode("utf-8")
+    #     list_of_channels: list[str] = decoded_string.split(",")
     #     print(decoded_string)
     #     return {
     #         "csv_fields": decoded_string,
@@ -91,7 +92,8 @@ def createTest(req: https_fn.CallableRequest) -> Any:
     file1 = parseTDMS(0, file_path_custom=tdms_filenames[-1])
     file2 = parseTDMS(0, file_path_custom=tdms_filenames[-2])
     parsed_datasets = combineTDMSDatasets(file1, file2)
-    parsed_datasets.update(parseCSV(file_path_custom=csv_filenames[-1]))
+    if (len(csv_filenames) > 0):
+        parsed_datasets.update(parseCSV(file_path_custom=csv_filenames[-1]))
     [channels, max_length, data_as_dict] = extendDatasets(parsed_datasets)
     print("pickling data...")
     with open("test_data/all_channels.pickle", "wb") as f:
