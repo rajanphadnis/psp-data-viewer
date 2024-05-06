@@ -42,6 +42,7 @@ def createCSV(req: https_fn.CallableRequest) -> Any:
     bucket_name = "psp-data-viewer-storage"
     blob_folder_name = test_id + "/csv_downloads"
     blob_name = "all_channels.csv"
+    list_of_channels: list[str] = []
     with open("adc.json", "w") as file1:
         file1.write(os.environ.get("GOOGLE_ADC"))
     credentials = service_account.Credentials.from_service_account_file("adc.json")
@@ -51,7 +52,7 @@ def createCSV(req: https_fn.CallableRequest) -> Any:
         blob_name = "all_channels.csv"
     else:
         decoded_string = base64.b64decode(str(base64_data)).decode("utf-8")
-        list_of_channels: list[str] = decoded_string.split(",")
+        list_of_channels = decoded_string.split(",")
         list_of_channels.sort()
         blob_name = ("_".join(list_of_channels)) + ".csv"
     print("blob name: " + blob_name)
