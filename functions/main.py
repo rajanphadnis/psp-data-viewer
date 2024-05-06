@@ -42,7 +42,7 @@ def createCSV(req: https_fn.CallableRequest) -> Any:
     bucket_name = "psp-data-viewer-storage"
     blob_folder_name = test_id + "/csv_downloads"
     blob_name = "all_channels.csv"
-    list_of_channels: list[str] = []
+    list_of_channels: list[str]  = []
     with open("adc.json", "w") as file1:
         file1.write(os.environ.get("GOOGLE_ADC"))
     credentials = service_account.Credentials.from_service_account_file("adc.json")
@@ -72,7 +72,7 @@ def createCSV(req: https_fn.CallableRequest) -> Any:
         all_channels_pickle_blob.download_to_filename("all_channels.pickle")
         print("unpickling expanded datasets...")
         with open("all_channels.pickle", "rb") as f:
-            data_datasets = pickle.loads(f.read())
+            data_datasets: dict[str, list[float]] = pickle.loads(f.read())
         print("unpickled expanded datasets")
         print("expanding channels...")
         df = pd.DataFrame.from_dict(data_datasets)
@@ -82,7 +82,10 @@ def createCSV(req: https_fn.CallableRequest) -> Any:
             print("export complete")
         else:
             print("exporting datasets")
-            df[list_of_channels.append("time")].to_csv(blob_name)
+            list_of_channels.append("time")
+            to_export_channels = list_of_channels
+            print(to_export_channels)
+            df[to_export_channels].to_csv(blob_name)
             print("export complete")
         print("uploading...")
         blob_to_upload = bucket.blob(blob_folder_name + "/" + blob_name)
