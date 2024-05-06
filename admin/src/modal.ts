@@ -19,6 +19,7 @@ export function initModal() {
       modal.style.display = "none";
     }
   };
+  (document.getElementById("new_test_id")! as HTMLInputElement).value = genId(7);
   initUrlList();
   updateUrlList(operationType.ADD);
 }
@@ -62,4 +63,17 @@ function createUrlListItem(index: number): HTMLDivElement {
     document.getElementById("new_test_urls_div")!.removeChild(listDiv);
   });
   return listDiv;
+}
+
+
+function genId(length: number) {
+  let result = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  let counter = 0;
+  while (counter < length) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    counter += 1;
+  }
+  return result;
 }

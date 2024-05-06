@@ -19,3 +19,8 @@ functions/__pycache__/
 firebase-debug.log
 ui-debug.log
 functions/__pycache__/main.cpython-311.pyc
+functions/all_channels.pickle
+functions/DataLog_2024-0419-2059-23_CMS_Data_Wiring_6.pickle
+functions/DataLog_2024-0419-2059-23_CMS_Data_Wiring_6.tdms
+functions/DataLog_2024-0419-2059-24_CMS_Data_Wiring_5.pickle
+functions/DataLog_2024-0419-2059-24_CMS_Data_Wiring_5.tdms
