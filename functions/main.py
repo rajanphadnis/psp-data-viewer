@@ -119,11 +119,13 @@ def createCSV(req: https_fn.CallableRequest) -> Any:
 @https_fn.on_call(timeout_sec=540, memory=options.MemoryOption.GB_8, cpu=2)
 def createTest(req: https_fn.CallableRequest) -> Any:
     data = req.data
+    max_entries_per_sensor: int = 4500
     test_name: str = data["test_name"]
     test_id: str = data["test_id"]
     test_article: str = data["test_article"]
     gse_article: str = data["gse_article"]
     url_pairs: list[str] = data["url_pairs"]
+    trim_to_s: int = int(float(data["trim_to_s"]))
     file_names: list[str] = []
 
     print("downloading...")
@@ -150,7 +152,6 @@ def createTest(req: https_fn.CallableRequest) -> Any:
     file_names.append("all_channels.pickle")
 
     db = firestore.client()
-    dict_to_write: dict[str, list[float]] = {}
     all_time: list[float] = data_as_dict["time"]
     available_datasets: list[str] = []
     for dataset in data_as_dict:
@@ -158,8 +159,22 @@ def createTest(req: https_fn.CallableRequest) -> Any:
             data: list[float] = data_as_dict[dataset]
             time: list[float] = all_time[: len(data)]
             df = pd.DataFrame.from_dict({"time": time, "data": data})
-            # df_cut = df.head(15*1000)
-            thing = df.iloc[:: math.ceil(max_length / 4000), :]
+            if trim_to_s == 0:
+                print("not trimming")
+                processed_df = df.iloc[:: math.ceil(max_length / max_entries_per_sensor), :]
+            else:
+                df_cut = df.head(trim_to_s * 1000)
+                max_length = len(df_cut.index)
+                trim_to_freq = math.ceil(max_length / max_entries_per_sensor)
+                print("Trimming to every x samples: " + str(trim_to_freq))
+                processed_df = df_cut.iloc[::trim_to_freq, :]
+                print(
+                    "total rows: "
+                    + str(len(df_cut.index))
+                    + " -> "
+                    + str(len(processed_df.index))
+                )
+
             # print("writing csv...")
             # df.to_csv(dataset+".csv", lineterminator="\n",index=False)
 
@@ -176,8 +191,8 @@ def createTest(req: https_fn.CallableRequest) -> Any:
             doc_ref.set({"time_offset": (time[0])})
             doc_ref.set(
                 {
-                    "data": thing["data"].to_list(),
-                    "time": thing["time"].to_list(),
+                    "data": processed_df["data"].to_list(),
+                    "time": processed_df["time"].to_list(),
                     "unit": scale,
                 },
                 merge=True,
