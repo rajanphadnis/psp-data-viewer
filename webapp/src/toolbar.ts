@@ -16,8 +16,8 @@ export function setupEventListeners() {
     localStorage.clear();
     sessionStorage.clear();
     const dbs = await window.indexedDB.databases();
-    dbs.forEach(async db => {
-        await window.indexedDB.deleteDatabase(db.name!);
+    dbs.forEach(async (db) => {
+      await window.indexedDB.deleteDatabase(db.name!);
     });
     const [link, b64] = getSharelink();
     window.location.href = link;
@@ -28,10 +28,18 @@ export function setupEventListeners() {
     const createCSV = httpsCallable(functions, "createCSV");
     const [sharelink, b64]: [string, string] = getSharelink();
     console.log(b64);
-    createCSV({ b64: b64.toString(), test_id: test_id }).then(async (result) => {
+    const payload = { b64: b64.toString(), test_id: test_id };
+    console.log(payload);
+    createCSV(payload).then(async (result) => {
       const data: any = result.data;
-      // const message = data.csv_fields;
-      console.log(data);
+      if (data.toString() == "False" || data.toString() == "false") {
+        console.log("failed to get download URL");
+      } else {
+        const a = document.createElement("a");
+        a.href = data;
+        a.download = "";
+        a.click();
+      }
       updateStatus(loadingStatus.DONE);
       csvButton.innerHTML = check_mark;
       await delay(1500);

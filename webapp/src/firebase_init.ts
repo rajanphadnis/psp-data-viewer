@@ -25,6 +25,8 @@ export function initFirebase() {
   });
 
   functions = getFunctions(app);
-  // connectFunctionsEmulator(functions, "127.0.0.1", 5001);
-
+  if (appCheckSecret != false) {
+    console.log("in debug mode");
+    connectFunctionsEmulator(functions, "127.0.0.1", 5001);
+  }
 }

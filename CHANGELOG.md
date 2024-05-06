@@ -1,10 +1,16 @@
+## v0.0.8
+Added more robust csv file fetching/creation
+
+### Changed
+- Added automatic redirect to download CSV file
+- Made getCSV() more robust and added csv temp storage
+
 ## v0.0.7
 Added initial functions for createing new tests and getting csv files
 
 ### Changed
 - Added getCSV()
 - Added createTest()
-
 
 ## v0.0.6
 Added "Clear Cache and Restart button"

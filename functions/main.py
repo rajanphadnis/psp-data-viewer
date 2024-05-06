@@ -9,14 +9,12 @@ import os
 import pickle
 from typing import Any
 from firebase_functions import https_fn, options
-from firebase_admin import initialize_app, App
+from firebase_admin import initialize_app, App, firestore
 import base64
 import datetime
 from google.cloud import storage
 import google.cloud.firestore as fs
 from google.oauth2 import service_account
-import firebase_admin
-from firebase_admin import credentials, firestore, App
 import pandas as pd
 from psp_liquids_daq_parser import (
     parseCSV,
@@ -27,74 +25,95 @@ from psp_liquids_daq_parser import (
     extendDatasets,
     combineTDMSDatasets,
 )
-from google.cloud.storage import Client, transfer_manager
+from google.cloud.storage import transfer_manager
 
 from createTest_helpers import downloadFromGDrive, organizeFiles
 
 app: App = initialize_app()
 
 
-@https_fn.on_call(secrets=["GOOGLE_ADC"], timeout_sec=540, memory=options.MemoryOption.GB_8, cpu=2)
+@https_fn.on_call(
+    secrets=["GOOGLE_ADC"], timeout_sec=540, memory=options.MemoryOption.GB_8, cpu=2
+)
 def createCSV(req: https_fn.CallableRequest) -> Any:
     data = req.data
     base64_data: str = data["b64"]
     test_id: str = data["test_id"]
     bucket_name = "psp-data-viewer-storage"
-    blob_folder_name = test_id + "/temp"
+    blob_folder_name = test_id + "/csv_downloads"
     blob_name = "all_channels.csv"
     with open("adc.json", "w") as file1:
         file1.write(os.environ.get("GOOGLE_ADC"))
     credentials = service_account.Credentials.from_service_account_file("adc.json")
     storage_client = storage.Client(credentials=credentials)
     bucket = storage_client.bucket(bucket_name)
-    all_channels_pickle_blob = bucket.blob(test_id + "/all_channels.pickle")
-    all_channels_pickle_blob.download_to_filename("all_channels.pickle")
-    print("unpickling expanded datasets...")
-    with open("all_channels.pickle", "rb") as f:
-                data_datasets = pickle.loads(f.read())
-    print("unpickled expanded datasets")
-    print("expanding channels...")
-    df = pd.DataFrame.from_dict(data_datasets)
-    if (base64_data == ""):
-        print("exporting all")
-        df.to_csv(blob_name)
-        print("export complete")
-        # return False
+    if base64_data == "":
+        blob_name = "all_channels.csv"
     else:
         decoded_string = base64.b64decode(str(base64_data)).decode("utf-8")
         list_of_channels: list[str] = decoded_string.split(",")
+        list_of_channels.sort()
         blob_name = ("_".join(list_of_channels)) + ".csv"
-        print("exporting datasets")
-        df[list_of_channels].to_csv(blob_name)
-        print("export complete")
-        # return {
-        #     "csv_fields": decoded_string,
-        #     "name": test_name
-        # }
-    print("uploading...")
-    results = transfer_manager.upload_many_from_filenames(
-        bucket,
-        [blob_name],
-        blob_name_prefix=blob_folder_name + "/",
-        source_directory=".",
-        max_workers=2,
-    )
-    for name, result in zip([blob_name], results):
-        # The results list is either `None` or an exception for each filename in
-        # the input list, in order.
-        if isinstance(result, Exception):
-            print("Failed to upload {} due to exception: {}".format(name, result))
-            return False
+    print("blob name: " + blob_name)
+    if bucket.blob(blob_folder_name + "/" + blob_name).exists(storage_client):
+        print("file exists - getting url")
+        blob = bucket.blob(blob_folder_name + "/" + blob_name)
+        url = blob.generate_signed_url(
+            version="v4",
+            expiration=datetime.timedelta(minutes=60),
+            method="GET",
+        )
+        print("Generated GET signed URL:")
+        return url
+    else:
+        print("getting all channel data")
+        all_channels_pickle_blob = bucket.blob(test_id + "/all_channels.pickle")
+        all_channels_pickle_blob.download_to_filename("all_channels.pickle")
+        print("unpickling expanded datasets...")
+        with open("all_channels.pickle", "rb") as f:
+            data_datasets = pickle.loads(f.read())
+        print("unpickled expanded datasets")
+        print("expanding channels...")
+        df = pd.DataFrame.from_dict(data_datasets)
+        if base64_data == "":
+            print("exporting all")
+            df.to_csv(blob_name)
+            print("export complete")
         else:
-            print("Uploaded {} to {}.".format(name, bucket.name))
-            blob = bucket.blob(blob_folder_name + "/" + blob_name)
-            url = blob.generate_signed_url(
-                version="v4",
-                expiration=datetime.timedelta(minutes=60),
-                method="GET",
-            )
-            print("Generated GET signed URL:")
-            return url
+            print("exporting datasets")
+            df[list_of_channels.append("time")].to_csv(blob_name)
+            print("export complete")
+        print("uploading...")
+        blob_to_upload = bucket.blob(blob_folder_name + "/" + blob_name)
+        generation_match_precondition = 0
+        blob_to_upload.upload_from_filename(
+            blob_name,
+            content_type="text/csv",
+            if_generation_match=generation_match_precondition,
+        )
+        # results = transfer_manager.upload_many_from_filenames(
+        #     bucket,
+        #     [blob_name],
+        #     blob_name_prefix=blob_folder_name + "/",
+        #     source_directory=".",
+        #     max_workers=2,
+        # )
+        # for name, result in zip([blob_name], results):
+        #     # The results list is either `None` or an exception for each filename in
+        #     # the input list, in order.
+        #     if isinstance(result, Exception):
+        #         print("Failed to upload {} due to exception: {}".format(name, result))
+        #         return False
+        #     else:
+        print("Uploaded {} to {}.".format(blob_name, bucket.name))
+        blob = bucket.blob(blob_folder_name + "/" + blob_name)
+        url = blob.generate_signed_url(
+            version="v4",
+            expiration=datetime.timedelta(minutes=60),
+            method="GET",
+        )
+        print("Generated GET signed URL:")
+        return url
 
 
 @https_fn.on_call(timeout_sec=540, memory=options.MemoryOption.GB_8, cpu=2)
@@ -121,7 +140,7 @@ def createTest(req: https_fn.CallableRequest) -> Any:
     file1 = parseTDMS(0, file_path_custom=tdms_filenames[-1])
     file2 = parseTDMS(0, file_path_custom=tdms_filenames[-2])
     parsed_datasets = combineTDMSDatasets(file1, file2)
-    if (len(csv_filenames) > 0):
+    if len(csv_filenames) > 0:
         parsed_datasets.update(parseCSV(file_path_custom=csv_filenames[-1]))
     [channels, max_length, data_as_dict] = extendDatasets(parsed_datasets)
     print("pickling data...")
