@@ -211,6 +211,7 @@ def createTest(req: https_fn.CallableRequest) -> Any:
             "test_article": test_article,
             "gse_article": gse_article,
             "name": test_name,
+            "initial_timestamp": all_time[0],
         },
         merge=True,
     )
@@ -224,6 +225,7 @@ def createTest(req: https_fn.CallableRequest) -> Any:
                         "test_article": test_article,
                         "gse_article": gse_article,
                         "name": test_name,
+                        "initial_timestamp": all_time[0],
                     }
                 ]
             )

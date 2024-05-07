@@ -9,6 +9,7 @@ export interface AllTests {
   name: string;
   test_article: string;
   gse_article: string;
+  initial_timestamp: number;
 }
 
 export const enum loadingStatus {

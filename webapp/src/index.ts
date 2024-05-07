@@ -32,7 +32,7 @@ async function main() {
   setKnownTests(tests, default_url);
   test_id = getTestID(default_url);
   getSharelinkList();
-  const [datasets, name, test_article, gse_article] = await getTestInfo();
+  const [datasets, name, test_article, gse_article, initial_timestamp] = await getTestInfo();
   activeDatasets.all = datasets.sort((a, b) => a.localeCompare(b));
   setTitle(name, test_article, gse_article);
   setupEventListeners();

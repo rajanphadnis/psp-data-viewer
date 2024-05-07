@@ -22,7 +22,7 @@ export async function getSensorData(dataset: string, fromCache: boolean): Promis
   return [time, data, scale];
 }
 
-export async function getTestInfo(): Promise<[string[], string, string, string]> {
+export async function getTestInfo(): Promise<[string[], string, string, string, number]> {
   const docRef = doc(db, test_id, "general");
   let docSnap;
   try {
@@ -36,14 +36,16 @@ export async function getTestInfo(): Promise<[string[], string, string, string]>
   const name: string = docData["name"];
   const test_article: string = docData["test_article"];
   const gse_article: string = docData["gse_article"];
-  return [datasets, name, test_article, gse_article];
+  const initial_timestamp: number = docData["initial_timestamp"]
+  return [datasets, name, test_article, gse_article, initial_timestamp];
 }
 
 export async function getGeneralTestInfo(): Promise<[AllTests[], string]> {
   const docRef = doc(db, "general", "tests");
   let docSnap = await getDoc(docRef);
   const docData = docSnap.data()!;
-  const tests: AllTests[] = docData["visible"];
+  const tests_unsorted: AllTests[] = docData["visible"];
+  const tests = tests_unsorted.sort((a, b) => (a.initial_timestamp > b.initial_timestamp ? -1 : 1));
   const default_url: string = docData["default"];
   return [tests, default_url];
 }
