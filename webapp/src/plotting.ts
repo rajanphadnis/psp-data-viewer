@@ -31,7 +31,7 @@ export async function plotDatasets(datasets: string[]) {
     series.push({
         label: dataset,
       value: (self: any, rawValue: number) => legendRound(rawValue, " " + scale),
-      stroke: datasetPlottingColors[i],
+      stroke: datasetPlottingColors()[i],
       width: 2,
       scale: scale,
       spanGaps: true,

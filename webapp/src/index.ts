@@ -3,7 +3,7 @@ import { getTestInfo, getGeneralTestInfo } from "./db_interaction";
 import { update } from "./plotting";
 import { loadingStatus, type DatasetStatus } from "./types";
 import { getTestID, getSharelinkList, setTitle, updateStatus } from "./browser_fxns";
-import { initModal, setKnownTests } from "./modal";
+import { initModals, setKnownTests } from "./modal";
 import { initFirebase } from "./firebase_init";
 import type uPlot from "uplot";
 import { setupEventListeners } from "./toolbar";
@@ -24,7 +24,7 @@ activeDatasets = {
   all: [],
 };
 initFirebase();
-initModal();
+initModals();
 
 async function main() {
   updateStatus(loadingStatus.LOADING);

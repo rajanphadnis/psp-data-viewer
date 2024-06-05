@@ -95,20 +95,6 @@ def createCSV(req: https_fn.CallableRequest) -> Any:
             content_type="text/csv",
             if_generation_match=generation_match_precondition,
         )
-        # results = transfer_manager.upload_many_from_filenames(
-        #     bucket,
-        #     [blob_name],
-        #     blob_name_prefix=blob_folder_name + "/",
-        #     source_directory=".",
-        #     max_workers=2,
-        # )
-        # for name, result in zip([blob_name], results):
-        #     # The results list is either `None` or an exception for each filename in
-        #     # the input list, in order.
-        #     if isinstance(result, Exception):
-        #         print("Failed to upload {} due to exception: {}".format(name, result))
-        #         return False
-        #     else:
         print("Uploaded {} to {}.".format(blob_name, bucket.name))
         blob = bucket.blob(blob_folder_name + "/" + blob_name)
         url = blob.generate_signed_url(
@@ -116,7 +102,7 @@ def createCSV(req: https_fn.CallableRequest) -> Any:
             expiration=datetime.timedelta(minutes=60),
             method="GET",
         )
-        print("Generated GET signed URL:")
+        print("Generated signed URL")
         return url
 
 
@@ -172,16 +158,6 @@ def createTest(req: https_fn.CallableRequest) -> Any:
                 trim_to_freq = math.ceil(max_length / max_entries_per_sensor)
                 print("Trimming to every x samples: " + str(trim_to_freq))
                 processed_df = df_cut.iloc[::trim_to_freq, :]
-                print(
-                    "total rows: "
-                    + str(len(df_cut.index))
-                    + " -> "
-                    + str(len(processed_df.index))
-                )
-
-            # print("writing csv...")
-            # df.to_csv(dataset+".csv", lineterminator="\n",index=False)
-
             scale = "psi"
             if "tc" in dataset:
                 scale = "deg"

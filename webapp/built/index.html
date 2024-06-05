@@ -20,10 +20,19 @@
     <div id="testSwitcherModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="close">&times;</span>
+                <span class="close" id="closeSwitcherModal">&times;</span>
                 <h2>Choose Test</h2>
             </div>
             <div id="modal-body"></div>
+        </div>
+    </div>
+    <div id="legendColorModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" id="closeColorModal">&times;</span>
+                <h2>Select Graph Color Palette</h2>
+            </div>
+            <div id="color-picker-modal-body"></div>
         </div>
     </div>
     <div id="navBar">
@@ -37,6 +46,11 @@
             </button>
         </div>
         <div id="toolbar">
+            <button id="setPlotColorsButton" class="toolbar_button">
+                <span class="material-symbols-outlined">
+                    palette
+                </span>
+            </button>
             <button id="downloadCSV" class="toolbar_button">
                 <span class="material-symbols-outlined">
                     table_view

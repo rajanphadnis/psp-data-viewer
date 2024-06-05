@@ -9,6 +9,7 @@ const downloadImageButton: HTMLButtonElement = document.getElementById("download
 const copyImageButton: HTMLButtonElement = document.getElementById("copyImage")! as HTMLButtonElement;
 const csvButton: HTMLButtonElement = document.getElementById("downloadCSV")! as HTMLButtonElement;
 const resetButton: HTMLButtonElement = document.getElementById("resetCache")! as HTMLButtonElement;
+const setPlotColorsButton: HTMLButtonElement = document.getElementById("setPlotColorsButton")! as HTMLButtonElement;
 
 export function setupEventListeners() {
   resetButton.addEventListener("click", async (e) => {
@@ -70,6 +71,10 @@ export function setupEventListeners() {
     await delay(1500);
     copyImageButton.innerHTML = '<span class="material-symbols-outlined">content_copy</span>';
   });
+  
+  setPlotColorsButton.addEventListener("click", (e) => {
+    
+  });
 }
 
 export function updateFeatures() {
@@ -97,6 +102,10 @@ export function updateFeatures() {
     // csvButton.style.opacity = "1";
     // csvButton.disabled = false;
     // csvButton.style.cursor = "pointer";
+
+    setPlotColorsButton.style.opacity = "1";
+    setPlotColorsButton.disabled = false;
+    setPlotColorsButton.style.cursor = "pointer";
   } else {
     copyImageButton.style.opacity = "0";
     copyImageButton.disabled = true;
@@ -110,8 +119,8 @@ export function updateFeatures() {
     downloadImageButton.disabled = true;
     downloadImageButton.style.cursor = "default";
 
-    // csvButton.style.opacity = "0";
-    // csvButton.disabled = true;
-    // csvButton.style.cursor = "default";
+    setPlotColorsButton.style.opacity = "0";
+    setPlotColorsButton.disabled = true;
+    setPlotColorsButton.style.cursor = "default";
   }
 }
