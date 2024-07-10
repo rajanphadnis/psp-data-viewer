@@ -72,7 +72,7 @@ export function setupEventListeners() {
   });
 }
 
-export function updateFeatures() {
+export function updateAvailableFeatures() {
   csvButton.style.opacity = "1";
   csvButton.disabled = false;
   csvButton.style.cursor = "pointer";

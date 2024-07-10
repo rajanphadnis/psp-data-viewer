@@ -1,23 +1,32 @@
 {
-    "name": "webapp",
-    "module": "src/index.ts",
-    "type": "module",
-    "version": "0.0.8",
-    "devDependencies": {
-        "@types/bun": "latest",
-        "@types/file-saver": "^2.0.7"
-    },
-    "peerDependencies": {
-        "typescript": "^5.0.0"
-    },
-    "dependencies": {
-        "file-saver": "^2.0.5",
-        "firebase": "^10.11.1",
-        "uplot": "^1.6.30"
-    },
-    "scripts": {
-        "debug-watch": "bun --watch build ./src/index.ts --outdir ./built",
-        "debug": "bun run --env-file=.env.dev ./build_tools/compile.ts",
-        "prod": "bun run --env-file=.env.prod.publish ./build_tools/compile.ts"
-    }
+  "name": "webapp",
+  "module": "src/index.ts",
+  "version": "0.0.8",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/file-saver": "^2.0.7",
+    "ts-loader": "^9.5.1",
+    "webpack": "^5.92.1",
+    "webpack-cli": "^5.1.4"
+  },
+  "peerDependencies": {
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@aws-sdk/client-sts": "^3.609.0",
+    "@aws-sdk/client-timestream-query": "^3.609.0",
+    "@aws-sdk/credential-providers": "^3.609.0",
+    "@types/aws-sdk": "^2.7.0",
+    "aws-sdk": "^2.1655.0",
+    "file-saver": "^2.0.5",
+    "firebase": "^10.12.3",
+    "install": "^0.13.0",
+    "uplot": "^1.6.30"
+  },
+  "scripts": {
+    "debug-watch": "bun --watch build ./src/index.ts --outdir ./built",
+    "debug": "bun run --env-file=.env.dev ./build_tools/compile.ts",
+    "prod": "bun run --env-file=.env.prod.publish ./build_tools/compile.ts"
+  }
 }
