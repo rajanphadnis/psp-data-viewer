@@ -13,59 +13,25 @@ export async function generatePlottedDatasets(
   datasets: string[],
   startTimestamp: number | undefined = undefined,
   endTimestamp: number | undefined = undefined
-) {
-  // let series: (
-  //   | {}
-  //   | {
-  //       label: string;
-  //       value: (self: any, rawValue: number) => string;
-  //       stroke: string;
-  //       width: number;
-  //       scale: string;
-  //       spanGaps: boolean;
-  //     }
-  // )[] = [{}];
-  // let toPlot: any = [];
-  // for (let i = 0; i < datasets.length; i++) {
-  // const dataset: string = datasets[i];
-  // const fromCache: boolean = globalThis.activeDatasets.cached.includes(dataset);
-  // const [time, data, scale] = await getSensorData(dataset, fromCache);
-  const [toPlot, series] = await getSensorData(datasets, false, startTimestamp, endTimestamp);
-  // toPlot[0] = time;
-  // toPlot.push(data);
-  // series.push({
-  //   label: dataset,
-  //   value: (self: any, rawValue: number) => legendRound(rawValue, " " + scale),
-  //   stroke: datasetPlottingColors[i],
-  //   width: 2,
-  //   scale: scale,
-  //   spanGaps: true,
-  // });
-  // }
+) : Promise<[number[][], ({} | {
+    label: string;
+    value: (self: any, rawValue: number) => string;
+    stroke: string;
+    width: number;
+    scale: string;
+    spanGaps: boolean;
+  })[]]> {
+  // Do caching stuff here
+  const [toPlot, series] = await getSensorData(datasets, startTimestamp, endTimestamp);
   return [toPlot, series];
 }
 
-function actuallyPlot(
-  toPlot: any = [],
-  series: (
-    | {}
-    | {
-        label: string;
-        value: (self: any, rawValue: number) => string;
-        stroke: string;
-        width: number;
-        scale: string;
-        spanGaps: boolean;
-      }
-  )[]
-) {
-  plot(toPlot, series);
-}
+
 
 export async function update() {
   updateStatus(loadingStatus.LOADING);
   let [toPlot, series] = await generatePlottedDatasets(globalThis.activeDatasets.to_add);
-  actuallyPlot(toPlot, series);
+  plot(toPlot as AlignedData, series);
   writeSelectorList(globalThis.activeDatasets.all);
   updateAvailableFeatures();
   updateStatus(loadingStatus.DONE);

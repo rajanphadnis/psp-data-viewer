@@ -8,7 +8,6 @@ import { legendRound } from "./plotting_helpers";
 
 export async function getSensorData(
   datasets: string[],
-  fromCache: boolean,
   startTimestamp: number | undefined = undefined,
   endTimestamp: number | undefined = undefined
 ): Promise<
@@ -62,7 +61,6 @@ export async function getSensorData(
       const headerName = data.ColumnInfo![i].Name!;
       headers.push(headerName);
       if (headerName != "time") {
-
         const nameOnly: string = headerName.split("__")[0];
         const scale: string = headerName.split("__")[1];
         series.push({
