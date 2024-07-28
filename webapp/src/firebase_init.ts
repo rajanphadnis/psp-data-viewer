@@ -15,18 +15,18 @@ const firebaseConfig = {
 
 export function initFirebase() {
   const app = initializeApp(firebaseConfig);
-  self.FIREBASE_APPCHECK_DEBUG_TOKEN = appCheckSecret;
+  globalThis.FIREBASE_APPCHECK_DEBUG_TOKEN = appCheckSecret;
   initializeAppCheck(app, {
     provider: new ReCaptchaEnterpriseProvider("6Lctk8kpAAAAAI40QzMPFihZWMfGtiZ_-UC3H2n9"),
     isTokenAutoRefreshEnabled: true,
   });
-  db = initializeFirestore(app, {
+  globalThis.db = initializeFirestore(app, {
     localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
   });
 
-  functions = getFunctions(app);
+  globalThis.functions = getFunctions(app);
   if (appCheckSecret != false) {
     console.log("in debug mode");
-    connectFunctionsEmulator(functions, "127.0.0.1", 5001);
+    connectFunctionsEmulator(globalThis.functions, "127.0.0.1", 5001);
   }
 }

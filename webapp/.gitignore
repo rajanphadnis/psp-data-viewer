@@ -176,4 +176,4 @@ dist
 
 ./.vscode/
 
-./built/index.js
+./built/*.js

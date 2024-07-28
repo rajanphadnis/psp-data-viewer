@@ -24,3 +24,4 @@ functions/DataLog_2024-0419-2059-23_CMS_Data_Wiring_6.pickle
 functions/DataLog_2024-0419-2059-23_CMS_Data_Wiring_6.tdms
 functions/DataLog_2024-0419-2059-24_CMS_Data_Wiring_5.pickle
 functions/DataLog_2024-0419-2059-24_CMS_Data_Wiring_5.tdms
+webapp/built/*.js

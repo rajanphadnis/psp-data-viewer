@@ -1,71 +1,124 @@
 import { Firestore, doc, getDoc, getDocFromCache } from "firebase/firestore";
 import type { AllTests } from "./types";
-var AWS = require("aws-sdk/dist/aws-sdk-react-native");
-// import AWS from "aws-sdk";
-// import { TimestreamQueryClient, QueryCommand } from "@aws-sdk/client-timestream-query";
-// import { fromCognitoIdentity, fromCognitoIdentityPool, fromTemporaryCredentials} from "@aws-sdk/credential-providers";
+import { QueryCommand, TimestreamQueryClient, type QueryCommandOutput } from "@aws-sdk/client-timestream-query";
+import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
+import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity";
+import { datasetPlottingColors } from "./theming";
+import { legendRound } from "./plotting_helpers";
 
-AWS.config.update({
-  region: "us-east-2",
-  credentials: { accessKeyId: "", secretAccessKey: "" },
-  // new AWS.CognitoIdentityCredentials({ IdentityPoolId: "us-east-2:a5f0e7fd-cf03-427b-ad78-fbece90bc2bc" }),
-});
+export async function getSensorData(
+  datasets: string[],
+  fromCache: boolean,
+  startTimestamp: number | undefined = undefined,
+  endTimestamp: number | undefined = undefined
+): Promise<
+  [
+    number[][],
+    (
+      | {}
+      | {
+          label: string;
+          value: (self: any, rawValue: number) => string;
+          stroke: string;
+          width: number;
+          scale: string;
+          spanGaps: boolean;
+        }
+    )[]
+  ]
+> {
+  let returnedData: QueryCommandOutput;
+  var headers: string[] = [];
+  let toPlot: number[][] = [[], []];
+  let series: (
+    | {}
+    | {
+        label: string;
+        value: (self: any, rawValue: number) => string;
+        stroke: string;
+        width: number;
+        scale: string;
+        spanGaps: boolean;
+      }
+  )[] = [{}];
+  if (datasets.length == 0) {
+    return [toPlot, series];
+  }
+  // const awsDatasetName: string = `${dataset}__${dataset_units}__`;
+  let datasets_string: string = '"' + datasets.join('","') + '"';
+  const query = `SELECT time,${datasets_string} FROM "sampleDB"."whoopsie" WHERE time BETWEEN from_milliseconds(1714539480000) and from_milliseconds(1714539680000) ORDER BY time ASC LIMIT 1000`;
+  console.log(query);
+  const queryCommand = new QueryCommand({ QueryString: query });
 
-export async function getSensorData(dataset: string, fromCache: boolean, startTimestamp: number | undefined = undefined, endTimestamp: number | undefined = undefined): Promise<[number[], number[], string]> {
-  var timestreamquery = new AWS.TimestreamQuery();
-  const input = {
-    QueryString: `
-    WITH RankedData AS (
-      SELECT time,fms__lbf__,
-         ROW_NUMBER() OVER (ORDER BY time) AS RowNum
-      FROM "sampleDB"."whoopsie"
-    )
-    SELECT time,fms__lbf__
-    FROM RankedData
-    WHERE RowNum % 200 = 0
-    ORDER BY time ASC LIMIT 500000
-    `,
-    // MaxRows: Number(1500),
-  };
+  try {
+    const data = await globalThis.timestreamQuery.send(queryCommand);
+    if (data.Rows!.length == 0) {
+      return [toPlot, series];
+    }
+    var startTime = performance.now();
+    console.log(data);
+    console.log(data.NextToken);
+    for (let i = 0; i < data.ColumnInfo!.length; i++) {
+      const headerName = data.ColumnInfo![i].Name!;
+      headers.push(headerName);
+      if (headerName != "time") {
 
-  var thing = await timestreamquery.query(input).promise();
-  let times: number[] = [];
-  let datas: number[] = [];
-  if (thing.$response.error) {
-    console.error(thing.$response.error);
-    return [[0], [0], "fail"];
-  } else {
-    thing.Rows.forEach((row: any) => {
-      times.push(new Date(row.Data[0].ScalarValue!).getTime() / 1000);
-      datas.push(parseFloat(row.Data[1].ScalarValue!));
-    });
-    console.log(times);
-    console.log(datas);
-    return [times, datas, "lbf"];
+        const nameOnly: string = headerName.split("__")[0];
+        const scale: string = headerName.split("__")[1];
+        series.push({
+          label: nameOnly,
+          value: (self: any, rawValue: number) => legendRound(rawValue, " " + scale),
+          stroke: datasetPlottingColors[i],
+          width: 2,
+          scale: scale,
+          spanGaps: true,
+        });
+      }
+    }
+    for (let i = 0; i < data.Rows![0].Data!.length; i++) {
+      toPlot[i] = [];
+    }
+    for (let i = 0; i < data.Rows!.length; i++) {
+      const rowData = data.Rows![i].Data;
+      for (let j = 0; j < rowData!.length; j++) {
+        let elementData: number;
+        if (headers[j] == "time") {
+          elementData = parseFloat((new Date(rowData![j].ScalarValue!).getTime() / 1000).toFixed(3));
+        } else {
+          elementData = parseFloat(rowData![j].ScalarValue!);
+        }
+        toPlot[j].push(elementData);
+      }
+    }
+    var endTime = performance.now();
+    console.log(`post processing took ${endTime - startTime} milliseconds`);
+  } catch (error) {
+    // error handling.
+    console.error(error);
+  } finally {
+    // finally.
+    // if(toPlot.length != 0) {
+    console.log([toPlot, series]);
+    return [toPlot, series];
+
+    // }
   }
 
-  // const docRef = doc(db, test_id, dataset);
-  // let docSnap;
-  // if (fromCache) {
-  //   try {
-  //     docSnap = await getDocFromCache(docRef);
-  //   } catch (e) {
-  //     console.log("cache miss:", e);
-  //     docSnap = await getDoc(docRef);
-  //   }
-  // } else {
-  //   docSnap = await getDoc(docRef);
-  // }
-  // const docData = docSnap.data()!;
-  // const time: number[] = docData["time"];
-  // const data: number[] = docData["data"];
-  // const scale: string = docData["unit"];
-  // activeDatasets.cached.push(dataset);
+  // toPlot[0] = time;
+  // toPlot.push(data);
+  // series.push({
+  //   label: dataset,
+  //   value: (self: any, rawValue: number) => legendRound(rawValue, " " + scale),
+  //   stroke: datasetPlottingColors[i],
+  //   width: 2,
+  //   scale: scale,
+  //   spanGaps: true,
+  // });
   // return [time, data, scale];
 }
 
 export async function getTestInfo(): Promise<[string[], string, string, string, number]> {
-  const docRef = doc(db, test_id, "general");
+  const docRef = doc(globalThis.db, globalThis.test_id, "general");
   let docSnap;
   try {
     docSnap = await getDocFromCache(docRef);
@@ -74,7 +127,7 @@ export async function getTestInfo(): Promise<[string[], string, string, string, 
     docSnap = await getDoc(docRef);
   }
   const docData = docSnap.data()!;
-  const datasets: string[] = docData["datasets"];
+  const datasets: string[] = docData["aws_datasets"];
   const name: string = docData["name"];
   const test_article: string = docData["test_article"];
   const gse_article: string = docData["gse_article"];
@@ -83,7 +136,7 @@ export async function getTestInfo(): Promise<[string[], string, string, string, 
 }
 
 export async function getGeneralTestInfo(): Promise<[AllTests[], string]> {
-  const docRef = doc(db, "general", "tests");
+  const docRef = doc(globalThis.db, "general", "tests");
   let docSnap = await getDoc(docRef);
   const docData = docSnap.data()!;
   const tests_unsorted: AllTests[] = docData["visible"];

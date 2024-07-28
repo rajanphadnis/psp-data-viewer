@@ -25,10 +25,10 @@ export function setupEventListeners() {
   csvButton.addEventListener("click", (e) => {
     updateStatus(loadingStatus.LOADING);
     csvButton.innerHTML = loader;
-    const createCSV = httpsCallable(functions, "createCSV");
+    const createCSV = httpsCallable(globalThis.functions, "createCSV");
     const [sharelink, b64]: [string, string] = getSharelink();
     console.log(b64);
-    const payload = { b64: b64.toString(), test_id: test_id };
+    const payload = { b64: b64.toString(), test_id: globalThis.test_id };
     console.log(payload);
     createCSV(payload).then(async (result) => {
       const data: any = result.data;
@@ -81,7 +81,7 @@ export function updateAvailableFeatures() {
   sharelinkButton.disabled = false;
   sharelinkButton.style.cursor = "pointer";
 
-  if (activeDatasets.to_add.length > 0) {
+  if (globalThis.activeDatasets.to_add.length > 0) {
     copyImageButton.style.opacity = "1";
     copyImageButton.disabled = false;
     copyImageButton.style.cursor = "pointer";

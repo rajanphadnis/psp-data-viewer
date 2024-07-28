@@ -3,11 +3,11 @@ import { saveAs } from "file-saver";
 export async function plotSnapshot(type: string) {
   let pxRatio = devicePixelRatio;
 
-  let rect = uplot.root.getBoundingClientRect();
+  let rect = globalThis.uplot.root.getBoundingClientRect();
   // rect of uPlot's canvas to get y shift due to title above it (if any)
-  let rect2 = uplot.ctx.canvas.getBoundingClientRect();
+  let rect2 = globalThis.uplot.ctx.canvas.getBoundingClientRect();
 
-  let htmlContent = uplot.root.outerHTML;
+  let htmlContent = globalThis.uplot.root.outerHTML;
 
   let uPlotCssRules: any = document.styleSheets[2].cssRules;
   let uPlotCssOverrideRules: any = document.styleSheets[3].cssRules;
@@ -43,7 +43,7 @@ export async function plotSnapshot(type: string) {
   let img = new Image();
   img.crossOrigin = "Anonymous";
 
-  ctx.drawImage(uplot.ctx.canvas, 0, (rect2.top - rect.top) * pxRatio);
+  ctx.drawImage(globalThis.uplot.ctx.canvas, 0, (rect2.top - rect.top) * pxRatio);
 
   let SVGContainer = document.createElement("div");
   SVGContainer.style.display = "none";

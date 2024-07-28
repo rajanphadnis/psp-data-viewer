@@ -111,36 +111,41 @@ export function plot(
           };
         },
       ],
-      setSelect: [
-        (uplot: uPlot) => {
-          if (uplot.select.width > 0) {
-            let min = uplot.posToVal(uplot.select.left, "x");
-            let max = uplot.posToVal(uplot.select.left + uplot.select.width, "x");
+      // setSelect: [
+      //   (uplot: uPlot) => {
+      //     if (uplot.select.width > 0) {
+      //       let min = uplot.posToVal(uplot.select.left, "x");
+      //       let max = uplot.posToVal(uplot.select.left + uplot.select.width, "x");
 
-            console.log("Fetching data for range...", { min, max });
+      //       console.log("Fetching data for range...", { min, max });
 
-            // set new data
-            // u.setData([
-            //   [ 3, 4, 5, 6],
-            //   [30,23,35,27],
-            // ], false);
+      //       // set new data
+      //       // u.setData([
+      //       //   [ 3, 4, 5, 6],
+      //       //   [30,23,35,27],
+      //       // ], false);
 
-            // zoom to selection
-            uplot.setScale("x", { min, max });
+      //       // zoom to selection
+      //       uplot.setScale("x", { min, max });
 
-            // reset selection
-            uplot.setSelect({ left: 0, top: 0, width: 0, height: 0 }, false);
-          }
-        },
-      ],
+      //       // reset selection
+      //       uplot.setSelect({ left: 0, top: 0, width: 0, height: 0 }, false);
+      //     }
+      //   },
+      // ],
+    },
+    scales: {
+      "x": {
+        time: true,
+      }
     },
   };
   document.getElementById("plot")!.innerHTML = "";
-  uplot = new uPlot(opts, toPlot, document.getElementById("plot")!);
+  globalThis.uplot = new uPlot(opts, toPlot, document.getElementById("plot")!);
   window.addEventListener("resize", (e) => {
-    uplot.setSize(getSize());
+    globalThis.uplot.setSize(getSize());
   });
-  console.log(uplot.hooks);
+  // console.log(uplot.hooks);
 }
 
 function getSize() {
