@@ -128,6 +128,7 @@ export function getAWSTokens() {
 
   var currentStored = sessionStorage.getItem("aws_auth");
   if (currentStored == null && (globalThis.aws_auth == null || globalThis.aws_auth == undefined)) {
+    console.log(encodeURIComponent(window.location.href));
     window.location.href =
       "https://psp-auth.auth.us-east-2.amazoncognito.com/oauth2/authorize?client_id=44uqovuaatbg3kq2b49dtldm6i&response_type=token&scope=email+openid+phone&redirect_uri=http%3A%2F%2Flocalhost%3A5000";
   }

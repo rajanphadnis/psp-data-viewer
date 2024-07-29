@@ -9,6 +9,7 @@ export function writeSelectorList(datasets: string[]) {
   selectorDiv.innerHTML = "";
   for (let i = 0; i < datasets.length; i++) {
     const dataset: string = datasets[i];
+    const dataset_public_name: string = dataset.split("__")[0] + " (" + dataset.split("__")[1] + ")"
     let buttonInnerHTML: string;
     let buttonColor: string;
     let list_text = document.createElement("p");
@@ -28,7 +29,7 @@ export function writeSelectorList(datasets: string[]) {
     const list_div = document.createElement("div");
     list_div.classList.add("datasetListDiv");
     list_button.classList.add("datasetListButton");
-    list_text.innerHTML = dataset;
+    list_text.innerHTML = dataset_public_name;
     list_button.innerHTML = buttonInnerHTML;
     list_button.style.backgroundColor = buttonColor;
     list_div.appendChild(list_text);

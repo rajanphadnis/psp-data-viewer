@@ -8,8 +8,8 @@ import { legendRound } from "./plotting_helpers";
 
 export async function getSensorData(
   datasets: string[],
-  startTimestamp: number | undefined = undefined,
-  endTimestamp: number | undefined = undefined
+  startTimestamp: number,
+  endTimestamp: number
 ): Promise<
   [
     number[][],
@@ -43,14 +43,24 @@ export async function getSensorData(
   if (datasets.length == 0) {
     return [toPlot, series];
   }
-  // const awsDatasetName: string = `${dataset}__${dataset_units}__`;
   let datasets_string: string = '"' + datasets.join('","') + '"';
-  const query = `SELECT time,${datasets_string} FROM "sampleDB"."whoopsie" WHERE time BETWEEN from_milliseconds(1714539480000) and from_milliseconds(1714539680000) ORDER BY time ASC LIMIT 1000`;
+  const subsample_num: number = Math.ceil((endTimestamp - startTimestamp) / globalThis.displayedSamples);
+  const query = `WITH CTE AS
+(
+    SELECT time,${datasets_string},dense_rank() OVER(ORDER BY time) - 1 As dr
+    FROM "sampleDB"."whoopsie"
+  	WHERE time BETWEEN from_milliseconds(${startTimestamp}) and from_milliseconds(${endTimestamp})
+)
+SELECT time,${datasets_string} FROM CTE
+WHERE dr % ${subsample_num} = 0 ORDER BY time ASC LIMIT ${globalThis.displayedSamples * 1.05}`;
   console.log(query);
   const queryCommand = new QueryCommand({ QueryString: query });
 
   try {
+    var startQueryTime = performance.now();
     const data = await globalThis.timestreamQuery.send(queryCommand);
+    var endQueryTime = performance.now();
+    console.log(`query took ${endQueryTime - startQueryTime} milliseconds`);
     if (data.Rows!.length == 0) {
       return [toPlot, series];
     }
@@ -94,28 +104,12 @@ export async function getSensorData(
     // error handling.
     console.error(error);
   } finally {
-    // finally.
-    // if(toPlot.length != 0) {
     console.log([toPlot, series]);
     return [toPlot, series];
-
-    // }
   }
-
-  // toPlot[0] = time;
-  // toPlot.push(data);
-  // series.push({
-  //   label: dataset,
-  //   value: (self: any, rawValue: number) => legendRound(rawValue, " " + scale),
-  //   stroke: datasetPlottingColors[i],
-  //   width: 2,
-  //   scale: scale,
-  //   spanGaps: true,
-  // });
-  // return [time, data, scale];
 }
 
-export async function getTestInfo(): Promise<[string[], string, string, string, number]> {
+export async function getTestInfo(): Promise<[string[], string, string, string, number, number]> {
   const docRef = doc(globalThis.db, globalThis.test_id, "general");
   let docSnap;
   try {
@@ -130,7 +124,9 @@ export async function getTestInfo(): Promise<[string[], string, string, string, 
   const test_article: string = docData["test_article"];
   const gse_article: string = docData["gse_article"];
   const initial_timestamp: number = docData["initial_timestamp"];
-  return [datasets, name, test_article, gse_article, initial_timestamp];
+  const starting_timestamp: number = parseInt(docData["starting_timestamp"]);
+  const ending_timestamp: number = parseInt(docData["ending_timestamp"]);
+  return [datasets, name, test_article, gse_article, starting_timestamp, ending_timestamp];
 }
 
 export async function getGeneralTestInfo(): Promise<[AllTests[], string]> {

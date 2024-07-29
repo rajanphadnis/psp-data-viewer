@@ -20,6 +20,9 @@ declare global {
   var aws_auth: any;
   var aws_jwt: any;
   var timestreamQuery: TimestreamQueryClient;
+  var starting_timestamp: number;
+  var ending_timestamp: number;
+  var displayedSamples: number;
 }
 globalThis.activeDatasets = {
   to_add: [],
@@ -29,17 +32,19 @@ globalThis.activeDatasets = {
 };
 
 initAWS();
-
 initFirebase();
 initModal();
 
 async function main() {
+  globalThis.displayedSamples = 3000;
   updateStatus(loadingStatus.LOADING);
   const [tests, default_url] = await getGeneralTestInfo();
   setKnownTests(tests, default_url);
   globalThis.test_id = getTestID(default_url);
   getSharelinkList();
-  const [datasets, name, test_article, gse_article, initial_timestamp] = await getTestInfo();
+  const [datasets, name, test_article, gse_article, starting_ts, ending_ts] = await getTestInfo();
+  globalThis.starting_timestamp = starting_ts;
+  globalThis.ending_timestamp = ending_ts;
   globalThis.activeDatasets.all = datasets.sort((a, b) => a.localeCompare(b));
   setTitle(name, test_article, gse_article);
   setupEventListeners();
