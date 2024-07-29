@@ -59,14 +59,14 @@ WHERE dr % ${subsample_num} = 0 ORDER BY time ASC LIMIT ${globalThis.displayedSa
   try {
     var startQueryTime = performance.now();
     const data = await globalThis.timestreamQuery.send(queryCommand);
+    console.log(data);
+    console.log(data.NextToken);
     var endQueryTime = performance.now();
     console.log(`query took ${endQueryTime - startQueryTime} milliseconds`);
     if (data.Rows!.length == 0) {
       return [toPlot, series];
     }
     var startTime = performance.now();
-    console.log(data);
-    console.log(data.NextToken);
     for (let i = 0; i < data.ColumnInfo!.length; i++) {
       const headerName = data.ColumnInfo![i].Name!;
       headers.push(headerName);

@@ -1,4 +1,5 @@
 import uPlot, { type AlignedData } from "uplot";
+import { update } from "./plotting";
 
 export function legendRound(val: any, suffix: string, precision: number = 2) {
   if (val == null || val == undefined || val == "null") {
@@ -108,22 +109,20 @@ export function plot(
             console.log("Fetching data for full range");
 
             // uplot.setData(data);
+            update();
           };
         },
       ],
       setSelect: [
         (uplot: uPlot) => {
           if (uplot.select.width > 0) {
-            let min = uplot.posToVal(uplot.select.left, "x");
-            let max = uplot.posToVal(uplot.select.left + uplot.select.width, "x");
+            let min = parseInt((uplot.posToVal(uplot.select.left, "x") * 1000).toString());
+            let max = parseInt((uplot.posToVal(uplot.select.left + uplot.select.width, "x") * 1000).toString());
 
             console.log("Fetching data for range...", { min, max });
 
-            // set new data
-            // u.setData([
-            //   [ 3, 4, 5, 6],
-            //   [30,23,35,27],
-            // ], false);
+            // TODO: min and max are in user's timezone. need to convert to aws timestream timezone instead
+            // update(min, max)
 
             // zoom to selection
             uplot.setScale("x", { min, max });
