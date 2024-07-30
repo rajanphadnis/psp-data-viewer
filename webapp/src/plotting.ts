@@ -62,7 +62,9 @@ export async function generatePlottedDatasets(
   let need_to_fetch = datasets.filter((x) => !headers.includes(x));
 
   if (headers.length != 0) {
-    const timestamps = JSON.parse(localStorage.getItem(`time--${startTimestamp.toString()}--${endTimestamp.toString()}`)!);
+    const timestamps = JSON.parse(
+      localStorage.getItem(`time--${startTimestamp.toString()}--${endTimestamp.toString()}`)!
+    );
     toPlot = [timestamps, ...toPlot];
     if (need_to_fetch.length > 0) {
       const [toPlot_fetched, series_fetched] = await getSensorData(need_to_fetch, startTimestamp, endTimestamp);
@@ -82,17 +84,21 @@ export async function generatePlottedDatasets(
   } else {
     const [toPlot_fetched, series_fetched] = await getSensorData(need_to_fetch, startTimestamp, endTimestamp);
     console.log("no cached data to return");
-    storeInCache(toPlot_fetched, ["time", ...need_to_fetch], startTimestamp, endTimestamp);
+    if (datasets.length > 0) {
+      storeInCache(toPlot_fetched, ["time", ...need_to_fetch], startTimestamp, endTimestamp);
+    }
     return [toPlot_fetched, series_fetched];
   }
 }
 
 function storeInCache(toPlot: number[][], need_to_fetch: string[], startTimestamp: number, endTimestamp: number) {
   for (let i = 0; i < need_to_fetch.length; i++) {
-    const plotData = JSON.stringify(toPlot[i]);
-    const dataset_key: string = `${need_to_fetch[i]}--${startTimestamp.toString()}--${endTimestamp.toString()}`;
-    console.log(`storing in cache: ${dataset_key}`)
-    localStorage.setItem(dataset_key, plotData);
+    if (toPlot[i].length > 1) {
+      const plotData = JSON.stringify(toPlot[i]);
+      const dataset_key: string = `${need_to_fetch[i]}--${startTimestamp.toString()}--${endTimestamp.toString()}`;
+      console.log(`storing in cache: ${dataset_key}`);
+      localStorage.setItem(dataset_key, plotData);
+    }
   }
 }
 
