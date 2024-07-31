@@ -23,6 +23,8 @@ declare global {
   var starting_timestamp: number;
   var ending_timestamp: number;
   var displayedSamples: number;
+  var displayedRangeStart: number;
+  var displayedRangeEnd: number;
 }
 globalThis.activeDatasets = {
   to_add: [],
@@ -45,6 +47,8 @@ async function main() {
   const [datasets, name, test_article, gse_article, starting_ts, ending_ts] = await getTestInfo();
   globalThis.starting_timestamp = starting_ts;
   globalThis.ending_timestamp = ending_ts;
+  globalThis.displayedRangeStart = starting_ts;
+  globalThis.displayedRangeEnd = ending_ts;
   globalThis.activeDatasets.all = datasets.sort((a, b) => a.localeCompare(b));
   setTitle(name, test_article, gse_article);
   setupEventListeners();

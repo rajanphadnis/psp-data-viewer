@@ -56,6 +56,6 @@ export async function buttonClickHandler(dataset: string) {
   } else {
     globalThis.activeDatasets.to_add.push(dataset);
   }
-  await update();
+  await update(globalThis.displayedRangeStart, globalThis.displayedRangeEnd);
   updateStatus(loadingStatus.DONE);
 }

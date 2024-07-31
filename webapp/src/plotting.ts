@@ -30,7 +30,7 @@ export async function generatePlottedDatasets(
   ]
 > {
   var headers: string[] = [];
-  let toPlot: number[][] = [[], []];
+  let toPlot: number[][] = [];
   let series: (
     | {}
     | {
@@ -109,6 +109,8 @@ export async function update(
   updateStatus(loadingStatus.LOADING);
   let [toPlot, series] = await generatePlottedDatasets(globalThis.activeDatasets.to_add, startTimestamp, endTimestamp);
   plot(toPlot as AlignedData, series);
+  globalThis.displayedRangeStart = startTimestamp;
+  globalThis.displayedRangeEnd = endTimestamp;
   writeSelectorList(globalThis.activeDatasets.all);
   updateAvailableFeatures();
   updateStatus(loadingStatus.DONE);
