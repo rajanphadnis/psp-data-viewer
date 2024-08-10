@@ -1,32 +1,18 @@
 {
     "name": "webapp",
     "module": "src/index.ts",
+    "type": "module",
     "version": "0.0.8",
-    "private": true,
     "devDependencies": {
         "@types/bun": "latest",
-        "@types/file-saver": "^2.0.7",
-        "@types/luxon": "^3.4.2",
-        "ts-loader": "^9.5.1",
-        "webpack": "^5.92.1",
-        "webpack-cli": "^5.1.4"
+        "@types/file-saver": "^2.0.7"
     },
     "peerDependencies": {
-        "typescript": "^5.4.5"
+        "typescript": "^5.0.0"
     },
     "dependencies": {
-        "@aws-sdk/client-cognito-identity": "^3.278.0",
-        "@aws-sdk/client-cognito-identity-provider": "^3.616.0",
-        "@aws-sdk/client-sts": "^3.609.0",
-        "@aws-sdk/client-timestream-query": "^3.609.0",
-        "@aws-sdk/credential-providers": "^3.609.0",
-        "@types/aws-sdk": "^2.7.0",
-        "amazon-cognito-identity-js": "^6.3.12",
-        "aws-sdk": "^2.1655.0",
         "file-saver": "^2.0.5",
-        "firebase": "^10.12.3",
-        "install": "^0.13.0",
-        "luxon": "^3.4.4",
+        "firebase": "^10.11.1",
         "uplot": "^1.6.30"
     },
     "scripts": {

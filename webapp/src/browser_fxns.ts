@@ -1,11 +1,6 @@
-import { CognitoIdentityProviderClient } from "@aws-sdk/client-cognito-identity-provider";
 import { check_mark, loader } from "./html_components";
 import { plotSnapshot } from "./image_tools";
 import { loadingStatus } from "./types";
-import { STSClient, AssumeRoleWithWebIdentityCommand } from "@aws-sdk/client-sts";
-import { CognitoUser, CognitoUserPool } from "amazon-cognito-identity-js";
-import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
-import { TimestreamQueryClient } from "@aws-sdk/client-timestream-query";
 
 function getQueryVariable(variable: string) {
   var query = window.location.search.substring(1);
@@ -31,20 +26,20 @@ export function getTestID(default_redirect: string): string {
 export function getSharelinkList(): void {
   let param = getQueryVariable("b64");
   if (param == undefined || param == "") {
-    globalThis.activeDatasets.to_add = [];
+    activeDatasets.to_add = [];
   } else {
     const decodedList = decode(param);
-    globalThis.activeDatasets.to_add = decodedList.split(",");
+    activeDatasets.to_add = decodedList.split(",");
   }
 }
 
 export function getSharelink(): [string, string] {
-  const bufferString = globalThis.activeDatasets.to_add.join(",");
+  const bufferString = activeDatasets.to_add.join(",");
   let b64: string;
   if (bufferString == undefined || bufferString == "") {
     return [location.origin + location.pathname, ""];
   } else {
-    b64 = encode(globalThis.activeDatasets.to_add.join(","));
+    b64 = encode(activeDatasets.to_add.join(","));
   }
   const sharelink_base = location.origin + location.pathname + "?b64=" + b64;
   return [sharelink_base, b64];
@@ -111,40 +106,4 @@ export function updateStatus(status: loadingStatus) {
   if (status == loadingStatus.DONE) {
     document.getElementById("status")!.innerHTML = check_mark;
   }
-}
-
-export function getAWSTokens() {
-  // var hash = new URLSearchParams(window.location.search).get("code");
-  var hash = window.location.hash.slice(1);
-  if (hash.length > 0) {
-    var result = hash.split("&").reduce(function (res: any, item) {
-      var parts = item.split("=");
-      res[parts[0]] = parts[1];
-      return res;
-    }, {});
-    globalThis.aws_auth = result;
-    sessionStorage.setItem("aws_auth", JSON.stringify(result));
-  }
-
-  var currentStored = sessionStorage.getItem("aws_auth");
-  if (currentStored == null && (globalThis.aws_auth == null || globalThis.aws_auth == undefined)) {
-    console.log(encodeURIComponent(window.location.href));
-    window.location.href =
-      "https://psp-auth.auth.us-east-2.amazoncognito.com/oauth2/authorize?client_id=44uqovuaatbg3kq2b49dtldm6i&response_type=token&scope=email+openid+phone&redirect_uri=http%3A%2F%2Flocalhost%3A5000";
-  }
-  if (currentStored != null) {
-    globalThis.aws_auth = JSON.parse(sessionStorage.getItem("aws_auth")!);
-  }
-
-  globalThis.timestreamQuery = new TimestreamQueryClient({
-    region: "us-east-2",
-    credentials: fromCognitoIdentityPool({
-      identityPoolId: "us-east-2:756dd2ed-4664-4b57-99d1-63033042b449",
-      logins: {
-        // Change the key below according to the specific region your user pool is in.
-        "cognito-idp.us-east-2.amazonaws.com/us-east-2_R0E6V0iNN": globalThis.aws_auth["id_token"],
-      },
-      clientConfig: { region: "us-east-2" },
-    }),
-  });
 }
