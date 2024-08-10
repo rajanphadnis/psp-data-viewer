@@ -26,7 +26,10 @@ from psp_liquids_daq_parser import (
     combineTDMSDatasets,
 )
 from google.cloud.storage import transfer_manager
-
+import h5py
+import time
+import math
+import statistics
 from createTest_helpers import downloadFromGDrive, organizeFiles
 
 app: App = initialize_app()
@@ -256,3 +259,48 @@ def createTest(req: https_fn.CallableRequest) -> Any:
         else:
             print("Uploaded {} to {}.".format(name, bucket.name))
     return {"name": test_name, "id": test_id}
+
+@https_fn.on_request(timeout_sec=60, memory=options.MemoryOption.GB_8, cpu=2)
+def getData(req: https_fn.Request) -> https_fn.Response:
+    # searchStart = 0
+    # searchEnd = 39823
+    searchStart = 1714537441001
+    searchEnd = 1714537443817
+    channel_to_fetch = ["fms__lbf__", "pi-fu-02__bin__", "fu_psi__psi__"]
+    maxVals = 4500
+
+    totalStartTime = time.time()
+    df = pd.DataFrame()
+    avgPerfTime = []
+
+    with h5py.File("tdms_data.hdf5", "r") as f:
+        channel_to_fetch.append("time")
+        datasets = list(f.keys())
+        for dataset in channel_to_fetch:
+            startTime = time.time()
+            dset = f[dataset]
+            endTime = time.time()
+            avgPerfTime.append((endTime - startTime)*1000)
+            df[dataset] = dset
+
+
+    # print(f'Avg fetch time per channel: {statistics.fmean(avgPerfTime)} ms')
+
+    fetchEndTime = time.time()
+    totalLength = len(df.index)
+    nth = math.ceil(totalLength / maxVals)
+    print(nth)
+
+    downsampledDF = df.iloc[1::nth]
+
+    filteredDF = df.iloc[1::nth].loc[(df['time'] >= searchStart) & (df.iloc[1::nth]['time'] <= searchEnd)]
+
+    totalEndTime = time.time()
+    print(f'Fetched all data in {(fetchEndTime - totalStartTime)*1000} ms')
+    print(f'downsampled and filtered in {(totalEndTime - fetchEndTime)*1000} ms')
+    print(filteredDF)
+    return https_fn.Response("nth")
+
+    # print("done")
+
+
