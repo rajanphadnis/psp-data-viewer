@@ -1,9 +1,9 @@
-export interface DatasetStatus {
-  to_add: string[];
-  loading: string[];
-  cached: string[];
-  all: string[];
-}
+// export interface DatasetStatus {
+//   to_add: string[];
+//   loading: string[];
+//   cached: string[];
+//   all: string[];
+// }
 export interface AllTests {
   id: string;
   name: string;
@@ -14,5 +14,14 @@ export interface AllTests {
 
 export const enum loadingStatus {
   LOADING,
-  DONE
+  DONE,
+}
+
+export interface DatasetSeries {
+  label: string;
+  value: (self: any, rawValue: number) => string;
+  stroke: string;
+  width: number;
+  scale: string;
+  spanGaps: boolean;
 }

@@ -26,20 +26,20 @@ export function getTestID(default_redirect: string): string {
 export function getSharelinkList(): void {
   let param = getQueryVariable("b64");
   if (param == undefined || param == "") {
-    activeDatasets.to_add = [];
+    globalThis.activeDatasets_to_add = [];
   } else {
     const decodedList = decode(param);
-    activeDatasets.to_add = decodedList.split(",");
+    globalThis.activeDatasets_to_add = decodedList.split(",");
   }
 }
 
 export function getSharelink(): [string, string] {
-  const bufferString = activeDatasets.to_add.join(",");
+  const bufferString = globalThis.activeDatasets_to_add.join(",");
   let b64: string;
   if (bufferString == undefined || bufferString == "") {
     return [location.origin + location.pathname, ""];
   } else {
-    b64 = encode(activeDatasets.to_add.join(","));
+    b64 = encode(globalThis.activeDatasets_to_add.join(","));
   }
   const sharelink_base = location.origin + location.pathname + "?b64=" + b64;
   return [sharelink_base, b64];

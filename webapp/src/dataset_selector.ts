@@ -13,11 +13,11 @@ export function writeSelectorList(datasets: string[]) {
     let buttonColor: string;
     let list_text = document.createElement("p");
     let list_button = document.createElement("button");
-    if (activeDatasets.to_add.includes(dataset)) {
+    if (globalThis.activeDatasets_to_add.includes(dataset)) {
       buttonInnerHTML = "-";
       buttonColor = pspColors.aged;
       list_text.classList.toggle("available", false);
-    } else if (activeDatasets.loading.includes(dataset)) {
+    } else if (globalThis.activeDatasets_loading.includes(dataset)) {
       buttonInnerHTML = loader;
       buttonColor = pspColors["night-sky"];
     } else {
@@ -45,15 +45,15 @@ export function writeSelectorList(datasets: string[]) {
 
 export async function buttonClickHandler(dataset: string) {
   updateStatus(loadingStatus.LOADING);
-  if (activeDatasets.to_add.includes(dataset)) {
-    const index = activeDatasets.to_add.indexOf(dataset, 0);
+  if (globalThis.activeDatasets_to_add.includes(dataset)) {
+    const index = globalThis.activeDatasets_to_add.indexOf(dataset, 0);
     if (index > -1) {
-      activeDatasets.to_add.splice(index, 1);
+      globalThis.activeDatasets_to_add.splice(index, 1);
     }
-  } else if (activeDatasets.loading.includes(dataset)) {
+  } else if (globalThis.activeDatasets_loading.includes(dataset)) {
     console.log("data already loading!");
   } else {
-    activeDatasets.to_add.push(dataset);
+    globalThis.activeDatasets_to_add.push(dataset);
   }
   await update();
   updateStatus(loadingStatus.DONE);

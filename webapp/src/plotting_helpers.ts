@@ -1,4 +1,6 @@
 import uPlot, { type AlignedData } from "uplot";
+import { update } from "./plotting";
+import { DateTime } from "luxon";
 
 export function legendRound(val: any, suffix: string, precision: number = 2) {
   if (val == null || val == undefined || val == "null") {
@@ -101,6 +103,43 @@ export function plot(
         },
       },
     ],
+    hooks: {
+      init: [
+        (uplot: uPlot) => {
+          uplot.over.ondblclick = (e) => {
+            console.log("Fetching data for full range");
+
+            // uplot.setData(data);
+            update();
+          };
+        },
+      ],
+      setSelect: [
+        (uplot: uPlot) => {
+          if (uplot.select.width > 0) {
+            let min = parseInt((uplot.posToVal(uplot.select.left, "x") * 1000).toString());
+            let max = parseInt((uplot.posToVal(uplot.select.left + uplot.select.width, "x") * 1000).toString());
+
+            console.log("Fetching data for range...", { min, max });
+            const min_converted = DateTime.fromMillis(min).setZone("utc", { keepLocalTime: true }).toMillis();
+            const max_converted = DateTime.fromMillis(max).setZone("utc", { keepLocalTime: true }).toMillis();
+
+            update(Math.round(Number(min_converted/1000)), Math.round(Number(max_converted/1000)));
+
+            // zoom to selection
+            uplot.setScale("x", { min, max });
+
+            // reset selection
+            uplot.setSelect({ left: 0, top: 0, width: 0, height: 0 }, false);
+          }
+        },
+      ],
+    },
+    scales: {
+      "x": {
+        time: true,
+      }
+    },
   };
   document.getElementById("plot")!.innerHTML = "";
   uplot = new uPlot(opts, toPlot, document.getElementById("plot")!);

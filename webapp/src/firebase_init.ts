@@ -15,12 +15,12 @@ const firebaseConfig = {
 
 export function initFirebase() {
   const app = initializeApp(firebaseConfig);
-  self.FIREBASE_APPCHECK_DEBUG_TOKEN = appCheckSecret;
+  self.globalThis.FIREBASE_APPCHECK_DEBUG_TOKEN = appCheckSecret;
   initializeAppCheck(app, {
     provider: new ReCaptchaEnterpriseProvider("6Lctk8kpAAAAAI40QzMPFihZWMfGtiZ_-UC3H2n9"),
     isTokenAutoRefreshEnabled: true,
   });
-  db = initializeFirestore(app, {
+  globalThis.db = initializeFirestore(app, {
     localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
   });
 

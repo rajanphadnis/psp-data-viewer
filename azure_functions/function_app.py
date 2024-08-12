@@ -26,12 +26,16 @@ def get_data(req: func.HttpRequest) -> func.HttpResponse:
         return func.HttpResponse(
             "Test ID is required. Make sure you've provided an 'id=' parameter when calling the API. If you're unsure what Test ID to use, consult psp-admin.rajanphadnis.com or other test documentation",
             status_code=400,
+            headers={
+                "Access-Control-Allow-Origin": "*",  # Required for CORS support to work
+                "Access-Control-Allow-Credentials": True,  # Required for cookies, authorization headers with HTTPS
+            },
         )
     if param_testID:
         testID: str = param_testID
 
     if not param_searchStart:
-        searchStart:int = 0
+        searchStart: int = 0
     if param_searchStart:
         searchStart = int(param_searchStart)
     if not param_searchEnd:
@@ -42,11 +46,7 @@ def get_data(req: func.HttpRequest) -> func.HttpResponse:
     if not param_maxVals:
         maxVals: int = maxValsAllowed
     if param_maxVals:
-        maxVals = (
-            int(param_maxVals)
-            if (int(param_maxVals) <= maxValsAllowed)
-            else maxValsAllowed
-        )
+        maxVals = int(param_maxVals)
 
     if not param_channels:
         channels_to_fetch: list[str] = []
@@ -70,7 +70,7 @@ def get_data(req: func.HttpRequest) -> func.HttpResponse:
     channels_to_fetch.append("time")
 
     with h5py.File(f"/hdf5data/hdf5_data/{testID}.hdf5", "r") as f:
-        # with h5py.File("./test.hdf5", "r") as f:
+        # with h5py.File(f"./{testID}.hdf5", "r") as f:
         for dataset in channels_to_fetch:
             df[dataset] = f[dataset]
 
@@ -87,6 +87,8 @@ def get_data(req: func.HttpRequest) -> func.HttpResponse:
 
     totalLength = len(filteredDF.index)
     nth = math.ceil(totalLength / maxVals)
+    if nth <= 1:
+        nth = 1
     downsampledDF = filteredDF.iloc[1::nth]
     downsampledLength = len(downsampledDF.index)
 
@@ -112,6 +114,10 @@ def get_data(req: func.HttpRequest) -> func.HttpResponse:
     # print(filteredDF)
     print(f"return object size in kb: {sys.getsizeof(jsonToReturn) / 1024}")
     return func.HttpResponse(
-        jsonToReturn,
+        body=jsonToReturn,
         status_code=200,
+        headers={
+            "Access-Control-Allow-Origin": "*",  # Required for CORS support to work
+            "Access-Control-Allow-Credentials": True,  # Required for cookies, authorization headers with HTTPS
+        },
     )

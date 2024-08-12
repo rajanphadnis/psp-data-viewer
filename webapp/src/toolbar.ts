@@ -28,7 +28,7 @@ export function setupEventListeners() {
     const createCSV = httpsCallable(functions, "createCSV");
     const [sharelink, b64]: [string, string] = getSharelink();
     console.log(b64);
-    const payload = { b64: b64.toString(), test_id: test_id };
+    const payload = { b64: b64.toString(), test_id: globalThis.test_id };
     console.log(payload);
     createCSV(payload).then(async (result) => {
       const data: any = result.data;
@@ -72,7 +72,7 @@ export function setupEventListeners() {
   });
 }
 
-export function updateFeatures() {
+export function updateAvailableFeatures() {
   csvButton.style.opacity = "1";
   csvButton.disabled = false;
   csvButton.style.cursor = "pointer";
@@ -81,7 +81,7 @@ export function updateFeatures() {
   sharelinkButton.disabled = false;
   sharelinkButton.style.cursor = "pointer";
 
-  if (activeDatasets.to_add.length > 0) {
+  if (globalThis.activeDatasets_to_add.length > 0) {
     copyImageButton.style.opacity = "1";
     copyImageButton.disabled = false;
     copyImageButton.style.cursor = "pointer";
