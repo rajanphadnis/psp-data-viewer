@@ -44,10 +44,22 @@ export async function saveTestData(
     test_article: new_test_article,
   };
   new_list.push(dataToWrite);
-  await updateDoc(generalDocRef, {
-    visible: new_list,
-  });
-  await updateDoc(docRef, dataToWrite);
+  (await fetch(`https://psp-api.rajanphadnis.com/api/get_database_info?id=${test_id}`))
+    .json()
+    .then(async (response) => {
+      await updateDoc(generalDocRef, {
+        visible: new_list,
+      });
+      await updateDoc(docRef, {
+        id: test_id,
+        name: new_name,
+        gse_article: new_gse,
+        test_article: new_test_article,
+        azure_datasets: response["database_channel_list"],
+        starting_timestamp: response["database_start_time"],
+        ending_timestamp: response["database_end_time"],
+      });
+    });
   updateTests(false);
   updateStatus(loadingStatus.DONE);
 }

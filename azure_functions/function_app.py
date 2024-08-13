@@ -121,3 +121,49 @@ def get_data(req: func.HttpRequest) -> func.HttpResponse:
             "Access-Control-Allow-Credentials": True,  # Required for cookies, authorization headers with HTTPS
         },
     )
+
+@app.route(route="get_database_info")
+def get_database_info(req: func.HttpRequest) -> func.HttpResponse:
+    totalStartTime = time.time()
+    logging.info("Python HTTP trigger function processed a request.")
+
+    param_testID = req.params.get("id")
+    if not param_testID:
+        return func.HttpResponse(
+            "Test ID is required. Make sure you've provided an 'id=' parameter when calling the API. If you're unsure what Test ID to use, consult psp-admin.rajanphadnis.com or other test documentation",
+            status_code=400,
+            headers={
+                "Access-Control-Allow-Origin": "*",  # Required for CORS support to work
+                "Access-Control-Allow-Credentials": True,  # Required for cookies, authorization headers with HTTPS
+            },
+        )
+    if param_testID:
+        testID: str = param_testID
+
+    startTime = 0
+    endTime = 0
+    channel_list = []
+
+    with h5py.File(f"/hdf5data/hdf5_data/{testID}.hdf5", "r") as f:
+    # with h5py.File(f"./{testID}.hdf5", "r") as f:
+        channel_list = list(f.keys())
+        startTime = int(f["time"][0])
+        endTime = int(f["time"][-1])
+
+    totalEndTime = time.time()
+    dictToReturn = {}
+    dictToReturn["function_exec_time_total_ms"] = (totalEndTime - totalStartTime) * 1000
+    dictToReturn["database_start_time"] = startTime
+    dictToReturn["database_end_time"] = endTime
+    dictToReturn["database_channel_list"] = channel_list
+    jsonToReturn = json.dumps(dictToReturn)
+
+    print(f"return object size in kb: {sys.getsizeof(jsonToReturn) / 1024}")
+    return func.HttpResponse(
+        body=jsonToReturn,
+        status_code=200,
+        headers={
+            "Access-Control-Allow-Origin": "*",  # Required for CORS support to work
+            "Access-Control-Allow-Credentials": True,  # Required for cookies, authorization headers with HTTPS
+        },
+    )

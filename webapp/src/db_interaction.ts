@@ -52,7 +52,7 @@ export async function getTestInfo(): Promise<[string[], string, string, string, 
     docSnap = await getDoc(docRef);
   }
   const docData = docSnap.data()!;
-  const datasets: string[] = docData["aws_datasets"];
+  const datasets: string[] = docData["azure_datasets"];
   const name: string = docData["name"];
   const test_article: string = docData["test_article"];
   const gse_article: string = docData["gse_article"];
