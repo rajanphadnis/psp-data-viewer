@@ -1,3 +1,14 @@
+## v0.0.9
+Moved stack over to azure hdf5 expansion. Still using firebase for basic key-value pair storage
+
+### Changed
+- Moved stack over to azure hdf5 expansion
+- Still using firebase for basic key-value pair storage
+- Fixed zoom selection
+- Added dynamic resolution data gathering
+- Added test metadata function
+- started to add documentation
+
 ## v0.0.8
 Added more robust csv file fetching/creation
 
