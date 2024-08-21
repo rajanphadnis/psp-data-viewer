@@ -91,6 +91,7 @@ def get_data(req: func.HttpRequest) -> func.HttpResponse:
         nth = 1
     downsampledDF = filteredDF.iloc[1::nth]
     downsampledLength = len(downsampledDF.index)
+    downsampledDF["time"] *= 0.001
 
     totalPackageTime = time.time()
 

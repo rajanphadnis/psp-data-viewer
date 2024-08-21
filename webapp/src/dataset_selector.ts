@@ -28,7 +28,7 @@ export function writeSelectorList(datasets: string[]) {
     const list_div = document.createElement("div");
     list_div.classList.add("datasetListDiv");
     list_button.classList.add("datasetListButton");
-    list_text.innerHTML = dataset;
+    list_text.innerHTML = dataset.toString().split("__")[0];
     list_button.innerHTML = buttonInnerHTML;
     list_button.style.backgroundColor = buttonColor;
     list_div.appendChild(list_text);

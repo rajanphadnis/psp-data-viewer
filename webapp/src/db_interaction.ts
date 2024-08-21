@@ -15,7 +15,7 @@ export async function getSensorData(
     return [toPlot, series];
   }
   let datasets_string: string = datasets.join(",");
-  let requestURL: string = `https://psp-api.rajanphadnis.com/api/get_data?id=test&start=${startTimestamp}&end=${endTimestamp}&channels=${datasets_string}`;
+  let requestURL: string = `https://psp-api.rajanphadnis.com/api/get_data?id=${globalThis.test_id}&start=${startTimestamp}&end=${endTimestamp}&channels=${datasets_string}`;
 
   var startQueryTime = performance.now();
   return (await fetch(requestURL)).json().then((response) => {

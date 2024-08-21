@@ -121,10 +121,10 @@ export function plot(
             let max = parseInt((uplot.posToVal(uplot.select.left + uplot.select.width, "x") * 1000).toString());
 
             console.log("Fetching data for range...", { min, max });
-            const min_converted = DateTime.fromMillis(min).setZone("utc", { keepLocalTime: true }).toMillis();
-            const max_converted = DateTime.fromMillis(max).setZone("utc", { keepLocalTime: true }).toMillis();
+            const min_converted = DateTime.fromMillis(min).setZone("utc", { keepLocalTime: false }).toMillis();
+            const max_converted = DateTime.fromMillis(max).setZone("utc", { keepLocalTime: false }).toMillis();
 
-            update(Math.round(Number(min_converted/1000)), Math.round(Number(max_converted/1000)));
+            update(Math.round(Number(min_converted)), Math.round(Number(max_converted)));
 
             // zoom to selection
             uplot.setScale("x", { min, max });
