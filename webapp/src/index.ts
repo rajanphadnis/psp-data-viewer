@@ -1,7 +1,7 @@
 import { Firestore } from "firebase/firestore";
 import { getTestInfo, getGeneralTestInfo } from "./db_interaction";
 import { update } from "./plotting";
-import { loadingStatus, type DatasetStatus } from "./types";
+import { loadingStatus } from "./types";
 import { getTestID, getSharelinkList, setTitle, updateStatus } from "./browser_fxns";
 import { initModal, setKnownTests } from "./modal";
 import { initFirebase } from "./firebase_init";
@@ -10,30 +10,42 @@ import { setupEventListeners } from "./toolbar";
 import { getFunctions, type Functions } from "firebase/functions";
 
 declare global {
-  var activeDatasets: DatasetStatus;
+  // var activeDatasets: DatasetStatus;
+  var activeDatasets_to_add: string[];
+  var activeDatasets_all: string[];
+  var activeDatasets_loading: string[];
+  var activeDatasets_cached: string[];
   var test_id: string;
   var db: Firestore;
   var FIREBASE_APPCHECK_DEBUG_TOKEN: boolean | string | undefined;
   var uplot: uPlot;
   var functions: Functions;
+  var starting_timestamp: number;
+  var ending_timestamp: number;
+  var displayedSamples: number;
+  var displayedRangeStart: number;
+  var displayedRangeEnd: number;
 }
-activeDatasets = {
-  to_add: [],
-  loading: [],
-  cached: [],
-  all: [],
-};
+globalThis.activeDatasets_to_add = [];
+globalThis.activeDatasets_all = [];
+globalThis.activeDatasets_loading = [];
+globalThis.activeDatasets_cached = [];
 initFirebase();
 initModal();
 
 async function main() {
+  globalThis.displayedSamples = 4500;
   updateStatus(loadingStatus.LOADING);
   const [tests, default_url] = await getGeneralTestInfo();
   setKnownTests(tests, default_url);
-  test_id = getTestID(default_url);
+  globalThis.test_id = getTestID(default_url);
   getSharelinkList();
-  const [datasets, name, test_article, gse_article, initial_timestamp] = await getTestInfo();
-  activeDatasets.all = datasets.sort((a, b) => a.localeCompare(b));
+  const [datasets, name, test_article, gse_article, starting_ts, ending_ts] = await getTestInfo();
+  globalThis.starting_timestamp = starting_ts;
+  globalThis.ending_timestamp = ending_ts;
+  globalThis.displayedRangeStart = starting_ts;
+  globalThis.displayedRangeEnd = ending_ts;
+  globalThis.activeDatasets_all = datasets.sort((a, b) => a.localeCompare(b));
   setTitle(name, test_article, gse_article);
   setupEventListeners();
   update();

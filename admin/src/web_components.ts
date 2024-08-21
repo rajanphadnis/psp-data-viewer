@@ -109,6 +109,7 @@ export function generateTestPanel(test: TestDetails) {
   panel_save_button.id = "panel_save_button";
   panel_save_button.style.visibility = "hidden"
   panel_save_button.addEventListener("click", (e: MouseEvent) => {
+    // const idElement = document.getElementById(test.id + "_field_id")! as HTMLInputElement;
     const nameElement = document.getElementById(test.id + "_field_name")! as HTMLInputElement;
     const testElement = document.getElementById(test.id + "_field_test_article")! as HTMLSelectElement;
     const gseElement = document.getElementById(test.id + "_field_gse_article")! as HTMLSelectElement;

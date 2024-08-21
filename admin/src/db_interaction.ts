@@ -56,7 +56,7 @@ export async function getSpecificTest(id: string, cache: boolean = true): Promis
   const gse_article: string = docData["gse_article"];
   const test_article: string = docData["test_article"];
   const name: string = docData["name"];
-  const datasets: string[] = docData["datasets"];
+  const datasets: string[] = docData["azure_datasets"];
   const toReturn: TestDetails = {
     id: id,
     name: name,

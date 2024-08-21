@@ -26,7 +26,10 @@ from psp_liquids_daq_parser import (
     combineTDMSDatasets,
 )
 from google.cloud.storage import transfer_manager
-
+import h5py
+import time
+import math
+import statistics
 from createTest_helpers import downloadFromGDrive, organizeFiles
 
 app: App = initialize_app()
@@ -36,6 +39,12 @@ app: App = initialize_app()
     secrets=["GOOGLE_ADC"], timeout_sec=540, memory=options.MemoryOption.GB_8, cpu=2
 )
 def createCSV(req: https_fn.CallableRequest) -> Any:
+    """Creates a CSV file given a base64 string and a test id
+    - The base64 string is just an encoded list of channels.
+    For example if you had channels fms and pi-ox-02, that would
+    be encoded as "Zm1zLHBpLW94LTAy"
+    - The test id is just the string of characters that represents the test data in the database
+    """
     data = req.data
     base64_data: str = data["b64"]
     test_id: str = data["test_id"]
@@ -250,3 +259,4 @@ def createTest(req: https_fn.CallableRequest) -> Any:
         else:
             print("Uploaded {} to {}.".format(name, bucket.name))
     return {"name": test_name, "id": test_id}
+
