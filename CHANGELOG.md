@@ -1,3 +1,9 @@
+## v0.1.1
+Small bug fixes
+
+### Changed
+- Updated auto-deploy
+
 ## v0.1.0
 Started documentation site, started admin new test page
 
