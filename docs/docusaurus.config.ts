@@ -104,7 +104,7 @@ const config: Config = {
             },
             {
               label: "API",
-              to: "/api/intro",
+              to: "/docs/api/intro",
             },
           ],
         },
