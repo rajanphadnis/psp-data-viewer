@@ -1,8 +1,10 @@
 ## v0.1.2
-Fixed client-side CSV generation
+Fixed client-side CSV generation, plot zooming
 
 ### Changed
 - Moved client-side CSV generation to localStorage-based csv gen
+- Added sharelink zoom capability
+- Fixed zoom bug on adding new dataset
 
 ## v0.1.1
 Small bug fixes
