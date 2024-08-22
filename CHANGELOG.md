@@ -1,3 +1,11 @@
+## v0.1.0
+Started documentation site, started admin new test page
+
+### Changed
+- Started documentation site
+- Added doc auto-deploy
+- Started new test page on admin site
+
 ## v0.0.9
 Moved stack over to azure hdf5 expansion. Still using firebase for basic key-value pair storage
 
