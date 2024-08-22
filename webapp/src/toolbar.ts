@@ -22,29 +22,32 @@ export function setupEventListeners() {
     const [link, b64] = getSharelink();
     window.location.href = link;
   });
-  csvButton.addEventListener("click", (e) => {
+  csvButton.addEventListener("click", async (e) => {
     updateStatus(loadingStatus.LOADING);
     csvButton.innerHTML = loader;
-    // const createCSV = httpsCallable(functions, "createCSV");
-    const [sharelink, b64]: [string, string] = getSharelink();
-    console.log(b64);
-    const payload = { b64: b64.toString(), test_id: globalThis.test_id };
-    console.log(payload);
-    // createCSV(payload).then(async (result) => {
-    //   const data: any = result.data;
-    //   if (data.toString() == "False" || data.toString() == "false") {
-    //     console.log("failed to get download URL");
-    //   } else {
-    //     const a = document.createElement("a");
-    //     a.href = data;
-    //     a.download = "";
-    //     a.click();
-    //   }
-    //   updateStatus(loadingStatus.DONE);
-    //   csvButton.innerHTML = check_mark;
-    //   await delay(1500);
-    //   csvButton.innerHTML = '<span class="material-symbols-outlined">table_view</span>';
-    // });
+    const data_columns = JSON.parse(localStorage.getItem("currentData_data")!);
+    const data_names = JSON.parse(localStorage.getItem("currentData_names")!);
+    let csvData: any[][] = [[...data_names]];
+    for (let i = 0; i < data_columns[0].length; i++) {
+      let rowToWrite = [];
+      for (let j = 0; j < data_columns.length; j++) {
+        const element = data_columns[j][i];
+        rowToWrite.push(element);
+      }
+      csvData.push(rowToWrite);
+    }
+    console.log(csvData);
+    let csvContent = "data:text/csv;charset=utf-8," + csvData.map((e) => e.join(",")).join("\n");
+    var encodedUri = encodeURI(csvContent);
+    var link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "my_data.csv");
+    document.body.appendChild(link);
+    link.click();
+    updateStatus(loadingStatus.DONE);
+    csvButton.innerHTML = check_mark;
+    await delay(1500);
+    csvButton.innerHTML = '<span class="material-symbols-outlined">csv</span>';
   });
 
   sharelinkButton.addEventListener("click", async (e) => {

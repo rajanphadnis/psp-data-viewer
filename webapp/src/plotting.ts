@@ -66,11 +66,11 @@ export async function generatePlottedDatasets(
   }
   let toPlot_toReturn = [toPlot_fetched[toPlot_fetched.length - 1], ...toPlot];
   let series_toReturn = [{}, ...series];
-  storeInCache(toPlot_fetched, [...need_to_fetch, "time"], startTimestamp, endTimestamp);
+  cacheFetchedData(toPlot_fetched, [...need_to_fetch, "time"], startTimestamp, endTimestamp);
   return [toPlot_toReturn, series_toReturn];
 }
 
-function storeInCache(toPlot: number[][], need_to_fetch: string[], startTimestamp: number, endTimestamp: number) {
+function cacheFetchedData(toPlot: number[][], need_to_fetch: string[], startTimestamp: number, endTimestamp: number) {
   for (let i = 0; i < need_to_fetch.length; i++) {
     if (toPlot[i].length > 1) {
       const plotData = JSON.stringify(toPlot[i]);
@@ -83,12 +83,21 @@ function storeInCache(toPlot: number[][], need_to_fetch: string[], startTimestam
   }
 }
 
+function storeActiveDatasets(data: number[][], datasetNames: string[]) {
+  const actualNames = ["time", ...datasetNames];
+  console.log(actualNames);
+  console.log(data);
+  localStorage.setItem("currentData_data", JSON.stringify(data));
+  localStorage.setItem("currentData_names", JSON.stringify(actualNames));
+}
+
 export async function update(
   startTimestamp: number = globalThis.starting_timestamp,
   endTimestamp: number = globalThis.ending_timestamp
 ) {
   updateStatus(loadingStatus.LOADING);
   let [toPlot, series] = await generatePlottedDatasets(globalThis.activeDatasets_to_add, startTimestamp, endTimestamp);
+  storeActiveDatasets(toPlot, globalThis.activeDatasets_to_add);
   plot(toPlot as AlignedData, series);
   globalThis.displayedRangeStart = startTimestamp;
   globalThis.displayedRangeEnd = endTimestamp;

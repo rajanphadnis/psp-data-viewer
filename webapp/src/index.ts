@@ -35,6 +35,8 @@ initModal();
 
 async function main() {
   globalThis.displayedSamples = 4500;
+  localStorage.removeItem("currentData_data");
+  localStorage.removeItem("currentData_names");
   updateStatus(loadingStatus.LOADING);
   const [tests, default_url] = await getGeneralTestInfo();
   setKnownTests(tests, default_url);
