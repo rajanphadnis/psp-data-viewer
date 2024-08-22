@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import Heading from '@theme/Heading';
 import styles from './styles.module.css';
+import Mermaid from '@theme/Mermaid';
 
 type FeatureItem = {
   title: string;
@@ -10,32 +11,34 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Easy to Use',
+    title: 'API',
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Running on a super simple serverless Azure cloud function, these Python-based
+        API calls just process and read data from an HDF5 file and return it in simple JSON
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
+    title: 'WebApp(s)',
     Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Written in TypeScript and compiled via bun, the main, admin, and documentation
+        sites are statically hosted on Firebase Hosting, and serve as a quick way to access
+        data without calling the API
       </>
     ),
   },
   {
-    title: 'Powered by React',
+    title: 'Backend',
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        To ease the number of API requests, and to make the website easier to use, frequently
+        accessed data is stored within a Firestore database. Only authorized apps can access
+        this database via Firebase App Check
       </>
     ),
   },

@@ -9,6 +9,7 @@
     --steel: #555960;
     --cool-gray: #6f727b;
     --background-color: rgb(29, 29, 29);
+    --background-color-selected: rgb(58, 58, 58);
 }
 
 .material-symbols-outlined {
@@ -224,4 +225,8 @@ div {
     margin-left: 15px;
     /* text-decoration: underline; */
     border-bottom: 2px solid currentColor;
+}
+
+.create-test-config-subtype {
+    color: var(--cool-gray);
 }

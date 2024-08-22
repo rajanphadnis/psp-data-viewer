@@ -25,26 +25,26 @@ export function setupEventListeners() {
   csvButton.addEventListener("click", (e) => {
     updateStatus(loadingStatus.LOADING);
     csvButton.innerHTML = loader;
-    const createCSV = httpsCallable(functions, "createCSV");
+    // const createCSV = httpsCallable(functions, "createCSV");
     const [sharelink, b64]: [string, string] = getSharelink();
     console.log(b64);
     const payload = { b64: b64.toString(), test_id: globalThis.test_id };
     console.log(payload);
-    createCSV(payload).then(async (result) => {
-      const data: any = result.data;
-      if (data.toString() == "False" || data.toString() == "false") {
-        console.log("failed to get download URL");
-      } else {
-        const a = document.createElement("a");
-        a.href = data;
-        a.download = "";
-        a.click();
-      }
-      updateStatus(loadingStatus.DONE);
-      csvButton.innerHTML = check_mark;
-      await delay(1500);
-      csvButton.innerHTML = '<span class="material-symbols-outlined">table_view</span>';
-    });
+    // createCSV(payload).then(async (result) => {
+    //   const data: any = result.data;
+    //   if (data.toString() == "False" || data.toString() == "false") {
+    //     console.log("failed to get download URL");
+    //   } else {
+    //     const a = document.createElement("a");
+    //     a.href = data;
+    //     a.download = "";
+    //     a.click();
+    //   }
+    //   updateStatus(loadingStatus.DONE);
+    //   csvButton.innerHTML = check_mark;
+    //   await delay(1500);
+    //   csvButton.innerHTML = '<span class="material-symbols-outlined">table_view</span>';
+    // });
   });
 
   sharelinkButton.addEventListener("click", async (e) => {

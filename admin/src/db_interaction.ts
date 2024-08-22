@@ -15,8 +15,8 @@ export async function getTestArticles(cache: boolean = true): Promise<void> {
     docSnap = await getDoc(docRef);
   }
   const docData = docSnap.data()!;
-  gse_articles = docData["gse"];
-  test_articles = docData["test"];
+  globalThis.gse_articles = docData["gse"];
+  globalThis.test_articles = docData["test"];
 }
 
 export async function getTests(cache: boolean = true): Promise<[TestDetails[], string]> {

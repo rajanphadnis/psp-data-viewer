@@ -9,7 +9,8 @@ export interface TestDetails {
 
 export const enum loadingStatus {
     LOADING,
-    DONE
+    DONE,
+    ERROR
   }
 
   export const enum articleType {
@@ -21,3 +22,10 @@ export const enum loadingStatus {
     REMOVE,
     INIT
   }
+
+export interface NewTestConfig {
+  name: string;
+  id: string;
+  create_type: string;
+  upload_urls: string[]
+}

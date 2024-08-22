@@ -156,7 +156,7 @@ export function generateArticlePanel(article: articleType) {
   }
 }
 
-function generateTitle(title: string) {
+export function generateTitle(title: string) {
   const title_p = document.createElement("p");
   const title_span = document.createElement("span");
   title_span.innerHTML = title;
@@ -175,7 +175,7 @@ function generateDatasetPanel(test: TestDetails) {
     const div = document.createElement("div");
     const panel_p = document.createElement("p");
     const detail_span = document.createElement("span");
-    panel_p.innerHTML = dataset;
+    panel_p.innerHTML = dataset.toString().split("__")[0] + " (" + dataset.toString().split("__")[1] + ")";
     if (test.custom_channels!.includes(dataset)) {
       detail_span.innerHTML = "Custom";
     } else {

@@ -22,6 +22,10 @@
     background-color: var(--steel);
 }
 
+.test-list-item-selected {
+    background-color: var(--background-color-selected);
+}
+
 .test-field-text {
     background-color: var(--background-color);
     border: 3px solid var(--field);

@@ -7,6 +7,7 @@ import { updateStatus } from "./status";
 import { httpsCallable, type Functions } from "firebase/functions";
 import { updateTests } from "./tests";
 import { initModal } from "./modal";
+import { newTest } from "./new-test/new";
 
 declare global {
   var db: Firestore;
@@ -20,7 +21,6 @@ declare global {
 }
 
 initFirebase();
-initModal();
 
 async function main() {
   await getTestArticles();
@@ -79,4 +79,9 @@ async function main() {
   updateStatus(loadingStatus.DONE);
 }
 
-main();
+if (location.pathname.includes("/new/")) {
+  newTest();
+} else {
+  initModal();
+  main();
+}

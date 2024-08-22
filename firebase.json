@@ -46,6 +46,23 @@
                 "source": "**",
                 "destination": "/index.html"
             }]
+        },
+
+        {
+            "target": "docs",
+            "public": "docs/build",
+            "ignore": [
+                "firebase.json",
+                "**/.*",
+                "**/node_modules/**"
+            ],
+            "frameworksBackend": {
+                "region": "us-central1"
+            },
+            "rewrites": [{
+                "source": "**",
+                "destination": "/index.html"
+            }]
         }
     ],
     "storage": {

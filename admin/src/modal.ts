@@ -3,25 +3,26 @@ import { operationType } from "./types";
 
 const mainDiv = document.getElementById("new_test_urls_div")! as HTMLDivElement;
 export function initModal() {
-  const modal = document.getElementById("testSwitcherModal")!;
+  // const modal = document.getElementById("testSwitcherModal")!;
   const newTestButton = document.getElementById("newTestButton")!;
-  const closeButton = document.getElementsByClassName("close")[0]!;
+  // const closeButton = document.getElementsByClassName("close")[0]!;
   newTestButton.addEventListener("click", (e) => {
-    modal.style.display = "block";
+    // modal.style.display = "block";
+    window.location.pathname = "/new";
   });
 
-  closeButton.addEventListener("click", (e) => {
-    modal.style.display = "none";
-  });
+  // closeButton.addEventListener("click", (e) => {
+  //   modal.style.display = "none";
+  // });
 
-  window.onclick = function (event) {
-    if (event.target == modal) {
-      modal.style.display = "none";
-    }
-  };
-  (document.getElementById("new_test_id")! as HTMLInputElement).value = genId(7);
-  initUrlList();
-  updateUrlList(operationType.ADD);
+  // window.onclick = function (event) {
+  //   if (event.target == modal) {
+  //     modal.style.display = "none";
+  //   }
+  // };
+  // (document.getElementById("new_test_id")! as HTMLInputElement).value = genId(7);
+  // initUrlList();
+  // updateUrlList(operationType.ADD);
 }
 
 function initUrlList() {
@@ -66,7 +67,7 @@ function createUrlListItem(index: number): HTMLDivElement {
 }
 
 
-function genId(length: number) {
+export function genId(length: number) {
   let result = '';
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   const charactersLength = characters.length;

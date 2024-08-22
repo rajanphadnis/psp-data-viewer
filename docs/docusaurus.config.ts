@@ -1,105 +1,132 @@
-import {themes as prismThemes} from 'prism-react-renderer';
-import type {Config} from '@docusaurus/types';
-import type * as Preset from '@docusaurus/preset-classic';
+import { themes as prismThemes } from "prism-react-renderer";
+import type { Config } from "@docusaurus/types";
+import type * as Preset from "@docusaurus/preset-classic";
 
 const config: Config = {
-  title: 'PSP Data Viewer | Docs',
-  tagline: 'imagine i actually documented it tho',
-  favicon: 'img/favicon.ico',
+  markdown: {
+    mermaid: true,
+  },
+  themes: ["@docusaurus/theme-mermaid"],
+  title: "PSP Data Viewer | Docs",
+  tagline: "imagine i actually documented it tho",
+  favicon: "img/favicon.ico",
 
   // Set the production url of your site here
-  url: 'https://psp-docs.rajanphadnis.com',
+  url: "https://psp-docs.rajanphadnis.com",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/',
+  baseUrl: "/",
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   // organizationName: 'facebook', // Usually your GitHub org/user name.
   // projectName: 'docusaurus', // Usually your repo name.
 
-  onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'warn',
+  onBrokenLinks: "throw",
+  onBrokenMarkdownLinks: "warn",
 
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
   // may want to replace "en" with "zh-Hans".
   i18n: {
-    defaultLocale: 'en',
-    locales: ['en'],
+    defaultLocale: "en",
+    locales: ["en"],
   },
 
   presets: [
     [
-      'classic',
+      "classic",
       {
         docs: {
-          sidebarPath: './sidebars.ts',
+          sidebarPath: "./sidebars.ts",
+          // path: "api",
+          // routeBasePath: "api",
+          // sidebarPath: './sidebarsProduct.js',
           // editUrl:
           //   'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
         },
         theme: {
-          customCss: './src/css/custom.css',
+          customCss: "./src/css/custom.css",
         },
       } satisfies Preset.Options,
     ],
   ],
-
+  
   themeConfig: {
-    // Replace with your project's social card
-    image: 'img/docusaurus-social-card.jpg',
+    colorMode: {
+      defaultMode: "dark",
+      disableSwitch: true,
+      respectPrefersColorScheme: false,
+    },
+    image: "img/docusaurus-social-card.jpg",
     navbar: {
       // title: 'PSP Data Viewer',
       logo: {
-        alt: 'PSP Logo',
-        src: 'img/logo.svg',
+        alt: "PSP Logo",
+        src: "img/logo.svg",
       },
       items: [
+        { to: "/architecture", label: "Architecture", position: "left" },
         {
-          type: 'docSidebar',
-          sidebarId: 'apiSidebar',
-          position: 'left',
-          label: 'API',
+          type: "docSidebar",
+          sidebarId: "apiSidebar",
+          position: "left",
+          label: "API",
         },
-        // {to: '/blog', label: 'Blog', position: 'left'},
         {
-          href: 'https://github.com/rajanphadnis/psp-data-viewer',
-          label: 'GitHub',
-          position: 'right',
+          type: "docSidebar",
+          sidebarId: "webappSidebar",
+          position: "left",
+          label: "WebApp(s)",
+        },
+        {
+          type: "docSidebar",
+          sidebarId: "backendSidebar",
+          position: "left",
+          label: "Backend",
+        },
+        {
+          href: "https://github.com/rajanphadnis/psp-data-viewer",
+          label: "GitHub",
+          position: "right",
         },
       ],
     },
     footer: {
-      style: 'dark',
+      style: "dark",
       links: [
         {
-          title: 'Docs',
+          title: "Docs",
           items: [
             {
-              label: 'API',
-              to: '/docs/intro',
+              label: "Architecture",
+              to: "/architecture",
+            },
+            {
+              label: "API",
+              to: "/api/intro",
             },
           ],
         },
         {
-          title: 'Related Projects',
+          title: "Related Projects",
           items: [
             {
-              label: 'PSP Daq Parser',
-              href: 'https://github.com/rajanphadnis/daq_parser',
+              label: "PSP Daq Parser",
+              href: "https://github.com/rajanphadnis/daq_parser",
             },
           ],
         },
         {
-          title: 'More',
+          title: "More",
           items: [
             // {
             //   label: 'Blog',
             //   to: '/blog',
             // },
             {
-              label: 'GitHub',
-              href: 'https://github.com/rajanphadnis/psp-data-viewer',
+              label: "GitHub",
+              href: "https://github.com/rajanphadnis/psp-data-viewer",
             },
           ],
         },
