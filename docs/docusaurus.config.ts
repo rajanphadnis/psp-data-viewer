@@ -106,6 +106,16 @@ const config: Config = {
               label: "API",
               to: "/docs/api/intro",
             },
+            
+            {
+              label: "WebApp(s)",
+              to: "/docs/webapp/intro",
+            },
+            
+            {
+              label: "Backend",
+              to: "/docs/backend/intro",
+            },
           ],
         },
         {

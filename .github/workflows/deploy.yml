@@ -133,7 +133,7 @@ jobs:
 
   build-and-release-webapp:
     runs-on: ubuntu-latest
-    needs: [version-check-webapp, version-check-admin, version-check-docs, changelog-check, unit-tests]
+    needs: [version-check-admin, version-check-webapp, version-check-docs, changelog-check, unit-tests]
     steps:
     - uses: actions/checkout@v4
     - uses: oven-sh/setup-bun@v1
@@ -177,7 +177,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Set up Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v4
       with:
         node-version: '20'
     - name: NPM install
