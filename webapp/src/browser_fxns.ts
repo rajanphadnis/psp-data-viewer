@@ -23,13 +23,19 @@ export function getTestID(default_redirect: string): string {
   return param.slice(1, -1);
 }
 
-export function getSharelinkList(): void {
+export function getSharelinkList(): boolean {
   let param = getQueryVariable("b64");
   if (param == undefined || param == "") {
     globalThis.activeDatasets_to_add = [];
+    return false;
   } else {
     const decodedList = decode(param);
-    globalThis.activeDatasets_to_add = decodedList.split(",");
+    const paramList = decodedList.split(":::");
+    console.log(parseInt(paramList[1]));
+    globalThis.activeDatasets_to_add = paramList[0].split(",");
+    globalThis.displayedRangeStart = parseInt(paramList[1]);
+    globalThis.displayedRangeEnd = parseInt(paramList[2]);
+    return true
   }
 }
 
@@ -39,7 +45,7 @@ export function getSharelink(): [string, string] {
   if (bufferString == undefined || bufferString == "") {
     return [location.origin + location.pathname, ""];
   } else {
-    b64 = encode(globalThis.activeDatasets_to_add.join(","));
+    b64 = encode(globalThis.activeDatasets_to_add.join(",") + `:::${globalThis.displayedRangeStart}:::${globalThis.displayedRangeEnd}`);
   }
   const sharelink_base = location.origin + location.pathname + "?b64=" + b64;
   return [sharelink_base, b64];

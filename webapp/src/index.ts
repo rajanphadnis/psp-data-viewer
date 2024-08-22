@@ -41,16 +41,18 @@ async function main() {
   const [tests, default_url] = await getGeneralTestInfo();
   setKnownTests(tests, default_url);
   globalThis.test_id = getTestID(default_url);
-  getSharelinkList();
+  const usingSharelink: boolean = getSharelinkList();
   const [datasets, name, test_article, gse_article, starting_ts, ending_ts] = await getTestInfo();
   globalThis.starting_timestamp = starting_ts;
   globalThis.ending_timestamp = ending_ts;
-  globalThis.displayedRangeStart = starting_ts;
-  globalThis.displayedRangeEnd = ending_ts;
+  if (!usingSharelink) {
+    globalThis.displayedRangeStart = starting_ts;
+    globalThis.displayedRangeEnd = ending_ts;
+  }
   globalThis.activeDatasets_all = datasets.sort((a, b) => a.localeCompare(b));
   setTitle(name, test_article, gse_article);
   setupEventListeners();
-  update();
+  update(globalThis.displayedRangeStart, globalThis.displayedRangeEnd);
 }
 
 main();

@@ -1,3 +1,9 @@
+## v0.1.2
+Fixed client-side CSV generation
+
+### Changed
+- Moved client-side CSV generation to localStorage-based csv gen
+
 ## v0.1.1
 Small bug fixes
 
