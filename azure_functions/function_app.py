@@ -168,3 +168,14 @@ def get_database_info(req: func.HttpRequest) -> func.HttpResponse:
             "Access-Control-Allow-Credentials": True,  # Required for cookies, authorization headers with HTTPS
         },
     )
+
+@app.route(route="test_fxn")
+def test_fxn(req: func.HttpRequest) -> func.HttpResponse:
+    return func.HttpResponse(
+        body="Hello World",
+        status_code=200,
+        headers={
+            "Access-Control-Allow-Origin": "*",  # Required for CORS support to work
+            "Access-Control-Allow-Credentials": True,  # Required for cookies, authorization headers with HTTPS
+        },
+    )
