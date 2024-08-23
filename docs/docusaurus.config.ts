@@ -43,7 +43,7 @@ const config: Config = {
           // routeBasePath: "api",
           // sidebarPath: './sidebarsProduct.js',
           editUrl:
-            'https://github.dev/rajanphadnis/psp-data-viewer/blob/main/docs/docs/',
+            'https://github.dev/rajanphadnis/psp-data-viewer/blob/main/docs/',
         },
         theme: {
           customCss: "./src/css/custom.css",

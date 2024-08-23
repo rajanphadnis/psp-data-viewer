@@ -1,3 +1,9 @@
+## v0.1.5
+Small bug fixes
+
+### Changed
+- small bug fixes
+
 ## v0.1.4
 Small bug fixes
 
