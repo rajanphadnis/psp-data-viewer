@@ -1,3 +1,12 @@
+## v0.1.3
+Added color pallette picker
+
+### Changed
+- Added settings panel
+- Added color pallette picker
+- Added version and build date settings footer
+- Added quick links to settings panel
+
 ## v0.1.2
 Fixed client-side CSV generation, plot zooming
 

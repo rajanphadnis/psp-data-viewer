@@ -1,6 +1,6 @@
 import { Firestore, doc, getDoc, getDocFromCache } from "firebase/firestore";
 import type { AllTests, DatasetSeries } from "./types";
-import { datasetPlottingColors } from "./theming";
+import { getDatasetPlottingColor } from "./theming";
 import { legendRound } from "./plotting_helpers";
 
 export async function getSensorData(
@@ -19,7 +19,6 @@ export async function getSensorData(
 
   var startQueryTime = performance.now();
   return (await fetch(requestURL)).json().then((response) => {
-    console.log(response);
     var endQueryTime = performance.now();
     console.log(`query took ${endQueryTime - startQueryTime} milliseconds`);
 
@@ -30,7 +29,7 @@ export async function getSensorData(
       series.push({
         label: nameOnly,
         value: (self: any, rawValue: number) => legendRound(rawValue, " " + scale),
-        stroke: datasetPlottingColors[channelsToFetch.get(dataset)!],
+        stroke: getDatasetPlottingColor(channelsToFetch.get(dataset)!),
         width: 2,
         scale: scale,
         spanGaps: true,

@@ -31,7 +31,6 @@ export function getSharelinkList(): boolean {
   } else {
     const decodedList = decode(param);
     const paramList = decodedList.split(":::");
-    console.log(parseInt(paramList[1]));
     globalThis.activeDatasets_to_add = paramList[0].split(",");
     globalThis.displayedRangeStart = parseInt(paramList[1]);
     globalThis.displayedRangeEnd = parseInt(paramList[2]);
@@ -102,7 +101,7 @@ export function setTitle(name: string, test_article: string, gse_article: string
   const titleElement = document.getElementById("title")!;
   const tabTitle = document.getElementById("tabTitle")!;
   titleElement.innerHTML = "PSP Data Viewer::" + test_article + ":" + gse_article + ":" + name;
-  tabTitle.innerHTML = test_article + "::" + name;
+  tabTitle.innerHTML = test_article + ":" + gse_article + ":" + name;
 }
 
 export function updateStatus(status: loadingStatus) {

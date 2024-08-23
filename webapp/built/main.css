@@ -178,8 +178,23 @@ div {
     text-align: center;
 }
 
+.settingsQuickActionButton {
+    margin-left: 20px;
+    padding: 10px;
+    border: none;
+    color: black;
+    background-color: var(--rush);
+    cursor: pointer;
+    text-align: center;
+    font-size: smaller;
+    font-weight: bold;
+    font-family: "IBM Plex Mono", monospace;
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
 #switch-test,
-#resetCache {
+#settings-button {
     margin-left: 20px;
     padding-top: 4px;
     /* border: 4px solid var(--rush); */
@@ -189,10 +204,13 @@ div {
     cursor: pointer;
     text-align: center;
     font-size: smaller;
+    font-weight: bold;
+    font-family: "IBM Plex Mono", monospace;
 }
 
 #switch-test:hover,
-#resetCache:hover {
+.settingsQuickActionButton:hover,
+#settings-button:hover {
     background-color: var(--field);
 }
 
@@ -206,7 +224,7 @@ div {
     display: none;
     position: fixed;
     z-index: 1;
-    padding-top: 20vh;
+    padding-top: 15vh;
     left: 0;
     top: 0;
     width: 100%;
@@ -254,7 +272,7 @@ div {
 }
 
 .close {
-    color: white;
+    color: #676767;
     float: right;
     font-size: 28px;
     font-weight: bold;
@@ -270,7 +288,7 @@ div {
 .modal-header {
     padding: 2px 16px;
     background-color: var(--rush);
-    color: white;
+    color: black;
     font-family: "IBM Plex Mono", monospace;
     font-weight: bold;
 }
@@ -280,7 +298,7 @@ div {
     color: white;
     font-family: "IBM Plex Mono", monospace;
     font-weight: bold;
-    max-height: 40vh;
+    max-height: 60vh;
     overflow: auto;
 }
 
@@ -306,4 +324,127 @@ div {
 .available {
     text-decoration: line-through;
     color: rgb(143, 143, 143);
+}
+
+#settingsFooter {
+    color: rgb(143, 143, 143);
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: bold;
+    font-size: small;
+    text-align: start;
+}
+
+#settings_releaseNotesLink {
+    color: rgb(143, 143, 143);
+}
+
+#settings_quickActions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.url_list_div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 220px;
+}
+
+.url_list_div:hover {
+    background-color: var(--steel);
+}
+
+.url_list_add_button {
+    border: none;
+    margin: 10px;
+    /* margin-right: 0px; */
+    /* width: calc(100% - 20px); */
+    color: black;
+    background-color: var(--rush);
+    cursor: pointer;
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: bold;
+    height: fit-content;
+    padding: 8px;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+}
+
+.url_list_add_button>p {
+    margin: 0px;
+    margin-right: 5px;
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: bold;
+}
+
+.url_list_delete_button {
+    border: none;
+    /* margin: 10px; */
+    margin-right: 0px;
+    /* width: calc(100% - 20px); */
+    color: black;
+    background-color: var(--rush);
+    cursor: pointer;
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: bold;
+    height: fit-content;
+    padding: 8px;
+}
+
+.url_list_title {
+    /* margin-left: 10px; */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 220px;
+}
+
+.icon {
+    width: 1.5em;
+    height: 1.5em;
+    vertical-align: -0.125em;
+}
+
+.test-field-text {
+    background-color: var(--background-color);
+    border: 3px solid var(--field);
+    color: white;
+    padding: 10px;
+    /* font-weight: bold; */
+    font-family: "IBM Plex Mono", monospace;
+    width: 150px;
+}
+
+.test-field-text:focus {
+    background-color: var(--background-color);
+    border: 3px solid var(--aged);
+    color: white;
+    padding: 10px;
+    outline: 6px solid transparent;
+}
+
+.test-field-text:disabled {
+    border: 3px solid transparent;
+    color: rgb(204, 204, 204);
+    background-color: transparent;
+}
+
+#colorPickerDiv {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    height: 32vh;
+    overflow-x: auto;
 }

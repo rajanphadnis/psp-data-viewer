@@ -11,10 +11,17 @@ export function initModal() {
   closeButton.addEventListener("click", (e) => {
     modal.style.display = "none";
   });
+}
 
+export function initModalEscape() {
+  const testModal = document.getElementById("testSwitcherModal")!;
+  const settingsModal = document.getElementById("settingsModal")!;
   window.onclick = function (event) {
-    if (event.target == modal) {
-      modal.style.display = "none";
+    if (event.target == testModal) {
+      testModal.style.display = "none";
+    }
+    if (event.target == settingsModal) {
+      settingsModal.style.display = "none";
     }
   };
 }
@@ -27,7 +34,11 @@ export function setKnownTests(tests: AllTests[], default_url: String): void {
     if (test.id == default_url) {
       isDefault = true;
     }
-    const buttonElement = createModalButton(test.test_article + ":" + test.gse_article + ":" + test.name, test.id, isDefault);
+    const buttonElement = createModalButton(
+      test.test_article + ":" + test.gse_article + ":" + test.name,
+      test.id,
+      isDefault
+    );
     modalBody.appendChild(buttonElement);
   }
 }

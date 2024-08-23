@@ -1,7 +1,7 @@
 import { type AlignedData } from "uplot";
 import { getSensorData } from "./db_interaction";
 import { legendRound, plot } from "./plotting_helpers";
-import { datasetPlottingColors } from "./theming";
+import { getDatasetPlottingColor } from "./theming";
 import { writeSelectorList } from "./dataset_selector";
 import { updateStatus } from "./browser_fxns";
 import { loadingStatus, type DatasetSeries } from "./types";
@@ -29,7 +29,7 @@ export async function generatePlottedDatasets(
       series[i] = {
         label: nameOnly,
         value: (self: any, rawValue: number) => legendRound(rawValue, " " + scale),
-        stroke: datasetPlottingColors[i],
+        stroke: getDatasetPlottingColor(i),
         width: 2,
         scale: scale,
         spanGaps: true,
@@ -38,10 +38,7 @@ export async function generatePlottedDatasets(
       channelsToFetch.set(datasets[i], i);
     }
   }
-  console.log(toPlot);
-  console.log(series);
   let need_to_fetch: string[] = channelsToFetch.keys().toArray();
-  console.log(need_to_fetch);
 
   if (need_to_fetch.length == 0) {
     const dataset_key: string = `application_data__time--${startTimestamp.toString()}--${endTimestamp.toString()}`;
@@ -56,8 +53,6 @@ export async function generatePlottedDatasets(
     endTimestamp,
     channelsToFetch
   );
-  console.log(toPlot_fetched);
-  console.log(series_fetched);
   for (let i = 0; i < need_to_fetch.length; i++) {
     const fetched_dataset = need_to_fetch[i];
     const indexToWrite = channelsToFetch.get(fetched_dataset)!;
@@ -85,8 +80,6 @@ function cacheFetchedData(toPlot: number[][], need_to_fetch: string[], startTime
 
 function storeActiveDatasets(data: number[][], datasetNames: string[]) {
   const actualNames = ["time", ...datasetNames];
-  console.log(actualNames);
-  console.log(data);
   localStorage.setItem("currentData_data", JSON.stringify(data));
   localStorage.setItem("currentData_names", JSON.stringify(actualNames));
 }

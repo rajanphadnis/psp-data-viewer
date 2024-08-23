@@ -177,3 +177,5 @@ dist
 ./.vscode/
 
 ./built/index.js
+
+./src/generated_app_info.ts

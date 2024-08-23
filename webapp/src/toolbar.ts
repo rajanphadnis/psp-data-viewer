@@ -8,20 +8,8 @@ const sharelinkButton: HTMLButtonElement = document.getElementById("sharelinkBut
 const downloadImageButton: HTMLButtonElement = document.getElementById("downloadImage")! as HTMLButtonElement;
 const copyImageButton: HTMLButtonElement = document.getElementById("copyImage")! as HTMLButtonElement;
 const csvButton: HTMLButtonElement = document.getElementById("downloadCSV")! as HTMLButtonElement;
-const resetButton: HTMLButtonElement = document.getElementById("resetCache")! as HTMLButtonElement;
 
 export function setupEventListeners() {
-  resetButton.addEventListener("click", async (e) => {
-    updateStatus(loadingStatus.LOADING);
-    localStorage.clear();
-    sessionStorage.clear();
-    const dbs = await window.indexedDB.databases();
-    dbs.forEach(async (db) => {
-      await window.indexedDB.deleteDatabase(db.name!);
-    });
-    const [link, b64] = getSharelink();
-    window.location.href = link;
-  });
   csvButton.addEventListener("click", async (e) => {
     updateStatus(loadingStatus.LOADING);
     csvButton.innerHTML = loader;
@@ -36,12 +24,11 @@ export function setupEventListeners() {
       }
       csvData.push(rowToWrite);
     }
-    console.log(csvData);
     let csvContent = "data:text/csv;charset=utf-8," + csvData.map((e) => e.join(",")).join("\n");
     var encodedUri = encodeURI(csvContent);
     var link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "my_data.csv");
+    link.setAttribute("download", `${globalThis.activeDatasets_to_add.join(" ")} ${globalThis.displayedRangeStart} ${globalThis.displayedRangeEnd}.csv`);
     document.body.appendChild(link);
     link.click();
     updateStatus(loadingStatus.DONE);
@@ -76,9 +63,9 @@ export function setupEventListeners() {
 }
 
 export function updateAvailableFeatures() {
-  csvButton.style.opacity = "1";
-  csvButton.disabled = false;
-  csvButton.style.cursor = "pointer";
+  // csvButton.style.opacity = "1";
+  // csvButton.disabled = false;
+  // csvButton.style.cursor = "pointer";
 
   sharelinkButton.style.opacity = "1";
   sharelinkButton.disabled = false;
@@ -97,9 +84,9 @@ export function updateAvailableFeatures() {
     downloadImageButton.disabled = false;
     downloadImageButton.style.cursor = "pointer";
 
-    // csvButton.style.opacity = "1";
-    // csvButton.disabled = false;
-    // csvButton.style.cursor = "pointer";
+    csvButton.style.opacity = "1";
+    csvButton.disabled = false;
+    csvButton.style.cursor = "pointer";
   } else {
     copyImageButton.style.opacity = "0";
     copyImageButton.disabled = true;
@@ -113,8 +100,8 @@ export function updateAvailableFeatures() {
     downloadImageButton.disabled = true;
     downloadImageButton.style.cursor = "default";
 
-    // csvButton.style.opacity = "0";
-    // csvButton.disabled = true;
-    // csvButton.style.cursor = "default";
+    csvButton.style.opacity = "0";
+    csvButton.disabled = true;
+    csvButton.style.cursor = "default";
   }
 }

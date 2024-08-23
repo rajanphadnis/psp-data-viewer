@@ -3,11 +3,13 @@ import { getTestInfo, getGeneralTestInfo } from "./db_interaction";
 import { update } from "./plotting";
 import { loadingStatus } from "./types";
 import { getTestID, getSharelinkList, setTitle, updateStatus } from "./browser_fxns";
-import { initModal, setKnownTests } from "./modal";
+import { initModal, initModalEscape, setKnownTests } from "./modal";
 import { initFirebase } from "./firebase_init";
 import type uPlot from "uplot";
 import { setupEventListeners } from "./toolbar";
 import { getFunctions, type Functions } from "firebase/functions";
+import { initSettingsModal, setupSettings } from "./settings";
+import { initColorList } from "./theming";
 
 declare global {
   // var activeDatasets: DatasetStatus;
@@ -25,13 +27,17 @@ declare global {
   var displayedSamples: number;
   var displayedRangeStart: number;
   var displayedRangeEnd: number;
+  var plotPalletteColors: string[];
 }
 globalThis.activeDatasets_to_add = [];
 globalThis.activeDatasets_all = [];
 globalThis.activeDatasets_loading = [];
 globalThis.activeDatasets_cached = [];
+initColorList();
 initFirebase();
 initModal();
+initSettingsModal();
+initModalEscape();
 
 async function main() {
   globalThis.displayedSamples = 4500;
@@ -52,6 +58,7 @@ async function main() {
   globalThis.activeDatasets_all = datasets.sort((a, b) => a.localeCompare(b));
   setTitle(name, test_article, gse_article);
   setupEventListeners();
+  setupSettings();
   update(globalThis.displayedRangeStart, globalThis.displayedRangeEnd);
 }
 
