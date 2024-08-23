@@ -5,8 +5,9 @@ on:
           - "v*.*.*"
 
 env:
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: './azure_functions/' # set this to the path to your web app project, defaults to the repository root
-  PYTHON_VERSION: '3.11' # set this to the python version to use (supports 3.6, 3.7, 3.8)
+  AZURE_FUNCTIONAPP_NAME: 'psp-data-viewer'
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: './azure_functions'
+  PYTHON_VERSION: '3.11'
 
 permissions:
   contents: write
@@ -135,6 +136,28 @@ jobs:
             script: |
                 core.setFailed('docs/package.json not updated to new version ${{ env.GHA_NEW_TAG_NAME_ADMIN }}!')
 
+  paths-filter:
+    runs-on: ubuntu-latest
+    outputs:
+      output1: ${{ steps.filter.outputs.workflows }}
+    steps:
+    - uses: actions/checkout@v4
+    - uses: dorny/paths-filter@v3
+      id: filter
+      with:
+        filters: |
+          workflows:
+            - 'azure_functions/**'
+    # run only if 'azure_functions' files were changed
+    - name: workflow tests
+      if: steps.filter.outputs.workflows == 'true'
+      run: echo "Azure Functions will deploy"
+
+    # run only if not 'workflows' files were changed
+    - name: not workflow tests
+      if: steps.filter.outputs.workflows != 'true'
+      run: echo "Will not deploy azure functions"
+
   build-and-release-webapp:
     runs-on: ubuntu-latest
     needs: [version-check-admin, version-check-webapp, version-check-docs, changelog-check, unit-tests]
@@ -196,9 +219,41 @@ jobs:
         projectId: psp-portfolio-f1205
         target: docs
 
+  build-and-deploy-azure:
+    runs-on: ubuntu-latest
+    needs: [version-check-admin, version-check-webapp, version-check-docs, changelog-check, unit-tests, paths-filter]
+    if: needs.paths-filter.outputs.output1 == 'true'
+    environment: Production
+    steps:
+    - name: 'Checkout GitHub Action'
+      uses: actions/checkout@v3
+
+    - name: Setup Python ${{ env.PYTHON_VERSION }} Environment
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: 'Resolve Project Dependencies Using Pip'
+      shell: bash
+      run: |
+        pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt --target=".python_packages/lib/site-packages"
+        popd
+
+    - name: 'Run Azure Functions Action'
+      uses: Azure/functions-action@v1
+      id: fa
+      with:
+        app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+        package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+        publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
+        scm-do-build-during-deployment: true
+        enable-oryx-build: true
+
   github-release:
     runs-on: ubuntu-latest
-    needs: [build-and-release-webapp, build-and-release-admin, build-and-release-docs]
+    needs: [build-and-release-webapp, build-and-release-admin, build-and-release-docs, build-and-deploy-azure]
     steps:
       - uses: actions/checkout@v4
       - name: Update GitHub Release
