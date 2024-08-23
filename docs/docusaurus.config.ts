@@ -42,8 +42,8 @@ const config: Config = {
           // path: "api",
           // routeBasePath: "api",
           // sidebarPath: './sidebarsProduct.js',
-          // editUrl:
-          //   'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+          editUrl:
+            'https://github.dev/rajanphadnis/psp-data-viewer/blob/main/docs/docs/',
         },
         theme: {
           customCss: "./src/css/custom.css",
