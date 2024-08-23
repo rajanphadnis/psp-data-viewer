@@ -1,3 +1,7 @@
 # PSP Data Viewer Platform
 
-PSP Data Viewer (post-test)
+Webapp: https://psp.rajanphadnis.com/
+
+Admin Console: https://psp-admin.rajanphadnis.com/
+
+Documentation: https://psp-docs.rajanphadnis.com/

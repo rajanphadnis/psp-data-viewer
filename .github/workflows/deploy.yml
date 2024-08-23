@@ -1,4 +1,4 @@
-name: "[CD:Production:Web] Build and Release"
+name: "[CD:Production] Build and Release"
 on:
   push:
       tags:
@@ -139,6 +139,8 @@ jobs:
   build-and-release-webapp:
     runs-on: ubuntu-latest
     needs: [version-check-admin, version-check-webapp, version-check-docs, changelog-check, unit-tests]
+    environment:
+      name: 'Production'
     steps:
     - uses: actions/checkout@v4
     - uses: oven-sh/setup-bun@v1
@@ -159,6 +161,8 @@ jobs:
   build-and-release-admin:
     runs-on: ubuntu-latest
     needs: [version-check-admin, version-check-webapp, version-check-docs, changelog-check, unit-tests]
+    environment:
+      name: 'Production'
     steps:
     - uses: actions/checkout@v4
     - uses: oven-sh/setup-bun@v1
@@ -179,6 +183,8 @@ jobs:
   build-and-release-docs:
     runs-on: ubuntu-latest
     needs: [version-check-admin, version-check-webapp, version-check-docs, changelog-check, unit-tests]
+    environment:
+      name: 'Production'
     steps:
     - uses: actions/checkout@v4
     - name: Set up Node.js
