@@ -6,7 +6,7 @@ sidebar_position: 1
 
 Call with `getData()` by submitting a request to `https://psp-api.rajanphadnis.com/api/get_data`
 
-Sample Query: `https://psp-api.rajanphadnis.com/api/get_data?start=1714537441001&end=1714537554817&channels=fms__lbf__,pi-fu-02__bin__`
+Sample Query: `https://psp-api.rajanphadnis.com/api/get_data?id=zggWCpa&start=1714534081000&end=1714537899029&channels=fms__lbf__,rtd-fu__V__`
 
 ## Parameters
 
