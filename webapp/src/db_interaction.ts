@@ -1,4 +1,4 @@
-import { Firestore, doc, getDoc, getDocFromCache } from "firebase/firestore";
+import { DocumentSnapshot, Firestore, doc, getDoc, getDocFromCache, getDocFromServer, type DocumentData } from "firebase/firestore";
 import type { AllTests, DatasetSeries } from "./types";
 import { getDatasetPlottingColor } from "./theming";
 import { legendRound } from "./plotting_helpers";
@@ -63,7 +63,15 @@ export async function getTestInfo(): Promise<[string[], string, string, string, 
 
 export async function getGeneralTestInfo(): Promise<[AllTests[], string]> {
   const docRef = doc(globalThis.db, "general", "tests");
-  let docSnap = await getDoc(docRef);
+  let docSnap: DocumentSnapshot<DocumentData, DocumentData>;
+  try {
+    console.log("fetching metadata from cache");
+    docSnap = await getDocFromCache(docRef);
+  } catch (error) {
+    console.log("cache miss. Fetching metadata from server");
+    docSnap = await getDoc(docRef);
+  }
+  // = await getDoc(docRef);
   const docData = docSnap.data()!;
   const tests_unsorted: AllTests[] = docData["visible"];
   const tests = tests_unsorted.sort((a, b) => (a.initial_timestamp > b.initial_timestamp ? -1 : 1));

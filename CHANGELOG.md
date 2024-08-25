@@ -1,3 +1,9 @@
+## v0.1.6
+Small bug fixes
+
+### Changed
+- added metadata caching
+
 ## v0.1.5
 Small bug fixes
 

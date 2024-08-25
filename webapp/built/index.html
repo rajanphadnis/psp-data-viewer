@@ -35,7 +35,7 @@
                 <h2>Settings</h2>
             </div>
             <div id="modal-body">
-                <div style="display: flex; flex-direction: row; justify-content: start;">
+                <div style="display: flex; flex-direction: row; justify-content: start;align-items: center;">
                     <h4>Plotting Color Pallette:</h4>
                     <button id="addto_color_pallet" class="url_list_add_button" title="Add New Entry">
                         <p>Add</p><svg xmlns="http://www.w3.org/2000/svg" class="icon"
@@ -64,8 +64,11 @@
                 <div id="colorPickerDiv"></div>
                 <h4>Quick Actions</h4>
                 <div id="settings_quickActions">
+                    <button title="Fetch Most Recent Data" id="resetMetadata" class="settingsQuickActionButton">
+                        <p>Refresh Metadata</p><span class="material-symbols-outlined">cloud_download</span>
+                    </button>
                     <button title="Fetch Most Recent Data" id="resetCache" class="settingsQuickActionButton">
-                        <p>Refresh Site</p><span class="material-symbols-outlined">cached</span>
+                        <p>Reset Site</p><span class="material-symbols-outlined">cached</span>
                     </button>
                     <button title="Open Documentation" id="openDocs" class="settingsQuickActionButton">
                         <p>Documentation</p><span class="material-symbols-outlined">description</span>

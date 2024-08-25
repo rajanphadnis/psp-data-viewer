@@ -17,6 +17,7 @@ const save_icon =
 const resetButton: HTMLButtonElement = document.getElementById("resetCache")! as HTMLButtonElement;
 const docsButton: HTMLButtonElement = document.getElementById("openDocs")! as HTMLButtonElement;
 const adminButton: HTMLButtonElement = document.getElementById("openAdmin")! as HTMLButtonElement;
+const metadataButton: HTMLButtonElement = document.getElementById("resetMetadata")! as HTMLButtonElement;
 export function initSettingsModal() {
   const modal = document.getElementById("settingsModal")!;
   const settings_versionString = document.getElementById("settings_versionString")! as HTMLSpanElement;
@@ -49,6 +50,15 @@ export function setupSettings() {
     updateStatus(loadingStatus.LOADING);
     localStorage.clear();
     sessionStorage.clear();
+    const dbs = await window.indexedDB.databases();
+    dbs.forEach(async (db) => {
+      await window.indexedDB.deleteDatabase(db.name!);
+    });
+    const [link, b64] = getSharelink();
+    window.location.href = link;
+  });
+  metadataButton.addEventListener("click", async (e) => {
+    updateStatus(loadingStatus.LOADING);
     const dbs = await window.indexedDB.databases();
     dbs.forEach(async (db) => {
       await window.indexedDB.deleteDatabase(db.name!);

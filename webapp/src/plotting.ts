@@ -23,7 +23,7 @@ export async function generatePlottedDatasets(
     const scale: string = datasets[i].split("__")[1];
     const dataset_key: string = `application_data__${
       datasets[i]
-    }--${startTimestamp.toString()}--${endTimestamp.toString()}`;
+    }--${startTimestamp.toString()}--${endTimestamp.toString()}--${globalThis.test_id}`;
     if (localStorage[dataset_key]) {
       toPlot[i] = JSON.parse(localStorage.getItem(dataset_key)!);
       series[i] = {
@@ -41,7 +41,7 @@ export async function generatePlottedDatasets(
   let need_to_fetch: string[] = channelsToFetch.keys().toArray();
 
   if (need_to_fetch.length == 0) {
-    const dataset_key: string = `application_data__time--${startTimestamp.toString()}--${endTimestamp.toString()}`;
+    const dataset_key: string = `application_data__time--${startTimestamp.toString()}--${endTimestamp.toString()}--${globalThis.test_id}`;
     let toPlot_toReturn = [JSON.parse(localStorage.getItem(dataset_key)!), ...toPlot];
     let series_toReturn = [{}, ...series];
     return [toPlot_toReturn, series_toReturn];
@@ -71,7 +71,7 @@ function cacheFetchedData(toPlot: number[][], need_to_fetch: string[], startTime
       const plotData = JSON.stringify(toPlot[i]);
       const dataset_key: string = `application_data__${
         need_to_fetch[i]
-      }--${startTimestamp.toString()}--${endTimestamp.toString()}`;
+      }--${startTimestamp.toString()}--${endTimestamp.toString()}--${globalThis.test_id}`;
       console.log(`storing in cache: ${dataset_key}`);
       localStorage.setItem(dataset_key, plotData);
     }
