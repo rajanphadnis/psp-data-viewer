@@ -1,8 +1,8 @@
 export function initConfirmationModal() {
     const modal = document.getElementById("testSwitcherModal")!;
-    const newTestButton = document.getElementById("newTestButton")!;
+    const finalizeButton = document.getElementById("finalizeButton")!;
     const closeButton = document.getElementsByClassName("close")[0]!;
-    // newTestButton.addEventListener("click", (e) => {
+    // finalizeButton.addEventListener("click", (e) => {
     //   modal.style.display = "block";
     // });
   

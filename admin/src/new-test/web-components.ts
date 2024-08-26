@@ -1,8 +1,11 @@
+import { getFunctions, httpsCallable } from "firebase/functions";
 import { delete_icon, plus_icon } from "../icons";
 import { genId } from "../modal";
 import { updateTestCreateStatus } from "../status";
 import { loadingStatus, operationType, type NewTestConfig } from "../types";
 import { generateTitle, updateTestDisplay } from "../web_components";
+import { doc, onSnapshot } from "firebase/firestore";
+import { new_gdrive_links, new_upload_tdsm_csv } from "./finalize";
 
 export async function updateConfigDisplay(config: NewTestConfig) {
   console.log(config);
@@ -17,8 +20,7 @@ export async function updateConfigDisplay(config: NewTestConfig) {
     linkDiv.style.display = "block";
     uploadDiv.style.display = "none";
     initUrlList();
-  }
-  else {
+  } else {
     linkDiv.style.display = "none";
     uploadDiv.style.display = "block";
     initUploadPane();
@@ -26,7 +28,51 @@ export async function updateConfigDisplay(config: NewTestConfig) {
   // generateTestPanel(selected_test);
   // selected_test = await getSpecificTest(selected_test.id, cache);
   // generateDatasetPanel(selected_test);
+  checkInputAndShowFinalizeButton(config);
   updateTestCreateStatus(loadingStatus.DONE);
+}
+
+function checkInputAndShowFinalizeButton(config: NewTestConfig) {
+  const rightMain: HTMLButtonElement = document.getElementById("right-main")! as HTMLButtonElement;
+  const finalizeButton: HTMLButtonElement = document.getElementById("finalizeButton")! as HTMLButtonElement;
+  finalizeButton.style.visibility = "visible";
+  rightMain.style.visibility = "visible";
+
+  finalizeButton.addEventListener("click", (e) => {
+    if (config.name.includes("gdrive")) {
+      new_gdrive_links(config);
+    } else {
+      new_upload_tdsm_csv(config);
+    }
+  });
+}
+
+export function getBasicTestInfo(config: NewTestConfig): [string, string, string, string] {
+  const idElement = document.getElementById(config.id + "_field_id")! as HTMLInputElement;
+  const nameElement = document.getElementById(config.id + "_field_name")! as HTMLInputElement;
+  const testElement = document.getElementById(config.id + "_field_test_article")! as HTMLSelectElement;
+  const gseElement = document.getElementById(config.id + "_field_gse_article")! as HTMLSelectElement;
+  const inputtedID = idElement.value;
+  const inputtedName = nameElement.value;
+  const inputtedGSEElement = gseElement.options[gseElement.selectedIndex].value;
+  const inputtedTestElement = testElement.options[testElement.selectedIndex].value;
+  return [inputtedID, inputtedName, inputtedGSEElement, inputtedTestElement];
+}
+
+export function liveUpdate(id: string) {
+  const currentStatusText = document.getElementById("newTest_currentStatus")! as HTMLDivElement;
+  const nextStatusText = document.getElementById("newTest_nextStatus")! as HTMLDivElement;
+  const currentStatusBar = document.getElementById("newTest_statusBar")! as HTMLDivElement;
+  const unsubscribe = onSnapshot(doc(globalThis.db, `/${id}/test_creation`), (doc) => {
+    console.log("Current data: ", doc);
+    if (doc.data() != undefined) {
+      currentStatusText.innerHTML = doc.data()!["creation_status"];
+      nextStatusText.innerHTML = doc.data()!["creation_status_next_step"];
+      currentStatusBar.innerHTML = `Step ${doc.data()!["creation_status_current"]} of ${
+        doc.data()!["creation_status_max_steps"]
+      }`;
+    }
+  });
 }
 
 export function generateConfigPathEntries(currentlySelectedConfig: NewTestConfig | null = null) {
@@ -122,12 +168,12 @@ function generateTestInfoField(
   }
   field_text.id = config_id + "_field_" + field_id;
   field_text.addEventListener("change", (e) => {
-    const saveButton = document.getElementById("panel_save_button")!;
-    saveButton.style.visibility = "visible";
+    // const saveButton = document.getElementById("panel_save_button")!;
+    // saveButton.style.visibility = "visible";
   });
   field_select.addEventListener("change", (e) => {
-    const saveButton = document.getElementById("panel_save_button")!;
-    saveButton.style.visibility = "visible";
+    // const saveButton = document.getElementById("panel_save_button")!;
+    // saveButton.style.visibility = "visible";
   });
   field_div.appendChild(field_label);
   if (isDropdown) {
@@ -161,18 +207,59 @@ function initUploadPane() {
   const div = document.createElement("div");
   const p = document.createElement("p");
   p.innerHTML = "Upload HDF5 file per documentation";
-  // const addButton = document.createElement("button");
-  // addButton.innerHTML = plus_icon;
-  // '<span class="material-symbols-outlined">add</span>';
-  // addButton.classList.add("url_list_add_button");
-  // addButton.addEventListener("click", (e) => {
-  //   updateUrlList(operationType.ADD);
-  // });
+  const addButton = document.createElement("button");
+  addButton.innerHTML = plus_icon;
+  ('<span class="material-symbols-outlined">add</span>');
+  addButton.classList.add("url_list_add_button");
+  addButton.addEventListener("click", (e) => {
+    updateFileList(operationType.ADD);
+  });
   div.classList.add("url_list_title");
   div.appendChild(p);
-  // div.appendChild(addButton);
+  div.appendChild(addButton);
   mainDiv.appendChild(div);
-  // mainDiv.appendChild(createUrlListItem(0));
+  // mainDiv.appendChild(createUploadListItem(0));
+}
+
+function createUploadListItem(index: number): [HTMLDivElement, HTMLDivElement] {
+  const listDiv = document.createElement("div");
+  const fileInput = document.createElement("input");
+  const deleteButton = document.createElement("button");
+  listDiv.classList.add("file_list_div");
+  listDiv.id = "file_list_div_" + index;
+  fileInput.id = "file_list_div_fileinput_" + index;
+  fileInput.classList.add("test-field-file-upload");
+  fileInput.type = "file";
+  fileInput.accept = ".csv,.tdms";
+  // const attr = document.createAttribute("multiple");
+  // fileInput.attributes.setNamedItemNS(attr);
+  deleteButton.innerHTML = delete_icon;
+  deleteButton.classList.add("file_list_delete_button");
+  listDiv.appendChild(fileInput);
+  listDiv.appendChild(deleteButton);
+  const progressDiv = createUploadProgressBar(index);
+  deleteButton.addEventListener("click", (e) => {
+    document.getElementById("test-upload")!.removeChild(listDiv);
+    document.getElementById("right-main")!.removeChild(progressDiv);
+  });
+  return [listDiv, progressDiv];
+}
+function createUploadProgressBar(index: number) {
+  const progressBar = document.createElement("progress");
+  const labelP = document.createElement("p");
+  const statusP = document.createElement("p");
+  const listDiv = document.createElement("div");
+  listDiv.classList.add("file_progress_div");
+  listDiv.id = "file_progress_div_" + index;
+  progressBar.id = "file_upload_progress_" + index;
+  progressBar.classList.add("file_progress_bar");
+  labelP.innerHTML = "File " + (index + 1) + ": ";
+  statusP.innerHTML = "Waiting for upload...";
+  statusP.id = "file_progress_p_" + index;
+  listDiv.appendChild(labelP);
+  listDiv.appendChild(progressBar);
+  listDiv.appendChild(statusP);
+  return listDiv;
 }
 
 function createUrlListItem(index: number): HTMLDivElement {
@@ -195,4 +282,12 @@ function createUrlListItem(index: number): HTMLDivElement {
 function updateUrlList(opType: operationType) {
   const numberOfCurrentItems = document.getElementsByClassName("url_list_div").length;
   document.getElementById("test-links")!.appendChild(createUrlListItem(numberOfCurrentItems));
+}
+
+function updateFileList(opType: operationType) {
+  const numberOfCurrentItems = document.getElementsByClassName("file_list_div").length;
+  const [listDiv, progressDiv] = createUploadListItem(numberOfCurrentItems);
+  document.getElementById("test-upload")!.appendChild(listDiv);
+  document.getElementById("right-main")!.appendChild(progressDiv);
+  document.getElementById("file_list_div_fileinput_" + numberOfCurrentItems)!.click();
 }

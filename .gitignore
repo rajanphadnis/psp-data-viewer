@@ -27,3 +27,4 @@ functions/DataLog_2024-0419-2059-24_CMS_Data_Wiring_5.tdms
 webapp/built/index.js
 aws_lambda/*.hdf5
 webapp/src/generated_app_info.ts
+functions/.env

@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="../status.css" crossorigin="anonymous">
     <link rel="stylesheet" href="../tests.css" crossorigin="anonymous">
     <link rel="stylesheet" href="../articles.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="./input_panel.css" crossorigin="anonymous">
     <link rel="icon" href="../images/favicon-32x32.png" sizes="32x32" />
     <link rel="icon" href="../images/favicon-16x16.png" sizes="16x16" />
     <link rel="icon" type="image/x-icon" href="../images/favicon.ico" />
@@ -100,7 +101,10 @@
         </div>
 
         <div id="right-main" style="visibility: hidden;">
-            <button title="Create a new test" id="newTestButton">Finalize -></button>
+            <button title="Create a new test" id="finalizeButton">Finalize -></button>
+            <div id="newTest_currentStatus" class="newTest_status_div"></div>
+            <div id="newTest_nextStatus" class="newTest_status_div"></div>
+            <div id="newTest_statusBar" class="newTest_status_div"></div>
         </div>
     </div>
 </body>

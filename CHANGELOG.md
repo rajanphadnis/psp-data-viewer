@@ -1,3 +1,12 @@
+## v0.2.0
+Added admin upload capability
+
+### Changed
+- added admin upload pane
+- added firebase functions to upload, process, transfer, compile, parse, and update everything needed to create a new test
+- added admin "finalize" button and panel
+- added infrastructure to support input checking
+
 ## v0.1.6
 Small bug fixes
 
