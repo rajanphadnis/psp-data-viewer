@@ -1,4 +1,3 @@
-import requests
 import azure.functions as func
 import logging
 import time
@@ -7,39 +6,9 @@ import pandas as pd
 import math
 import json
 import sys
+import requests
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
-
-
-def get_db_info(testID: str):
-    totalStartTime = time.time()
-    startTime = 0
-    endTime = 0
-    channel_list = []
-
-    with h5py.File(f"/hdf5data/hdf5_data/{testID}.hdf5", "r") as f:
-    # with h5py.File(f"./{testID}.hdf5", "r") as f:
-        channel_list = list(f.keys())
-        startTime = int(f["time"][0])
-        endTime = int(f["time"][-1])
-
-    totalEndTime = time.time()
-    dictToReturn = {}
-    dictToReturn["function_exec_time_total_ms"] = (totalEndTime - totalStartTime) * 1000
-    dictToReturn["database_start_time"] = startTime
-    dictToReturn["database_end_time"] = endTime
-    dictToReturn["database_channel_list"] = channel_list
-    return dictToReturn
-
-
-def get_annotations(testID: str):
-    response = requests.get(
-        f"https://get-annotations-w547ikcrwa-uc.a.run.app?id={testID}"
-    ).json()
-    if "No Annotations" in response:
-        return None
-    return response
-
 
 @app.route(route="get_data")
 def get_data(req: func.HttpRequest) -> func.HttpResponse:
@@ -154,7 +123,6 @@ def get_data(req: func.HttpRequest) -> func.HttpResponse:
         },
     )
 
-
 @app.route(route="get_database_info")
 def get_database_info(req: func.HttpRequest) -> func.HttpResponse:
     logging.info("Python HTTP trigger function processed a request.")
@@ -177,7 +145,13 @@ def get_database_info(req: func.HttpRequest) -> func.HttpResponse:
         param_annotations = "no"
 
     if param_annotations == "only":
-        annotations = get_annotations(testID)
+        response = requests.get(
+            f"https://get-annotations-w547ikcrwa-uc.a.run.app?id={testID}"
+        ).json()
+        if "No Annotations" in response:
+            annotations = None
+        else:
+            annotations = response
         if annotations is None:
             return func.HttpResponse(
                 body="No Annotations Available",
@@ -196,8 +170,32 @@ def get_database_info(req: func.HttpRequest) -> func.HttpResponse:
             },
         )
     if param_annotations == "yes":
-        dictToReturn = get_db_info(testID)
-        annotations = get_annotations(testID)
+        totalStartTime = time.time()
+        startTime = 0
+        endTime = 0
+        channel_list = []
+
+        with h5py.File(f"/hdf5data/hdf5_data/{testID}.hdf5", "r") as f:
+            # with h5py.File(f"./{testID}.hdf5", "r") as f:
+            channel_list = list(f.keys())
+            startTime = int(f["time"][0])
+            endTime = int(f["time"][-1])
+
+        totalEndTime = time.time()
+        dictToReturn = {}
+        dictToReturn["function_exec_time_total_ms"] = (
+            totalEndTime - totalStartTime
+        ) * 1000
+        dictToReturn["database_start_time"] = startTime
+        dictToReturn["database_end_time"] = endTime
+        dictToReturn["database_channel_list"] = channel_list
+        response = requests.get(
+            f"https://get-annotations-w547ikcrwa-uc.a.run.app?id={testID}"
+        ).json()
+        if "No Annotations" in response:
+            annotations = None
+        else:
+            annotations = response
         if annotations is not None:
             dictToReturn.update(annotations)
         jsonToReturn = json.dumps(dictToReturn)
@@ -211,8 +209,26 @@ def get_database_info(req: func.HttpRequest) -> func.HttpResponse:
                 "Access-Control-Allow-Credentials": True,  # Required for cookies, authorization headers with HTTPS
             },
         )
-    if param_annotations == "no":
-        dictToReturn = get_db_info(testID)
+    else:
+        totalStartTime = time.time()
+        startTime = 0
+        endTime = 0
+        channel_list = []
+
+        with h5py.File(f"/hdf5data/hdf5_data/{testID}.hdf5", "r") as f:
+            # with h5py.File(f"./{testID}.hdf5", "r") as f:
+            channel_list = list(f.keys())
+            startTime = int(f["time"][0])
+            endTime = int(f["time"][-1])
+
+        totalEndTime = time.time()
+        dictToReturn = {}
+        dictToReturn["function_exec_time_total_ms"] = (
+            totalEndTime - totalStartTime
+        ) * 1000
+        dictToReturn["database_start_time"] = startTime
+        dictToReturn["database_end_time"] = endTime
+        dictToReturn["database_channel_list"] = channel_list
         jsonToReturn = json.dumps(dictToReturn)
 
         print(f"return object size in kb: {sys.getsizeof(jsonToReturn) / 1024}")
@@ -224,15 +240,3 @@ def get_database_info(req: func.HttpRequest) -> func.HttpResponse:
                 "Access-Control-Allow-Credentials": True,  # Required for cookies, authorization headers with HTTPS
             },
         )
-
-
-@app.route(route="test_fxn")
-def test_fxn(req: func.HttpRequest) -> func.HttpResponse:
-    return func.HttpResponse(
-        body="Hello World",
-        status_code=200,
-        headers={
-            "Access-Control-Allow-Origin": "*",  # Required for CORS support to work
-            "Access-Control-Allow-Credentials": True,  # Required for cookies, authorization headers with HTTPS
-        },
-    )

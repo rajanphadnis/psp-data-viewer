@@ -30,3 +30,6 @@ webapp/src/generated_app_info.ts
 functions/.env
 node_modules
 functions/venv
+
+.python_packages
+.venv
