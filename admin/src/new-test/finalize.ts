@@ -68,13 +68,14 @@ export function new_upload_tdsm_csv(config: NewTestConfig) {
         // progressBar.max = snapshot.totalBytes;
         progressBar.value = snapshot.bytesTransferred / snapshot.totalBytes;
         progressStatus.innerHTML = `${((snapshot.bytesTransferred / snapshot.totalBytes) * 100).toFixed(2)}%`;
-        console.log("Upload is " + progress + "% done");
+        // console.log("Upload is " + progress + "% done");
         switch (snapshot.state) {
           case "paused":
-            console.log("Upload is paused");
+            console.info("Upload is paused");
             break;
           case "running":
-            console.log("Upload is running");
+            // console.log("Upload is running");
+            console.info("Upload is running");
             completionStatus[i] = "running";
             break;
         }
