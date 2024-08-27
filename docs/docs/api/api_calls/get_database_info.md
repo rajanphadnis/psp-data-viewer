@@ -26,6 +26,14 @@ The `id` is a seven-character test identifier. This is almost always a random se
 
 To find your test's `id`, go to the [Admin Console](https://psp-admin.rajanphadnis.com) and select the test you want to query, then copy the "ID" value in the center pane.
 
+### `annotations` (Optional)
+
+#### Type: `enum` [`yes`, `only`, `no`]
+
+Default value: `no`
+
+The `annotations` parameter is an enum value to determine whether or not to return annotation data, in addition to the rest of the database metadata. Setting this value to `yes` or `only` will cause the API request to slow down significantly, but will also return key-value pairs of annotations and their associated UNIX Epoch-anchored millisecond timestamps. Setting this value to `only` will only return annotation data, and will not return other database metadata.
+
 
 ## Query Breakdown
 
@@ -79,4 +87,11 @@ The other returned value is simply a logging value: `function_exec_time_total_ms
 
 ```
 https://psp-api.rajanphadnis.com/api/get_database_info?id=zggWCpa
+```
+
+### Get test metadata and annotations
+
+
+```
+https://psp-api.rajanphadnis.com/api/get_database_info?id=zggWCpa&annotations=yes
 ```
