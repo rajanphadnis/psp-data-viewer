@@ -1,3 +1,9 @@
+## v0.2.3
+version bump
+
+### Changed
+- version bump
+
 ## v0.2.2
 Fixed verbose logging and added a lot of documentation, added annotation support to API
 
