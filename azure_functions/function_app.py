@@ -10,6 +10,7 @@ import requests
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
+
 @app.route(route="get_data")
 def get_data(req: func.HttpRequest) -> func.HttpResponse:
     logging.info("Python HTTP trigger function processed a request.")
@@ -123,6 +124,7 @@ def get_data(req: func.HttpRequest) -> func.HttpResponse:
         },
     )
 
+
 @app.route(route="get_database_info")
 def get_database_info(req: func.HttpRequest) -> func.HttpResponse:
     logging.info("Python HTTP trigger function processed a request.")
@@ -151,7 +153,9 @@ def get_database_info(req: func.HttpRequest) -> func.HttpResponse:
         if "No Annotations" in response:
             annotations = None
         else:
-            annotations = response
+            annotations = {
+                "annotations": response,
+            }
         if annotations is None:
             return func.HttpResponse(
                 body="No Annotations Available",
@@ -161,6 +165,7 @@ def get_database_info(req: func.HttpRequest) -> func.HttpResponse:
                     "Access-Control-Allow-Credentials": True,  # Required for cookies, authorization headers with HTTPS
                 },
             )
+
         return func.HttpResponse(
             body=json.dumps(annotations),
             status_code=200,
@@ -195,7 +200,9 @@ def get_database_info(req: func.HttpRequest) -> func.HttpResponse:
         if "No Annotations" in response:
             annotations = None
         else:
-            annotations = response
+            annotations = {
+                "annotations": response,
+            }
         if annotations is not None:
             dictToReturn.update(annotations)
         jsonToReturn = json.dumps(dictToReturn)

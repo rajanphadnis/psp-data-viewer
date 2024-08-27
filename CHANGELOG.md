@@ -1,3 +1,9 @@
+## v0.2.5
+changed annotation api response format
+
+### Changed
+- added annotations to "annotations" key
+
 ## v0.2.4
 version bump
 
