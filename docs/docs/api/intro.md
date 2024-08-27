@@ -40,7 +40,7 @@ https://psp-api.rajanphadnis.com/api/get_database_info?id=zggWCpa
 
 To query the API (to "call" the function and get data back), all you have to do is send a GET request to a specific URL, and the results will be returned to you in JSON!
 
-After forming your query using the documentation for a specific endpoint ([`get_data()`, for example](./api_calls/get_data)), you'll end up with a URL that starts with `https://psp-api.rajanphadnis.com/api/`
+After forming your query using the documentation for a specific endpoint ([`get_data()`, for example](./api_calls/get_data)), you'll end up with a URL that starts with `https://psp-api.rajanphadnis.com/api/`. Note that parameters can be arranged in any order - as long as they include the propoer separators (`?` and `&`, as appropriate).
 
 For this example, let's use the following URL: `https://psp-api.rajanphadnis.com/api/get_data?id=zggWCpa&channels=fms__lbf__,rtd-ox__V__`.
 
