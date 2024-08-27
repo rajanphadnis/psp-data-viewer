@@ -23,6 +23,9 @@ declare global {
 }
 
 initFirebase();
+if (!("Proxy" in window)) {
+  console.warn("Your browser doesn't support Proxies. Some features may not work properly.");
+}
 
 async function main() {
   await getTestArticles();

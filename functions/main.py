@@ -3,7 +3,7 @@ from multiprocessing import cpu_count
 import os
 import time
 # from typing import Any
-# from firebase_functions import https_fn, options
+from firebase_functions import options
 from firebase_admin import initialize_app, App, storage, firestore
 import google.cloud.firestore as fs
 import numpy as np
@@ -139,7 +139,7 @@ def getUnits(dataset_name: str) -> str:
 #     }
 
 
-@on_document_created(document="{testID}/test_creation")
+@on_document_created(document="{testID}/test_creation", memory=options.MemoryOption.GB_8, cpu=2)
 def createTest_createHDF5(event: Event[DocumentSnapshot]) -> None:
     data = event.data.to_dict()
     test_name: str = data["name"]
@@ -280,7 +280,7 @@ def createTest_createHDF5(event: Event[DocumentSnapshot]) -> None:
     )
 
 
-@on_document_created(timeout_sec=540, document="{testID}/ready_to_deploy")
+@on_document_created(timeout_sec=540, document="{testID}/ready_to_deploy", memory=options.MemoryOption.GB_8, cpu=2)
 def uploadToAzure(event: Event[DocumentSnapshot]) -> None:
     data = event.data.to_dict()
     test_name: str = data["name"]

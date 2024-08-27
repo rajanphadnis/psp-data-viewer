@@ -1,3 +1,11 @@
+## v0.2.1
+Fixed function deploy and memory constraints
+
+### Changed
+- fixed db ref in function deploy
+- fixed admin finalizing messaging
+- added firebase function memory constraints to functions (8GB, 2 cores)
+
 ## v0.2.0
 Added admin upload capability
 

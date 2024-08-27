@@ -36,9 +36,16 @@ export function new_gdrive_links(config: NewTestConfig) {
 }
 
 export function new_upload_tdsm_csv(config: NewTestConfig) {
+  const currentStatusText = document.getElementById("newTest_currentStatus")! as HTMLDivElement;
+  const nextStatusText = document.getElementById("newTest_nextStatus")! as HTMLDivElement;
+  const currentStatusBar = document.getElementById("newTest_statusBar")! as HTMLDivElement;
+  currentStatusText.innerHTML = "Starting file upload...";
+  nextStatusText.innerHTML = "Do not close this window while you can still read this message";
+  currentStatusBar.innerHTML = "Step 1 of 6";
   const [inputtedID, inputtedName, inputtedGSEElement, inputtedTestElement] = getBasicTestInfo(config);
   const inputtedFiles = [];
   const completedUpload: string[] = [];
+  const completionStatus: string[] = [];
   for (let i = 0; i < document.getElementsByClassName("file_list_div").length; i++) {
     const inputtedFileVal = document.getElementById(`file_list_div_fileinput_${i}`)! as HTMLInputElement;
     if (inputtedFileVal.files) {
@@ -68,6 +75,7 @@ export function new_upload_tdsm_csv(config: NewTestConfig) {
             break;
           case "running":
             console.log("Upload is running");
+            completionStatus[i] = "running";
             break;
         }
       },
@@ -91,26 +99,48 @@ export function new_upload_tdsm_csv(config: NewTestConfig) {
       },
       () => {
         completedUpload.push(inputtedFile.name);
+        completionStatus[i] = "completed";
+        if (completedUpload.length == inputtedFiles.length) {
+          finalizeFileUpload(completedUpload, inputtedID, inputtedName, inputtedGSEElement, inputtedTestElement);
+        } else {
+          console.log("mismatched upload list size");
+        }
       }
     );
   }
 
-  if (completedUpload.length == inputtedFiles.length) {
-    const firestore_payload = {
-      id: inputtedID,
-      name: inputtedName,
-      gse_article: inputtedGSEElement,
-      test_article: inputtedTestElement,
-      creation_status: "File upload complete",
-      creation_status_next_step: "Preparing database parsing...",
-      creation_status_max_steps: 6,
-      creation_status_current: 2,
-      file_names: completedUpload,
-      tdms_timeSyncDelay_ms: 8327,
-    };
-    const docRef = doc(db, `${inputtedID}/test_creation`);
-    setDoc(docRef, firestore_payload, { merge: true });
-  } else {
-    console.log("mismatched upload list size");
-  }
+  // while (!(completionStatus.every((val, i, arr) => val === arr[0]) && completionStatus[0] === "completed")) {
+  //   console.log("waiting for upload completion: " + completionStatus.toString());
+  // }
+}
+
+function finalizeFileUpload(
+  completedUpload: string[],
+  inputtedID: string,
+  inputtedName: string,
+  inputtedGSEElement: string,
+  inputtedTestElement: string
+) {
+  console.log("writing database results");
+  const currentStatusText = document.getElementById("newTest_currentStatus")! as HTMLDivElement;
+  const nextStatusText = document.getElementById("newTest_nextStatus")! as HTMLDivElement;
+  const currentStatusBar = document.getElementById("newTest_statusBar")! as HTMLDivElement;
+  currentStatusText.innerHTML = "Files Uploaded!";
+  nextStatusText.innerHTML = "Preparing TDMS and CSV files...";
+  currentStatusBar.innerHTML = "Step 2 of 6";
+  liveUpdate(inputtedID);
+  const firestore_payload = {
+    id: inputtedID,
+    name: inputtedName,
+    gse_article: inputtedGSEElement,
+    test_article: inputtedTestElement,
+    creation_status: "File upload complete",
+    creation_status_next_step: "Preparing database parsing...",
+    creation_status_max_steps: 6,
+    creation_status_current: 2,
+    file_names: completedUpload,
+    tdms_timeSyncDelay_ms: 8327,
+  };
+  const docRef = doc(db, `${inputtedID}/test_creation`);
+  setDoc(docRef, firestore_payload, { merge: true });
 }

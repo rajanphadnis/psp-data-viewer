@@ -29,8 +29,8 @@ export function initFirebase() {
   globalThis.storage = getStorage();
   if (appCheckSecret != false) {
     console.log("in debug mode");
-    connectFunctionsEmulator(globalThis.functions, "127.0.0.1", 5001);
-    connectStorageEmulator(globalThis.storage, "127.0.0.1", 9199);
-    connectFirestoreEmulator(globalThis.db, "127.0.0.1", 8080);
+    // connectFunctionsEmulator(globalThis.functions, "127.0.0.1", 5001);
+    // connectStorageEmulator(globalThis.storage, "127.0.0.1", 9199);
+    // connectFirestoreEmulator(globalThis.db, "127.0.0.1", 8080);
   }
 }
