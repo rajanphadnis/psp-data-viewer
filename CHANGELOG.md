@@ -1,3 +1,9 @@
+## v0.2.4
+version bump
+
+### Changed
+- version bump
+
 ## v0.2.3
 version bump
 
