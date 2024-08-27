@@ -83,26 +83,74 @@ g->>-W: Returns zoomed channel data
 
 
 
-# Data Flow: Create Test
+# Data Flow: Create Test with HDF5 File
 
 ```mermaid
 sequenceDiagram
-actor U as User
-participant W as Admin Dashboard
+actor usr as User
+participant admin as Admin Dashboard
 participant f as Firestore
-participant G as get_database_info()
-participant A as Azure File Share
+participant f_fxn as Firebase Functions
+participant storage as Firebase Storage
+participant api as get_database_info()
+participant azure as Azure File Share
 
-U->>W: Opens app
-W->>+f: Get all test metadata
-f->>-W: Return test metadata
+usr->>admin: Opens app
+admin->>+f: Get all test metadata
+f->>-admin: Return test metadata
 
-U->>W: New Test with Upload
-W->>+A: Upload test file (HDF5)
-W->>+G: Request test metadata
-G->>A: Retrieve test file
-A->>-G: Return file metadata
-G->>-W: Return file metadata
-W->>f: Write file metadata
+usr->>admin: New Test with Upload
+admin->>storage: Upload test file (HDF5)
+admin->>f: Write test info to db (ready_to_deploy)
+f->>+f_fxn: Kickoff File Transfer
+f_fxn->>storage: Request HDF5 file
+storage->>f_fxn: Return HDF5 file
+f_fxn->>azure: Upload HDF5
+f_fxn->>api: Request test metadata
+api->>azure: Retrieve test file
+azure->>api: Return file metadata
+api->>f_fxn: Return file metadata
+f_fxn->>-f: Write file metadata
+```
 
+
+
+
+
+
+# Data Flow: Create Test with TDMS and CSV Files
+
+```mermaid
+sequenceDiagram
+actor usr as User
+participant admin as Admin Dashboard
+participant f as Firestore
+participant f_fxn as Firebase Functions
+participant storage as Firebase Storage
+participant api as get_database_info()
+participant azure as Azure File Share
+
+usr->>admin: Opens app
+admin->>+f: Get all test metadata
+f->>-admin: Return test metadata
+
+usr->>admin: New Test with Upload
+admin->>storage: Upload test files (TDMS & CSV)
+admin->>+f: Write test info to db (test_creation)
+f->>+f_fxn: Kickoff Database Build
+f_fxn->>storage: Request TDMS and CSV files
+storage->>f_fxn: Return TDMS and CSV files
+f_fxn-->f_fxn: Create HDF5 database
+f_fxn->>storage: Upload HDF5 file
+f_fxn->>-f: Write test info to db (ready_to_deploy)
+
+f->>+f_fxn: Kickoff File Transfer
+f_fxn->>storage: Request HDF5 file
+storage->>f_fxn: Return HDF5 file
+f_fxn->>azure: Upload HDF5
+f_fxn->>api: Request test metadata
+api->>azure: Retrieve test file
+azure->>api: Return file metadata
+api->>f_fxn: Return file metadata
+f_fxn->>-f: Write file metadata
 ```
