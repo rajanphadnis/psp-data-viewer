@@ -1,10 +1,11 @@
 ## v0.2.2
-Fixed verbose logging and added a lot of documentation
+Fixed verbose logging and added a lot of documentation, added annotation support to API
 
 ### Changed
 - removed standard logging
 - added API documentation
 - updated README
+- Added annotation support to API
 
 ## v0.2.1
 Fixed function deploy and memory constraints

@@ -28,7 +28,7 @@ To find your test's `id`, go to the [Admin Console](https://psp-admin.rajanphadn
 
 ### `annotations` (Optional)
 
-#### Type: `enum` [`yes`, `only`, `no`]
+#### Type: `enum`: [`yes`, `only`, `no`]
 
 Default value: `no`
 
@@ -94,4 +94,11 @@ https://psp-api.rajanphadnis.com/api/get_database_info?id=zggWCpa
 
 ```
 https://psp-api.rajanphadnis.com/api/get_database_info?id=zggWCpa&annotations=yes
+```
+
+### Get only annotations
+
+
+```
+https://psp-api.rajanphadnis.com/api/get_database_info?id=zggWCpa&annotations=only
 ```
