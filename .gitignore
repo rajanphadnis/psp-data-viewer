@@ -28,3 +28,5 @@ webapp/built/index.js
 aws_lambda/*.hdf5
 webapp/src/generated_app_info.ts
 functions/.env
+node_modules
+functions/venv

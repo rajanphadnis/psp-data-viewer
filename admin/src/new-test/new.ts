@@ -18,17 +18,19 @@ export async function newTest() {
 }
 
 function generateTestConfigs() {
-  const newConfigs: NewTestConfig[] = [{
-    name: "TDMS & CSV",
-    id: "gdrive_tdms_csv",
-    create_type: "Google Drive Links",
-    upload_urls: [],
-  },{
-    name: "HDF5",
-    id: "gdrive_hdf5",
-    create_type: "Google Drive Links",
-    upload_urls: [],
-  },{
+  const newConfigs: NewTestConfig[] = [
+  //   {
+  //   name: "TDMS & CSV",
+  //   id: "gdrive_tdms_csv",
+  //   create_type: "Google Drive Links",
+  //   upload_urls: [],
+  // },{
+  //   name: "HDF5",
+  //   id: "gdrive_hdf5",
+  //   create_type: "Google Drive Links",
+  //   upload_urls: [],
+  // },
+  {
     name: "TDMS & CSV",
     id: "upload_tdms_csv",
     create_type: "File Upload",

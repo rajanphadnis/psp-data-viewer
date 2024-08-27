@@ -8,10 +8,12 @@ import { httpsCallable, type Functions } from "firebase/functions";
 import { updateTests } from "./tests";
 import { initModal } from "./modal";
 import { newTest } from "./new-test/new";
+import type { FirebaseStorage } from "firebase/storage";
 
 declare global {
   var db: Firestore;
   var functions: Functions;
+  var storage: FirebaseStorage;
   var FIREBASE_APPCHECK_DEBUG_TOKEN: boolean | string | undefined;
   var test_articles: string[];
   var gse_articles: string[];

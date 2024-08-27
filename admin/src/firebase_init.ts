@@ -1,8 +1,10 @@
 import { ReCaptchaEnterpriseProvider, initializeAppCheck } from "firebase/app-check";
-import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from "firebase/firestore";
+import { connectFirestoreEmulator, initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from "firebase/firestore";
 import { appCheckSecret } from "./generated_app_check_secret";
 import { initializeApp } from "firebase/app";
 import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
+import { connectStorageEmulator, getStorage } from "firebase/storage";
+import { connectDatabaseEmulator } from "firebase/database";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAmJytERQ1hnORHswd-j07WhpTYH7yu6fA",
@@ -20,12 +22,15 @@ export function initFirebase() {
     provider: new ReCaptchaEnterpriseProvider("6Lctk8kpAAAAAI40QzMPFihZWMfGtiZ_-UC3H2n9"),
     isTokenAutoRefreshEnabled: true,
   });
-  db = initializeFirestore(app, {
+  globalThis.db = initializeFirestore(app, {
     localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
   });
-  functions = getFunctions(app);
+  globalThis.functions = getFunctions(app);
+  globalThis.storage = getStorage();
   if (appCheckSecret != false) {
     console.log("in debug mode");
-    connectFunctionsEmulator(functions, "127.0.0.1", 5001);
+    connectFunctionsEmulator(globalThis.functions, "127.0.0.1", 5001);
+    connectStorageEmulator(globalThis.storage, "127.0.0.1", 9199);
+    connectFirestoreEmulator(globalThis.db, "127.0.0.1", 8080);
   }
 }

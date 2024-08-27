@@ -46,10 +46,9 @@ export function new_upload_tdsm_csv(config: NewTestConfig) {
     }
   }
   console.log(inputtedFiles);
-  const storage = getStorage();
   for (let i = 0; i < inputtedFiles.length; i++) {
     const inputtedFile = inputtedFiles[i];
-    const storageRef = ref(storage, `${inputtedID}/raw-files/` + inputtedFile.name);
+    const storageRef = ref(globalThis.storage, `${inputtedID}/raw-files/` + inputtedFile.name);
     const uploadTask = uploadBytesResumable(storageRef, inputtedFile);
     // Listen for state changes, errors, and completion of the upload.
     uploadTask.on(

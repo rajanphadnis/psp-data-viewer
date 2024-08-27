@@ -1,10 +1,10 @@
-from concurrent.futures import ThreadPoolExecutor
+# from concurrent.futures import ThreadPoolExecutor
 from multiprocessing import cpu_count
 import os
 import time
-from typing import Any
-from firebase_functions import https_fn, options
-from firebase_admin import initialize_app, App, firestore, storage
+# from typing import Any
+# from firebase_functions import https_fn, options
+from firebase_admin import initialize_app, App, storage, firestore
 import google.cloud.firestore as fs
 import numpy as np
 import pandas as pd
@@ -23,13 +23,13 @@ import h5py
 from azure.core.exceptions import ResourceExistsError, ResourceNotFoundError
 from datetime import datetime
 import time as t
-import gdown
+# import gdown
 from azure.storage.fileshare import ShareFileClient
+import google.cloud.firestore
 
 app: App = initialize_app()
 storage_client = storage
-db = firestore.client()
-
+# db: google.cloud.firestore.Client = fstore.client()
 
 def organizeFiles(file_names: list[str]):
     csv_files = list(filter(lambda x: ".csv" in x, file_names))
@@ -43,12 +43,10 @@ def organizeFiles(file_names: list[str]):
         timestamps.append(int(dateString))
     return (fileNames, csv_files, timestamps)
 
-
-def downloadFromGDrive(url: str):
-    print("new download: " + url)
-    file_name = gdown.download(url=url, fuzzy=True)
-    return file_name
-
+# def downloadFromGDrive(url: str):
+#     print("new download: " + url)
+#     file_name = gdown.download(url=url, fuzzy=True)
+#     return file_name
 
 def getUnits(dataset_name: str) -> str:
     scale = "psi"
@@ -62,83 +60,83 @@ def getUnits(dataset_name: str) -> str:
         scale = "V"
     return scale
 
-@https_fn.on_call(timeout_sec=540, memory=options.MemoryOption.GB_8, cpu=2)
-def createTest_links_gdrive(req: https_fn.CallableRequest) -> Any:
-    data = req.data
-    # link_list = [
-    #     "https://drive.google.com/file/d/10M68NfEW9jlU1XMyv5ubRzIoKsWTQ_MY/view?usp=sharing",  # csv
-    #     "https://drive.google.com/file/d/1zoMto1MpyK6P62iSg0Jz-AfUzmVBy5ZE/view?usp=sharing",  # 2328_5
-    #     "https://drive.google.com/file/d/1SKDAxE1udwTQtjbmGNZapU4nRv1hGNZT/view?usp=sharing",  # 2328_6
-    #     "https://drive.google.com/file/d/1VHZuGHIgEyeKf51VhEe-x6qHaHeBqLAx/view?usp=sharing",  # 0002_5
-    #     "https://drive.google.com/file/d/1TPiCOGoa8BtZgm8iOaN-polQceFXyOke/view?usp=sharing",  # 0002_6
-    # ]
-    # https://drive.google.com/file/d/1SKDAxE1udwTQtjbmGNZapU4nRv1hGNZT/view?usp=sharing,
-    # https://drive.google.com/file/d/1TPiCOGoa8BtZgm8iOaN-polQceFXyOke/view?usp=sharing,
-    # https://drive.google.com/file/d/1VHZuGHIgEyeKf51VhEe-x6qHaHeBqLAx/view?usp=sharing,
-    # https://drive.google.com/file/d/1zoMto1MpyK6P62iSg0Jz-AfUzmVBy5ZE/view?usp=sharing
-    test_name: str = data["test_name"]
-    test_id: str = data["test_id"]
-    test_article: str = data["test_article"]
-    gse_article: str = data["gse_article"]
-    links: list[str] = data["links"]
-    tdms_timeSyncDelay_ms: int = data["tdms_timeSyncDelay_ms"]
-    file_names: list[str] = []
-    file_links: list[str] = []
-    cpus = cpu_count()
-    with ThreadPoolExecutor(max_workers=cpus - 1) as executor:
-        results = executor.map(downloadFromGDrive, links)
-        for result in results:
-            file_names.append(result)
-            print("downloaded:", result)
-    uploadResults = transfer_manager.upload_many_from_filenames(
-        storage_client.bucket(),
-        file_names,
-        max_workers=cpus - 1,
-        blob_name_prefix=f"{test_id}/raw-files/",
-    )
-    print("upload finished")
-    for name, uploadResult in zip(file_names, uploadResults):
-        if isinstance(uploadResult, Exception):
-            print("Failed to upload {} due to exception: {}".format(name, uploadResult))
-            raise https_fn.HttpsError(
-                code=https_fn.FunctionsErrorCode.DATA_LOSS,
-                message=(
-                    "Failed to upload {} due to exception: {}".format(
-                        name, uploadResult
-                    )
-                ),
-            )
+# @https_fn.on_call(timeout_sec=540, memory=options.MemoryOption.GB_8, cpu=2)
+# def createTest_links_gdrive(req: https_fn.CallableRequest) -> Any:
+#     data = req.data
+#     # link_list = [
+#     #     "https://drive.google.com/file/d/10M68NfEW9jlU1XMyv5ubRzIoKsWTQ_MY/view?usp=sharing",  # csv
+#     #     "https://drive.google.com/file/d/1zoMto1MpyK6P62iSg0Jz-AfUzmVBy5ZE/view?usp=sharing",  # 2328_5
+#     #     "https://drive.google.com/file/d/1SKDAxE1udwTQtjbmGNZapU4nRv1hGNZT/view?usp=sharing",  # 2328_6
+#     #     "https://drive.google.com/file/d/1VHZuGHIgEyeKf51VhEe-x6qHaHeBqLAx/view?usp=sharing",  # 0002_5
+#     #     "https://drive.google.com/file/d/1TPiCOGoa8BtZgm8iOaN-polQceFXyOke/view?usp=sharing",  # 0002_6
+#     # ]
+#     # https://drive.google.com/file/d/1SKDAxE1udwTQtjbmGNZapU4nRv1hGNZT/view?usp=sharing,
+#     # https://drive.google.com/file/d/1TPiCOGoa8BtZgm8iOaN-polQceFXyOke/view?usp=sharing,
+#     # https://drive.google.com/file/d/1VHZuGHIgEyeKf51VhEe-x6qHaHeBqLAx/view?usp=sharing,
+#     # https://drive.google.com/file/d/1zoMto1MpyK6P62iSg0Jz-AfUzmVBy5ZE/view?usp=sharing
+#     test_name: str = data["test_name"]
+#     test_id: str = data["test_id"]
+#     test_article: str = data["test_article"]
+#     gse_article: str = data["gse_article"]
+#     links: list[str] = data["links"]
+#     tdms_timeSyncDelay_ms: int = data["tdms_timeSyncDelay_ms"]
+#     file_names: list[str] = []
+#     file_links: list[str] = []
+#     cpus = cpu_count()
+#     with ThreadPoolExecutor(max_workers=cpus - 1) as executor:
+#         results = executor.map(downloadFromGDrive, links)
+#         for result in results:
+#             file_names.append(result)
+#             print("downloaded:", result)
+#     uploadResults = transfer_manager.upload_many_from_filenames(
+#         storage_client.bucket(),
+#         file_names,
+#         max_workers=cpus - 1,
+#         blob_name_prefix=f"{test_id}/raw-files/",
+#     )
+#     print("upload finished")
+#     for name, uploadResult in zip(file_names, uploadResults):
+#         if isinstance(uploadResult, Exception):
+#             print("Failed to upload {} due to exception: {}".format(name, uploadResult))
+#             raise https_fn.HttpsError(
+#                 code=https_fn.FunctionsErrorCode.DATA_LOSS,
+#                 message=(
+#                     "Failed to upload {} due to exception: {}".format(
+#                         name, uploadResult
+#                     )
+#                 ),
+#             )
 
-        else:
-            print("Uploaded {} to {}.".format(name, storage_client.bucket().name))
-            blob = storage_client.bucket().blob(f"{test_id}/raw-files/{name}")
-            file_links.append(blob.public_url)
-            print(os.path.getsize(name))
-    print(file_links)
-    firestore_payload = {
-        "id": test_id,
-        "name": test_name,
-        "gse_article": gse_article,
-        "test_article": test_article,
-        "creation_status": "File upload complete",
-        "creation_status_next_step": "Preparing database parsing...",
-        "creation_status_max_steps": 6,
-        "creation_status_current": 2,
-        "file_names": list(file_names),
-        "tdms_timeSyncDelay_ms": tdms_timeSyncDelay_ms,
-    }
-    doc_ref_test_general = db.collection(test_id).document("test_creation")
-    doc_ref_test_general.set(
-        firestore_payload,
-        merge=True,
-    )
-    print("firestore write complete")
-    return {
-        "creation_status": "File upload complete",
-        "creation_status_next_step": "Preparing files...",
-        "creation_status_max_steps": 6,
-        "creation_status_current": 2,
-    }
+#         else:
+#             print("Uploaded {} to {}.".format(name, storage_client.bucket().name))
+#             blob = storage_client.bucket().blob(f"{test_id}/raw-files/{name}")
+#             file_links.append(blob.public_url)
+#             print(os.path.getsize(name))
+#     print(file_links)
+#     firestore_payload = {
+#         "id": test_id,
+#         "name": test_name,
+#         "gse_article": gse_article,
+#         "test_article": test_article,
+#         "creation_status": "File upload complete",
+#         "creation_status_next_step": "Preparing database parsing...",
+#         "creation_status_max_steps": 6,
+#         "creation_status_current": 2,
+#         "file_names": list(file_names),
+#         "tdms_timeSyncDelay_ms": tdms_timeSyncDelay_ms,
+#     }
+#     doc_ref_test_general = db.collection(test_id).document("test_creation")
+#     doc_ref_test_general.set(
+#         firestore_payload,
+#         merge=True,
+#     )
+#     print("firestore write complete")
+#     return {
+#         "creation_status": "File upload complete",
+#         "creation_status_next_step": "Preparing files...",
+#         "creation_status_max_steps": 6,
+#         "creation_status_current": 2,
+#     }
 
 
 @on_document_created(document="{testID}/test_creation")
@@ -172,7 +170,7 @@ def createTest_createHDF5(event: Event[DocumentSnapshot]) -> None:
             file_names.append(name)
 
     (tdms_filenames, csv_filenames, starting_timestamps) = organizeFiles(file_names)
-
+    db: google.cloud.firestore.Client = firestore.client()
     firestore_payload = {
         "creation_status": "TDMS & CSV files prepared",
         "creation_status_next_step": "Writing HDF5 database...",
@@ -240,10 +238,6 @@ def createTest_createHDF5(event: Event[DocumentSnapshot]) -> None:
     masterDF["time"] = masterDF["time"].astype("Int64")
     masterDF = masterDF.sort_values("time")
 
-    # plt.plot(masterDF["time"], masterDF["fu_psi__psi__"])
-    # plt.plot(masterDF["time"], masterDF["pi-fu-02__bin__"])
-    # plt.show()
-
     writeTimeStart = time.time()
     with h5py.File(f"{test_id}.hdf5", "w") as f:
         cols = masterDF.columns.tolist()
@@ -294,7 +288,7 @@ def uploadToAzure(event: Event[DocumentSnapshot]) -> None:
     test_article: str = data["test_article"]
     gse_article: str = data["gse_article"]
     share_name = "psp-data-viewer3d1877"
-
+    db: google.cloud.firestore.Client = firestore.client()
     storage_client.bucket().blob(
         f"{test_id}/raw-files/{test_id}.hdf5"
     ).download_to_filename(f"./{test_id}.hdf5")
