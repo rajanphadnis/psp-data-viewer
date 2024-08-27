@@ -1,7 +1,7 @@
 from multiprocessing import cpu_count
 import os
 import time
-from firebase_functions import options
+from firebase_functions import options, https_fn
 from firebase_admin import initialize_app, App, storage, firestore
 import google.cloud.firestore as fs
 import numpy as np
@@ -23,6 +23,7 @@ from datetime import datetime
 import time as t
 from azure.storage.fileshare import ShareFileClient
 import google.cloud.firestore
+import json
 
 app: App = initialize_app()
 storage_client = storage
@@ -282,3 +283,20 @@ def uploadToAzure(event: Event[DocumentSnapshot]) -> None:
         firestore_payload,
         # merge=True,
     )
+
+@https_fn.on_request(
+    cors=options.CorsOptions(
+        cors_origins="*",
+        cors_methods=["get", "post"],
+    )
+)
+def get_annotations(req: https_fn.Request) -> https_fn.Response:
+    test_id = req.args["id"] if "id" in req.args else None
+    if test_id is None:
+        return https_fn.Response("'id' is required",status=400)
+    db: google.cloud.firestore.Client = firestore.client()
+    fetchedData = db.collection(test_id).document("annotations").get().to_dict()
+    if fetchedData is None:
+        return https_fn.Response('{"No Annotations": true}', status=200, mimetype="text/json")
+    else:
+        return https_fn.Response(json.dumps(fetchedData), status=200, mimetype="text/json")
