@@ -25,3 +25,17 @@ export interface DatasetSeries {
   scale: string;
   spanGaps: boolean;
 }
+
+export interface DatasetAxis {
+  scale: string;
+  values: (u: any, vals: any[], space: any) => string[];
+  stroke: string;
+  grid: {
+    stroke: string;
+  };
+  side: number;
+  ticks: {
+    show: boolean;
+    stroke: string;
+  };
+}

@@ -28,6 +28,7 @@ declare global {
   var displayedRangeStart: number;
   var displayedRangeEnd: number;
   var plotPalletteColors: string[];
+  
 }
 globalThis.activeDatasets_to_add = [];
 globalThis.activeDatasets_all = [];

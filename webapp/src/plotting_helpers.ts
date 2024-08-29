@@ -1,14 +1,16 @@
-import uPlot, { type AlignedData } from "uplot";
+import uPlot, { type AlignedData, type Options } from "uplot";
 import { update } from "./plotting";
 import { DateTime } from "luxon";
+import { getDatasetPlottingColor } from "./theming";
+import type { DatasetAxis, DatasetSeries } from "./types";
 
 export function legendRound(val: any, suffix: string, precision: number = 2) {
   if (val == null || val == undefined || val == "null") {
     return "";
-  } if (suffix == " bin") {
-    return val>0.5?"Open":"Closed"
   }
-  else {
+  if (suffix == " bin") {
+    return val > 0.5 ? "Open" : "Closed";
+  } else {
     return val.toFixed(precision) + suffix;
   }
 }
@@ -25,84 +27,13 @@ export function plot(
         scale: string;
         spanGaps: boolean;
       }
-  )[]
+  )[],
+  axes: DatasetAxis[]
 ) {
   let opts = {
     ...getSize(),
     series: series,
-    axes: [
-      {
-        stroke: "#fff",
-        grid: {
-          stroke: "#ffffff20",
-        },
-        ticks: {
-          show: true,
-          stroke: "#80808080",
-        },
-      },
-      {
-        scale: "psi",
-        values: (u: any, vals: any[], space: any) => vals.map((v) => +v.toFixed(1) + "psi"),
-        stroke: "#fff",
-        grid: {
-          stroke: "#ffffff20",
-        },
-        ticks: {
-          show: true,
-          stroke: "#80808080",
-        },
-      },
-      {
-        scale: "deg",
-        values: (u: any, vals: any[], space: any) => vals.map((v) => +v.toFixed(1) + "F"),
-        stroke: "#fff",
-        grid: {
-          stroke: "#ffffff20",
-        },
-        ticks: {
-          show: true,
-          stroke: "#80808080",
-        },
-      },
-      {
-        scale: "lbf",
-        values: (u: any, vals: any[], space: any) => vals.map((v) => +v.toFixed(1) + "lbf"),
-        stroke: "#fff",
-        grid: {
-          stroke: "#ffffff20",
-        },
-        ticks: {
-          show: true,
-          stroke: "#80808080",
-        },
-      },
-      {
-        scale: "bin",
-        values: (u: any, vals: any[], space: any) => vals.map((v) => +v.toFixed(1)),
-        stroke: "#fff",
-        // grid: {
-        //   stroke: "#ffffff20",
-        // },
-        side: 1,
-        ticks: {
-          show: false,
-          stroke: "#80808080",
-        },
-      },
-      {
-        scale: "V",
-        values: (u: any, vals: any[], space: any) => vals.map((v) => +v.toFixed(1) + "V"),
-        stroke: "#fff",
-        grid: {
-          stroke: "#ffffff20",
-        },
-        ticks: {
-          show: true,
-          stroke: "#80808080",
-        },
-      },
-    ],
+    axes: axes,
     hooks: {
       init: [
         (uplot: uPlot) => {
@@ -136,13 +67,13 @@ export function plot(
       ],
     },
     scales: {
-      "x": {
+      x: {
         time: true,
-      }
+      },
     },
   };
   document.getElementById("plot")!.innerHTML = "";
-  uplot = new uPlot(opts, toPlot, document.getElementById("plot")!);
+  uplot = new uPlot(opts as Options, toPlot, document.getElementById("plot")!);
   window.addEventListener("resize", (e) => {
     uplot.setSize(getSize());
   });
@@ -153,4 +84,31 @@ function getSize() {
     width: document.getElementById("plot")!.offsetWidth - 10,
     height: window.innerHeight - 90,
   };
+}
+
+export function generateAxisAndSeries(scale: string, dataset: string, dataset_name: string, dataset_index: number): [DatasetSeries, DatasetAxis] {
+  const scaleToUse: string = scale == "bin" ? "bin" : `${scale}_${dataset}`;
+  const scaleUnitLabel: string = scale == "bin" ? "" : scale;
+  const seriesToReturn: DatasetSeries = {
+    label: dataset_name,
+    value: (self: any, rawValue: number) => legendRound(rawValue, " " + scale),
+    stroke: getDatasetPlottingColor(dataset_index),
+    width: 2,
+    scale: scaleToUse,
+    spanGaps: true,
+  };
+  const axisToReturn: DatasetAxis = {
+    scale: scaleToUse,
+    values: (u: any, vals: any[], space: any) => vals.map((v) => +v.toFixed(1) + scaleUnitLabel),
+    stroke: "#fff",
+    grid: {
+      stroke: "#ffffff20",
+    },
+    side: 3,
+    ticks: {
+      show: true,
+      stroke: "#80808080",
+    },
+  };
+  return [seriesToReturn, axisToReturn];
 }

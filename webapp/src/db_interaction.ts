@@ -1,21 +1,30 @@
-import { DocumentSnapshot, Firestore, doc, getDoc, getDocFromCache, getDocFromServer, type DocumentData } from "firebase/firestore";
-import type { AllTests, DatasetSeries } from "./types";
+import {
+  DocumentSnapshot,
+  Firestore,
+  doc,
+  getDoc,
+  getDocFromCache,
+  getDocFromServer,
+  type DocumentData,
+} from "firebase/firestore";
+import type { AllTests, DatasetAxis, DatasetSeries } from "./types";
 import { getDatasetPlottingColor } from "./theming";
-import { legendRound } from "./plotting_helpers";
+import { generateAxisAndSeries, legendRound } from "./plotting_helpers";
 
 export async function getSensorData(
   datasets: string[],
   startTimestamp: number,
   endTimestamp: number,
   channelsToFetch: Map<string, number>
-): Promise<[number[][], ({} | DatasetSeries)[]]> {
+): Promise<[number[][], ({} | DatasetSeries)[], DatasetAxis[]]> {
   let toPlot: number[][] = [];
   let series: ({} | DatasetSeries)[] = [];
+  let axes: DatasetAxis[] = [];
   if (datasets.length == 0) {
-    return [toPlot, series];
+    return [toPlot, series, axes];
   }
   let datasets_string: string = datasets.join(",");
-  let requestURL: string = `https://psp-api.rajanphadnis.com/api/get_data?id=${globalThis.test_id}&start=${startTimestamp}&end=${endTimestamp}&channels=${datasets_string}`;
+  let requestURL: string = `https://psp-api.rajanphadnis.com/api/get_data?id=${globalThis.test_id}&start=${startTimestamp}&end=${endTimestamp}&channels=${datasets_string}&max=4000`;
 
   var startQueryTime = performance.now();
   return (await fetch(requestURL)).json().then((response) => {
@@ -26,18 +35,19 @@ export async function getSensorData(
       const dataset = datasets[i];
       const nameOnly: string = dataset.split("__")[0];
       const scale: string = dataset.split("__")[1];
-      series.push({
-        label: nameOnly,
-        value: (self: any, rawValue: number) => legendRound(rawValue, " " + scale),
-        stroke: getDatasetPlottingColor(channelsToFetch.get(dataset)!),
-        width: 2,
-        scale: scale,
-        spanGaps: true,
-      });
+      let binExists: boolean = false;
+      const [seriesToReturn, axisToReturn] = generateAxisAndSeries(
+        scale,
+        dataset,
+        nameOnly,
+        channelsToFetch.get(dataset)!
+      );
+      series.push(seriesToReturn);
+      axes.push(axisToReturn);
       toPlot.push(response[dataset]);
     }
     toPlot.push(response["time"]);
-    return [toPlot, series];
+    return [toPlot, series, axes];
   });
 }
 
