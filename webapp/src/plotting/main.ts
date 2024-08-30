@@ -19,7 +19,6 @@ export async function update(
     endTimestamp
   );
   storeActiveDatasets(toPlot, globalThis.activeDatasets_to_add);
-  // synchronizeDatasetsAndLegendList(generated_axes);
   const [series, axes] = consolidateLegends(generated_series, generated_axes);
   plot(toPlot as AlignedData, series, axes);
   globalThis.displayedRangeStart = startTimestamp;
