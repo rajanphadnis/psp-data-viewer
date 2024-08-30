@@ -10,7 +10,6 @@ export function generateAxisAndSeries(
 ): [DatasetSeries, DatasetAxis] {
   const scaleToUse: string = scale == "bin" ? "bin" : dataset;
   const scaleUnitLabel: string = scale == "bin" ? "" : scale;
-  // console.log(document.getElementById(`datasetListLegendCycleButton_${dataset}`)!.innerHTML);
   const isOdd = globalThis.activeDatasets_legend_side[globalThis.activeDatasets_to_add.indexOf(dataset)] % 2 == 1;
   const seriesToReturn: DatasetSeries = {
     label: dataset_name,

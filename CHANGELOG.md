@@ -1,5 +1,5 @@
 ## v0.2.6
-added measuring tool, added keyboard shortcuts huge refactor
+added measuring tool, added keyboard shortcuts huge refactor, added y-axis control
 
 ### Changed
 - Added measuring tool
@@ -8,6 +8,8 @@ added measuring tool, added keyboard shortcuts huge refactor
 - Added document-level keyboard shortcuts to open and close modals
 - Updated docs for measuring tool
 - Added binary plotting axes consolidation
+- Added ability to change y-axis positioning
+- Added y-axis control to sharelink
 
 ## v0.2.5
 changed annotation api response format

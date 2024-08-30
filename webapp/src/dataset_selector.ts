@@ -16,7 +16,8 @@ export function writeSelectorList(datasets: string[]) {
     let list_button = document.createElement("button");
     if (globalThis.activeDatasets_to_add.includes(dataset)) {
       // buttonInnerHTML = "-";
-      buttonInnerHTML = globalThis.activeDatasets_legend_side[globalThis.activeDatasets_to_add.indexOf(dataset)].toString();
+      buttonInnerHTML =
+        globalThis.activeDatasets_legend_side[globalThis.activeDatasets_to_add.indexOf(dataset)].toString();
       buttonColor = pspColors.aged;
       list_text.classList.toggle("available", false);
     } else if (globalThis.activeDatasets_loading.includes(dataset)) {
@@ -41,18 +42,7 @@ export function writeSelectorList(datasets: string[]) {
       await datasetClickHandler(dataset);
     });
     list_button.addEventListener("click", async (e) => {
-      // if (document.getElementById(`datasetListLegendCycleButton_${dataset}`)!.innerHTML != "+") {
-      //   const list_button_val = parseInt(document.getElementById(`datasetListLegendCycleButton_${dataset}`)!.innerHTML);
-      //   let newVal = list_button_val + 1;
-      //   if (newVal > 4) {
-      //     newVal = 1;
-      //   }
-      //   globalThis.activeDatasets_legend_side[globalThis.activeDatasets_to_add.indexOf(dataset)] = newVal;
-      //   await update(globalThis.displayedRangeStart, globalThis.displayedRangeEnd);
-      //   // document.getElementById(`datasetListLegendCycleButton_${dataset}`)!.innerHTML = newVal.toString();
-      // } else {
       await buttonClickHandler(dataset);
-      // }
     });
   }
 }
@@ -83,10 +73,9 @@ export async function buttonClickHandler(dataset: string) {
     const index = globalThis.activeDatasets_to_add.indexOf(dataset, 0);
     const currentVal = globalThis.activeDatasets_legend_side[index];
     if (currentVal == 4) {
-      globalThis.activeDatasets_legend_side[index] = 1
-    }
-    else {
-      globalThis.activeDatasets_legend_side[index] = currentVal + 1
+      globalThis.activeDatasets_legend_side[index] = 1;
+    } else {
+      globalThis.activeDatasets_legend_side[index] = currentVal + 1;
     }
     // if (index > -1) {
     //   globalThis.activeDatasets_to_add.splice(index, 1);
