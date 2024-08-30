@@ -1,3 +1,5 @@
+import { open_in_new_tab_icon } from "../html_components";
+
 export function drawDatum(u: uPlot, x: number, y: number, color: string) {
   let cx = u.valToPos(x, "x", true);
   let cy = u.valToPos(y, globalThis.plotDisplayedAxes[0], true);
@@ -17,22 +19,22 @@ export function drawDatum(u: uPlot, x: number, y: number, color: string) {
 }
 export function updateDeltaText() {
   const deltaDiv = document.getElementById("measurementPopup")! as HTMLDivElement;
-  let stringToWrite = `Δt=${((globalThis.x2 - globalThis.x1) * 1000).toFixed(2)}ms`;
+  let stringToWrite = `Δt=${formatTimeDelta((globalThis.x2! - globalThis.x1!) * 1000)}`;
   for (let i = 0; i < globalThis.plotDisplayedAxes.length; i++) {
     const displayedAxis: string = globalThis.plotDisplayedAxes[i];
     const nameOnly = displayedAxis.split("__")[0];
     const val = (globalThis.y2[i] - globalThis.y1[i]).toFixed(4);
-    stringToWrite = stringToWrite + `</br>Δ${nameOnly}=${val}${displayedAxis.split("__")[1]}`;
+    if (nameOnly != "bin") {
+      stringToWrite = stringToWrite + `</br>Δ${nameOnly}=${val}${displayedAxis.split("__")[1]}`;
+    }
   }
   deltaDiv.innerHTML = stringToWrite;
-  console.log(globalThis.x1, globalThis.x2, globalThis.y1, globalThis.y2);
 }
 export function clearDatums(u: uPlot): void {
   globalThis.x1 = globalThis.x2 = null;
   globalThis.y1 = globalThis.y2 = [];
   const deltaDiv = document.getElementById("measurementPopup")! as HTMLDivElement;
-  deltaDiv.innerHTML =
-    '<a href="https://psp-docs.rajanphadnis.com/docs/webapp/tools/meauring_tool" target="_blank">Documentation</a>';
+  deltaDiv.innerHTML = `<a href="https://psp-docs.rajanphadnis.com/docs/webapp/tools/meauring_tool" target="_blank">Documentation${open_in_new_tab_icon}</a>`;
   u.redraw();
 }
 
@@ -58,4 +60,13 @@ export function setPoint2() {
     });
     globalThis.uplot.redraw();
   }
+}
+
+function formatTimeDelta(delta_ms: number): string {
+  var minutes = Math.floor(delta_ms / 60000);
+  var seconds = parseFloat(((delta_ms % 60000) / 1000).toFixed(3));
+  if (minutes == 0) {
+    return (seconds < 10 ? "0" : "") + seconds + "s";
+  }
+  return minutes + "m" + (seconds < 10 ? "0" : "") + seconds + "s";
 }

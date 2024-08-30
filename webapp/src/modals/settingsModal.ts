@@ -3,7 +3,6 @@ import { appVersion, buildDate } from "../generated_app_info";
 import { defaultPlottingColors } from "../theming";
 
 export function initSettingsModal() {
-  const modal = document.getElementById("settingsModal")!;
   const settings_versionString = document.getElementById("settings_versionString")! as HTMLSpanElement;
   const settings_buildDate = document.getElementById("settings_buildDate")! as HTMLSpanElement;
   const settings_releaseNotesLink = document.getElementById("settings_releaseNotesLink")! as HTMLLinkElement;

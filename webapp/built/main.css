@@ -522,4 +522,12 @@ div {
 
 .popuptext a {
     color: #fff;
+    /* height: 15px; */
+    fill: #fff;
+}
+
+.popuptext a svg {
+    /* color: #fff; */
+    height: 15px;
+    /* fill: #fff; */
 }

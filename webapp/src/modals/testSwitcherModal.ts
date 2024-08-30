@@ -1,7 +1,6 @@
 import type { AllTests } from "../types";
 
-export function initModal() {
-  const modal = document.getElementById("testSwitcherModal")!;
+export function initSwitcherModal() {
   const switchTestButton = document.getElementById("switch-test")!;
   const closeButton = document.getElementsByClassName("close")[0]!;
   switchTestButton.addEventListener("click", (e) => {

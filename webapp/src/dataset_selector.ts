@@ -15,7 +15,8 @@ export function writeSelectorList(datasets: string[]) {
     let list_text = document.createElement("p");
     let list_button = document.createElement("button");
     if (globalThis.activeDatasets_to_add.includes(dataset)) {
-      buttonInnerHTML = globalThis.activeDatasets_legend_side[globalThis.activeDatasets_to_add.indexOf(dataset)];
+      buttonInnerHTML = "-";
+      // buttonInnerHTML = globalThis.activeDatasets_legend_side[globalThis.activeDatasets_to_add.indexOf(dataset)];
       buttonColor = pspColors.aged;
       list_text.classList.toggle("available", false);
     } else if (globalThis.activeDatasets_loading.includes(dataset)) {

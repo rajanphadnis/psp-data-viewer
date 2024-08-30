@@ -121,6 +121,9 @@ export function addKeyPressListeners() {
     if (e.key == "t") {
       toggleSwitcherModal();
     }
+    if (e.key == "m") {
+      document.getElementById("measurementPopup")!.classList.toggle("show");
+    }
     if (e.key == "1") {
       setPoint1();
     } else if (e.key == "2") {

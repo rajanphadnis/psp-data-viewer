@@ -2,7 +2,6 @@ import Coloris from "@melloware/coloris";
 import { defaultMeasuringToolColors } from "../theming";
 
 export function initMeasurementModal() {
-  const modal = document.getElementById("measuringModal")!;
   const closeButton = document.getElementById("measuringClose")!;
   const textInput = document.getElementById("measuringModalColorPicker")! as HTMLInputElement;
   const measureButton: HTMLButtonElement = document.getElementById("measurePlotButton")! as HTMLButtonElement;
