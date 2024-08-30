@@ -10,5 +10,5 @@ sidebar_position: 1
 
 - Point to "getting started" references for a few different languages
 
-- talk about timezones
+- talk about timezones: data is shown in your local timezone, but stored in the database in UTC time
 
