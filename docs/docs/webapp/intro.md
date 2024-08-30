@@ -4,11 +4,23 @@ sidebar_position: 1
 
 # Intro
 
-- Why make it?
+Inspired by a weird combination of Borg and Telemetron.
 
-- How to access it?
+Access the Webapp here: [https://psp.rajanphadnis.com](https://psp.rajanphadnis.com) 
 
-- Point to "getting started" references for a few different languages
+And the Admin console here: [https://psp-admin.rajanphadnis.com](https://psp-admin.rajanphadnis.com)
 
-- talk about timezones: data is shown in your local timezone, but stored in the database in UTC time
+
+data is shown in your local timezone, but stored in the database in UTC time
+
+
+## Roadmap:
+
+Progress is made whenever I'm bored, but here are the features I'll eventually implement:
+
+- Custom Channels (calc channels)
+- Better axes merging and consolidation (similar axes are merged into one axis)
+- Easy access to full data export
+- Popup to provide code samples to access data that is currently visible
+- Guided tour
 
