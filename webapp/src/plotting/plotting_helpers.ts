@@ -5,7 +5,7 @@ import { defaultMeasuringToolColors, defaultPlottingColors } from "../theming";
 import type { DatasetAxis } from "../types";
 import Coloris from "@melloware/coloris";
 import { clearDatums, drawDatum, updateDeltaText } from "../tools/measuring";
-import { addKeyPressListeners } from "./init";
+import { addKeyPressListeners } from "../browser_interactions";
 
 export function legendRound(val: any, suffix: string, precision: number = 2) {
   if (val == null || val == undefined || val == "null") {
@@ -45,9 +45,9 @@ export function plot(
             update();
           };
         },
-        (uplot: uPlot) => {
-          addKeyPressListeners();
-        },
+        // (uplot: uPlot) => {
+        //   addKeyPressListeners();
+        // },
       ],
 
       draw: [

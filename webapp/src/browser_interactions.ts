@@ -1,3 +1,8 @@
+import { toggleMeasuringModal } from "./modals/measuringModal";
+import { toggleSettingsModal } from "./modals/settingsModal";
+import { toggleSwitcherModal } from "./modals/testSwitcherModal";
+import { clearDatums, setPoint1, setPoint2 } from "./tools/measuring";
+
 function getQueryVariable(variable: string) {
   var query = window.location.search.substring(1);
   var vars = query.split("&");
@@ -100,4 +105,26 @@ export function setTitle(name: string, test_article: string, gse_article: string
   const tabTitle = document.getElementById("tabTitle")!;
   titleElement.innerHTML = "PSP Data Viewer::" + test_article + ":" + gse_article + ":" + name;
   tabTitle.innerHTML = test_article + ":" + gse_article + ":" + name;
+}
+
+export function addKeyPressListeners() {
+  document.onkeydown = (e) => {
+    if (e.key == "Escape") {
+      clearDatums(globalThis.uplot);
+    }
+    if (e.key == "e") {
+      toggleMeasuringModal();
+    }
+    if (e.key == "s") {
+      toggleSettingsModal();
+    }
+    if (e.key == "t") {
+      toggleSwitcherModal();
+    }
+    if (e.key == "1") {
+      setPoint1();
+    } else if (e.key == "2") {
+      setPoint2();
+    }
+  };
 }

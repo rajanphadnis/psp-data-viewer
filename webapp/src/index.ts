@@ -2,7 +2,7 @@ import { Firestore } from "firebase/firestore";
 import { getTestInfo, getGeneralTestInfo } from "./db_interaction";
 import { update } from "./plotting/main";
 import { loadingStatus } from "./types";
-import { getTestID, getSharelinkList, setTitle } from "./browser_interactions";
+import { getTestID, getSharelinkList, setTitle, addKeyPressListeners } from "./browser_interactions";
 import { initModal, setKnownTests } from "./modals/testSwitcherModal";
 import { initModalEscape } from "./modals/general";
 import { initFirebase } from "./firebase_init";
@@ -60,6 +60,7 @@ initModal();
 initSettingsModal();
 initMeasurementModal();
 initModalEscape();
+addKeyPressListeners();
 
 async function main() {
   globalThis.displayedSamples = 4500;

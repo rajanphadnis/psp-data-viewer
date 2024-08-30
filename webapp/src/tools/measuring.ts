@@ -35,3 +35,27 @@ export function clearDatums(u: uPlot): void {
     '<a href="https://psp-docs.rajanphadnis.com/docs/webapp/tools/meauring_tool" target="_blank">Documentation</a>';
   u.redraw();
 }
+
+export function setPoint1() {
+  const { left, top } = globalThis.uplot.cursor;
+  if (left && top && left >= 0 && top >= 0) {
+    globalThis.x1 = globalThis.uplot.posToVal(left, "x");
+    globalThis.y1 = [];
+    globalThis.plotDisplayedAxes.forEach((scale) => {
+      globalThis.y1.push(globalThis.uplot.posToVal(top, scale));
+    });
+    globalThis.uplot.redraw();
+  }
+}
+
+export function setPoint2() {
+  const { left, top } = globalThis.uplot.cursor;
+  if (left && top && left >= 0 && top >= 0) {
+    globalThis.x2 = globalThis.uplot.posToVal(left, "x");
+    globalThis.y2 = [];
+    globalThis.plotDisplayedAxes.forEach((scale) => {
+      globalThis.y2.push(globalThis.uplot.posToVal(top, scale));
+    });
+    globalThis.uplot.redraw();
+  }
+}
