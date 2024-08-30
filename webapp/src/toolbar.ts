@@ -1,36 +1,25 @@
-import { httpsCallable } from "firebase/functions";
-import { getSharelink, copyTextToClipboard, updateStatus, delay } from "./browser_fxns";
+import { getSharelink, copyTextToClipboard, delay } from "./browser_interactions";
 import { check_mark, loader } from "./html_components";
-import { plotSnapshot } from "./image_tools";
+import { plotSnapshot } from "./tools/image_tools";
 import { loadingStatus } from "./types";
+import { downloadCSV } from "./tools/csv";
+import { updateStatus } from "./web_components";
 
 const sharelinkButton: HTMLButtonElement = document.getElementById("sharelinkButton")! as HTMLButtonElement;
 const downloadImageButton: HTMLButtonElement = document.getElementById("downloadImage")! as HTMLButtonElement;
 const copyImageButton: HTMLButtonElement = document.getElementById("copyImage")! as HTMLButtonElement;
 const csvButton: HTMLButtonElement = document.getElementById("downloadCSV")! as HTMLButtonElement;
+const measureButton: HTMLButtonElement = document.getElementById("measurePlotButton")! as HTMLButtonElement;
 
 export function setupEventListeners() {
+  measureButton.addEventListener("click", (e) => {
+    var popup = document.getElementById("measurementPopup")!;
+    popup.classList.toggle("show");
+  });
   csvButton.addEventListener("click", async (e) => {
     updateStatus(loadingStatus.LOADING);
     csvButton.innerHTML = loader;
-    const data_columns = JSON.parse(localStorage.getItem("currentData_data")!);
-    const data_names = JSON.parse(localStorage.getItem("currentData_names")!);
-    let csvData: any[][] = [[...data_names]];
-    for (let i = 0; i < data_columns[0].length; i++) {
-      let rowToWrite = [];
-      for (let j = 0; j < data_columns.length; j++) {
-        const element = data_columns[j][i];
-        rowToWrite.push(element);
-      }
-      csvData.push(rowToWrite);
-    }
-    let csvContent = "data:text/csv;charset=utf-8," + csvData.map((e) => e.join(",")).join("\n");
-    var encodedUri = encodeURI(csvContent);
-    var link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `${globalThis.activeDatasets_to_add.join(" ")} ${globalThis.displayedRangeStart} ${globalThis.displayedRangeEnd}.csv`);
-    document.body.appendChild(link);
-    link.click();
+    downloadCSV();
     updateStatus(loadingStatus.DONE);
     csvButton.innerHTML = check_mark;
     await delay(1500);
@@ -76,9 +65,9 @@ export function updateAvailableFeatures() {
     copyImageButton.disabled = false;
     copyImageButton.style.cursor = "pointer";
 
-    // sharelinkButton.style.opacity = "1";
-    // sharelinkButton.disabled = false;
-    // sharelinkButton.style.cursor = "pointer";
+    measureButton.style.opacity = "1";
+    measureButton.disabled = false;
+    measureButton.style.cursor = "pointer";
 
     downloadImageButton.style.opacity = "1";
     downloadImageButton.disabled = false;
@@ -92,9 +81,9 @@ export function updateAvailableFeatures() {
     copyImageButton.disabled = true;
     copyImageButton.style.cursor = "default";
 
-    // sharelinkButton.style.opacity = "0";
-    // sharelinkButton.disabled = true;
-    // sharelinkButton.style.cursor = "default";
+    measureButton.style.opacity = "0";
+    measureButton.disabled = true;
+    measureButton.style.cursor = "default";
 
     downloadImageButton.style.opacity = "0";
     downloadImageButton.disabled = true;

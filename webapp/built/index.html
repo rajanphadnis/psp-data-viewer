@@ -85,6 +85,18 @@
             </div>
         </div>
     </div>
+    <div id="measuringModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span id="measuringClose" class="close">&times;</span>
+                <h2>Measuring Tool Settings</h2>
+            </div>
+            <div id="modal-body">
+                <h4>Point Color:</h4>
+                <input id="measuringModalColorPicker" class="test-field-text" title="Color Picker Text Input Box" type="text">
+            </div>
+        </div>
+    </div>
     <div id="navBar">
         <div style="display:flex; flex-direction: row; justify-content: start; align-items: center;">
             <div id="title">Loading...</div>
@@ -96,6 +108,14 @@
             </button>
         </div>
         <div id="toolbar">
+            <button id="measurePlotButton" class="toolbar_button popup">
+                <span class="material-symbols-outlined">
+                    straighten
+                </span>
+                <div class="popuptext" id="measurementPopup"><a
+                        href="https://psp-docs.rajanphadnis.com/docs/webapp/tools/meauring_tool"
+                        target="_blank">Documentation</a></div>
+            </button>
             <button id="downloadCSV" class="toolbar_button">
                 <span class="material-symbols-outlined">
                     csv

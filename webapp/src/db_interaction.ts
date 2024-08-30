@@ -1,15 +1,12 @@
 import {
   DocumentSnapshot,
-  Firestore,
   doc,
   getDoc,
   getDocFromCache,
-  getDocFromServer,
   type DocumentData,
 } from "firebase/firestore";
 import type { AllTests, DatasetAxis, DatasetSeries } from "./types";
-import { getDatasetPlottingColor } from "./theming";
-import { generateAxisAndSeries, legendRound } from "./plotting_helpers";
+import { generateAxisAndSeries } from "./plotting/axes_series_generation";
 
 export async function getSensorData(
   datasets: string[],

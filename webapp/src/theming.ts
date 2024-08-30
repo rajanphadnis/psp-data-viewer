@@ -20,24 +20,6 @@ export function getPlottingColorListLength() {
   return globalThis.plotPalletteColors.length;
 }
 
-export function getColorList() {
-  const inputFields = document.querySelectorAll(".test-field-text")! as NodeListOf<HTMLInputElement>;
-  let newColorList: string[] = [];
-  inputFields.forEach(inputField => {
-    newColorList.push(inputField.value);
-  });
-  return newColorList;
-}
-
-export function initColorList() {
-  let storageItem = localStorage.getItem("plotting_color_pallette_color_list");
-  if (storageItem == null) {
-    globalThis.plotPalletteColors = defaultPlottingColors;
-  } else {
-    globalThis.plotPalletteColors = JSON.parse(storageItem);
-  }
-}
-
 export const defaultPlottingColors = [
   pspColors.field,
   pspColors["bm-gold"],
@@ -55,3 +37,7 @@ export const defaultPlottingColors = [
   "#87CDF6",
   "blue",
 ];
+
+export const defaultMeasuringToolColors = ["#ffa500", "#5d00ff", "#d000ff", "#ff009d", "#00ff4c"];
+
+export const measuringToolDefaultColor = "#ffa500";
