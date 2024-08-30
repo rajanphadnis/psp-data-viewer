@@ -34,6 +34,7 @@ export function getSharelinkList(): boolean {
     globalThis.activeDatasets_to_add = paramList[0].split(",");
     globalThis.displayedRangeStart = parseInt(paramList[1]);
     globalThis.displayedRangeEnd = parseInt(paramList[2]);
+    globalThis.activeDatasets_legend_side = paramList[3].split(",").map(Number);
     return true;
   }
 }
@@ -46,7 +47,7 @@ export function getSharelink(): [string, string] {
   } else {
     b64 = encode(
       globalThis.activeDatasets_to_add.join(",") +
-        `:::${globalThis.displayedRangeStart}:::${globalThis.displayedRangeEnd}`
+        `:::${globalThis.displayedRangeStart}:::${globalThis.displayedRangeEnd}:::${globalThis.activeDatasets_legend_side.join(",")}`
     );
   }
   const sharelink_base = location.origin + location.pathname + "?b64=" + b64;

@@ -1,3 +1,14 @@
+## v0.2.6
+added measuring tool, added keyboard shortcuts huge refactor
+
+### Changed
+- Added measuring tool
+- Added measuring tool point color settings
+- Refactored entire wabapp codebase into far more manageable code
+- Added document-level keyboard shortcuts to open and close modals
+- Updated docs for measuring tool
+- Added binary plotting axes consolidation
+
 ## v0.2.5
 changed annotation api response format
 
