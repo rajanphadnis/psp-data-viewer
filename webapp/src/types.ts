@@ -33,3 +33,11 @@ export interface DatasetAxis {
     stroke: string;
   };
 }
+
+
+export interface CalcChannel {
+  sourceChannel: string;
+  formula: string;
+  newChannelName: string;
+  axisSide: number;
+}

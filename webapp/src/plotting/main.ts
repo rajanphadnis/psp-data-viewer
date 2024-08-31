@@ -7,19 +7,21 @@ import { updateStatus } from "../web_components";
 import { generatePlottedDatasets } from "./dataset_generation";
 import { storeActiveDatasets } from "../caching";
 import { consolidateLegends } from "./legend_axes_consolidation";
+import { runCalcsEngine } from "../tools/calcs_engine";
 
 export async function update(
   startTimestamp: number = globalThis.starting_timestamp,
   endTimestamp: number = globalThis.ending_timestamp
 ) {
   updateStatus(loadingStatus.LOADING);
-  const [toPlot, generated_series, generated_axes] = await generatePlottedDatasets(
+  const [generated_toPlot, generated_series, generated_axes] = await generatePlottedDatasets(
     globalThis.activeDatasets_to_add,
     startTimestamp,
     endTimestamp
   );
-  storeActiveDatasets(toPlot, globalThis.activeDatasets_to_add);
-  const [series, axes] = consolidateLegends(generated_series, generated_axes);
+  storeActiveDatasets(generated_toPlot, globalThis.activeDatasets_to_add);
+  const [toPlot, calced_series, calced_axes] = runCalcsEngine(generated_toPlot, generated_series, generated_axes);
+  const [series, axes] = consolidateLegends(calced_series, calced_axes);
   plot(toPlot as AlignedData, series, axes);
   globalThis.displayedRangeStart = startTimestamp;
   globalThis.displayedRangeEnd = endTimestamp;

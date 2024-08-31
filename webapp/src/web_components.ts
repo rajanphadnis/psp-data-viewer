@@ -24,4 +24,5 @@ export function initGlobalVariables() {
   globalThis.y2 = [];
   globalThis.measuringToolColor = getDefaultMeasuringToolColor();
   globalThis.displayedSamples = 4000;
+  globalThis.calcChannels = [];
 }

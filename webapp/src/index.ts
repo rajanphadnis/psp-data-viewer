@@ -1,7 +1,7 @@
 import { Firestore } from "firebase/firestore";
 import { getTestInfo, getGeneralTestInfo } from "./db_interaction";
 import { update } from "./plotting/main";
-import { loadingStatus } from "./types";
+import { loadingStatus, type CalcChannel } from "./types";
 import { getTestID, getSharelinkList, setTitle, addKeyPressListeners } from "./browser_interactions";
 import { initSwitcherModal, setKnownTests } from "./modals/testSwitcherModal";
 import { initModalEscape } from "./modals/general";
@@ -15,7 +15,7 @@ import { getDefaultMeasuringToolColor } from "./caching";
 import {} from "./tools/measuring";
 import { initGlobalVariables, updateStatus } from "./web_components";
 import { initSettingsModal } from "./modals/settingsModal";
-import { initMeasurementModal } from "./modals/measuringModal";
+import { initToolsModal } from "./modals/toolModal";
 import Coloris from "@melloware/coloris";
 
 declare global {
@@ -41,14 +41,29 @@ declare global {
   var y1: number[];
   var y2: number[];
   var measuringToolColor: string;
+  var calcChannels: CalcChannel[];
 }
 initGlobalVariables();
+globalThis.calcChannels.push(
+  {
+    sourceChannel: "fms__lbf__",
+    formula: "x-100",
+    newChannelName: "fms_calc1",
+    axisSide: 1,
+  },
+  {
+    sourceChannel: "fms__lbf__",
+    formula: "x+1000",
+    newChannelName: "fms_calc2",
+    axisSide: 2,
+  }
+);
 Coloris.init();
 initColorList();
 initFirebase();
 initSwitcherModal();
 initSettingsModal();
-initMeasurementModal();
+initToolsModal();
 initModalEscape();
 addKeyPressListeners();
 

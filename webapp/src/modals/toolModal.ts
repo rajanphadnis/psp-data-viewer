@@ -1,16 +1,16 @@
 import Coloris from "@melloware/coloris";
 import { defaultMeasuringToolColors } from "../theming";
 
-export function initMeasurementModal() {
+export function initToolsModal() {
   const closeButton = document.getElementById("measuringClose")!;
   const textInput = document.getElementById("measuringModalColorPicker")! as HTMLInputElement;
   const measureButton: HTMLButtonElement = document.getElementById("measurePlotButton")! as HTMLButtonElement;
   measureButton.addEventListener("contextmenu", (e) => {
     e.preventDefault();
-    toggleMeasuringModal();
+    toggleToolsModal();
   });
   closeButton.addEventListener("click", (e) => {
-    toggleMeasuringModal();
+    toggleToolsModal();
 
     // modal.style.display = "none";
   });
@@ -25,7 +25,7 @@ export function initMeasurementModal() {
   });
 }
 
-export function toggleMeasuringModal() {
+export function toggleToolsModal() {
   const modal = document.getElementById("measuringModal")!;
   if (modal.style.display == "block") {
     modal.style.display = "none";

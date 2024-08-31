@@ -6,11 +6,13 @@ export function generateAxisAndSeries(
   scale: string,
   dataset: string,
   dataset_name: string,
-  dataset_index: number
+  dataset_index: number,
+  default_axis_side: number = 1,
 ): [DatasetSeries, DatasetAxis] {
   const scaleToUse: string = scale == "bin" ? "bin" : dataset;
   const scaleUnitLabel: string = scale == "bin" ? "" : scale;
-  const isOdd = globalThis.activeDatasets_legend_side[globalThis.activeDatasets_to_add.indexOf(dataset)] % 2 == 1;
+  const legendSide = globalThis.activeDatasets_legend_side[globalThis.activeDatasets_to_add.indexOf(dataset)];
+  const isOdd = legendSide == undefined ? default_axis_side % 2 == 1 : legendSide % 2 == 1;
   const seriesToReturn: DatasetSeries = {
     label: dataset_name,
     value: (self: any, rawValue: number) => legendRound(rawValue, " " + scale),

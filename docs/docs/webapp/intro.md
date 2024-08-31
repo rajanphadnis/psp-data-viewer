@@ -23,4 +23,5 @@ Progress is made whenever I'm bored, but here are the features I'll eventually i
 - Easy access to full data export
 - Popup to provide code samples to access data that is currently visible
 - Guided tour
+- Annotations (they're already in the API)
 

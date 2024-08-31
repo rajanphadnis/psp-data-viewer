@@ -1,4 +1,4 @@
-import { toggleMeasuringModal } from "./modals/measuringModal";
+import { toggleToolsModal } from "./modals/toolModal";
 import { toggleSettingsModal } from "./modals/settingsModal";
 import { toggleSwitcherModal } from "./modals/testSwitcherModal";
 import { clearDatums, setPoint1, setPoint2 } from "./tools/measuring";
@@ -114,7 +114,7 @@ export function addKeyPressListeners() {
       clearDatums(globalThis.uplot);
     }
     if (e.key == "e") {
-      toggleMeasuringModal();
+      toggleToolsModal();
     }
     if (e.key == "s") {
       toggleSettingsModal();
