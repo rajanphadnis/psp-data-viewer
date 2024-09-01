@@ -34,7 +34,7 @@ export function clearDatums(u: uPlot): void {
   globalThis.x1 = globalThis.x2 = null;
   globalThis.y1 = globalThis.y2 = [];
   const deltaDiv = document.getElementById("measurementPopup")! as HTMLDivElement;
-  deltaDiv.innerHTML = `<a href="https://psp-docs.rajanphadnis.com/docs/webapp/tools/meauring_tool" target="_blank">Documentation${open_in_new_tab_icon}</a>`;
+  deltaDiv.innerHTML = `<a href="https://psp-docs.rajanphadnis.com/docs/webapp/tools/measuring_tool" target="_blank">Documentation${open_in_new_tab_icon}</a>`;
   u.redraw();
 }
 

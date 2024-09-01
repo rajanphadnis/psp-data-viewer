@@ -1,5 +1,6 @@
 import Coloris from "@melloware/coloris";
 import { defaultMeasuringToolColors } from "../theming";
+import { initCalcChannelList } from "../settings/calc_channel_input";
 
 export function initToolsModal() {
   const closeButton = document.getElementById("measuringClose")!;
@@ -11,8 +12,6 @@ export function initToolsModal() {
   });
   closeButton.addEventListener("click", (e) => {
     toggleToolsModal();
-
-    // modal.style.display = "none";
   });
   textInput.value = globalThis.measuringToolColor;
   textInput.addEventListener("change", (e) => {
@@ -23,6 +22,7 @@ export function initToolsModal() {
       console.error("failed to cache mearing tool color change");
     }
   });
+  initCalcChannelList();
 }
 
 export function toggleToolsModal() {

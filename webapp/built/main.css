@@ -360,6 +360,22 @@ div {
     background-color: var(--steel);
 }
 
+.calc_channel_list_div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 220px;
+}
+
+.calc_channel_list_div:hover {
+    background-color: var(--steel);
+}
+
 .url_list_add_button {
     border: none;
     margin: 10px;
@@ -411,6 +427,57 @@ div {
     width: 220px;
 }
 
+.calc_channel_list_add_button {
+    border: none;
+    margin: 10px;
+    /* margin-right: 0px; */
+    /* width: calc(100% - 20px); */
+    color: black;
+    background-color: var(--rush);
+    cursor: pointer;
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: bold;
+    height: fit-content;
+    padding: 8px;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+}
+
+.calc_channel_list_add_button>p {
+    margin: 0px;
+    margin-right: 5px;
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: bold;
+}
+
+.calc_channel_list_delete_button {
+    border: none;
+    /* margin: 10px; */
+    margin-right: 0px;
+    /* width: calc(100% - 20px); */
+    color: black;
+    background-color: var(--rush);
+    cursor: pointer;
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: bold;
+    height: fit-content;
+    padding: 8px;
+}
+
+.calc_channel_list_title {
+    /* margin-left: 10px; */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 220px;
+}
+
 .icon {
     width: 1.5em;
     height: 1.5em;
@@ -436,6 +503,30 @@ div {
 }
 
 .test-field-text:disabled {
+    border: 3px solid transparent;
+    color: rgb(204, 204, 204);
+    background-color: transparent;
+}
+
+.calc-channel-list-text-fields {
+    background-color: var(--background-color);
+    border: 3px solid var(--field);
+    color: white;
+    padding: 10px;
+    /* font-weight: bold; */
+    font-family: "IBM Plex Mono", monospace;
+    width: 150px;
+}
+
+.calc-channel-list-text-fields:focus {
+    background-color: var(--background-color);
+    border: 3px solid var(--aged);
+    color: white;
+    padding: 10px;
+    outline: 6px solid transparent;
+}
+
+.calc-channel-list-text-fields:disabled {
     border: 3px solid transparent;
     color: rgb(204, 204, 204);
     background-color: transparent;

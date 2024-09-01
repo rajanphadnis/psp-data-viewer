@@ -11,7 +11,6 @@ import { setupEventListeners } from "./toolbar";
 import { type Functions } from "firebase/functions";
 import { setupSettings } from "./settings/settings";
 import { initColorList } from "./caching";
-import { getDefaultMeasuringToolColor } from "./caching";
 import {} from "./tools/measuring";
 import { initGlobalVariables, updateStatus } from "./web_components";
 import { initSettingsModal } from "./modals/settingsModal";
@@ -42,19 +41,20 @@ declare global {
   var y2: number[];
   var measuringToolColor: string;
   var calcChannels: CalcChannel[];
+  var calcChannelWindow: number;
 }
 initGlobalVariables();
 globalThis.calcChannels.push(
   {
     sourceChannel: "fms__lbf__",
-    formula: "x-100",
+    formula: "avg(y,z)",
     newChannelName: "fms_calc1",
     axisSide: 1,
   },
   {
-    sourceChannel: "fms__lbf__",
-    formula: "x+1000",
-    newChannelName: "fms_calc2",
+    sourceChannel: "fu_psi__psi__",
+    formula: "x+2",
+    newChannelName: "fu_psi_calc",
     axisSide: 2,
   }
 );

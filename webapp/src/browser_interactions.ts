@@ -110,21 +110,22 @@ export function setTitle(name: string, test_article: string, gse_article: string
 
 export function addKeyPressListeners() {
   document.onkeydown = (e) => {
+    // if (e.e)
     if (e.key == "Escape") {
       clearDatums(globalThis.uplot);
     }
-    if (e.key == "e") {
-      toggleToolsModal();
-    }
-    if (e.key == "s") {
-      toggleSettingsModal();
-    }
-    if (e.key == "t") {
-      toggleSwitcherModal();
-    }
-    if (e.key == "m") {
-      document.getElementById("measurementPopup")!.classList.toggle("show");
-    }
+    // if (e.key == "e") {
+    //   toggleToolsModal();
+    // }
+    // if (e.key == "s") {
+    //   toggleSettingsModal();
+    // }
+    // if (e.key == "t") {
+    //   toggleSwitcherModal();
+    // }
+    // if (e.key == "m") {
+    //   document.getElementById("measurementPopup")!.classList.toggle("show");
+    // }
     if (e.key == "1") {
       setPoint1();
     } else if (e.key == "2") {

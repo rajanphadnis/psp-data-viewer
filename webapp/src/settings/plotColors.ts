@@ -1,4 +1,3 @@
-import Coloris from "@melloware/coloris";
 import { delete_icon } from "../html_components";
 import { update } from "../plotting/main";
 import { getDatasetPlottingColor, defaultPlottingColors, getPlottingColorListLength } from "../theming";
