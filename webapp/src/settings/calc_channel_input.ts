@@ -1,6 +1,20 @@
 import { delete_icon } from "../html_components";
 import { update } from "../plotting/main";
 
+function createChannelDropdown(id: string) {
+  const select = document.createElement("select") as HTMLSelectElement;
+  select.name = id;
+  select.id = `select_${id}`;
+  select.classList.add("calc_channel_dropdown");
+  globalThis.activeDatasets_all.forEach((dataset) => {
+    const option = document.createElement("option") as HTMLOptionElement;
+    option.value = dataset;
+    option.innerHTML = dataset.split("__")[0];
+    select.appendChild(option);
+  });
+
+}
+
 export function createCalcChannelItem(index: number, val: string): HTMLDivElement {
   const listDiv = document.createElement("div");
   const formulaInput = document.createElement("span");
@@ -44,6 +58,7 @@ export function initCalcChannelList() {
     const config = {
       handlers: {
         edit: function() {
+          // @ts-ignore: Unreachable code error
           let enteredMath = formulaInput.latex(); // Get entered math in LaTeX format
           // checkAnswer(enteredMath);
           console.log(enteredMath);
@@ -51,6 +66,7 @@ export function initCalcChannelList() {
       },
       restrictMismatchedBrackets: true,
     };
+    // @ts-ignore: Unreachable code error
     let mathField = MathQuill.getInterface(2).MathField(formulaInput, config);
     console.log(mathField);
   });
