@@ -34,10 +34,15 @@ export interface DatasetAxis {
   };
 }
 
-
 export interface CalcChannel {
-  sourceChannel: string;
   formula: string;
   newChannelName: string;
   axisSide: number;
+  units: string;
+  var_mapping: 
+    {
+      var_name: string;
+      source_channel: string;
+    }[]
+  ;
 }

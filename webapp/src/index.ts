@@ -44,20 +44,34 @@ declare global {
   var calcChannelWindow: number;
 }
 initGlobalVariables();
-globalThis.calcChannels.push(
-  {
-    sourceChannel: "fms__lbf__",
-    formula: "avg(y,z)",
-    newChannelName: "fms_calc1",
-    axisSide: 1,
-  },
-  {
-    sourceChannel: "fu_psi__psi__",
-    formula: "x+2",
-    newChannelName: "fu_psi_calc",
-    axisSide: 2,
-  }
-);
+globalThis.calcChannels.push({
+  formula: "x+10",
+  newChannelName: "fms_calc",
+  axisSide: 1,
+  units: "lbf",
+  var_mapping: [
+    {
+      source_channel: "fms__lbf__",
+      var_name: "x",
+    },
+  ],
+});
+globalThis.calcChannels.push({
+  formula: "B+z",
+  newChannelName: "fu_calc",
+  axisSide: 2,
+  units: "th",
+  var_mapping: [
+    {
+      source_channel: "fu_psi__psi__",
+      var_name: "z",
+    },
+    {
+      source_channel: "fms__lbf__",
+      var_name: "B",
+    },
+  ],
+});
 Coloris.init();
 initColorList();
 initFirebase();

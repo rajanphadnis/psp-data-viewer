@@ -4,17 +4,22 @@ import { plotSnapshot } from "./tools/image_tools";
 import { loadingStatus } from "./types";
 import { downloadCSV } from "./tools/csv";
 import { updateStatus } from "./web_components";
+import { toggleToolsModal } from "./modals/toolModal";
 
 const sharelinkButton: HTMLButtonElement = document.getElementById("sharelinkButton")! as HTMLButtonElement;
 const downloadImageButton: HTMLButtonElement = document.getElementById("downloadImage")! as HTMLButtonElement;
 const copyImageButton: HTMLButtonElement = document.getElementById("copyImage")! as HTMLButtonElement;
 const csvButton: HTMLButtonElement = document.getElementById("downloadCSV")! as HTMLButtonElement;
 const measureButton: HTMLButtonElement = document.getElementById("measurePlotButton")! as HTMLButtonElement;
+const calcChannelsButton: HTMLButtonElement = document.getElementById("calcChannelsButton")! as HTMLButtonElement;
 
 export function setupEventListeners() {
   measureButton.addEventListener("click", (e) => {
     var popup = document.getElementById("measurementPopup")!;
     popup.classList.toggle("show");
+  });
+  calcChannelsButton.addEventListener("click", (e) => {
+    toggleToolsModal();
   });
   csvButton.addEventListener("click", async (e) => {
     updateStatus(loadingStatus.LOADING);
@@ -69,6 +74,10 @@ export function updateAvailableFeatures() {
     measureButton.disabled = false;
     measureButton.style.cursor = "pointer";
 
+    calcChannelsButton.style.opacity = "1";
+    calcChannelsButton.disabled = false;
+    calcChannelsButton.style.cursor = "pointer";
+
     downloadImageButton.style.opacity = "1";
     downloadImageButton.disabled = false;
     downloadImageButton.style.cursor = "pointer";
@@ -84,6 +93,10 @@ export function updateAvailableFeatures() {
     measureButton.style.opacity = "0";
     measureButton.disabled = true;
     measureButton.style.cursor = "default";
+
+    calcChannelsButton.style.opacity = "0";
+    calcChannelsButton.disabled = true;
+    calcChannelsButton.style.cursor = "default";
 
     downloadImageButton.style.opacity = "0";
     downloadImageButton.disabled = true;

@@ -1,4 +1,5 @@
 import { generateAxisAndSeries } from "../plotting/axes_series_generation";
+import { alphabet } from "../random";
 import type { DatasetSeries, DatasetAxis } from "../types";
 
 export function runCalcsEngine(
@@ -14,31 +15,46 @@ export function runCalcsEngine(
     let calculated_series = master_calculated_series;
     let calculated_axes = master_calculated_axes;
     const calcChannelData = globalThis.calcChannels[i];
-    const calcSourceName = calcChannelData.sourceChannel;
-    if (globalThis.activeDatasets_to_add.includes(calcSourceName)) {
+    const allChannelsPresent = calcChannelData.var_mapping
+      .map((variable) => variable.source_channel)
+      .every((item) => globalThis.activeDatasets_to_add.includes(item));
+    if (allChannelsPresent) {
       const t0 = performance.now();
-      const scale = calcSourceName.split("__")[1];
-      const sourceChannelData = calculated_toPlot[1];
+      const units = calcChannelData.units;
+
       let newChannelData = [];
-      for (let j = 0; j < sourceChannelData.length; j++) {
-        const variable = sourceChannelData[j];
-        const prevVar = sourceChannelData[j - globalThis.calcChannelWindow];
-        const nextVar = sourceChannelData[j + globalThis.calcChannelWindow];
+      for (let j = 0; j < master_calculated_toPlot[0].length; j++) {
         // @ts-ignore: Unreachable code error
         let fn = evaluatex(calcChannelData.formula, {
           avg: (p1: number, p2: number) => {
             return (p1 + p2) / 2;
           },
         });
-        let result = fn({
-          x: variable,
-          y: prevVar ?? variable,
-          z: nextVar ?? variable,
+        let varmapping: any = {};
+        calcChannelData.var_mapping.forEach((element) => {
+          const indexOfChannel = globalThis.activeDatasets_to_add.indexOf(element.source_channel);
+          const sourceChannelData = master_calculated_toPlot[indexOfChannel + 1];
+          const mainLetterIndex = alphabet.indexOf(element.var_name);
+          const mainLetter = element.var_name;
+          const nextLetter = alphabet[mainLetterIndex + 1];
+          const prevLetter = alphabet[mainLetterIndex - 1];
+          const variable = sourceChannelData[j];
+          const prevVar = sourceChannelData[j - globalThis.calcChannelWindow] ?? variable;
+          const nextVar = sourceChannelData[j + globalThis.calcChannelWindow] ?? variable;
+          varmapping[mainLetter] = variable;
+          varmapping[prevLetter] = prevVar;
+          varmapping[nextLetter] = nextVar;
         });
-        newChannelData.push(result);
+        try {
+          let result = fn(varmapping);
+          newChannelData.push(result);
+        } catch (error) {
+          alert(error);
+          break;
+        }
       }
       const [seriesToReturn, axisToReturn] = generateAxisAndSeries(
-        scale,
+        units,
         calcChannelData.newChannelName,
         calcChannelData.newChannelName,
         calculated_series.length,
