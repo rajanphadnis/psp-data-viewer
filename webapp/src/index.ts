@@ -42,6 +42,7 @@ declare global {
   var measuringToolColor: string;
   var calcChannels: CalcChannel[];
   var calcChannelWindow: number;
+  var numberOfAxes: number;
 }
 initGlobalVariables();
 globalThis.calcChannels.push({

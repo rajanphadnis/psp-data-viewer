@@ -72,7 +72,7 @@ export async function buttonClickHandler(dataset: string) {
   if (globalThis.activeDatasets_to_add.includes(dataset)) {
     const index = globalThis.activeDatasets_to_add.indexOf(dataset, 0);
     const currentVal = globalThis.activeDatasets_legend_side[index];
-    if (currentVal == 4) {
+    if (currentVal == globalThis.numberOfAxes) {
       globalThis.activeDatasets_legend_side[index] = 1;
     } else {
       globalThis.activeDatasets_legend_side[index] = currentVal + 1;

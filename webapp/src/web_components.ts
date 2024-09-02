@@ -26,4 +26,5 @@ export function initGlobalVariables() {
   globalThis.displayedSamples = 4000;
   globalThis.calcChannels = [];
   globalThis.calcChannelWindow = 500;
+  globalThis.numberOfAxes = 6;
 }

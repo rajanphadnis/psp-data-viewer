@@ -1,19 +1,16 @@
 import { generateAxisAndSeries } from "../plotting/axes_series_generation";
 import { alphabet } from "../random";
-import type { DatasetSeries, DatasetAxis } from "../types";
+import type { DatasetSeries } from "../types";
 
 export function runCalcsEngine(
   toPlot: number[][],
   series: ({} | DatasetSeries)[],
-  axes: DatasetAxis[]
-): [number[][], ({} | DatasetSeries)[], DatasetAxis[]] {
+): [number[][], ({} | DatasetSeries)[]] {
   let master_calculated_toPlot = toPlot;
   let master_calculated_series = series;
-  let master_calculated_axes = axes;
   for (let i = 0; i < globalThis.calcChannels.length; i++) {
     let calculated_toPlot = master_calculated_toPlot;
     let calculated_series = master_calculated_series;
-    let calculated_axes = master_calculated_axes;
     const calcChannelData = globalThis.calcChannels[i];
     const allChannelsPresent = calcChannelData.var_mapping
       .map((variable) => variable.source_channel)
@@ -53,20 +50,18 @@ export function runCalcsEngine(
           break;
         }
       }
-      const [seriesToReturn, axisToReturn] = generateAxisAndSeries(
+      const seriesToReturn = generateAxisAndSeries(
         units,
         calcChannelData.newChannelName,
         calcChannelData.newChannelName,
         calculated_series.length,
-        calcChannelData.axisSide
       );
       master_calculated_toPlot = [...calculated_toPlot, newChannelData];
       master_calculated_series = [...calculated_series, seriesToReturn];
-      master_calculated_axes = [...calculated_axes, axisToReturn];
       const t1 = performance.now();
       console.log(t1 - t0);
     }
   }
 
-  return [master_calculated_toPlot, master_calculated_series, master_calculated_axes];
+  return [master_calculated_toPlot, master_calculated_series];
 }

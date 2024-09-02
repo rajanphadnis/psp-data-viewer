@@ -1,11 +1,8 @@
 import uPlot, { type AlignedData, type Options } from "uplot";
 import { update } from "./main";
 import { DateTime } from "luxon";
-import { defaultMeasuringToolColors, defaultPlottingColors } from "../theming";
 import type { DatasetAxis } from "../types";
-import Coloris from "@melloware/coloris";
-import { clearDatums, drawDatum, updateDeltaText } from "../tools/measuring";
-import { addKeyPressListeners } from "../browser_interactions";
+import { drawDatum, updateDeltaText } from "../tools/measuring";
 
 export function legendRound(val: any, suffix: string, precision: number = 2) {
   if (val == null || val == undefined || val == "null") {
@@ -31,8 +28,8 @@ export function plot(
         spanGaps: boolean;
       }
   )[],
-  axes: DatasetAxis[]
 ) {
+  const axes = generateAllAxes(globalThis.numberOfAxes);
   let opts = {
     ...getSize(),
     series: series,
@@ -109,4 +106,95 @@ function getSize() {
     width: document.getElementById("plot")!.offsetWidth - 10,
     height: window.innerHeight - 90,
   };
+}
+
+function generateAllAxes(totalAxes: number) {
+  let axesToReturn: DatasetAxis[] = [];
+  for (let i = 1; i < totalAxes+1; i++) {
+    axesToReturn = [...axesToReturn, ...generateAxes(i)];
+    
+  }
+  return [{
+    stroke: "#fff",
+    grid: {
+      stroke: "#ffffff20",
+    },
+    ticks: {
+      show: true,
+      stroke: "#80808080",
+    },
+  },...axesToReturn];
+}
+
+function generateAxes(axesSide: number): DatasetAxis[] {
+  let axesToReturn: DatasetAxis[] = [];
+  const isOdd = axesSide % 2 == 1;
+  axesToReturn.push(
+    {
+      scale: `lbf_${axesSide}`,
+      values: (u: any, vals: any[], space: any) => vals.map((v) => +v.toFixed(1) + "lbf"),
+      stroke: "#fff",
+      grid: {
+        stroke: "#ffffff20",
+      },
+      side: isOdd ? 3 : 1,
+      ticks: {
+        show: true,
+        stroke: "#80808080",
+      },
+    },
+    {
+      scale: `psi_${axesSide}`,
+      values: (u: any, vals: any[], space: any) => vals.map((v) => +v.toFixed(1) + "psi"),
+      stroke: "#fff",
+      grid: {
+        stroke: "#ffffff20",
+      },
+      side: isOdd ? 3 : 1,
+      ticks: {
+        show: true,
+        stroke: "#80808080",
+      },
+    },
+    {
+      scale: `V_${axesSide}`,
+      values: (u: any, vals: any[], space: any) => vals.map((v) => +v.toFixed(1) + "V"),
+      stroke: "#fff",
+      grid: {
+        stroke: "#ffffff20",
+      },
+      side: isOdd ? 3 : 1,
+      ticks: {
+        show: true,
+        stroke: "#80808080",
+      },
+    },
+    {
+      scale: `bin_${axesSide}`,
+      values: (u: any, vals: any[], space: any) => vals.map((v) => +v.toFixed(1) + ""),
+      stroke: "#fff",
+      grid: {
+        stroke: "#ffffff20",
+      },
+      side: isOdd ? 3 : 1,
+      ticks: {
+        show: true,
+        stroke: "#80808080",
+      },
+    },
+    {
+      scale: `deg_${axesSide}`,
+      values: (u: any, vals: any[], space: any) => vals.map((v) => +v.toFixed(1) + "deg"),
+      stroke: "#fff",
+      grid: {
+        stroke: "#ffffff20",
+      },
+      side: isOdd ? 3 : 1,
+      ticks: {
+        show: true,
+        stroke: "#80808080",
+      },
+    }
+  );
+  return axesToReturn;
 }
