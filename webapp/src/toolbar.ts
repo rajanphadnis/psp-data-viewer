@@ -15,8 +15,7 @@ const calcChannelsButton: HTMLButtonElement = document.getElementById("calcChann
 
 export function setupEventListeners() {
   measureButton.addEventListener("click", (e) => {
-    var popup = document.getElementById("measurementPopup")!;
-    popup.classList.toggle("show");
+    document.getElementById("measurementPopup")!.classList.toggle("show");
   });
   calcChannelsButton.addEventListener("click", (e) => {
     toggleToolsModal();

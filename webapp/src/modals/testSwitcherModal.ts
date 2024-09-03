@@ -49,6 +49,7 @@ export function toggleSwitcherModal() {
   if (modal.style.display == "block") {
     modal.style.display = "none";
   } else {
+    document.getElementById("measurementPopup")!.classList.remove("show");
     modal.style.display = "block";
   }
 }

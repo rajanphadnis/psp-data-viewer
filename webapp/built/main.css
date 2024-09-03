@@ -523,6 +523,30 @@ div {
     background-color: transparent;
 }
 
+
+/* .test-field-text-2 {
+    background-color: var(--background-color);
+    border: 3px solid var(--field);
+    color: white;
+    padding: 10px;
+    font-family: "IBM Plex Mono", monospace;
+    width: 150px;
+}
+
+.test-field-text-2:focus {
+    background-color: var(--background-color);
+    border: 3px solid var(--aged);
+    color: white;
+    padding: 10px;
+    outline: 6px solid transparent;
+}
+
+.test-field-text-2:disabled {
+    border: 3px solid transparent;
+    color: rgb(204, 204, 204);
+    background-color: transparent;
+} */
+
 .calc-channel-list-text-fields {
     background-color: var(--background-color);
     border: 3px solid var(--field);
