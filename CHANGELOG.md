@@ -1,3 +1,16 @@
+## v0.2.7
+added calcs engine
+
+### Changed
+- Added calcs engine
+- Added calcs editing settings panel
+- Moved measuring tool color picker to settings panel
+- Added `hr` to calcs channel editing page
+- Added measurement display dissipation after modal opening
+- Changed multi-axis to handle 6 axes sets
+- Added multi-axis consolidation
+- Updated docs
+
 ## v0.2.6
 added measuring tool, added keyboard shortcuts huge refactor, added y-axis control
 

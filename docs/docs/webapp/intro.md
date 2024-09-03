@@ -18,10 +18,11 @@ data is shown in your local timezone, but stored in the database in UTC time
 
 Progress is made whenever I'm bored, but here are the features I'll eventually implement:
 
-- Custom Channels (calc channels)
-- Better axes merging and consolidation (similar axes are merged into one axis)
 - Easy access to full data export
 - Popup to provide code samples to access data that is currently visible
 - Guided tour
 - Annotations (they're already in the API)
+- Better UX in modals
+- JSON settings & calc channels import/export
+- Need to comment the code :/
 
