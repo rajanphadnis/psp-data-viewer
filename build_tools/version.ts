@@ -36,11 +36,11 @@ getCurrentChangelogVersion()
       app_names.forEach((app_name) => {
         const current_version: string = require(`../${app_name}/package.json`).version;
         const newVersion = incrementVersion(current_version, changeType);
-        // writeNewPackageVersion(app_name, newVersion);
+        writeNewPackageVersion(app_name, newVersion);
       });
       const newVersion = incrementVersion(changelog_version, changeType);
       const newChangelog = await generateChangelog(newVersion, changeType);
-      // writeChangelog(newChangelog);
+      writeChangelog(newChangelog);
       console.log("files updated successfully");
     } else if (package_versions_identical) {
       console.error("Changelog version doesn't match package.json versions!");
