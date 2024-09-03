@@ -1,7 +1,7 @@
 import { type AlignedData } from "uplot";
 import { plot } from "./plotting_helpers";
 import { writeSelectorList } from "../dataset_selector";
-import { loadingStatus } from "../types";
+import { loadingStatus, type DatasetSeries } from "../types";
 import { updateAvailableFeatures } from "../toolbar";
 import { updateStatus } from "../web_components";
 import { generatePlottedDatasets } from "./dataset_generation";
@@ -20,6 +20,10 @@ export async function update(
   );
   storeActiveDatasets(generated_toPlot, globalThis.activeDatasets_to_add);
   const [toPlot, series] = runCalcsEngine(generated_toPlot, generated_series);
+  globalThis.plotDisplayedAxes = series.slice(1).map((s, i) => {
+    const thing = s as DatasetSeries;
+    return thing.scale;
+  });
   plot(toPlot as AlignedData, series);
   globalThis.displayedRangeStart = startTimestamp;
   globalThis.displayedRangeEnd = endTimestamp;

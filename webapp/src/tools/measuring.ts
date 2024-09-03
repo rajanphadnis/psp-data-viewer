@@ -22,10 +22,11 @@ export function updateDeltaText() {
   let stringToWrite = `Δt=${formatTimeDelta((globalThis.x2! - globalThis.x1!) * 1000)}`;
   for (let i = 0; i < globalThis.plotDisplayedAxes.length; i++) {
     const displayedAxis: string = globalThis.plotDisplayedAxes[i];
-    const nameOnly = displayedAxis.split("__")[0];
+    const scaleName = displayedAxis.split("_")[0];
+    const name = globalThis.activeDatasets_to_add[i].split("__")[0];
     const val = (globalThis.y2[i] - globalThis.y1[i]).toFixed(4);
-    if (nameOnly != "bin") {
-      stringToWrite = stringToWrite + `</br>Δ${nameOnly}=${val}${displayedAxis.split("__")[1]}`;
+    if (scaleName != "bin") {
+      stringToWrite = stringToWrite + `</br>Δ${name}=${val}${displayedAxis.split("_")[0]}`;
     }
   }
   deltaDiv.innerHTML = stringToWrite;
