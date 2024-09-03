@@ -1,9 +1,10 @@
 {
-  "dependencies": {
-    "@types/node": "^22.5.2",
-    "minimist": "^1.2.8"
-  },
-  "scripts": {
-    "version": "bun run ./build_tools/version.ts"
-  }
+    "dependencies": {
+        "@types/node": "^22.5.2",
+        "minimist": "^1.2.8",
+        "open": "^10.1.0"
+    },
+    "scripts": {
+        "deploy": "bun run ./build_tools/version.ts"
+    }
 }
