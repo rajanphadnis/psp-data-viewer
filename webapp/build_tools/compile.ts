@@ -55,6 +55,6 @@ syncWriteFile(
 await Bun.build({
   entrypoints: ["./src/index.ts"],
   outdir: "./built",
-  minify: false, // default false
+  minify: true, // default false
 });
 console.log("Wrote env var, built, and minified");
