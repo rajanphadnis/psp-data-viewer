@@ -203,42 +203,42 @@ jobs:
         projectId: psp-portfolio-f1205
         target: docs
 
-  build-and-deploy-azure:
-    runs-on: ubuntu-latest
-    needs: [version-check-admin, version-check-webapp, version-check-docs, changelog-check, unit-tests]
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-function.outputs.webapp-url }}
-    steps:
-    - name: 'Checkout GitHub Action'
-      uses: actions/checkout@v4
+  # build-and-deploy-azure:
+  #   runs-on: ubuntu-latest
+  #   needs: [version-check-admin, version-check-webapp, version-check-docs, changelog-check, unit-tests]
+  #   environment:
+  #     name: 'Production'
+  #     url: ${{ steps.deploy-to-function.outputs.webapp-url }}
+  #   steps:
+  #   - name: 'Checkout GitHub Action'
+  #     uses: actions/checkout@v4
 
-    - name: Setup Python ${{ env.PYTHON_VERSION }} Environment
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ env.PYTHON_VERSION }}
+  #   - name: Setup Python ${{ env.PYTHON_VERSION }} Environment
+  #     uses: actions/setup-python@v5
+  #     with:
+  #       python-version: ${{ env.PYTHON_VERSION }}
 
-    - name: 'Resolve Project Dependencies Using Pip'
-      shell: bash
-      run: |
-        pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt --target=".python_packages/lib/site-packages"
-        popd
+  #   - name: 'Resolve Project Dependencies Using Pip'
+  #     shell: bash
+  #     run: |
+  #       pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+  #       python -m pip install --upgrade pip
+  #       pip install -r requirements.txt --target=".python_packages/lib/site-packages"
+  #       popd
 
-    - name: 'Run Azure Functions Action'
-      uses: Azure/functions-action@v1
-      id: deploy-to-function
-      with:
-        app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
-        package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
-        publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
-        scm-do-build-during-deployment: true
-        enable-oryx-build: true
+  #   - name: 'Run Azure Functions Action'
+  #     uses: Azure/functions-action@v1
+  #     id: deploy-to-function
+  #     with:
+  #       app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+  #       package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+  #       publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
+  #       scm-do-build-during-deployment: true
+  #       enable-oryx-build: true
 
   github-release:
     runs-on: ubuntu-latest
-    needs: [build-and-release-webapp, build-and-release-admin, build-and-release-docs, build-and-deploy-azure]
+    needs: [build-and-release-webapp, build-and-release-admin, build-and-release-docs]
     environment:
       name: 'Production'
     steps:

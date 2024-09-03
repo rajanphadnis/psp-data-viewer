@@ -28,6 +28,7 @@ import json
 app: App = initialize_app()
 storage_client = storage
 
+
 def organizeFiles(file_names: list[str]):
     csv_files = list(filter(lambda x: ".csv" in x, file_names))
     fileNames = list(filter(lambda x: ".csv" not in x, file_names))
@@ -39,6 +40,7 @@ def organizeFiles(file_names: list[str]):
         dateString = t.mktime(datetimeObj.timetuple())
         timestamps.append(int(dateString))
     return (fileNames, csv_files, timestamps)
+
 
 def getUnits(dataset_name: str) -> str:
     scale = "psi"
@@ -52,7 +54,13 @@ def getUnits(dataset_name: str) -> str:
         scale = "V"
     return scale
 
-@on_document_created(document="{testID}/test_creation", memory=options.MemoryOption.GB_8, cpu=2)
+
+@on_document_created(
+    document="{testID}/test_creation",
+    memory=options.MemoryOption.GB_16,
+    cpu=4,
+    timeout_sec=540,
+)
 def createTest_createHDF5(event: Event[DocumentSnapshot]) -> None:
     data = event.data.to_dict()
     test_name: str = data["name"]
@@ -192,7 +200,13 @@ def createTest_createHDF5(event: Event[DocumentSnapshot]) -> None:
         merge=True,
     )
 
-@on_document_created(timeout_sec=540, document="{testID}/ready_to_deploy", memory=options.MemoryOption.GB_8, cpu=2)
+
+@on_document_created(
+    timeout_sec=540,
+    document="{testID}/ready_to_deploy",
+    memory=options.MemoryOption.GB_16,
+    cpu=4,
+)
 def uploadToAzure(event: Event[DocumentSnapshot]) -> None:
     data = event.data.to_dict()
     test_name: str = data["name"]
@@ -284,6 +298,7 @@ def uploadToAzure(event: Event[DocumentSnapshot]) -> None:
         # merge=True,
     )
 
+
 @https_fn.on_request(
     cors=options.CorsOptions(
         cors_origins="*",
@@ -293,10 +308,14 @@ def uploadToAzure(event: Event[DocumentSnapshot]) -> None:
 def get_annotations(req: https_fn.Request) -> https_fn.Response:
     test_id = req.args["id"] if "id" in req.args else None
     if test_id is None:
-        return https_fn.Response("'id' is required",status=400)
+        return https_fn.Response("'id' is required", status=400)
     db: google.cloud.firestore.Client = firestore.client()
     fetchedData = db.collection(test_id).document("annotations").get().to_dict()
     if fetchedData is None:
-        return https_fn.Response('{"No Annotations": true}', status=200, mimetype="text/json")
+        return https_fn.Response(
+            '{"No Annotations": true}', status=200, mimetype="text/json"
+        )
     else:
-        return https_fn.Response(json.dumps(fetchedData), status=200, mimetype="text/json")
+        return https_fn.Response(
+            json.dumps(fetchedData), status=200, mimetype="text/json"
+        )
