@@ -1,3 +1,9 @@
+## v0.2.10
+Added search to docs
+
+### Changed
+- Added Algolia DocSearch to Docs
+
 ## v0.2.9
 Bug fixes
 
