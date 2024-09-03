@@ -42,6 +42,7 @@ getCurrentChangelogVersion()
       const newChangelog = await generateChangelog(newVersion, changeType);
       writeChangelog(newChangelog);
       console.log("files updated successfully");
+      console.log(`Click to start release process: https://github.com/rajanphadnis/psp-data-viewer/releases/new?tag=v${newVersion}`);
     } else if (package_versions_identical) {
       console.error("Changelog version doesn't match package.json versions!");
     } else {
