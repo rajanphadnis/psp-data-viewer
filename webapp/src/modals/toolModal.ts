@@ -1,6 +1,6 @@
 import Coloris from "@melloware/coloris";
 import { defaultMeasuringToolColors } from "../theming";
-import { initCalcChannelList } from "../settings/calc_channel_input";
+import { initCalcChannelList, redrawCalcChannelsList } from "../calcs_engine/element_backend";
 
 export function initToolsModal() {
   const closeButton = document.getElementById("measuringClose")!;
@@ -30,6 +30,7 @@ export function toggleToolsModal() {
   if (modal.style.display == "block") {
     modal.style.display = "none";
   } else {
+    redrawCalcChannelsList();
     modal.style.display = "block";
     Coloris({
       el: ".test-field-text",

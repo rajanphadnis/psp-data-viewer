@@ -1,6 +1,6 @@
 import { getSharelink } from "./browser_interactions";
 import { defaultPlottingColors, measuringToolDefaultColor } from "./theming";
-import { loadingStatus } from "./types";
+import { loadingStatus, type CalcChannel } from "./types";
 import { updateStatus } from "./web_components";
 
 export function getDefaultMeasuringToolColor() {
@@ -49,7 +49,8 @@ export async function cacheFetchedData(
       }
     }
   }
-}export function storeActiveDatasets(data: number[][], datasetNames: string[]) {
+}
+export function storeActiveDatasets(data: number[][], datasetNames: string[]) {
   const actualNames = ["time", ...datasetNames];
   localStorage.setItem("currentData_data", JSON.stringify(data));
   localStorage.setItem("currentData_names", JSON.stringify(actualNames));
@@ -63,3 +64,15 @@ export function initColorList() {
   }
 }
 
+export function saveCalcChannels(data: CalcChannel[]) {
+  localStorage.setItem("calc_channels", JSON.stringify(data));
+}
+
+export function initCalcChannels() {
+  let storageItem = localStorage.getItem("calc_channels");
+  if (storageItem == null) {
+    globalThis.calcChannels = [];
+  } else {
+    globalThis.calcChannels = JSON.parse(storageItem);
+  }
+}

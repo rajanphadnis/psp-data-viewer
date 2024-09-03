@@ -369,10 +369,25 @@ div {
     margin-right: 10px;
     margin-top: 5px;
     margin-bottom: 5px;
-    width: 220px;
+    /* width: 220px; */
 }
 
 .calc_channel_list_div:hover {
+    background-color: var(--steel);
+}
+
+.calcChannelInputDiv {
+    display: flex;
+    flex-direction: row;
+    /* justify-content: space-between; */
+    align-items: center;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.calcChannelInputDiv:hover {
     background-color: var(--steel);
 }
 
@@ -587,7 +602,7 @@ div {
 .popup .show {
     visibility: visible;
     -webkit-animation: fadeIn 1s;
-    animation: fadeIn 1s
+    animation: fadeIn 1s;
 }
 
 
@@ -621,4 +636,24 @@ div {
     /* color: #fff; */
     height: 15px;
     /* fill: #fff; */
+}
+
+.calcChannelSubDiv {
+    padding-left: 50px;
+}
+
+.calc-channels-formula {
+    color: white;
+    border-color: white;
+    border-width: 5px;
+    background: black;
+    caret-color: white;
+}
+
+.calc-channels-formula .mq-matrixed {
+    background: black;
+}
+
+.calc-channels-formula .mq-matrixed-container {
+    filter: progid: DXImageTransform.Microsoft.Chroma(color='black');
 }

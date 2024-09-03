@@ -6,7 +6,7 @@ import { updateAvailableFeatures } from "../toolbar";
 import { updateStatus } from "../web_components";
 import { generatePlottedDatasets } from "./dataset_generation";
 import { storeActiveDatasets } from "../caching";
-import { runCalcsEngine } from "../tools/calcs_engine";
+import { runCalcsEngine } from "../calcs_engine/calcs_engine";
 
 export async function update(
   startTimestamp: number = globalThis.starting_timestamp,

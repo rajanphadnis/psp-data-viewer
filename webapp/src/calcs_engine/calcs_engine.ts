@@ -1,5 +1,5 @@
 import { generateAxisAndSeries } from "../plotting/axes_series_generation";
-import { alphabet } from "../random";
+import { alphabet } from "./random";
 import type { DatasetSeries } from "../types";
 
 export function runCalcsEngine(

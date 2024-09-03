@@ -39,7 +39,7 @@ export async function generatePlottedDatasets(
     return [toPlot_toReturn, series_toReturn];
   }
   console.log("fetching channels from database: " + need_to_fetch.toString());
-  const [toPlot_fetched, series_fetched, axes_fetched] = await getSensorData(
+  const [toPlot_fetched, series_fetched] = await getSensorData(
     need_to_fetch,
     startTimestamp,
     endTimestamp,

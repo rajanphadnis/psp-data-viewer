@@ -10,7 +10,7 @@ import uPlot from "uplot";
 import { setupEventListeners } from "./toolbar";
 import { type Functions } from "firebase/functions";
 import { setupSettings } from "./settings/settings";
-import { initColorList } from "./caching";
+import { initCalcChannels, initColorList } from "./caching";
 import {} from "./tools/measuring";
 import { initGlobalVariables, updateStatus } from "./web_components";
 import { initSettingsModal } from "./modals/settingsModal";
@@ -45,47 +45,17 @@ declare global {
   var numberOfAxes: number;
 }
 initGlobalVariables();
-globalThis.calcChannels.push({
-  formula: "x+10",
-  newChannelName: "fms_calc",
-  axisSide: 1,
-  units: "lbf",
-  var_mapping: [
-    {
-      source_channel: "fms__lbf__",
-      var_name: "x",
-    },
-  ],
-});
-globalThis.calcChannels.push({
-  formula: "B+z",
-  newChannelName: "fu_calc",
-  axisSide: 2,
-  units: "th",
-  var_mapping: [
-    {
-      source_channel: "fu_psi__psi__",
-      var_name: "z",
-    },
-    {
-      source_channel: "fms__lbf__",
-      var_name: "B",
-    },
-  ],
-});
 Coloris.init();
 initColorList();
 initFirebase();
 initSwitcherModal();
 initSettingsModal();
-initToolsModal();
-initModalEscape();
-addKeyPressListeners();
+initCalcChannels();
 
 async function main() {
+  updateStatus(loadingStatus.LOADING);
   localStorage.removeItem("currentData_data");
   localStorage.removeItem("currentData_names");
-  updateStatus(loadingStatus.LOADING);
   const [tests, default_url] = await getGeneralTestInfo();
   setKnownTests(tests, default_url);
   globalThis.test_id = getTestID(default_url);
@@ -98,6 +68,9 @@ async function main() {
     globalThis.displayedRangeEnd = ending_ts;
   }
   globalThis.activeDatasets_all = datasets.sort((a, b) => a.localeCompare(b));
+  initToolsModal();
+  initModalEscape();
+  addKeyPressListeners();
   setTitle(name, test_article, gse_article);
   setupEventListeners();
   setupSettings();

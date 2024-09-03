@@ -13,12 +13,12 @@ export async function getSensorData(
   startTimestamp: number,
   endTimestamp: number,
   channelsToFetch: Map<string, number>
-): Promise<[number[][], ({} | DatasetSeries)[], DatasetAxis[]]> {
+): Promise<[number[][], ({} | DatasetSeries)[]]> {
   let toPlot: number[][] = [];
   let series: ({} | DatasetSeries)[] = [];
   let axes: DatasetAxis[] = [];
   if (datasets.length == 0) {
-    return [toPlot, series, axes];
+    return [toPlot, series];
   }
   let datasets_string: string = datasets.join(",");
   let requestURL: string = `https://psp-api.rajanphadnis.com/api/get_data?id=${globalThis.test_id}&start=${startTimestamp}&end=${endTimestamp}&channels=${datasets_string}&max=${globalThis.displayedSamples}`;
@@ -33,18 +33,17 @@ export async function getSensorData(
       const nameOnly: string = dataset.split("__")[0];
       const scale: string = dataset.split("__")[1];
       let binExists: boolean = false;
-      const [seriesToReturn, axisToReturn] = generateAxisAndSeries(
+      const seriesToReturn = generateAxisAndSeries(
         scale,
         dataset,
         nameOnly,
         channelsToFetch.get(dataset)!
       );
       series.push(seriesToReturn);
-      axes.push(axisToReturn);
       toPlot.push(response[dataset]);
     }
     toPlot.push(response["time"]);
-    return [toPlot, series, axes];
+    return [toPlot, series];
   });
 }
 
