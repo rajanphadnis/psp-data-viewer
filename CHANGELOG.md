@@ -1,3 +1,9 @@
+## v0.2.11
+bug fixes
+
+### Changed
+- bug fixes
+
 ## v0.2.10
 Added search to docs
 
