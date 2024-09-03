@@ -5,7 +5,7 @@ on:
           - "v*.*.*"
 
 env:
-  AZURE_FUNCTIONAPP_NAME: 'psp-data-viewer'
+  AZURE_FUNCTIONAPP_NAME: 'psp-data-viewer-api'
   AZURE_FUNCTIONAPP_PACKAGE_PATH: './azure_functions'
   PYTHON_VERSION: '3.11'
 
