@@ -1,7 +1,4 @@
-import Coloris from "@melloware/coloris";
-import { defaultMeasuringToolColors } from "../theming";
 import { initCalcChannelList, redrawCalcChannelsList } from "../calcs_engine/element_backend";
-import { toggleSettingsModal } from "./settingsModal";
 
 export function initToolsModal() {
   const closeButton = document.getElementById("toolClose")!;
