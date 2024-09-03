@@ -1,8 +1,9 @@
 {
-    "dependencies": {
-        "@types/node": "^22.5.2"
-    },
-    "scripts": {
-        "version": "bun run ./build_tools/version.ts"
-    }
+  "dependencies": {
+    "@types/node": "^22.5.2",
+    "minimist": "^1.2.8"
+  },
+  "scripts": {
+    "version": "bun run ./build_tools/version.ts"
+  }
 }

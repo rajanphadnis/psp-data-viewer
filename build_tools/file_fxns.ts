@@ -34,12 +34,29 @@ export function writeNewPackageVersion(app_name: string, newVersion: string) {
   fs.writeFileSync(`${app_name}/package.json`, JSON.stringify(file, null, 4));
 }
 
-export function generateChangelog(version: string, increment_type: ChangeType): string {
+export async function generateChangelog(version: string, increment_type: ChangeType): Promise<string> {
+  if (increment_type != ChangeType.PATCH) {
     const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout
+      input: process.stdin,
+      output: process.stdout,
     });
-    const headline = rl.question("Input header") ?? "bug fixes";
+    const response = await new Promise<string>(async (resolve, reject) => {
+      rl.question("Changelog summary (default: bug fixes): ", (answer) => {
+        rl.close();
+        resolve(answer);
+      });
+    });
+    let headline = "";
+    if (increment_type == ChangeType.MAJOR) {
+      headline = response == "" ? "Major Changes" : response;
+    } else {
+      headline = response == "" ? "Minor Changes" : response;
+    }
+    const toReturn = `## v${version}\n${headline}\n\n### Changed\n- bug fixes\n- \n\n`;
+    return toReturn;
+  } else {
+    const headline = "bug fixes";
     const toReturn = `## v${version}\n${headline}\n\n### Changed\n- bug fixes\n\n`;
     return toReturn;
+  }
 }

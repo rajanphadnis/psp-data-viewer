@@ -1,11 +1,29 @@
 import { generateChangelog, getCurrentChangelogVersion, writeChangelog, writeNewPackageVersion } from "./file_fxns";
 import { ChangeType } from "./types";
+import minimist from "minimist";
 
+const patchType_cmdline: string = minimist(process.argv.slice(2))["_"][0] ?? "patch";
 const app_names: string[] = ["admin", "docs", "webapp"];
-const changeType = ChangeType.PATCH;
+let changeType = ChangeType.PATCH;
+
+switch (patchType_cmdline.toString().toLowerCase()) {
+  case "patch":
+    changeType = ChangeType.PATCH;
+    break;
+  case "minor":
+    changeType = ChangeType.MINOR;
+    break;
+  case "major":
+    changeType = ChangeType.MAJOR;
+    break;
+
+  default:
+    changeType = ChangeType.PATCH;
+    break;
+}
 
 getCurrentChangelogVersion()
-  .then((changelog_version) => {
+  .then(async (changelog_version) => {
     const package_versions: string[] = app_names.map((app_name) => {
       return require(`../${app_name}/package.json`).version;
     });
@@ -13,7 +31,6 @@ getCurrentChangelogVersion()
     const package_versions_identical: boolean = package_versions.every((val, i, arr) => val === arr[0]);
     const all_versions_identical: boolean = all_versions.every((val, i, arr) => val === arr[0]);
 
-    console.log("checked bools");
     if (all_versions_identical) {
       console.log("all versions identical");
       app_names.forEach((app_name) => {
@@ -21,10 +38,10 @@ getCurrentChangelogVersion()
         const newVersion = incrementVersion(current_version, changeType);
         // writeNewPackageVersion(app_name, newVersion);
       });
-      console.log("package done");
       const newVersion = incrementVersion(changelog_version, changeType);
-      const newChangelog = generateChangelog(newVersion, changeType);
+      const newChangelog = await generateChangelog(newVersion, changeType);
       // writeChangelog(newChangelog);
+      console.log("files updated successfully");
     } else if (package_versions_identical) {
       console.error("Changelog version doesn't match package.json versions!");
     } else {
