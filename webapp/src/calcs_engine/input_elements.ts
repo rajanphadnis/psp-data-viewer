@@ -47,8 +47,16 @@ export function createCalcChannelMainItem(
   subDiv: HTMLDivElement
 ): HTMLDivElement {
   const listDiv = document.createElement("div");
+  const formulaP = document.createElement("p");
   const formulaInput = document.createElement("span");
+  const formulaDiv = document.createElement("div");
+  const nameP = document.createElement("p");
   const nameInput = document.createElement("input");
+  const nameDiv = document.createElement("div");
+  const unitsP = document.createElement("p");
+  const unitsDiv = document.createElement("div");
+  const axisP = document.createElement("p");
+  const axisDiv = document.createElement("div");
   const deleteButton = document.createElement("button");
   const addButton = document.createElement("button");
   listDiv.classList.add("calc_channel_list_div");
@@ -66,13 +74,29 @@ export function createCalcChannelMainItem(
   addButton.innerHTML = plus_icon;
   addButton.classList.add("calc_channel_list_add_button");
   addButton.setAttribute("title", "Delete Entry");
-  listDiv.appendChild(nameInput);
-  listDiv.appendChild(formulaInput);
-  listDiv.appendChild(createCalcChannelUnitsSelector(index, val == undefined ? "psi" : val.units));
-  listDiv.appendChild(createCalcChannelAxesSelector(index, val == undefined ? 1 : val.axisSide));
+
+  nameP.innerText = "Name:";
+  formulaP.innerText = "Formula:";
+  unitsP.innerText = "Units:";
+  axisP.innerText = "Axis:";
+
+  nameDiv.appendChild(nameP);
+  nameDiv.appendChild(nameInput);
+  listDiv.appendChild(nameDiv);
+  formulaDiv.appendChild(formulaP);
+  formulaDiv.appendChild(formulaInput);
+  listDiv.appendChild(formulaDiv);
+  unitsDiv.appendChild(unitsP);
+  unitsDiv.appendChild(createCalcChannelUnitsSelector(index, val == undefined ? "psi" : val.units));
+  listDiv.appendChild(unitsDiv);
+  axisDiv.appendChild(axisP);
+  axisDiv.appendChild(createCalcChannelAxesSelector(index, val == undefined ? 1 : val.axisSide));
+  listDiv.appendChild(axisDiv);
   listDiv.appendChild(addButton);
   listDiv.appendChild(deleteButton);
   deleteButton.addEventListener("click", (e) => {
+    const hrAbove = listDiv.previousElementSibling;
+    hrAbove!.remove();
     document.getElementById("calcChannelDiv")!.removeChild(listDiv);
     document.getElementById("calcChannelDiv")!.removeChild(subDiv);
   });

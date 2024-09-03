@@ -34,14 +34,6 @@ function addNewCalcChannelItems(val: CalcChannel | undefined) {
   const formulaInput = document.getElementsByClassName("calc-channels-formula")![numberOfCurrentItems];
   // @ts-ignore: Unreachable code error
   let mathField = MathQuill.getInterface(2).MathField(formulaInput, {
-    // handlers: {
-    //   edit: function () {
-    //     // @ts-ignore: Unreachable code error
-    //     let enteredMath = mathField.latex(); // Get entered math in LaTeX format
-    //     // checkAnswer(enteredMath);
-    //     console.log(enteredMath);
-    //   },
-    // },
     restrictMismatchedBrackets: true,
     leftRightIntoCmdGoes: "up",
     supSubsRequireOperand: true,
@@ -67,12 +59,12 @@ export function initCalcChannelList() {
     toggleToolsModal();
     update(globalThis.displayedRangeStart, globalThis.displayedRangeEnd);
   });
-  // resetButton.addEventListener("click", (e) => {
-  //   localStorage.setItem("plotting_color_pallette_color_list", JSON.stringify(defaultPlottingColors));
-  //   globalThis.plotPalletteColors = defaultPlottingColors;
-  //   update(globalThis.displayedRangeStart, globalThis.displayedRangeEnd);
-  //   refreshColorListElements();
-  // });
+  resetButton.addEventListener("click", (e) => {
+    localStorage.removeItem("calc_channels");
+    globalThis.calcChannels = [];
+    document.getElementById("calcChannelDiv")!.innerHTML = "";
+    update(globalThis.displayedRangeStart, globalThis.displayedRangeEnd);
+  });
   redrawCalcChannelsList();
 }
 
