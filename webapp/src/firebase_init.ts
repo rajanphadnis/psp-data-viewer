@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { ReCaptchaEnterpriseProvider, initializeAppCheck } from "firebase/app-check";
 import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from "firebase/firestore";
 import { appCheckSecret } from "./generated_app_info";
-import { connectFunctionsEmulator, getFunctions } from "firebase/functions";
+// import { connectFunctionsEmulator, getFunctions } from "firebase/functions";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAmJytERQ1hnORHswd-j07WhpTYH7yu6fA",
@@ -24,9 +24,9 @@ export function initFirebase() {
     localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
   });
 
-  functions = getFunctions(app);
+  // functions = getFunctions(app);
   if (appCheckSecret != false) {
     console.log("in debug mode");
-    connectFunctionsEmulator(functions, "127.0.0.1", 5001);
+    // connectFunctionsEmulator(functions, "127.0.0.1", 5001);
   }
 }
