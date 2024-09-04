@@ -7,8 +7,12 @@ export function generateAxisAndSeries(
   dataset: string,
   dataset_name: string,
   dataset_index: number,
+  axis_side: number = 0,
 ): DatasetSeries {
-  const legendSide = globalThis.activeDatasets_legend_side[globalThis.activeDatasets_to_add.indexOf(dataset)];
+  let legendSide = axis_side;
+  if (axis_side == 0) {
+    legendSide = globalThis.activeDatasets_legend_side[globalThis.activeDatasets_to_add.indexOf(dataset)];
+  }
   const scaleToUse: string = `${scale}_${legendSide}`;
   const seriesToReturn: DatasetSeries = {
     label: dataset_name,

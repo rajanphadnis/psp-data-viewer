@@ -4,23 +4,34 @@ import minimist from "minimist";
 import { exec } from "child_process";
 import open from "open";
 
-const patchType_cmdline: string = minimist(process.argv.slice(2))["_"][0] ?? "patch";
+const patchType_cmdline: string = minimist(process.argv.slice(2))["_"][0] ?? "";
+const defaultMessage_cmdline: string = minimist(process.argv.slice(2))["_"][1];
 const app_names: string[] = ["admin", "docs", "webapp"];
 let changeType = ChangeType.PATCH;
+let defaultCommitMessage = "None";
+
+// throw Error;
 
 switch (patchType_cmdline.toString().toLowerCase()) {
   case "patch":
     changeType = ChangeType.PATCH;
+    defaultCommitMessage = defaultMessage_cmdline ?? "bug fixes";
+    console.log("Proceeding with type: PATCH and auto-comitting");
     break;
   case "minor":
     changeType = ChangeType.MINOR;
+    defaultCommitMessage = defaultMessage_cmdline ?? "None";
+    console.log("Proceeding with type: MINOR");
     break;
   case "major":
     changeType = ChangeType.MAJOR;
+    defaultCommitMessage = defaultMessage_cmdline ?? "None";
+    console.log("Proceeding with type: MAJOR");
     break;
 
   default:
-    changeType = ChangeType.PATCH;
+    // changeType = ChangeType.PATCH;
+    throw Error("Need to include a version increment type\nOne of either 'patch', 'minor', or 'major' are required");
     break;
 }
 
@@ -41,7 +52,7 @@ getCurrentChangelogVersion()
         writeNewPackageVersion(app_name, newVersion);
       });
       const newVersion = incrementVersion(changelog_version, changeType);
-      const newChangelog = await generateChangelog(newVersion, changeType);
+      const newChangelog = await generateChangelog(newVersion, changeType, defaultCommitMessage);
       writeChangelog(newChangelog);
       console.log("files updated successfully");
       if (changeType == ChangeType.PATCH) {
@@ -79,9 +90,12 @@ function incrementVersion(current_version: string, increment_type: ChangeType) {
 
   if (increment_type == ChangeType.MAJOR) {
     major_version = major_version + 1;
+    minor_version = 0;
+    patch_version = 0;
   }
   if (increment_type == ChangeType.MINOR) {
     minor_version = minor_version + 1;
+    patch_version = 0;
   }
   if (increment_type == ChangeType.PATCH) {
     patch_version = patch_version + 1;

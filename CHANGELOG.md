@@ -1,3 +1,15 @@
+## v0.3.0
+Admin security improvements and automation overhaul
+
+### Changed
+- bug fixes
+- Admin console automation added
+- Fixed inability to edit test name and articels in admin console by adding firebase function
+- Added time channel filtering on new test create
+- Finished up `bun run deploy` automation (still need to document usage)
+- Fixed calc channel axis side weirdness
+- Overall product is now more mature and better preapred for launch
+
 ## v0.2.15
 bug fixes
 

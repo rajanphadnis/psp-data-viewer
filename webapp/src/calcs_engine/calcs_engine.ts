@@ -55,6 +55,7 @@ export function runCalcsEngine(
         calcChannelData.newChannelName,
         calcChannelData.newChannelName,
         calculated_series.length,
+        calcChannelData.axisSide
       );
       master_calculated_toPlot = [...calculated_toPlot, newChannelData];
       master_calculated_series = [...calculated_series, seriesToReturn];
