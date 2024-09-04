@@ -23,7 +23,7 @@ export function initFirebase() {
     isTokenAutoRefreshEnabled: true,
   });
   globalThis.db = initializeFirestore(app, {
-    localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
+    // localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
   });
   globalThis.functions = getFunctions(app);
   globalThis.storage = getStorage();

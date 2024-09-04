@@ -259,13 +259,18 @@ def uploadToAzure(event: Event[DocumentSnapshot]) -> None:
         f"https://psp-api.rajanphadnis.com/api/get_database_info?id={test_id}"
     ).json()
     doc_ref_test_general = db.collection(test_id).document("general")
+    channel_list = response["database_channel_list"]
+    try:
+        channel_list.remove("time")
+    except ValueError:
+        pass
     doc_ref_test_general.set(
         {
             "id": test_id,
             "name": test_name,
             "gse_article": gse_article,
             "test_article": test_article,
-            "azure_datasets": response["database_channel_list"],
+            "azure_datasets": channel_list,
             "starting_timestamp": response["database_start_time"],
             "ending_timestamp": response["database_end_time"],
         },
@@ -303,7 +308,8 @@ def uploadToAzure(event: Event[DocumentSnapshot]) -> None:
     cors=options.CorsOptions(
         cors_origins="*",
         cors_methods=["get", "post"],
-    )
+    ),
+    memory=options.MemoryOption.MB_512,
 )
 def get_annotations(req: https_fn.Request) -> https_fn.Response:
     test_id = req.args["id"] if "id" in req.args else None
@@ -319,3 +325,73 @@ def get_annotations(req: https_fn.Request) -> https_fn.Response:
         return https_fn.Response(
             json.dumps(fetchedData), status=200, mimetype="text/json"
         )
+
+
+@https_fn.on_request(
+    cors=options.CorsOptions(
+        cors_origins="*",
+        cors_methods=["get", "post"],
+    ),
+    memory=options.MemoryOption.MB_512,
+)
+def updateTestMetaData(req: https_fn.Request) -> https_fn.Response:
+    test_id = req.args["id"] if "id" in req.args else None
+    test_name = req.args["name"] if "name" in req.args else None
+    test_article = req.args["article"] if "article" in req.args else None
+    test_gse = req.args["gse"] if "gse" in req.args else None
+    if test_id is None:
+        return https_fn.Response("'id' is required", status=400)
+    if test_name is None:
+        return https_fn.Response("'name' is required", status=400)
+    if test_article is None:
+        return https_fn.Response("'article' is required", status=400)
+    if test_gse is None:
+        return https_fn.Response("'gse' is required", status=400)
+    db: google.cloud.firestore.Client = firestore.client()
+    transaction: google.cloud.firestore.Transaction = db.transaction()
+    test_ref: google.cloud.firestore.DocumentReference = db.collection(
+        test_id
+    ).document("general")
+    general_ref: google.cloud.firestore.DocumentReference = db.collection(
+        "general"
+    ).document("tests")
+
+    @firestore.transactional
+    def update_in_transaction(
+        transaction: google.cloud.firestore.Transaction,
+        general_ref: google.cloud.firestore.DocumentReference,
+        test_ref: google.cloud.firestore.DocumentReference,
+    ):
+        list_of_visible: list = general_ref.get(transaction=transaction).get("visible")
+        print(list_of_visible)
+        item_to_index = [item for item in list_of_visible if item["id"] == test_id]
+        print(item_to_index)
+        transaction.update(
+            test_ref,
+            {"name": test_name, "test_article": test_article, "gse_article": test_gse},
+        )
+        transaction.update(
+            general_ref, {"visible": google.cloud.firestore.ArrayRemove(item_to_index)}
+        )
+        transaction.update(
+            general_ref,
+            {
+                "visible": google.cloud.firestore.ArrayUnion(
+                    [
+                        {
+                            "id": test_id,
+                            "name": test_name,
+                            "test_article": test_article,
+                            "gse_article": test_gse,
+                        }
+                    ]
+                )
+            },
+        )
+        return True
+
+    result = update_in_transaction(transaction, general_ref, test_ref)
+    if result:
+        return https_fn.Response({"status": "ok"}, status=200)
+    else:
+        return https_fn.Response({"status": "Something went wrong"}, status=500)

@@ -47,18 +47,16 @@ export async function saveTestData(
   (await fetch(`https://psp-api.rajanphadnis.com/api/get_database_info?id=${test_id}`))
     .json()
     .then(async (response) => {
-      await updateDoc(generalDocRef, {
-        visible: new_list,
-      });
-      await updateDoc(docRef, {
-        id: test_id,
-        name: new_name,
-        gse_article: new_gse,
-        test_article: new_test_article,
-        azure_datasets: response["database_channel_list"],
-        starting_timestamp: response["database_start_time"],
-        ending_timestamp: response["database_end_time"],
-      });
+      (
+        await fetch(
+          `https://updatetestmetadata-w547ikcrwa-uc.a.run.app/?id=${test_id}&name=${new_name}&article=${new_test_article}&gse=${new_gse}`
+        )
+      )
+        .json()
+        .then((re) => {
+          console.log("completed doc update");
+          console.log(re);
+        });
     });
   updateTests(false);
   updateStatus(loadingStatus.DONE);

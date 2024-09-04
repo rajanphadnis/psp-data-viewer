@@ -1,4 +1,4 @@
-import { doc, getDoc, getDocFromCache } from "firebase/firestore";
+import { doc, getDoc, getDocFromCache, getDocFromServer } from "firebase/firestore";
 import type { TestDetails } from "./types";
 
 export async function getTestArticles(cache: boolean = true): Promise<void> {
@@ -19,7 +19,7 @@ export async function getTestArticles(cache: boolean = true): Promise<void> {
   globalThis.test_articles = docData["test"];
 }
 
-export async function getTests(cache: boolean = true): Promise<[TestDetails[], string]> {
+export async function getTests(cache: boolean = false): Promise<[TestDetails[], string]> {
   const docRef = doc(db, "general", "tests");
   let docSnap;
   if (cache) {
@@ -30,7 +30,7 @@ export async function getTests(cache: boolean = true): Promise<[TestDetails[], s
       docSnap = await getDoc(docRef);
     }
   } else {
-    docSnap = await getDoc(docRef);
+    docSnap = await getDocFromServer(docRef);
   }
 
   const docData = docSnap.data()!;
@@ -39,7 +39,7 @@ export async function getTests(cache: boolean = true): Promise<[TestDetails[], s
   return [test_articles, default_test];
 }
 
-export async function getSpecificTest(id: string, cache: boolean = true): Promise<TestDetails> {
+export async function getSpecificTest(id: string, cache: boolean = false): Promise<TestDetails> {
   const docRef = doc(db, id, "general");
   let docSnap;
   if (cache) {
@@ -50,7 +50,7 @@ export async function getSpecificTest(id: string, cache: boolean = true): Promis
       docSnap = await getDoc(docRef);
     }
   } else {
-    docSnap = await getDoc(docRef);
+    docSnap = await getDocFromServer(docRef);
   }
   const docData = docSnap.data()!;
   const gse_article: string = docData["gse_article"];
