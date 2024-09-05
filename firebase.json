@@ -4,6 +4,7 @@
         "indexes": "firestore.indexes.json"
     },
     "functions": [{
+        "runtime": "python312",
         "source": "functions",
         "codebase": "default",
         "ignore": [

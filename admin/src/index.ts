@@ -9,6 +9,7 @@ import { updateTests } from "./tests";
 import { initModal } from "./modal";
 import { newTest } from "./new-test/new";
 import type { FirebaseStorage } from "firebase/storage";
+import { instanceManager } from "./instances/manager";
 
 declare global {
   var db: Firestore;
@@ -87,6 +88,10 @@ async function main() {
 if (location.pathname.includes("/new/")) {
   newTest();
 } else {
-  initModal();
-  main();
+  if (location.pathname.includes("/instances/")) {
+    instanceManager();
+  } else {
+    initModal();
+    main();
+  }
 }

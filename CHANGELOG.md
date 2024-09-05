@@ -1,3 +1,9 @@
+## v0.3.1
+bug fixes
+
+### Changed
+- bug fixes
+
 ## v0.3.0
 Admin security improvements and automation overhaul
 
