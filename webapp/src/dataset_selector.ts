@@ -1,4 +1,4 @@
-import { left_chevron,  loader, right_chevron} from "./html_components";
+import { left_chevron, loader, right_chevron } from "./html_components";
 import { update } from "./plotting/main";
 import { clearDatums } from "./tools/measuring";
 import { pspColors } from "./theming";
@@ -19,10 +19,12 @@ export function writeSelectorList(datasets: string[]) {
       const axisNumber = globalThis.activeDatasets_legend_side[globalThis.activeDatasets_to_add.indexOf(dataset)];
       const isOdd = axisNumber % 2 == 1;
       if (isOdd) {
-        buttonInnerHTML = left_chevron + `${axisNumber.toString()}<span class="dataset_selector_p">` + right_chevron + "</span>";
+        buttonInnerHTML =
+          left_chevron + `${axisNumber.toString()}<span class="dataset_selector_p">` + right_chevron + "</span>";
         // buttonInnerHTML = "<" + axisNumber.toString();
       } else {
-        buttonInnerHTML = '<span class="dataset_selector_p">' + left_chevron + `</span>${axisNumber.toString()}` + right_chevron;
+        buttonInnerHTML =
+          '<span class="dataset_selector_p">' + left_chevron + `</span>${axisNumber.toString()}` + right_chevron;
         // buttonInnerHTML = axisNumber.toString() + ">";
       }
 
