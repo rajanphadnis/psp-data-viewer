@@ -126,7 +126,7 @@ div {
     font-family: "IBM Plex Mono", monospace;
     color: white;
     text-align: center;
-    z-index: 100;
+    z-index: 2;
 }
 
 #plotOverlayDiv a {

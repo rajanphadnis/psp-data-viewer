@@ -46,10 +46,13 @@ function createModalButton(title: string, id: string, isDefault: boolean) {
 
 export function toggleSwitcherModal() {
   const modal = document.getElementById("testSwitcherModal")!;
+  const overlayDiv = document.getElementById("plotOverlayDiv")! as HTMLDivElement;
   if (modal.style.display == "block") {
     modal.style.display = "none";
+    overlayDiv.style.display = "flex";
   } else {
     document.getElementById("measurementPopup")!.classList.remove("show");
     modal.style.display = "block";
+    overlayDiv.style.display = "none";
   }
 }

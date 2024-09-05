@@ -1,3 +1,9 @@
+## v0.3.3
+bug fixes
+
+### Changed
+- bug fixes
+
 ## v0.3.2
 added inplace plot documentation hint and dataset selector axis arrows
 

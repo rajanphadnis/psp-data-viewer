@@ -48,12 +48,15 @@ export function initSettingsModal() {
 
 export function toggleSettingsModal() {
   const modal = document.getElementById("settingsModal")!;
+  const overlayDiv = document.getElementById("plotOverlayDiv")! as HTMLDivElement;
   if (modal.style.display == "block") {
     modal.style.display = "none";
+    overlayDiv.style.display = "flex";
   } else {
     modal.style.display = "block";
     document.getElementById("measurementPopup")!.classList.remove("show");
     initColorPlotInputs();
+    overlayDiv.style.display = "none";
   }
 }
 
