@@ -1,4 +1,4 @@
-import { loader } from "./html_components";
+import { left_chevron,  loader, right_chevron} from "./html_components";
 import { update } from "./plotting/main";
 import { clearDatums } from "./tools/measuring";
 import { pspColors } from "./theming";
@@ -16,8 +16,16 @@ export function writeSelectorList(datasets: string[]) {
     let list_button = document.createElement("button");
     if (globalThis.activeDatasets_to_add.includes(dataset)) {
       // buttonInnerHTML = "-";
-      buttonInnerHTML =
-        globalThis.activeDatasets_legend_side[globalThis.activeDatasets_to_add.indexOf(dataset)].toString();
+      const axisNumber = globalThis.activeDatasets_legend_side[globalThis.activeDatasets_to_add.indexOf(dataset)];
+      const isOdd = axisNumber % 2 == 1;
+      if (isOdd) {
+        buttonInnerHTML = left_chevron + `${axisNumber.toString()}<span class="dataset_selector_p">` + right_chevron + "</span>";
+        // buttonInnerHTML = "<" + axisNumber.toString();
+      } else {
+        buttonInnerHTML = '<span class="dataset_selector_p">' + left_chevron + `</span>${axisNumber.toString()}` + right_chevron;
+        // buttonInnerHTML = axisNumber.toString() + ">";
+      }
+
       buttonColor = pspColors.aged;
       list_text.classList.toggle("available", false);
     } else if (globalThis.activeDatasets_loading.includes(dataset)) {

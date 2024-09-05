@@ -714,3 +714,21 @@ div {
 .calc-channels-formula .mq-matrixed-container {
     filter: progid: DXImageTransform.Microsoft.Chroma(color='black');
 }
+
+.left_chevron_icon {
+    height: 10px;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.right_chevron_icon {
+    height: 10px;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.dataset_selector_p {
+    fill: transparent;
+    padding: 0px;
+    margin: 0px;
+}
