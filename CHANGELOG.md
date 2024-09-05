@@ -1,3 +1,9 @@
+## v0.3.5
+updated google tag
+
+### Changed
+- bug fixes
+
 ## v0.3.4
 added google tag
 
