@@ -1,3 +1,9 @@
+## v0.3.6
+updated clipping overlay
+
+### Changed
+- bug fixes
+
 ## v0.3.5
 updated google tag
 
