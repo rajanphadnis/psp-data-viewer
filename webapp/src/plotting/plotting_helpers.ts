@@ -3,6 +3,7 @@ import { update } from "./main";
 import { DateTime } from "luxon";
 import type { DatasetAxis } from "../types";
 import { drawDatum, updateDeltaText } from "../tools/measuring";
+import { plotting_instructions } from "../html_components";
 
 export function legendRound(val: any, suffix: string, precision: number = 2) {
   if (val == null || val == undefined || val == "null") {
@@ -27,7 +28,7 @@ export function plot(
         scale: string;
         spanGaps: boolean;
       }
-  )[],
+  )[]
 ) {
   const axes = generateAllAxes(globalThis.numberOfAxes);
   let opts = {
@@ -94,11 +95,18 @@ export function plot(
       },
     },
   };
-  document.getElementById("plot")!.innerHTML = "";
-  uplot = new uPlot(opts as unknown as Options, toPlot, document.getElementById("plot")!);
+  const plotDiv = document.getElementById("plot")! as HTMLDivElement;
+  plotDiv.innerHTML = plotting_instructions;
+  const overlayDiv = document.getElementById("plotOverlayDiv")! as HTMLDivElement;
+  uplot = new uPlot(opts as unknown as Options, toPlot, plotDiv);
   window.addEventListener("resize", (e) => {
     uplot.setSize(getSize());
   });
+  if (toPlot.length == 0) {
+    overlayDiv.style.display = "flex";
+  } else {
+    overlayDiv.style.display = "none";
+  }
 }
 
 function getSize() {
@@ -110,20 +118,22 @@ function getSize() {
 
 function generateAllAxes(totalAxes: number) {
   let axesToReturn: DatasetAxis[] = [];
-  for (let i = 1; i < totalAxes+1; i++) {
+  for (let i = 1; i < totalAxes + 1; i++) {
     axesToReturn = [...axesToReturn, ...generateAxes(i)];
-    
   }
-  return [{
-    stroke: "#fff",
-    grid: {
-      stroke: "#ffffff20",
+  return [
+    {
+      stroke: "#fff",
+      grid: {
+        stroke: "#ffffff20",
+      },
+      ticks: {
+        show: true,
+        stroke: "#80808080",
+      },
     },
-    ticks: {
-      show: true,
-      stroke: "#80808080",
-    },
-  },...axesToReturn];
+    ...axesToReturn,
+  ];
 }
 
 function generateAxes(axesSide: number): DatasetAxis[] {

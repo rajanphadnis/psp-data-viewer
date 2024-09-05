@@ -64,7 +64,7 @@ export async function generateChangelog(
     const toReturn = `## v${version}\n${headline}\n\n### Changed\n- bug fixes\n- \n\n`;
     return toReturn;
   } else {
-    const headline = "bug fixes";
+    const headline = defaultMessage == "None" ? "bug fixes" : defaultMessage;
     const toReturn = `## v${version}\n${headline}\n\n### Changed\n- bug fixes\n\n`;
     return toReturn;
   }

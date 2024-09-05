@@ -58,7 +58,7 @@ getCurrentChangelogVersion()
       if (changeType == ChangeType.PATCH) {
         const response = await new Promise<void>(async (resolve, reject) => {
           exec(
-            `git add . && git commit -m "bug fixes and bump to v${newVersion}" && git push origin main`,
+            `git add . && git commit -m "bump to v${newVersion}" && git push origin main`,
             (err, stdout, stderr) => {
               // your callback
               console.log(stdout);
