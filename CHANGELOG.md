@@ -1,3 +1,9 @@
+## v0.3.7
+updated gtag position
+
+### Changed
+- bug fixes
+
 ## v0.3.6
 updated clipping overlay
 
