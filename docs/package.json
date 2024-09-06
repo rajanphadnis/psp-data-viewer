@@ -1,6 +1,6 @@
 {
     "name": "docs",
-    "version": "0.3.8",
+    "version": "0.3.9",
     "private": true,
     "scripts": {
         "docusaurus": "docusaurus",
@@ -16,6 +16,7 @@
     },
     "dependencies": {
         "@docusaurus/core": "3.5.1",
+        "@docusaurus/plugin-google-gtag": "^3.5.2",
         "@docusaurus/preset-classic": "3.5.1",
         "@docusaurus/theme-mermaid": "3.5.1",
         "@mdx-js/react": "^3.0.0",

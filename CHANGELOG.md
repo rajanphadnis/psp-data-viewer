@@ -1,3 +1,9 @@
+## v0.3.9
+added google analytics to docs
+
+### Changed
+- bug fixes
+
 ## v0.3.8
 updated docs
 
