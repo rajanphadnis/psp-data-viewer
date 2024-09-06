@@ -42,38 +42,34 @@ const config: Config = {
           // path: "api",
           // routeBasePath: "api",
           // sidebarPath: './sidebarsProduct.js',
-          editUrl:
-            'https://github.dev/rajanphadnis/psp-data-viewer/blob/main/docs/',
+          editUrl: "https://github.dev/rajanphadnis/psp-data-viewer/blob/main/docs/",
         },
         theme: {
           customCss: "./src/css/custom.css",
         },
-      } satisfies Preset.Options,
-      '@docusaurus/preset-classic',
-      {
         gtag: {
-          trackingID: 'G-67WSW9GJ33',
+          trackingID: "G-67WSW9GJ33",
           anonymizeIP: false,
         },
-      },
+      } satisfies Preset.Options,
     ],
   ],
-  
+
   themeConfig: {
     algolia: {
       // The application ID provided by Algolia
-      appId: 'RJ36RG8K45',
+      appId: "RJ36RG8K45",
 
       // Public API key: it is safe to commit it
-      apiKey: '1eef2c1b924b6595a42a8aa98e2aee16',
+      apiKey: "1eef2c1b924b6595a42a8aa98e2aee16",
 
-      indexName: 'psp-rajanphadnis',
+      indexName: "psp-rajanphadnis",
 
       // Optional: see doc section below
       contextualSearch: true,
 
       // Optional: Specify domains where the navigation should occur through window.location instead on history.push. Useful when our Algolia config crawls multiple documentation sites and we want to navigate with window.location.href to them.
-      externalUrlRegex: 'external\\.com|domain\\.com',
+      externalUrlRegex: "external\\.com|domain\\.com",
 
       // Optional: Replace parts of the item URLs from Algolia. Useful when using the same search index for multiple deployments using a different baseUrl. You can use regexp or string in the `from` param. For example: localhost:3000 vs myCompany.com/docs
       //replaceSearchResultPathname: {
@@ -85,7 +81,7 @@ const config: Config = {
       searchParameters: {},
 
       // Optional: path for search page that enabled by default (`false` to disable it)
-      searchPagePath: 'search',
+      searchPagePath: "search",
 
       // Optional: whether the insights feature is enabled or not on Docsearch (`false` by default)
       insights: false,
@@ -145,12 +141,12 @@ const config: Config = {
               label: "API",
               to: "/docs/api/intro",
             },
-            
+
             {
               label: "WebApp(s)",
               to: "/docs/webapp/intro",
             },
-            
+
             {
               label: "Backend",
               to: "/docs/backend/intro",
