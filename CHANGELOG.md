@@ -1,3 +1,9 @@
+## v0.3.11
+upgraded docusaurus and added admin tracker
+
+### Changed
+- bug fixes
+
 ## v0.3.10
 added google analytics to docs
 

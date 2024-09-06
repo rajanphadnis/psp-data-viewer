@@ -2,7 +2,7 @@
     "name": "webapp",
     "module": "src/index.ts",
     "type": "module",
-    "version": "0.3.10",
+    "version": "0.3.11",
     "devDependencies": {
         "@types/bun": "latest",
         "@types/file-saver": "^2.0.7"
