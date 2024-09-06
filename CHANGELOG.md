@@ -1,3 +1,9 @@
+## v0.3.8
+updated docs
+
+### Changed
+- bug fixes
+
 ## v0.3.7
 updated gtag position
 
