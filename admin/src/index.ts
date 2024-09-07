@@ -31,8 +31,10 @@ if (!("Proxy" in window)) {
 async function main() {
   await getTestArticles();
   updateTests();
-  const test_article_button = document.getElementById("test_article_button")!;
-  const gse_article_button = document.getElementById("gse_article_button")!;
+  const test_article_button = document.getElementById("test_article_button")! as HTMLButtonElement;
+  const gse_article_button = document.getElementById("gse_article_button")! as HTMLButtonElement;
+  const analytics_button = document.getElementById("analytics_button")! as HTMLButtonElement;
+  const instance_button = document.getElementById("instance_button")! as HTMLButtonElement;
   const newTestSaveButton = document.getElementById("new_test_save")! as HTMLButtonElement;
   test_article_button.addEventListener("click", (e) => {
     generateArticlePanel(articleType.TEST);
@@ -80,6 +82,12 @@ async function main() {
       // csvButton.innerHTML = '<span class="material-symbols-outlined">table_view</span>';
       updateStatus(loadingStatus.DONE);
     });
+  });
+  analytics_button.addEventListener("click", (e) => {
+    window.location.pathname = "analytics";
+  });
+  instance_button.addEventListener("click", (e) => {
+    window.location.pathname = "instances";
   });
   generateArticlePanel(articleType.TEST);
   updateStatus(loadingStatus.DONE);

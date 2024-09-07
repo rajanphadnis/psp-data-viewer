@@ -142,7 +142,7 @@ export function generateArticlePanel(article: articleType) {
     selected_list = test_articles;
   }
 
-  list.appendChild(generateTitle(selected_text + " Articles:"));
+  // list.appendChild(generateTitle(selected_text + " Articles:"));
   for (let i = 0; i < selected_list.length; i++) {
     const test = selected_list[i];
     const div = document.createElement("div");

@@ -1,4 +1,22 @@
 .article_button {
+    width: calc(50% - 20px);
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background-color: var(--rush);
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: "IBM Plex Mono", monospace;
+    color: black;
+}
+
+.article_button:hover {
+    background-color: var(--field);
+}
+
+.tools_button {
     width: calc(100% - 20px);
     margin-left: 10px;
     margin-right: 10px;
@@ -10,8 +28,10 @@
     border: none;
     font-weight: bold;
     cursor: pointer;
+    font-family: "IBM Plex Mono", monospace;
+    color: black;
 }
 
-.article_button:hover {
+.tools_button:hover {
     background-color: var(--field);
 }

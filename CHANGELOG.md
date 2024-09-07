@@ -1,3 +1,9 @@
+## v0.3.12
+added analytics tab
+
+### Changed
+- bug fixes
+
 ## v0.3.11
 upgraded docusaurus and added admin tracker
 

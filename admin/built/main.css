@@ -168,11 +168,24 @@ div {
     /* scrollbar-gutter: stable; */
 }
 
-#articles-info {
+#articles-main {
     width: 70%;
     border-left: 1px solid white;
     border-right: 1px solid white;
     border-top: 1px solid white;
+}
+
+#articles-info {
+    /* width: 70%;
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+    border-top: 1px solid white; */
+}
+
+#articles-tabs {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
 }
 
 .articles_info_div {
