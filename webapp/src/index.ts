@@ -8,15 +8,15 @@ import { initModalEscape } from "./modals/general";
 import { initFirebase } from "./firebase_init";
 import uPlot from "uplot";
 import { setupEventListeners } from "./toolbar";
-// import { type Functions } from "firebase/functions";
 import { setupSettings } from "./settings/settings";
 import { initCalcChannels, initColorList } from "./caching";
-// import {} from "./tools/measuring";
 import { initGlobalVariables, updateStatus } from "./web_components";
 import { initSettingsModal } from "./modals/settingsModal";
 import { initToolsModal } from "./modals/toolModal";
 import Coloris from "@melloware/coloris";
 
+// Initialize global state variables. All of these variables
+// hold the current state of the web app.
 declare global {
   var activeDatasets_to_add: string[];
   var activeDatasets_all: string[];
@@ -27,7 +27,6 @@ declare global {
   var db: Firestore;
   var FIREBASE_APPCHECK_DEBUG_TOKEN: boolean | string | undefined;
   var uplot: uPlot;
-  // var functions: Functions;
   var starting_timestamp: number;
   var ending_timestamp: number;
   var displayedSamples: number;
@@ -44,19 +43,43 @@ declare global {
   var calcChannelWindow: number;
   var numberOfAxes: number;
 }
+
+// When the page is loaded, initialize the global variables (the app state)
 initGlobalVariables();
+
+// Initialize the color picker plugin
 Coloris.init();
+
+// Initialize the plotting color pallette
 initColorList();
+
+// Initialize Firebase services and authorize with Firebase App Check  
 initFirebase();
+
+// Initialize the test switcher panel (modal)
 initSwitcherModal();
+
+// Initialize the settings modal
 initSettingsModal();
+
+// Initialize the calc channels from cache or init to an empty list
 initCalcChannels();
 
+
+// This is the main app run loop
 async function main() {
+  // Set the status to "Loading"
   updateStatus(loadingStatus.LOADING);
+
+  // Clear the currently active datasets from the cache. These exist
+  // if the user has visited the website before
   localStorage.removeItem("currentData_data");
   localStorage.removeItem("currentData_names");
+
+  // Contact the Firestore database and get the default test data
   const [tests, default_url] = await getGeneralTestInfo();
+
+  // 
   setKnownTests(tests, default_url);
   globalThis.test_id = getTestID(default_url);
   const usingSharelink: boolean = getSharelinkList();

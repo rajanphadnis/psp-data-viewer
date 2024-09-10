@@ -13,6 +13,12 @@ const firebaseConfig = {
   appId: "1:493859450932:web:e4e3c67f0f46316c555a61",
 };
 
+/**
+ * Initializes Firebase services, including App Check and Firestore
+ *
+ * @returns None
+ *
+ */
 export function initFirebase() {
   const app = initializeApp(firebaseConfig);
   self.globalThis.FIREBASE_APPCHECK_DEBUG_TOKEN = appCheckSecret;

@@ -114,6 +114,8 @@ To build and debug the admin console:
 
 4. In the second window, run `firebase emulators:start`
 
+5. The entry point for the webapp is `/admin/src/index.ts`. Everything starts out here.
+
 ### Building/Debugging: Web App
 
 To build and debug the web app:
@@ -125,6 +127,8 @@ To build and debug the web app:
 3. In one window, run `bun run debug` and `bun run debug-watch`
 
 4. In the second window, run `firebase emulators:start`
+
+5. The entry point for the webapp is `/webapp/src/index.ts`. Everything starts out here.
 
 ### Building/Debugging: Docs
 

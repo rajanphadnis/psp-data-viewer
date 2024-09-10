@@ -1,12 +1,24 @@
 import type { AllTests } from "../types";
 
+/**
+ * Initializes the test switcher modal
+ * 
+ * This is necessary because otherwise you couldn't add event
+ * listeners to the page to open and close the modal
+ *
+ * @returns None
+ *
+ */
 export function initSwitcherModal() {
   const switchTestButton = document.getElementById("switch-test")!;
   const closeButton = document.getElementsByClassName("close")[0]!;
+
+  // If the test switcher button is clicked, open the modal
   switchTestButton.addEventListener("click", (e) => {
     toggleSwitcherModal()
   });
 
+  // If the "close" button is clicked, close the modal
   closeButton.addEventListener("click", (e) => {
     toggleSwitcherModal()
   });
@@ -43,16 +55,31 @@ function createModalButton(title: string, id: string, isDefault: boolean) {
   return button;
 }
 
-
+/**
+ * Toggle the test switcher modal open and closed
+ *
+ * @returns None
+ *
+ */
 export function toggleSwitcherModal() {
   const modal = document.getElementById("testSwitcherModal")!;
   const overlayDiv = document.getElementById("plotOverlayDiv")! as HTMLDivElement;
+
+  // If the modal is open, close it
   if (modal.style.display == "block") {
     modal.style.display = "none";
     // overlayDiv.style.display = "flex";
-  } else {
+  }
+  
+  // If the modal is closed, open it
+  else {
+    // Hide the measurement popup when we open the modal
     document.getElementById("measurementPopup")!.classList.remove("show");
+
+    // open the modal
     modal.style.display = "block";
+
+    // Hide the plot instructions that is shown when there is nothing on the plot
     overlayDiv.style.display = "none";
   }
 }

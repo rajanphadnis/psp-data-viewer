@@ -55,6 +55,16 @@ export function storeActiveDatasets(data: number[][], datasetNames: string[]) {
   localStorage.setItem("currentData_data", JSON.stringify(data));
   localStorage.setItem("currentData_names", JSON.stringify(actualNames));
 }
+
+/**
+ * Initializes the plotting color pallette.
+ *
+ * If the color pallete hasn't been saved to the cache, init to the default
+ * plotting colors. Otherwise, load the color pallette from the cache
+ *
+ * @returns None
+ *
+ */
 export function initColorList() {
   let storageItem = localStorage.getItem("plotting_color_pallette_color_list");
   if (storageItem == null) {

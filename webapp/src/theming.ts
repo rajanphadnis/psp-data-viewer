@@ -13,6 +13,7 @@ export const pspColors = {
 export function getDatasetPlottingColor(index: number) {
   const availableLength = globalThis.plotPalletteColors.length;
   const mod = index % availableLength;
+  // globalThis.activeDatasets_to_add[index]
   return globalThis.plotPalletteColors[mod];
 }
 

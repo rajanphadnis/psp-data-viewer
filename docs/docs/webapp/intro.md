@@ -61,3 +61,4 @@ Want to request a new feature? Fill out a ticket [here](https://github.com/rajan
   - [ ] Import settings
 - [ ] Look into using pointer clicks as measuring tool points instead of keyboard
 - [ ] Add slope measurement to measuring tool
+- [ ] State diagram on P&ID
