@@ -81,8 +81,14 @@ async function main() {
 
   // 
   setKnownTests(tests, default_url);
+
+  // get the currently selected test ID (or redirect to default test if it doesn't exist)
   globalThis.test_id = getTestID(default_url);
+
+  // 
   const usingSharelink: boolean = getSharelinkList();
+
+  // 
   const [datasets, name, test_article, gse_article, starting_ts, ending_ts] = await getTestInfo();
   globalThis.starting_timestamp = starting_ts;
   globalThis.ending_timestamp = ending_ts;
@@ -100,4 +106,5 @@ async function main() {
   update(globalThis.displayedRangeStart, globalThis.displayedRangeEnd);
 }
 
+// Run the app
 main();

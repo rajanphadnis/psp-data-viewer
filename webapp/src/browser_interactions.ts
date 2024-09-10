@@ -14,12 +14,23 @@ function getQueryVariable(variable: string) {
   }
 }
 
+/**
+ * Get the selected test from the URL. If the URL doesn't have a
+ * selected test, redirect to the default test
+ *
+ * @returns A `string` that represents the currently-selected test ID
+ *
+ */
 export function getTestID(default_redirect: string): string {
   let param = location.pathname;
+
+  // If the URL doesn't have a test id parameter, redirect to the default test
   if (param == undefined || param == "/" || param.length <= 2) {
     param = "/" + default_redirect + "/";
     window.location.href = location.origin + param;
   }
+
+  // remove the leading and trailing slashes from the test ID from the URL and return
   return param.slice(1, -1);
 }
 
