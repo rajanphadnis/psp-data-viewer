@@ -1,11 +1,13 @@
 {
     "dependencies": {
         "@types/node": "^22.5.2",
+        "glob": "^11.0.0",
         "minimist": "^1.2.8",
         "open": "^10.1.0"
     },
     "scripts": {
         "deploy": "bun run ./build_tools/version.ts",
-        "dev": "bun run ./build_tools/dev-setup.ts"
+        "dev": "bun run ./build_tools/dev-setup.ts",
+        "instance-setup": "bun run ./build_tools/instance_config.ts"
     }
 }
