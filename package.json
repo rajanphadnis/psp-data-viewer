@@ -5,6 +5,7 @@
         "open": "^10.1.0"
     },
     "scripts": {
-        "deploy": "bun run ./build_tools/version.ts"
+        "deploy": "bun run ./build_tools/version.ts",
+        "dev": "bun run ./build_tools/dev-setup.ts"
     }
 }

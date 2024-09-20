@@ -1,0 +1,67 @@
+name: "[CD:Dev] Build and Release"
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "dev"
+    paths:
+      - "**.ts"
+
+env:
+  PYTHON_VERSION: "3.11"
+
+permissions:
+  contents: write
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+  build-and-release-webapp:
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    environment:
+      name: "Production"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - name: Setup Dev Environment
+        run: bun run dev
+      - name: Build Web App
+        working-directory: ./webapp
+        run: bun install && bun run prod
+      - name: Release Web App
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_PSP_PORTFOLIO_F1205 }}
+          channelId: live
+          projectId: psp-portfolio-f1205
+          target: webapp
+
+  build-and-release-admin:
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    environment:
+      name: "Production"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - name: Setup Dev Environment
+        run: bun run dev
+      - name: Build Admin Webapp
+        working-directory: ./admin
+        run: bun install && bun run prod
+      - name: Release Admin Webapp
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_PSP_PORTFOLIO_F1205 }}
+          channelId: live
+          projectId: psp-portfolio-f1205
+          target: admin
