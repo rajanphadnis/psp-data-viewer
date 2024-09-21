@@ -534,7 +534,6 @@ def deleteTest(req: https_fn.Request) -> https_fn.Response:
         return https_fn.Response(
             json.dumps({"status": "'id' is required"}), status=400
         )
-
     appId = os.environ.get("AZURE_APP_ID")
     password = os.environ.get("AZURE_PASSWORD_STRING")
     tenant = os.environ.get("AZURE_TENANT_STRING")
@@ -558,7 +557,6 @@ def deleteTest(req: https_fn.Request) -> https_fn.Response:
     for blob in blobs:
         blob.delete()
         print(f"Deleted {blob.name}")
-
 
     @firestore.transactional
     def update_in_transaction(
