@@ -1,10 +1,6 @@
 import * as fs from "fs";
-import * as path from "path";
 import { glob } from "glob";
-
-const folderPath = "./build_tools"; // Replace with your folder path
-// const searchString = 'oldString'; // Replace with the string you want to replace
-// const replaceString = 'newString'; // Replace with the new string
+import instance_config from "../instance_config.json";
 
 // Function to replace string in a file
 const replaceInFile = (filePath: string, searchString: string, replaceString: string) => {
@@ -21,7 +17,7 @@ const replaceInFile = (filePath: string, searchString: string, replaceString: st
         if (err) {
           console.error(`Error writing file ${filePath}:`, err);
         } else {
-          console.log(`Replaced in file ${filePath}`);
+          console.log(`Replaced ${searchString} in file ${filePath}`);
         }
       });
     }
@@ -29,14 +25,26 @@ const replaceInFile = (filePath: string, searchString: string, replaceString: st
 };
 
 // Get all files in the folder
-glob(`./*.*`, { ignore: [`./build_tools/instance_config.ts`,`./instance_config.json`] }).then((files) => {
-  //   if (err) {
-  //     console.error("Error finding files:", err);
-  //     return;
-  //   }
-  console.log(files);
-
+glob(
+  [
+    `./.firebaserc`,
+    `./README.md`,
+    `./build_tools/**.*`,
+    `./webapp/src/**/**.*`,
+    `./admin/src/**/**.*`,
+    `./functions/*.py`,
+    `./azure_functions/*.py`,
+    `./docs/docs/**/**.*`,
+    `./docs/src/**/**.*`,
+    `./docs/*.ts`,
+  ],
+  {
+    ignore: [`./build_tools/instance_config.ts`, `./instance_config.json`],
+  }
+).then((files) => {
   files.forEach((file) => {
-    replaceInFile(file, "____firebase_config_webapp_prod_string____", "psp-portfolio-f1205");
+    Object.keys(instance_config).forEach((element) => {
+      replaceInFile(file, element, instance_config[element]);
+    });
   });
 });
