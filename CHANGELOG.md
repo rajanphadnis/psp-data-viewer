@@ -1,3 +1,10 @@
+## v0.4.0
+added admin tdms delay
+
+### Changed
+- bug fixes
+- Added admin tdms delay
+
 ## v0.3.12
 added analytics tab
 
