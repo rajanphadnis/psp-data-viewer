@@ -39,10 +39,12 @@ export function new_upload_tdsm_csv(config: NewTestConfig) {
   const currentStatusText = document.getElementById("newTest_currentStatus")! as HTMLDivElement;
   const nextStatusText = document.getElementById("newTest_nextStatus")! as HTMLDivElement;
   const currentStatusBar = document.getElementById("newTest_statusBar")! as HTMLDivElement;
+  const finalizeButton = document.getElementById("finalizeButton")! as HTMLButtonElement;
+  finalizeButton.style.display = "none";
   currentStatusText.innerHTML = "Starting file upload...";
   nextStatusText.innerHTML = "Do not close this window while you can still read this message";
   currentStatusBar.innerHTML = "Step 1 of 6";
-  const [inputtedID, inputtedName, inputtedGSEElement, inputtedTestElement] = getBasicTestInfo(config);
+  const [inputtedID, inputtedName, inputtedGSEElement, inputtedTestElement, inputtedDelay] = getBasicTestInfo(config);
   const inputtedFiles = [];
   const completedUpload: string[] = [];
   const completionStatus: string[] = [];
@@ -102,7 +104,8 @@ export function new_upload_tdsm_csv(config: NewTestConfig) {
         completedUpload.push(inputtedFile.name);
         completionStatus[i] = "completed";
         if (completedUpload.length == inputtedFiles.length) {
-          finalizeFileUpload(completedUpload, inputtedID, inputtedName, inputtedGSEElement, inputtedTestElement);
+          // delay: 8327
+          finalizeFileUpload(completedUpload, inputtedID, inputtedName, inputtedGSEElement, inputtedTestElement, inputtedDelay);
         } else {
           console.log("mismatched upload list size");
         }
@@ -120,7 +123,8 @@ function finalizeFileUpload(
   inputtedID: string,
   inputtedName: string,
   inputtedGSEElement: string,
-  inputtedTestElement: string
+  inputtedTestElement: string,
+  tdms_timeSyncDelay_ms: number
 ) {
   console.log("writing database results");
   const currentStatusText = document.getElementById("newTest_currentStatus")! as HTMLDivElement;
@@ -140,7 +144,7 @@ function finalizeFileUpload(
     creation_status_max_steps: 6,
     creation_status_current: 2,
     file_names: completedUpload,
-    tdms_timeSyncDelay_ms: 8327,
+    tdms_timeSyncDelay_ms: tdms_timeSyncDelay_ms,
   };
   const docRef = doc(db, `${inputtedID}/test_creation`);
   setDoc(docRef, firestore_payload, { merge: true });

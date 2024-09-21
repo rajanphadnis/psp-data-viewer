@@ -47,16 +47,18 @@ function checkInputAndShowFinalizeButton(config: NewTestConfig) {
   });
 }
 
-export function getBasicTestInfo(config: NewTestConfig): [string, string, string, string] {
+export function getBasicTestInfo(config: NewTestConfig): [string, string, string, string, number] {
   const idElement = document.getElementById(config.id + "_field_id")! as HTMLInputElement;
   const nameElement = document.getElementById(config.id + "_field_name")! as HTMLInputElement;
+  const delayElement = document.getElementById(config.id + "_field_tdms_delay")! as HTMLInputElement;
   const testElement = document.getElementById(config.id + "_field_test_article")! as HTMLSelectElement;
   const gseElement = document.getElementById(config.id + "_field_gse_article")! as HTMLSelectElement;
   const inputtedID = idElement.value;
   const inputtedName = nameElement.value;
+  const inputtedDelay = parseInt(delayElement.value.toString() ?? "0");
   const inputtedGSEElement = gseElement.options[gseElement.selectedIndex].value;
   const inputtedTestElement = testElement.options[testElement.selectedIndex].value;
-  return [inputtedID, inputtedName, inputtedGSEElement, inputtedTestElement];
+  return [inputtedID, inputtedName, inputtedGSEElement, inputtedTestElement, inputtedDelay];
 }
 
 export function liveUpdate(id: string) {
@@ -118,6 +120,7 @@ function generateInputPanel(config: NewTestConfig) {
   const encap_div = document.createElement("div");
   encap_div.appendChild(generateTestInfoField(config.id, "ID", "id", false, genId(7), [], true));
   encap_div.appendChild(generateTestInfoField(config.id, "Name", "name", false));
+  encap_div.appendChild(generateTestInfoField(config.id, "TDMS Delay", "tdms_delay", false, "", [], false, true));
   encap_div.appendChild(
     generateTestInfoField(config.id, "Test Article", "test_article", true, undefined, globalThis.test_articles)
   );
@@ -135,7 +138,8 @@ function generateTestInfoField(
   isDropdown: boolean,
   knownValue?: string,
   list_values?: string[],
-  disabled: boolean = false
+  disabled: boolean = false,
+  isNumber: boolean = false
 ) {
   const field_div = document.createElement("div");
   const field_label = document.createElement("label");
@@ -167,6 +171,7 @@ function generateTestInfoField(
     }
   }
   field_text.id = config_id + "_field_" + field_id;
+  field_text.type = isNumber ? "number" : "text";
   field_text.addEventListener("change", (e) => {
     // const saveButton = document.getElementById("panel_save_button")!;
     // saveButton.style.visibility = "visible";
