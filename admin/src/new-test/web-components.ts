@@ -5,6 +5,7 @@ import { loadingStatus, operationType, type NewTestConfig } from "../types";
 import { generateTitle, updateTestDisplay } from "../web_components";
 import { doc, onSnapshot } from "firebase/firestore";
 import { new_gdrive_links, new_upload_tdsm_csv } from "./finalize";
+import { checkFileName, checkInput } from "./input-check";
 
 export async function updateConfigDisplay(config: NewTestConfig) {
   console.log(config);
@@ -46,7 +47,7 @@ function checkInputAndShowFinalizeButton(config: NewTestConfig) {
   });
 }
 
-export function getBasicTestInfo(config: NewTestConfig): [string, string, string, string, number] {
+export function getBasicTestInfo(config: NewTestConfig): [string, string, string, string, number, boolean] {
   const idElement = document.getElementById(config.id + "_field_id")! as HTMLInputElement;
   const nameElement = document.getElementById(config.id + "_field_name")! as HTMLInputElement;
   const delayElement = document.getElementById(config.id + "_field_tdms_delay")! as HTMLInputElement;
@@ -57,7 +58,8 @@ export function getBasicTestInfo(config: NewTestConfig): [string, string, string
   const inputtedDelay = parseInt(delayElement.value.toString() ?? "0");
   const inputtedGSEElement = gseElement.options[gseElement.selectedIndex].value;
   const inputtedTestElement = testElement.options[testElement.selectedIndex].value;
-  return [inputtedID, inputtedName, inputtedGSEElement, inputtedTestElement, inputtedDelay];
+  const checks = checkInput(inputtedID, inputtedName, inputtedGSEElement, inputtedTestElement, inputtedDelay);
+  return [inputtedID, inputtedName, inputtedGSEElement, inputtedTestElement, inputtedDelay, checks];
 }
 
 export function liveUpdate(id: string) {
@@ -245,6 +247,13 @@ function createUploadListItem(index: number): [HTMLDivElement, HTMLDivElement] {
   deleteButton.addEventListener("click", (e) => {
     document.getElementById("test-upload")!.removeChild(listDiv);
     document.getElementById("right-main")!.removeChild(progressDiv);
+  });
+  fileInput.addEventListener("change", async (e) => {
+    const checksOut = await checkFileName((e.target! as HTMLInputElement));
+    if (!checksOut) {
+      document.getElementById("test-upload")!.removeChild(listDiv);
+      document.getElementById("right-main")!.removeChild(progressDiv);
+    }
   });
   return [listDiv, progressDiv];
 }

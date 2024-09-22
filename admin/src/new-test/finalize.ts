@@ -40,11 +40,14 @@ export function new_upload_tdsm_csv(config: NewTestConfig) {
   const nextStatusText = document.getElementById("newTest_nextStatus")! as HTMLDivElement;
   const currentStatusBar = document.getElementById("newTest_statusBar")! as HTMLDivElement;
   const finalizeButton = document.getElementById("finalizeButton")! as HTMLButtonElement;
+  const [inputtedID, inputtedName, inputtedGSEElement, inputtedTestElement, inputtedDelay, checks] = getBasicTestInfo(config);
+  if (!checks) {
+    throw new Error("Input checks failed");
+  }
   finalizeButton.style.display = "none";
   currentStatusText.innerHTML = "Starting file upload...";
   nextStatusText.innerHTML = "Do not close this window while you can still read this message";
   currentStatusBar.innerHTML = "Step 1 of 6";
-  const [inputtedID, inputtedName, inputtedGSEElement, inputtedTestElement, inputtedDelay] = getBasicTestInfo(config);
   const inputtedFiles = [];
   const completedUpload: string[] = [];
   const completionStatus: string[] = [];

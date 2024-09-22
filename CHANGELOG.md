@@ -1,3 +1,9 @@
+## v0.4.3
+added admin console input and file checker
+
+### Changed
+- bug fixes
+
 ## v0.4.2
 re-arranged admin console and alphabetized test lists
 
