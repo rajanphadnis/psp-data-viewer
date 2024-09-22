@@ -1,5 +1,5 @@
 import { getTestArticles } from "../db_interaction";
-import { updateStatus, updateTestCreateStatus } from "../status";
+import { updateTestCreateStatus } from "../status";
 import { loadingStatus, type NewTestConfig } from "../types";
 import { initConfirmationModal } from "./modal";
 import { generateConfigPathEntries } from "./web-components";

@@ -14,7 +14,7 @@ export function generateTestEntries() {
     const list_arrow = document.createElement("span");
     list_arrow.classList.add("material-symbols-outlined");
     list_arrow.innerHTML = "arrow_forward_ios";
-    list_text.innerHTML = test.name;
+    list_text.innerHTML = test.test_article + ":" + test.gse_article + ":" + test.name;
     list_div.classList.add("test-list-item");
     list_div.addEventListener("click", (e) => {
       // generateTestPanel(test);

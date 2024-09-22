@@ -1,11 +1,27 @@
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { updateStatus } from "./status";
 import { loadingStatus, type TestDetails } from "./types";
-import { getTestArticles, getTests } from "./db_interaction";
+import { getTests } from "./db_interaction";
 import { updateTestDisplay } from "./web_components";
 
 export async function updateTests(cache: boolean = true) {
-  [tests, default_test] = await getTests(cache);
+  [globalThis.tests, globalThis.default_test] = await getTests(cache);
+  globalThis.tests.sort(function (a, b) {
+    if (a.test_article === b.test_article) {
+      if (a.gse_article === b.gse_article) {
+        return b.name < a.name ? 1 : -1;
+      } else if (a.gse_article < b.gse_article) {
+        return 1;
+      } else if (a.gse_article < b.gse_article) {
+        return -1;
+      }
+    } else if (a.test_article < b.test_article) {
+      return 1;
+    } else if (a.test_article < b.test_article) {
+      return -1;
+    }
+    return -1;
+  });
   selected_test = tests[0];
   updateTestDisplay(cache);
 }
@@ -56,8 +72,9 @@ export async function saveTestData(
         .then((re) => {
           console.log("completed doc update");
           console.log(re);
+          updateTests(false);
+          window.location.href = window.location.href;
+        updateStatus(loadingStatus.DONE);
         });
     });
-  updateTests(false);
-  updateStatus(loadingStatus.DONE);
 }

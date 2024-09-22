@@ -1,8 +1,8 @@
 import type { Firestore } from "firebase/firestore";
 import { initFirebase } from "./firebase_init";
 import { articleType, loadingStatus, type TestDetails } from "./types";
-import { getTestArticles, getTests } from "./db_interaction";
-import { generateArticlePanel, generateTestEntries, loader, updateTestDisplay } from "./web_components";
+import { getTestArticles } from "./db_interaction";
+import { generateArticlePanel, loader } from "./web_components";
 import { updateStatus } from "./status";
 import { httpsCallable, type Functions } from "firebase/functions";
 import { updateTests } from "./tests";
@@ -30,7 +30,7 @@ if (!("Proxy" in window)) {
 
 async function main() {
   await getTestArticles();
-  updateTests();
+  updateTests(false);
   const test_article_button = document.getElementById("test_article_button")! as HTMLButtonElement;
   const gse_article_button = document.getElementById("gse_article_button")! as HTMLButtonElement;
   const analytics_button = document.getElementById("analytics_button")! as HTMLButtonElement;

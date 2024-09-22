@@ -1,3 +1,9 @@
+## v0.4.2
+re-arranged admin console and alphabetized test lists
+
+### Changed
+- bug fixes
+
 ## v0.4.1
 added plotting axis padding
 

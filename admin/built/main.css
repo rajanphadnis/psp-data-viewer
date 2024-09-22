@@ -121,12 +121,12 @@ div {
 #bottom-main {
     display: flex;
     flex-direction: row;
-    height: 100%;
+    height: 50%;
     /* max-height: calc((100vh - 46px) / 2); */
     /* overflow: auto; */
 }
 
-#tests {
+#dataset {
     width: 50%;
     margin-left: auto;
     margin-right: auto;
@@ -204,9 +204,9 @@ div {
     background-color: var(--steel);
 }
 
-#dataset {
+#tests {
     width: calc(100% - 1px);
-    border-left: 1px solid white;
+    border-right: 1px solid white;
     height: 100%;
     /* border-top: 1px solid white; */
 }

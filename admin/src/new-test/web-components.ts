@@ -1,4 +1,3 @@
-import { getFunctions, httpsCallable } from "firebase/functions";
 import { delete_icon, plus_icon } from "../icons";
 import { genId } from "../modal";
 import { updateTestCreateStatus } from "../status";

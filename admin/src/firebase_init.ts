@@ -1,10 +1,9 @@
 import { ReCaptchaEnterpriseProvider, initializeAppCheck } from "firebase/app-check";
-import { connectFirestoreEmulator, initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from "firebase/firestore";
+import { initializeFirestore } from "firebase/firestore";
 import { appCheckSecret } from "./generated_app_check_secret";
 import { initializeApp } from "firebase/app";
-import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
-import { connectStorageEmulator, getStorage } from "firebase/storage";
-import { connectDatabaseEmulator } from "firebase/database";
+import { getFunctions } from "firebase/functions";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAmJytERQ1hnORHswd-j07WhpTYH7yu6fA",

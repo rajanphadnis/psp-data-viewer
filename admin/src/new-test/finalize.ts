@@ -1,7 +1,7 @@
 import { httpsCallable } from "firebase/functions";
 import type { NewTestConfig } from "../types";
 import { getBasicTestInfo, liveUpdate } from "./web-components";
-import { getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import { ref, uploadBytesResumable } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
 
 export function new_gdrive_links(config: NewTestConfig) {

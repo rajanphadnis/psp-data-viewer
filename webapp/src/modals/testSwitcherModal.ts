@@ -2,7 +2,7 @@ import type { AllTests } from "../types";
 
 /**
  * Initializes the test switcher modal
- * 
+ *
  * This is necessary because otherwise you couldn't add event
  * listeners to the page to open and close the modal
  *
@@ -15,17 +15,33 @@ export function initSwitcherModal() {
 
   // If the test switcher button is clicked, open the modal
   switchTestButton.addEventListener("click", (e) => {
-    toggleSwitcherModal()
+    toggleSwitcherModal();
   });
 
   // If the "close" button is clicked, close the modal
   closeButton.addEventListener("click", (e) => {
-    toggleSwitcherModal()
+    toggleSwitcherModal();
   });
 }
 
 export function setKnownTests(tests: AllTests[], default_url: String): void {
   const modalBody = document.getElementById("modal-body")!;
+  tests.sort(function (a, b) {
+    if (a.test_article === b.test_article) {
+      if (a.gse_article === b.gse_article) {
+        return b.name < a.name ? 1 : -1;
+      } else if (a.gse_article < b.gse_article) {
+        return 1;
+      } else if (a.gse_article < b.gse_article) {
+        return -1;
+      }
+    } else if (a.test_article < b.test_article) {
+      return 1;
+    } else if (a.test_article < b.test_article) {
+      return -1;
+    }
+    return -1;
+  });
   for (let i = 0; i < tests.length; i++) {
     const test = tests[i];
     let isDefault: boolean = false;
@@ -70,7 +86,7 @@ export function toggleSwitcherModal() {
     modal.style.display = "none";
     // overlayDiv.style.display = "flex";
   }
-  
+
   // If the modal is closed, open it
   else {
     // Hide the measurement popup when we open the modal
