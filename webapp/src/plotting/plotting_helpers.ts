@@ -35,6 +35,7 @@ export function plot(
     ...getSize(),
     series: series,
     axes: axes,
+    padding: [null, 8, null, 6],
     hooks: {
       init: [
         (uplot: uPlot) => {

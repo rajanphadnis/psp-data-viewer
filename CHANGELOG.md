@@ -1,3 +1,9 @@
+## v0.4.1
+added plotting axis padding
+
+### Changed
+- bug fixes
+
 ## v0.4.0
 added admin tdms delay
 
