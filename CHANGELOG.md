@@ -1,3 +1,9 @@
+## v0.4.4
+added delete button copy and re-arranged admin console
+
+### Changed
+- bug fixes
+
 ## v0.4.3
 added admin console input and file checker
 

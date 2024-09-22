@@ -1,3 +1,4 @@
+import { copyTextToClipboard } from "./browser_interactions";
 import { getSpecificTest } from "./db_interaction";
 import { updateStatus } from "./status";
 import { saveTestData } from "./tests";
@@ -94,20 +95,31 @@ function generateTestPanelField(
 
 export function generateTestPanel(test: TestDetails) {
   const panel_div = document.getElementById("test-info")!;
+  const delete_link = document.createElement("button");
+  delete_link.id = "delete_test_button";
+  delete_link.innerHTML = "Copy Delete Link";
+  delete_link.classList.add("delete_button_class");
+  delete_link.addEventListener("click", (e) => {
+    const deleteLink = `https://deletetest-w547ikcrwa-uc.a.run.app/?id=${test.id}`;
+    copyTextToClipboard(deleteLink, "delete_test_button", "Copy Delete Link");
+  });
   panel_div.innerHTML = "";
   panel_div.appendChild(generateTitle("Test Details:"));
   const encap_div = document.createElement("div");
+  encap_div.appendChild(delete_link);
   encap_div.appendChild(generateTestPanelField(test.id, "ID", "id", false, test.id, [], true));
   encap_div.appendChild(generateTestPanelField(test.id, "Name", "name", false, test.name));
   encap_div.appendChild(
     generateTestPanelField(test.id, "Test Article", "test_article", true, test.test_article, test_articles)
   );
-  encap_div.appendChild(generateTestPanelField(test.id, "GSE Article", "gse_article", true, test.gse_article, gse_articles));
+  encap_div.appendChild(
+    generateTestPanelField(test.id, "GSE Article", "gse_article", true, test.gse_article, gse_articles)
+  );
   const panel_save_button = document.createElement("button");
   panel_save_button.innerHTML = "Save";
   panel_save_button.classList.add("test-panel-save");
   panel_save_button.id = "panel_save_button";
-  panel_save_button.style.visibility = "hidden"
+  panel_save_button.style.visibility = "hidden";
   panel_save_button.addEventListener("click", (e: MouseEvent) => {
     // const idElement = document.getElementById(test.id + "_field_id")! as HTMLInputElement;
     const nameElement = document.getElementById(test.id + "_field_name")! as HTMLInputElement;
