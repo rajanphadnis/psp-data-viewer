@@ -41,6 +41,7 @@ declare global {
   var measuringToolColor: string;
   var calcChannels: CalcChannel[];
   var calcChannelWindow: number;
+  var calcChannelDt_seconds: number;
   var numberOfAxes: number;
 }
 

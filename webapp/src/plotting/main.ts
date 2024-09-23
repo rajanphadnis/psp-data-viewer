@@ -24,6 +24,12 @@ export async function update(
     const thing = s as DatasetSeries;
     return thing.scale;
   });
+
+  if (toPlot.length > 1) {
+    // Save dT to global variable
+    globalThis.calcChannelDt_seconds = toPlot[0][1] - toPlot[0][0];
+  }
+
   plot(toPlot as AlignedData, series);
   globalThis.displayedRangeStart = startTimestamp;
   globalThis.displayedRangeEnd = endTimestamp;

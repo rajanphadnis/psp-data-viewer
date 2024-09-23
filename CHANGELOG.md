@@ -1,3 +1,9 @@
+## v0.4.5
+added integration and derivative functions to calc channels
+
+### Changed
+- bug fixes
+
 ## v0.4.4
 added delete button copy and re-arranged admin console
 

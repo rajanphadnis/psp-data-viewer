@@ -4,7 +4,7 @@ import type { DatasetSeries } from "../types";
 
 export function runCalcsEngine(
   toPlot: number[][],
-  series: ({} | DatasetSeries)[],
+  series: ({} | DatasetSeries)[]
 ): [number[][], ({} | DatasetSeries)[]] {
   let master_calculated_toPlot = toPlot;
   let master_calculated_series = series;
@@ -26,8 +26,18 @@ export function runCalcsEngine(
           avg: (p1: number, p2: number) => {
             return (p1 + p2) / 2;
           },
+          integrate: (p1: number, p2: number) => {
+            let previousVal = p1;
+            if (j - 1 != -1) {
+              previousVal = newChannelData[j - 1];
+            }
+            return previousVal + p2 * globalThis.calcChannelDt_seconds;
+          },
+          derivative: (p1: number, p2: number) => {
+            return (p2 - p1) / globalThis.calcChannelDt_seconds;
+          },
         });
-        let varmapping: any = {};
+        let varmapping: Record<string, number> = {};
         calcChannelData.var_mapping.forEach((element) => {
           const indexOfChannel = globalThis.activeDatasets_to_add.indexOf(element.source_channel);
           const sourceChannelData = master_calculated_toPlot[indexOfChannel + 1];
@@ -60,7 +70,7 @@ export function runCalcsEngine(
       master_calculated_toPlot = [...calculated_toPlot, newChannelData];
       master_calculated_series = [...calculated_series, seriesToReturn];
       const t1 = performance.now();
-      console.log(t1 - t0);
+      // console.log(t1 - t0);
     }
   }
 
