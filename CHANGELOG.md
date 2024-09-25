@@ -1,3 +1,9 @@
+## v0.4.6
+added browser warning message
+
+### Changed
+- bug fixes
+
 ## v0.4.5
 added integration and derivative functions to calc channels
 
