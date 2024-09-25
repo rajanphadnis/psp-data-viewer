@@ -65,6 +65,8 @@ initSettingsModal();
 
 // Initialize the calc channels from cache or init to an empty list
 initCalcChannels();
+
+// @ts-expect-error
 var isChromium = !!navigator.userAgentData && navigator.userAgentData.brands.some((data) => data.brand == "Chromium");
 if (!isChromium) {
   const message =

@@ -24,6 +24,8 @@ declare global {
 }
 
 initFirebase();
+
+// @ts-expect-error
 var isChromium = !!navigator.userAgentData && navigator.userAgentData.brands.some((data) => data.brand == "Chromium");
 if (!isChromium) {
   const message =
