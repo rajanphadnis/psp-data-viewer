@@ -34,6 +34,11 @@
     fill: greenyellow;
 }
 
+.red_x {
+    color: red;
+    fill: red;
+}
+
 #status {
     padding-right: 20px;
     text-align: center;

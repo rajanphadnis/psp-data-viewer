@@ -1,24 +1,24 @@
 {
-    "projects": {
-        "default": "psp-portfolio-f1205"
-    },
-    "targets": {
-        "psp-portfolio-f1205": {
-            "hosting": {
-                "webapp": [
-                    "psp-portfolio-f1205"
-                ],
-                "admin": [
-                    "psp-admin-portfolio"
-                ],
-                "docs": [
-                    "psp-docs"
-                ],
-                "mission": [
-                    "psp-mission"
-                ]
-            }
-        }
-    },
-    "etags": {}
+  "projects": {
+    "default": "psp-portfolio-f1205"
+  },
+  "targets": {
+    "psp-portfolio-f1205": {
+      "hosting": {
+        "webapp": [
+          "psp-portfolio-f1205"
+        ],
+        "admin": [
+          "psp-admin-portfolio"
+        ],
+        "docs": [
+          "psp-docs"
+        ],
+        "mission": [
+          "psp-mission"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }

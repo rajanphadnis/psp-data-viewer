@@ -1,27 +1,10 @@
-import { updateStatus } from "./status";
-import { loadingStatus, stepStatus, type ProcedureStep } from "./types";
+import { loadingStatus, stepStatus, type ProcedureStep } from "../browser/types";
 
 export const loader: string = '<div class="loader"></div>';
 
-export function generate_steps() {
-  const all_steps = globalThis.steps;
-  const major_ids = Array.from(new Set(all_steps.map((step) => step.major_id))).sort();
-  var steps_div = document.getElementById("steps") as HTMLDivElement;
-  steps_div.innerHTML = "";
-  major_ids.forEach((major_id) => {
-    const steps = all_steps.filter((step) => step.major_id === major_id).sort((a,b) => Number.parseInt(a.minor_id) - Number.parseInt(b.minor_id));
-    const header = gen_major_step_header(major_id, globalThis.step_titles[major_id]);
-    steps_div.appendChild(header);
-    steps_div.appendChild(gen_major_step_content(steps));
-    if (globalThis.visible_procs.includes(major_id)) {
-        header.click();
-      }
-  });
-  
-  updateStatus(loadingStatus.DONE);
-}
 
-function gen_major_step_header(major_step: number, name: string): HTMLButtonElement {
+
+export function gen_major_step_header(major_step: number, name: string): HTMLButtonElement {
   const button: HTMLButtonElement = document.createElement("button");
   const p: HTMLParagraphElement = document.createElement("p");
   p.innerText = `${major_step} - ${name}`;
@@ -43,7 +26,7 @@ function gen_major_step_header(major_step: number, name: string): HTMLButtonElem
   return button;
 }
 
-function gen_major_step_content(steps: ProcedureStep[]): HTMLDivElement {
+export function gen_major_step_content(steps: ProcedureStep[]): HTMLDivElement {
   const main_div: HTMLDivElement = document.createElement("div");
   main_div.classList.add("major_step_content");
   steps.forEach((step) => {

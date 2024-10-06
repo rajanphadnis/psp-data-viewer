@@ -1,4 +1,4 @@
-import { getRedirectResult, GoogleAuthProvider, onAuthStateChanged, signInWithRedirect } from "firebase/auth";
+import { getRedirectResult, GoogleAuthProvider, onAuthStateChanged, signInWithRedirect, signOut } from "firebase/auth";
 
 export function initGlobalVars() {
   globalThis.visible_procs = [];
@@ -14,7 +14,12 @@ export async function initNavbar() {
       // https://firebase.google.com/docs/reference/js/auth.user
       const uid = user.uid;
       document.getElementById("loginButton")!.addEventListener("click", () => {
-        window.location.pathname = "/logout/";
+        signOut(globalThis.auth).then(() => {
+          // Sign-out successful.
+          window.location.pathname = window.location.pathname;
+        }).catch((error) => {
+          // An error happened.
+        });
       });
       document.getElementById("loginButton")!.innerText = "Logout";
       // ...
