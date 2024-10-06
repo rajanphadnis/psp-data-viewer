@@ -33,3 +33,4 @@ functions/venv
 
 .python_packages
 .venv
+formatter/*.csv
