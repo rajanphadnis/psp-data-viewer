@@ -145,14 +145,14 @@ jobs:
           run: |
             TAGNAME=${{ github.ref_name }}
             NEW_NAME="${TAGNAME//v/}"
-            echo GHA_NEW_TAG_NAME_ADMIN=$NEW_NAME >> "$GITHUB_ENV"
+            echo GHA_NEW_TAG_NAME_MISSION=$NEW_NAME >> "$GITHUB_ENV"
         - name: Tag/Release search
-          run: echo "GHA_V_COUNTER_ADMIN=$(grep '${{ format('"version"{0}', ':') }} "${{ env.GHA_NEW_TAG_NAME_MISSION }}"' mission/package.json | wc -l)" >> "$GITHUB_ENV"
+          run: echo "GHA_V_COUNTER_MISSION=$(grep '${{ format('"version"{0}', ':') }} "${{ env.GHA_NEW_TAG_NAME_MISSION }}"' mission/package.json | wc -l)" >> "$GITHUB_ENV"
           shell: bash
         - name: Tag Output
           run: |
-            echo "env.GHA_V_COUNTER_ADMIN = ${{ env.GHA_V_COUNTER_MISSION }}"
-            echo "env.GHA_NEW_TAG_NAME_ADMIN = ${{ env.GHA_NEW_TAG_NAME_MISSION }}"
+            echo "env.GHA_V_COUNTER_MISSION = ${{ env.GHA_V_COUNTER_MISSION }}"
+            echo "env.GHA_NEW_TAG_NAME_MISSION = ${{ env.GHA_NEW_TAG_NAME_MISSION }}"
           shell: bash
         - name: "If pubspec isn't updated, delete the release and tag"
           uses: dev-drprasad/delete-tag-and-release@v1.0
