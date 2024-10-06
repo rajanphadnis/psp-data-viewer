@@ -135,10 +135,42 @@ jobs:
           with:
             script: |
                 core.setFailed('docs/package.json not updated to new version ${{ env.GHA_NEW_TAG_NAME_ADMIN }}!')
+  version-check-mission:
+    runs-on: ubuntu-latest
+    outputs:
+      version-code: ${{ steps.version-code-gen.outputs.GHA_VERSION_CODE }}
+    steps:
+        - uses: actions/checkout@v4
+        - name: Set up new test tag
+          run: |
+            TAGNAME=${{ github.ref_name }}
+            NEW_NAME="${TAGNAME//v/}"
+            echo GHA_NEW_TAG_NAME_ADMIN=$NEW_NAME >> "$GITHUB_ENV"
+        - name: Tag/Release search
+          run: echo "GHA_V_COUNTER_ADMIN=$(grep '${{ format('"version"{0}', ':') }} "${{ env.GHA_NEW_TAG_NAME_MISSION }}"' mission/package.json | wc -l)" >> "$GITHUB_ENV"
+          shell: bash
+        - name: Tag Output
+          run: |
+            echo "env.GHA_V_COUNTER_ADMIN = ${{ env.GHA_V_COUNTER_MISSION }}"
+            echo "env.GHA_NEW_TAG_NAME_ADMIN = ${{ env.GHA_NEW_TAG_NAME_MISSION }}"
+          shell: bash
+        - name: "If pubspec isn't updated, delete the release and tag"
+          uses: dev-drprasad/delete-tag-and-release@v1.0
+          if: env.GHA_V_COUNTER_MISSION == '0'
+          with:
+            tag_name: ${{ github.ref_name }}
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            delete_release: true
+        - name: Find '${{ github.ref_name }}' in package.json
+          if: env.GHA_V_COUNTER_MISSION == '0'
+          uses: actions/github-script@v2.1.0
+          with:
+            script: |
+                core.setFailed('mission/package.json not updated to new version ${{ env.GHA_NEW_TAG_NAME_MISSION }}!')
 
   build-and-release-webapp:
     runs-on: ubuntu-latest
-    needs: [version-check-admin, version-check-webapp, version-check-docs, changelog-check, unit-tests]
+    needs: [version-check-admin, version-check-webapp, version-check-docs, version-check-mission, changelog-check, unit-tests]
     environment:
       name: 'Production'
     steps:
@@ -160,7 +192,7 @@ jobs:
 
   build-and-release-admin:
     runs-on: ubuntu-latest
-    needs: [version-check-admin, version-check-webapp, version-check-docs, changelog-check, unit-tests]
+    needs: [version-check-admin, version-check-webapp, version-check-docs, version-check-mission, changelog-check, unit-tests]
     environment:
       name: 'Production'
     steps:
@@ -180,9 +212,31 @@ jobs:
         projectId: psp-portfolio-f1205
         target: admin
 
+  build-and-release-mission:
+    runs-on: ubuntu-latest
+    needs: [version-check-admin, version-check-webapp, version-check-docs, version-check-mission, changelog-check, unit-tests]
+    environment:
+      name: 'Production'
+    steps:
+    - uses: actions/checkout@v4
+    - uses: oven-sh/setup-bun@v1
+      with:
+        bun-version: latest
+    - name: Build Admin Webapp
+      working-directory: ./mission
+      run: bun install && bun run prod
+    - name: Release Mission Webapp 
+      uses: FirebaseExtended/action-hosting-deploy@v0
+      with:
+        repoToken: ${{ secrets.GITHUB_TOKEN }}
+        firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_PSP_PORTFOLIO_F1205 }}
+        channelId: live
+        projectId: psp-portfolio-f1205
+        target: mission
+
   build-and-release-docs:
     runs-on: ubuntu-latest
-    needs: [version-check-admin, version-check-webapp, version-check-docs, changelog-check, unit-tests]
+    needs: [version-check-admin, version-check-webapp, version-check-docs, version-check-mission, changelog-check, unit-tests]
     environment:
       name: 'Production'
     steps:
@@ -238,7 +292,7 @@ jobs:
 
   github-release:
     runs-on: ubuntu-latest
-    needs: [build-and-release-webapp, build-and-release-admin, build-and-release-docs]
+    needs: [build-and-release-webapp, build-and-release-admin, build-and-release-docs, build-and-release-mission]
     environment:
       name: 'Production'
     steps:

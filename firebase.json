@@ -1,72 +1,106 @@
 {
-    "firestore": {
+  "firestore": {
+    "databases": {
+      "default": {
         "rules": "firestore.rules",
         "indexes": "firestore.indexes.json"
-    },
-    "functions": [{
-        "runtime": "python312",
-        "source": "functions",
-        "codebase": "default",
-        "ignore": [
-            "venv",
-            ".git",
-            "firebase-debug.log",
-            "firebase-debug.*.log",
-            "test_data",
-            "psp-portfolio-key.json"
-        ]
-    }],
-    "hosting": [{
-            "target": "webapp",
-            "public": "webapp/built",
-            "ignore": [
-                "firebase.json",
-                "**/.*",
-                "**/node_modules/**"
-            ],
-            "frameworksBackend": {
-                "region": "us-central1"
-            },
-            "rewrites": [{
-                "source": "**",
-                "destination": "/index.html"
-            }]
-        },
-        {
-            "target": "admin",
-            "public": "admin/built",
-            "ignore": [
-                "firebase.json",
-                "**/.*",
-                "**/node_modules/**"
-            ],
-            "frameworksBackend": {
-                "region": "us-central1"
-            },
-            "rewrites": [{
-                "source": "**",
-                "destination": "/index.html"
-            }]
-        },
-
-        {
-            "target": "docs",
-            "public": "docs/build",
-            "ignore": [
-                "firebase.json",
-                "**/.*",
-                "**/node_modules/**"
-            ],
-            "frameworksBackend": {
-                "region": "us-central1"
-            },
-            "rewrites": [{
-                "source": "**",
-                "destination": "/index.html"
-            }]
-        }
-    ],
-    "storage": {
-        "rules": "storage.rules"
+      },
+      "mission-management": {
+        "rules": "firestore.mission-management.rules",
+        "indexes": "firestore.mission-management.indexes.json"
+      }
     }
+  },
+  "functions": [
+    {
+      "runtime": "python312",
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "venv",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "test_data",
+        "psp-portfolio-key.json"
+      ]
+    }
+  ],
+  "hosting": [
+    {
+      "target": "webapp",
+      "public": "webapp/built",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "frameworksBackend": {
+        "region": "us-central1"
+      },
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    },
+    {
+      "target": "admin",
+      "public": "admin/built",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "frameworksBackend": {
+        "region": "us-central1"
+      },
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    },
+    {
+      "target": "mission",
+      "public": "mission/built",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "frameworksBackend": {
+        "region": "us-central1"
+      },
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    },
+    {
+      "target": "docs",
+      "public": "docs/build",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "frameworksBackend": {
+        "region": "us-central1"
+      },
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    }
+  ],
+  "storage": {
+    "rules": "storage.rules"
+  }
 }

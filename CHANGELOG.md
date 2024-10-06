@@ -1,3 +1,9 @@
+## v0.4.7
+added local formatter and mission struct
+
+### Changed
+- bug fixes
+
 ## v0.4.6
 added browser warning message
 

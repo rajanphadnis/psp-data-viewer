@@ -1,0 +1,123 @@
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 25vh;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.75);
+}
+
+.modal-content {
+    color: white;
+    position: relative;
+    background-color: var(--background-color);
+    margin: auto;
+    padding: 0;
+    border: 2px solid #888;
+    width: 80%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s;
+}
+
+@-webkit-keyframes animatetop {
+    from {
+        top: -300px;
+        opacity: 0;
+    }
+    to {
+        top: 0;
+        opacity: 1;
+    }
+}
+
+@keyframes animatetop {
+    from {
+        top: -300px;
+        opacity: 0;
+    }
+    to {
+        top: 0;
+        opacity: 1;
+    }
+}
+
+.close {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-header {
+    padding: 2px 16px;
+    background-color: var(--rush);
+    color: black;
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: bold;
+}
+
+#modal-body {
+    padding: 2px 16px;
+    color: white;
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: bold;
+    max-height: 45vh;
+    overflow: auto;
+    display: flex;
+    flex-direction: row;
+}
+
+#modal-body div {
+    /* width: 50%; */
+    min-width: calc(50% - 6px);
+    /* max-width: 50%; */
+}
+
+/* #new_test_info_div {
+    border-right: 1px solid white;
+}
+
+#new_test_save {
+    border: none;
+    margin: 10px;
+    width: calc(100% - 20px);
+    color: black;
+    background-color: var(--rush);
+    cursor: pointer;
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: bold;
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+#new_test_save:hover {
+    background-color: var(--field);
+}
+
+#new_test_save:disabled {
+    cursor: default;
+}
+
+#new_test_urls_div {
+    padding-left: 10px;
+    padding-right: 0px;
+} */

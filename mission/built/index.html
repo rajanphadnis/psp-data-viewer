@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="tabTitle">Admin Dashboard</title>
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel=preconnect href="https://fonts.googleapis.com/" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono&display=swap" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@40,400,0,0&display=swap"
+        media="print" onload="this.media='all'" crossorigin />
+    <link rel="stylesheet" href="/fonts.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="/main.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="/modal.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="/status.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="/procs.css" crossorigin="anonymous">
+    <link rel="icon" href="/images/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" href="/images/favicon-16x16.png" sizes="16x16" />
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
+</head>
+<!-- Google tag (gtag.js) -->
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-L9C03KGEX8"></script> -->
+<!-- <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'G-L9C03KGEX8');
+</script> -->
+
+<body>
+    <div id="testSwitcherModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close">&times;</span>
+                <h2>Create Test</h2>
+            </div>
+            <div id="modal-body">
+                <div id="new_test_info_div">
+                    <div class="test-field-div">
+                        <label class="test-field-label">ID</label>
+                        <input class="test-field-text" id="new_test_id">
+                    </div>
+                    <div class="test-field-div">
+                        <label class="test-field-label">Name</label>
+                        <input class="test-field-text" id="new_test_name">
+                    </div>
+                    <div class="test-field-div">
+                        <label class="test-field-label">Test Article</label>
+                        <select class="test-field-select" id="new_test_test_article">
+                            <option value="CMS" title="CMS">CMS</option>
+                            <option value="Rocket 4" title="Rocket 4">Rocket 4</option>
+                        </select>
+                    </div>
+                    <div class="test-field-div">
+                        <label class="test-field-label">GSE Article</label>
+                        <select class="test-field-select" id="new_test_gse_article">
+                            <option value="BCLS" title="BCLS">BCLS</option>
+                            <option value="Test Stand" title="Test Stand">Test Stand</option>
+                        </select>
+                    </div>
+                    <div class="test-field-div">
+                        <label class="test-field-label">(Optional) Trim to (seconds)</label>
+                        <input class="test-field-text" id="new_test_trim">
+                    </div>
+                </div>
+                <div id="new_test_urls_div"></div>
+            </div>
+            <button id="new_test_save">Create Test -></button>
+        </div>
+    </div>
+    <div id="navBar">
+        <div style="display:flex; flex-direction: row; justify-content: start; align-items: center;">
+            <div id="title">PSP Mission Management<span id="mission-name"></span></div>
+        </div>
+        <!-- <div id="toolbar">
+            <button id="downloadCSV" class="toolbar_button">
+                <span class="material-symbols-outlined">
+                    table_view
+                </span>
+            </button>
+            <button id="downloadImage" class="toolbar_button">
+                <span class="material-symbols-outlined">
+                    download
+                </span>
+            </button>
+            <button id="copyImage" class="toolbar_button">
+                <span class="material-symbols-outlined">
+                    content_copy
+                </span>
+            </button>
+        </div> -->
+        <div style="display:flex; flex-direction: row; justify-content: end; align-items: center;">
+            <p id="statusMessage" style="margin: auto; padding-right: 10px;">Booting</p>
+            <div id="status" style="padding-right: 0px !important;">
+                <div class="loader"></div>
+            </div>
+            <button title="Create a new test" id="loginButton">Login</button>
+        </div>
+    </div>
+    <div id="main">
+        <!-- <div id="pid-panel">
+            P&ID
+        </div> -->
+        <div id="steps">
+            <p>Loading...</p>
+        </div>
+    </div>
+</body>
+<script src="/index.js"></script>
+
+</html>

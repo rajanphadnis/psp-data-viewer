@@ -30,6 +30,10 @@ webapp/src/generated_app_info.ts
 functions/.env
 node_modules
 functions/venv
+mission/built/index.js
+mission/src/generated_app_info.ts
+mission/.env.dev
+
 
 .python_packages
 .venv
