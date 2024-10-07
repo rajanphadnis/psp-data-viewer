@@ -11,6 +11,7 @@ export function initGlobalVars() {
   globalThis.is_authenticated = false;
   globalThis.is_editing_mode = false;
   globalThis.role_search = "";
+  globalThis.seating_chart = [];
 }
 
 export async function initNavbar() {

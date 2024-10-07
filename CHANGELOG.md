@@ -1,3 +1,9 @@
+## v0.4.11
+added basic seating chart editor
+
+### Changed
+- bug fixes
+
 ## v0.4.10
 minor fixes
 

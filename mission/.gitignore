@@ -178,3 +178,8 @@ dist
 ./built/index.js
 
 ./src/generated_app_info.ts
+
+
+bun.lockb
+firestore-debug.log
+firebase-debug.log

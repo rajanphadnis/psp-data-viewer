@@ -10,12 +10,16 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@40,400,0,0&display=swap"
         media="print" onload="this.media='all'" crossorigin />
+
     <link rel="stylesheet" href="/fonts.css" crossorigin="anonymous">
     <link rel="stylesheet" href="/main.css" crossorigin="anonymous">
     <link rel="stylesheet" href="/modal.css" crossorigin="anonymous">
     <link rel="stylesheet" href="/status.css" crossorigin="anonymous">
     <link rel="stylesheet" href="/procs.css" crossorigin="anonymous">
     <link rel="stylesheet" href="/home.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="/seating.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="/gridstack.css" crossorigin="anonymous">
+
     <link rel="icon" href="/images/favicon-32x32.png" sizes="32x32" />
     <link rel="icon" href="/images/favicon-16x16.png" sizes="16x16" />
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
@@ -49,7 +53,8 @@
     <div id="navBar">
         <div style="display:flex; flex-direction: row; justify-content: start; align-items: center;">
             <div id="title">PSP Mission Management<span id="mission-name"></span></div>
-        </div><div id="role-search"></div>
+        </div>
+        <div id="role-search"></div>
         <div id="editing-lock"></div>
         <div style="display:flex; flex-direction: row; justify-content: end; align-items: center;">
             <p id="statusMessage" style="margin: auto; padding-right: 10px;">Booting</p>
@@ -60,9 +65,20 @@
         </div>
     </div>
     <div id="main">
-        <!-- <div id="pid-panel">
-            P&ID
-        </div> -->
+        <div id="left-panel">
+            <div class="trash">
+                <div>
+                    <span>Remove from control room</span>
+                </div>
+            </div>
+            <div class="newWidget grid-stack-item">
+                <div class="grid-stack-item-content" style="padding: 5px;">
+                    <div>
+                        <span>TOP: Person Name</span>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="steps">
             <p>Loading...</p>
         </div>

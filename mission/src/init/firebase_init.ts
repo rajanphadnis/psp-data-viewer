@@ -58,6 +58,10 @@ export async function initFirebase() {
     querySnapshot.forEach(async (doc_read) => {
       await deleteDoc(doc_read.ref);
     });
+    const querySnapshot2 = await getDocs(collection(globalThis.db, "9KS7qji/seating/charts"));
+    querySnapshot2.forEach(async (doc_read) => {
+      await deleteDoc(doc_read.ref);
+    });
     await addDoc(collection(globalThis.db, "9KS7qji/procedures/steps"), {
       active: true,
       instructions: "OPEN PV-N2-01",
@@ -84,6 +88,17 @@ export async function initFirebase() {
       operators: ["TOP"],
       status: "COMPLETED",
       status_detials: "by rphadnis",
+    });
+    await addDoc(collection(globalThis.db, "9KS7qji/seating/charts"), {
+      active: true,
+      name: "ZL8 Control Room",
+      chart: `[{"x":0,"y":0,"w":12,"noMove":true,"noResize":true,"locked":true,"content":"Desk"},{"x":0,"y":1,"w":2,"h":4,"content":"6"},{"x":2,"y":1,"w":2,"h":2,"content":"8"},{"x":4,"y":1,"w":2,"h":2,"content":"9"},{"w":2,"h":2,"x":6,"y":1,"content":"<span>TOP: Person Name</span>"},{"x":8,"y":1,"h":2,"minW":2,"noResize":true,"content":"cannot resize"},{"x":10,"y":1,"w":2,"h":2,"content":"4"},{"x":2,"y":3,"w":2,"h":2,"content":"5"},{"x":8,"y":3,"w":2,"h":2,"content":"10"},{"x":10,"y":3,"w":2,"h":2,"content":"11"},{"x":8,"y":5,"w":4,"h":2,"content":"7"}]`,
+    });
+
+    await addDoc(collection(globalThis.db, "9KS7qji/seating/charts"), {
+      active: true,
+      name: "ZL3 Control Room",
+      chart: `[{"x":0,"y":0,"w":2,"h":2,"content":"6"},{"x":2,"y":0,"w":10,"noMove":true,"noResize":true,"locked":true,"content":"Desk"},{"x":2,"y":1,"w":2,"h":2,"content":"8"},{"x":4,"y":1,"w":2,"h":2,"content":"9"},{"w":2,"h":2,"x":6,"y":1,"content":"<span>TOP: Person Name</span>"},{"x":8,"y":1,"h":2,"minW":2,"noResize":true,"content":"cannot resize"},{"x":10,"y":1,"w":2,"h":2,"content":"4"},{"x":3,"y":3,"w":2,"h":2,"content":"5"},{"x":7,"y":3,"w":2,"h":2,"content":"10"},{"x":9,"y":3,"w":2,"h":2,"content":"11"}]`,
     });
   }
 }

@@ -38,3 +38,6 @@ mission/.env.dev
 .python_packages
 .venv
 formatter/*.csv
+mission/bun.lockb
+mission/firestore-debug.log
+mission/firebase-debug.log

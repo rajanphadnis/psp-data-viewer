@@ -26,6 +26,12 @@ export interface SectionHeaders {
   title: string;
 }
 
+export interface SeatingChart {
+  room_name: string,
+  chart: string,
+  ref_id: string,
+}
+
 export function enum_to_string(to_convert: stepStatus) {
   let to_return = "";
   switch (to_convert) {
