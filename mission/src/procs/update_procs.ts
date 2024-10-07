@@ -13,6 +13,7 @@ export function update_procs(querySnapshot: QuerySnapshot<DocumentData, Document
       status: doc.data()["status"] as stepStatus,
       status_details: doc.data()["status_details"],
       operators: doc.data()["operators"],
+      ref_id: doc.id,
     };
     steps.push(constructed_step);
   });

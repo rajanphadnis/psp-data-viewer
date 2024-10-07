@@ -46,6 +46,7 @@ div {
 #title {
     font-weight: bold;
     font-size: larger;
+    cursor: pointer;
 }
 
 #main {
@@ -69,4 +70,15 @@ div {
 
 #loginButton:hover {
     background-color: var(--field);
+}
+
+#editing-lock {
+    margin: 0px;
+    padding: 0px;
+    cursor: pointer;
+}
+#role-search {
+    margin: 0px;
+    padding: 0px;
+    cursor: pointer;
 }

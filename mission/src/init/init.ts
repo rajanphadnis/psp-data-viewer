@@ -1,35 +1,61 @@
 import { getRedirectResult, GoogleAuthProvider, onAuthStateChanged, signInWithRedirect, signOut } from "firebase/auth";
+import { toggleEditingStatus, updateLockouts } from "../procs/auth_and_editing_locks";
+import { search_icon } from "../browser/icons";
+import { generate_steps } from "../procs/update_procs";
 
 export function initGlobalVars() {
   globalThis.visible_procs = [];
   globalThis.mission_name = "Loading...";
   globalThis.steps = [];
+  globalThis.is_authenticated = false;
+  globalThis.is_editing_mode = false;
+  globalThis.role_search = "";
 }
 
 export async function initNavbar() {
+  document.getElementById("editing-lock")!.addEventListener("click", () => {
+    toggleEditingStatus();
+  });
+  document.getElementById("role-search")!.innerHTML = search_icon;
+  document.getElementById("role-search")!.addEventListener("click", () => {
+    globalThis.role_search = prompt("What is your role?") ?? "";
+    generate_steps();
+  });
+  document.getElementById("title")!.addEventListener("click", () => {
+    window.location.pathname = "";
+  });
   // await
   onAuthStateChanged(auth, (user) => {
     if (user) {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/auth.user
       const uid = user.uid;
-      document.getElementById("loginButton")!.addEventListener("click", () => {
-        signOut(globalThis.auth).then(() => {
-          // Sign-out successful.
-          window.location.pathname = window.location.pathname;
-        }).catch((error) => {
-          // An error happened.
-        });
-      });
-      document.getElementById("loginButton")!.innerText = "Logout";
+      console.log(user);
+      globalThis.is_authenticated = true;
+      updateLockouts();
       // ...
     } else {
+      globalThis.is_authenticated = false;
       // User is signed out
       // ...
-      document.getElementById("loginButton")!.addEventListener("click", () => {
-        signInWithRedirect(globalThis.auth, new GoogleAuthProvider());
-      });
-      document.getElementById("loginButton")!.innerText = "Login";
+      updateLockouts();
     }
   });
+}
+
+export function initModal() {
+  const modal = document.getElementById("confirmationModal")! as HTMLDivElement;
+
+  const closeButton = document.getElementsByClassName("close")[0]!;
+  closeButton.addEventListener("click", (e) => {
+    console.log("close");
+    modal.style.display = "none";
+  });
+
+  window.onclick = function (event) {
+    if (event.target == modal) {
+      console.log("quit");
+      modal.style.display = "none";
+    }
+  };
 }

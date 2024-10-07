@@ -14,12 +14,17 @@
   border: none;
   text-align: left;
   outline: none;
-  font-size: 15px;
+  font-size: 16px;
   font-family: "IBM Plex Mono", monospace;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .major_step_header_p {
   padding-left: 20px;
+  padding-right: 20px;
 }
 
 /* .expanded_major_step, */
@@ -27,11 +32,15 @@
   background-color: #666;
 }
 
+.major_step_header_delete_span {
+  padding-right: 10px;
+}
+
 .major_step_content {
   padding: 0px;
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.2s ease-out;
+  /* transition: max-height 0.2s ease-out; */
   background-color: #ffffff;
   color: black;
   font-family: "IBM Plex Mono", monospace;
@@ -65,12 +74,15 @@
 .minor_step_ops {
   padding-left: 10px;
   padding-right: 10px;
-  background-color: rgba(255, 0, 0, 0.3);
-  width: 75px;
+  width: 100px;
   text-align: center;
   align-content: center;
   border-left: 1px black solid;
   border-right: 1px black solid;
+}
+
+.minor_step_ops_highlighted {
+  background-color: rgba(255, 0, 0, 0.3);
 }
 
 .minor_step_instructions {
@@ -81,25 +93,111 @@
 
 .minor_step_status {
   align-content: center;
+  height: 100%;
+  width: 200px;
+  border: none;
+  background-color: transparent;
+  border-left: 1px black solid;
+  cursor: pointer;
+}
+
+.minor_step_status_complete:hover {
+  background-color: green;
+}
+.minor_step_wip {
+  background-color: yellow;
+}
+.minor_step_wip:hover {
+  background-color: rgb(255, 213, 0);
+}
+
+.minor_step_status_wip:hover {
+  background-color: rgb(255, 213, 0);
+}
+.minor_step_status_wip {
+  background-color: yellow;
+}
+.minor_step_status_written:hover {
+  background-color: #555;
+  color: white;
+}
+
+.minor_step_complete {
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
+  align-items: center;
 }
 
 .completed_step {
-    background-color: rgba(0, 255, 0, 0.45);
+  background-color: rgba(0, 255, 0, 0.45);
 }
 
-.completed_step >* .minor_step_ops {
-    background-color: transparent;
-    border-left: 1px black solid;
-    border-right: 1px black solid;
-
+.completed_step > * .minor_step_ops_highlighted {
+  background-color: transparent;
+  /* border-left: 1px black solid;
+  border-right: 1px black solid; */
 }
 
-.completed_step:hover >* .minor_step_ops {
-    /* background-color: rgb(0, 176, 0); */
-    border-left: 1px black solid;
-    border-right: 1px black solid;
+.completed_step:hover > * .minor_step_ops_highlighted {
+  /* background-color: rgb(0, 176, 0); */
+  /* border-left: 1px black solid;
+  border-right: 1px black solid; */
 }
 
 .completed_step:hover {
-    background-color: rgba(0, 176, 0, 0.45);
+  background-color: rgba(0, 176, 0, 0.744);
+}
+
+.procs_input_text {
+  padding: 0px;
+  /* height: fit-content;
+  font-size: large; */
+  width: 100%;
+}
+
+.major_step_editing_div {
+  margin: 0px;
+  padding: 0%;
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+}
+
+.step_delete_span {
+  cursor: pointer;
+  padding: 0px;
+  margin: 0px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.add_step_button {
+  background-color: #000;
+  cursor: pointer;
+  padding: 0px;
+  width: 100%;
+  border: none;
+  text-align: center;
+  outline: none;
+  font-size: 16px;
+  font-family: "IBM Plex Mono", monospace;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  max-height: 5px;
+  color: transparent;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.add_step_button:hover {
+  max-height: unset;
+  color: white;
+}
+
+.procs_input_text_instructions {
+  /* width: 200px; */
 }

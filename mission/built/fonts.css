@@ -1,5 +1,39 @@
 .icon {
-    width: 1.5em;
-    height: 1.5em;
-    vertical-align: -0.125em;
+  width: 1.5em;
+  height: 1.5em;
+  vertical-align: -0.125em;
+}
+
+.green_check {
+  color: greenyellow;
+  fill: greenyellow;
+}
+
+.red_x {
+  color: red;
+  fill: red;
+}
+
+.unlocked_icon {
+  color: white;
+  fill: white;
+}
+.locked_icon {
+  color: white;
+  fill: white;
+}
+
+.delete_icon {
+  color: white;
+  fill: white;
+}
+
+.delete_icon_dark {
+  color: black;
+  fill: black;
+}
+
+.search_icon {
+  color: white;
+  fill: white;
 }

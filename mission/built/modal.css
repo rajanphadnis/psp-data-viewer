@@ -25,6 +25,7 @@
     -webkit-animation-duration: 0.4s;
     animation-name: animatetop;
     animation-duration: 0.4s;
+    padding-bottom: 20px;
 }
 
 @-webkit-keyframes animatetop {
@@ -87,37 +88,20 @@
     min-width: calc(50% - 6px);
     /* max-width: 50%; */
 }
-
-/* #new_test_info_div {
-    border-right: 1px solid white;
-}
-
-#new_test_save {
-    border: none;
-    margin: 10px;
-    width: calc(100% - 20px);
-    color: black;
+#modal_delete {
     background-color: var(--rush);
+    color: black;
+    padding: 0.5em;
+    font-size: 16px;
+    border: none;
     cursor: pointer;
-    font-family: "IBM Plex Mono", monospace;
     font-weight: bold;
-    padding: 20px;
-    text-align: center;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
+    font-family: "IBM Plex Mono", monospace;
+    display: block;
+    opacity: 1;
+    margin-left: 10px;
 }
 
-#new_test_save:hover {
+#modal_delete:hover {
     background-color: var(--field);
 }
-
-#new_test_save:disabled {
-    cursor: default;
-}
-
-#new_test_urls_div {
-    padding-left: 10px;
-    padding-right: 0px;
-} */

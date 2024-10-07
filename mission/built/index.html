@@ -3,7 +3,7 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="tabTitle">Admin Dashboard</title>
+    <title id="tabTitle">PSP Mission Management</title>
     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
     <link rel=preconnect href="https://fonts.googleapis.com/" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono&display=swap" />
@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="/modal.css" crossorigin="anonymous">
     <link rel="stylesheet" href="/status.css" crossorigin="anonymous">
     <link rel="stylesheet" href="/procs.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="/home.css" crossorigin="anonymous">
     <link rel="icon" href="/images/favicon-32x32.png" sizes="32x32" />
     <link rel="icon" href="/images/favicon-16x16.png" sizes="16x16" />
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
@@ -33,67 +34,23 @@
 </script> -->
 
 <body>
-    <div id="testSwitcherModal" class="modal">
+    <div id="confirmationModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="close">&times;</span>
-                <h2>Create Test</h2>
+                <h2>Confirm Deletion</h2>
             </div>
             <div id="modal-body">
-                <div id="new_test_info_div">
-                    <div class="test-field-div">
-                        <label class="test-field-label">ID</label>
-                        <input class="test-field-text" id="new_test_id">
-                    </div>
-                    <div class="test-field-div">
-                        <label class="test-field-label">Name</label>
-                        <input class="test-field-text" id="new_test_name">
-                    </div>
-                    <div class="test-field-div">
-                        <label class="test-field-label">Test Article</label>
-                        <select class="test-field-select" id="new_test_test_article">
-                            <option value="CMS" title="CMS">CMS</option>
-                            <option value="Rocket 4" title="Rocket 4">Rocket 4</option>
-                        </select>
-                    </div>
-                    <div class="test-field-div">
-                        <label class="test-field-label">GSE Article</label>
-                        <select class="test-field-select" id="new_test_gse_article">
-                            <option value="BCLS" title="BCLS">BCLS</option>
-                            <option value="Test Stand" title="Test Stand">Test Stand</option>
-                        </select>
-                    </div>
-                    <div class="test-field-div">
-                        <label class="test-field-label">(Optional) Trim to (seconds)</label>
-                        <input class="test-field-text" id="new_test_trim">
-                    </div>
-                </div>
-                <div id="new_test_urls_div"></div>
+                <p>Confirm deletion of section <span id="modal-content-span"></span></p>
             </div>
-            <button id="new_test_save">Create Test -></button>
+            <button id="modal_delete">Delete -></button>
         </div>
     </div>
     <div id="navBar">
         <div style="display:flex; flex-direction: row; justify-content: start; align-items: center;">
             <div id="title">PSP Mission Management<span id="mission-name"></span></div>
-        </div>
-        <!-- <div id="toolbar">
-            <button id="downloadCSV" class="toolbar_button">
-                <span class="material-symbols-outlined">
-                    table_view
-                </span>
-            </button>
-            <button id="downloadImage" class="toolbar_button">
-                <span class="material-symbols-outlined">
-                    download
-                </span>
-            </button>
-            <button id="copyImage" class="toolbar_button">
-                <span class="material-symbols-outlined">
-                    content_copy
-                </span>
-            </button>
-        </div> -->
+        </div><div id="role-search"></div>
+        <div id="editing-lock"></div>
         <div style="display:flex; flex-direction: row; justify-content: end; align-items: center;">
             <p id="statusMessage" style="margin: auto; padding-right: 10px;">Booting</p>
             <div id="status" style="padding-right: 0px !important;">

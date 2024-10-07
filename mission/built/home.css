@@ -1,0 +1,14 @@
+.home_mission_entry_div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  border: 1px white solid;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.home_mission_entry_div > a {
+  align-content: center;
+  color: white;
+  /* text-decoration: none; */
+}
