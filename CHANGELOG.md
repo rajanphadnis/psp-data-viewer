@@ -1,3 +1,9 @@
+## v0.4.10
+minor fixes
+
+### Changed
+- bug fixes
+
 ## v0.4.9
 basic procedures work
 

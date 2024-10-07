@@ -4,7 +4,8 @@ import { search_icon } from "../browser/icons";
 import { generate_steps } from "../procs/update_procs";
 
 export function initGlobalVars() {
-  globalThis.visible_procs = [];
+  const range = (start: number, end: number) => Array.from({length: (end - start)}, (v, k) => k + start);
+  globalThis.visible_procs = range(1,31);
   globalThis.mission_name = "Loading...";
   globalThis.steps = [];
   globalThis.is_authenticated = false;
@@ -19,7 +20,9 @@ export async function initNavbar() {
   document.getElementById("role-search")!.innerHTML = search_icon;
   document.getElementById("role-search")!.addEventListener("click", () => {
     globalThis.role_search = prompt("What is your role?") ?? "";
-    generate_steps();
+    if (location.pathname.includes("/procs/")) {
+      generate_steps();
+    }
   });
   document.getElementById("title")!.addEventListener("click", () => {
     window.location.pathname = "";

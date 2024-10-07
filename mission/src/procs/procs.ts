@@ -3,7 +3,6 @@ import { loadingStatus } from "../browser/types";
 import { updateStatus } from "../dom/status";
 import { update_procs } from "./update_procs";
 
-
 export function procs() {
   updateStatus(loadingStatus.LOADING, "Fetching");
   globalThis.mission_id = window.location.pathname.slice(7);
@@ -12,7 +11,6 @@ export function procs() {
     document.getElementById("mission-name")!.innerText = `::${globalThis.mission_name}`;
     globalThis.step_titles = doc.data()!["section_headers"];
   });
-
   const q = query(collection(globalThis.db, `${globalThis.mission_id}/procedures/steps`), where("active", "==", true));
   globalThis.steps_unsub = onSnapshot(q, (querySnapshot) => update_procs(querySnapshot));
 }

@@ -37,6 +37,7 @@ export function gen_major_step_header(major_step: number, name: string): HTMLBut
 
         }
         globalThis.visible_procs.push(major_step);
+        globalThis.visible_procs = Array.from(new Set(globalThis.visible_procs));
       }
     }
   });
