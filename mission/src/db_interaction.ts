@@ -106,7 +106,12 @@ export async function get_roles() {
         globalThis.roles.push({ operator: key, name: name });
       });
     }
-    globalThis.roles.sort();
+    globalThis.roles.sort((a, b) => {
+      const comparison = a.operator < b.operator;
+      const is_equal = a.operator == b.operator;
+      const to_return = is_equal ? (a.name < b.name ? -1 : 1) : comparison ? -1 : 1;
+      return to_return;
+    });
     globalThis.mission_name = docSnap.data()["name"] ?? "Error";
   } else {
     console.log("No such document!");

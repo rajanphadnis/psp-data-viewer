@@ -1,3 +1,9 @@
+## v0.4.15
+fixed operator sorting
+
+### Changed
+- bug fixes
+
 ## v0.4.14
 added roster editing mode lockout
 
