@@ -1,14 +1,21 @@
 .grid-stack {
-  background: #fafad2;
+  /* background: #fafad2; */
+  background: transparent;
+  border: 1px white solid;
+  box-shadow: 1px 4px 6px rgba(255, 255, 255, 0.2);
 }
 
 .grid-stack-item-content {
   text-align: center;
-  background-color: #18bc9c;
+  /* background-color: #18bc9c; */
+  background-color: transparent;
+  border: 1px white solid;
+  align-content: center;
+  box-shadow: 1px 4px 6px rgba(255, 255, 255, 0.2);
 }
 
 .trash {
-  height: 100px;
+  height: 150px;
   width: 100%;
   background: rgba(255, 0, 0, 0.4);
   margin-bottom: 15px;
@@ -18,7 +25,7 @@
   justify-content: center;
   align-content: center;
 }
-.sidebar {
+/* .sidebar {
   background: rgba(0, 255, 0, 0.1);
   padding: 25px 0;
   height: 100px;
@@ -36,11 +43,11 @@
 }
 .sidebar .grid-stack-item .grid-stack-item-content {
   background: none;
-}
+} */
 
 /* make nested grid have slightly darker bg take almost all space (need some to tell them apart) so items inside can have similar to external size+margin */
 .grid-stack > .grid-stack-item.grid-stack-sub-grid > .grid-stack-item-content {
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.05);
   inset: 0 2px;
 }
 .grid-stack.grid-stack-nested {
@@ -61,9 +68,10 @@
 .newWidget {
   /* margin-left: 10px;
   margin-right: 10px; */
-  /* margin-bottom: 20px; */
+  margin-bottom: 20px;
   /* width: 100%; */
   /* padding: 5px; */
+  cursor: pointer;
 }
 
 .dropbtn {
@@ -79,6 +87,24 @@
 
 .dropbtn:hover,
 .dropbtn:focus {
+  background-color: var(--field);
+}
+
+#save_button {
+  background-color: var(--rush);
+  color: black;
+  font-weight: bold;
+  padding: 20px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 50px;
+  display: none;
+}
+
+#save_button:hover,
+#save_button:focus {
   background-color: var(--field);
 }
 

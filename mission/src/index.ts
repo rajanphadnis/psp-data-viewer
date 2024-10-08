@@ -1,6 +1,6 @@
 import { Firestore, type Unsubscribe } from "firebase/firestore";
 import { initFirebase } from "./init/firebase_init";
-import { type ProcedureStep, type SeatingChart } from "./browser/types";
+import { type ProcedureStep, type RoleAssignments, type SeatingChart } from "./browser/types";
 import { initGlobalVars, initModal, initNavbar } from "./init/init";
 import { login } from "./browser/login";
 import type { Auth } from "firebase/auth";
@@ -26,6 +26,8 @@ declare global {
   var seating_unsub: Unsubscribe;
   var seating_chart: SeatingChart[];
   var currently_selected_seating_chart: SeatingChart;
+  var roles: RoleAssignments[];
+  var currently_displayed_seating_chart: string;
 }
 
 initGlobalVars();

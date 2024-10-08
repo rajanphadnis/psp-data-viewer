@@ -32,6 +32,11 @@ export interface SeatingChart {
   ref_id: string,
 }
 
+export interface RoleAssignments {
+  operator: string,
+  name: string,
+}
+
 export function enum_to_string(to_convert: stepStatus) {
   let to_return = "";
   switch (to_convert) {

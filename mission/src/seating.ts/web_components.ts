@@ -1,4 +1,5 @@
-import type { SeatingChart } from "../browser/types";
+import type { RoleAssignments, SeatingChart } from "../browser/types";
+import { update_seating_chart } from "../db_interaction";
 import { draw_chart } from "./seating_chart";
 
 export function gen_dropdown() {
@@ -44,24 +45,65 @@ export function gen_trash() {
   return main_div;
 }
 
-export function gen_draggable() {
+export function gen_draggable(role: RoleAssignments) {
   const main_div = document.createElement("div");
   const span = document.createElement("span");
   const secondary_div = document.createElement("div");
   const third_div = document.createElement("div");
   main_div.classList.add("newWidget");
   main_div.classList.add("grid-stack-item");
+  main_div.setAttribute("gs-w", "2");
+  main_div.setAttribute("gs-h", "2");
   secondary_div.classList.add("grid-stack-item-content");
   secondary_div.style.padding = "5px";
-  span.innerHTML = "TOP: Person Name";
+  if (role.operator == role.name && role.name == "") {
+    span.innerHTML = "None";
+  } else {
+    span.innerHTML = `${role.operator}: ${role.name}`;
+  }
   secondary_div.appendChild(third_div);
   third_div.appendChild(span);
   main_div.appendChild(secondary_div);
   return main_div;
 }
 
+export function gen_temp_draggable(unsplit: string) {
+  const main_div = document.createElement("div");
+  const first_div = document.createElement("div");
+  const second_div = document.createElement("div");
+  const span = document.createElement("span");
+  if (unsplit == "None") {
+    span.innerHTML = "Empty";
+  } else {
+    span.innerHTML = `${unsplit.split(": ")[0]}</br></br>${unsplit.split(": ")[1]}`;
+  }
+  first_div.appendChild(span);
+
+  main_div.classList.add("grid-stack-item");
+  main_div.setAttribute("gs-w", "2");
+  main_div.setAttribute("gs-h", "2");
+  first_div.classList.add("grid-stack-item-content");
+  second_div.classList.add("ui-resizable-handle");
+  second_div.classList.add("ui-resizable-se");
+  second_div.setAttribute("style", "z-index: 100; user-select: none;");
+
+  main_div.appendChild(first_div);
+  main_div.appendChild(second_div);
+  return main_div;
+}
+
 export function gen_seating_chart_title() {
-    const header = document.createElement("h1");
-    header.textContent = globalThis.currently_selected_seating_chart.room_name;
-    return header;
+  const header = document.createElement("h1");
+  header.textContent = globalThis.currently_selected_seating_chart.room_name;
+  return header;
+}
+
+export function gen_save_button() {
+  const button = document.createElement("button");
+  button.id = "save_button";
+  button.addEventListener("click", () => {
+    update_seating_chart();
+  });
+  button.innerText = "Save Layout";
+  return button;
 }

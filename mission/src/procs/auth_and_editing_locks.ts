@@ -1,6 +1,7 @@
 import { GoogleAuthProvider, signInWithRedirect, signOut } from "firebase/auth";
 import { locked_icon, unlocked_icon } from "../browser/icons";
 import { generate_steps } from "./update_procs";
+import { draw_chart } from "../seating.ts/seating_chart";
 
 export function updateLockouts() {
   const is_auth = globalThis.is_authenticated;
@@ -33,6 +34,9 @@ export function updateLockouts() {
 
   if (location.pathname.includes("/procs/")) {
     generate_steps();
+  }
+  if (location.pathname.includes("/seating/") && globalThis.currently_selected_seating_chart) {
+    draw_chart();
   }
 }
 

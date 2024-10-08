@@ -1,5 +1,5 @@
-import { collection, doc, updateDoc, writeBatch } from "firebase/firestore";
-import { enum_to_string, loadingStatus, stepStatus, type ProcedureStep } from "./browser/types";
+import { collection, doc, getDoc, onSnapshot, query, updateDoc, where, writeBatch } from "firebase/firestore";
+import { enum_to_string, loadingStatus, stepStatus, type ProcedureStep, type SeatingChart } from "./browser/types";
 import { updateStatus } from "./dom/status";
 
 export function update_step_instructions(ref_id: string, new_instruction: string) {
@@ -86,4 +86,27 @@ export function change_status(ref_id: string, new_status: stepStatus) {
       alert("failed to update status. Please refresh the page and try again");
       console.log(er);
     });
+}
+
+export async function get_roles() {
+  const docSnap = await getDoc(doc(globalThis.db, globalThis.mission_id, "procedures"));
+  if (docSnap.exists()) {
+    for (var key in docSnap.data()["roles"]) {
+      const names = docSnap.data()["roles"][key] as string[];
+      names.forEach((name) => {
+        globalThis.roles.push({ operator: key, name: name });
+      });
+    }
+  } else {
+    console.log("No such document!");
+  }
+}
+
+export async function update_seating_chart() {
+  await updateDoc(
+    doc(globalThis.db, globalThis.mission_id, "seating", "charts", globalThis.currently_selected_seating_chart.ref_id),
+    {
+      chart: globalThis.currently_displayed_seating_chart,
+    }
+  );
 }

@@ -2,7 +2,15 @@ import { GridStack } from "gridstack";
 import { loadingStatus, type SeatingChart } from "../browser/types";
 import { updateStatus } from "../dom/status";
 import type { DocumentData, QuerySnapshot } from "firebase/firestore";
-import { gen_draggable, gen_dropdown, gen_seating_chart_title, gen_trash } from "./web_components";
+import {
+  gen_draggable,
+  gen_dropdown,
+  gen_save_button,
+  gen_seating_chart_title,
+  gen_temp_draggable,
+  gen_trash,
+} from "./web_components";
+import { update_seating_chart } from "../db_interaction";
 
 export function update_chart(querySnapshot: QuerySnapshot<DocumentData, DocumentData>) {
   if (querySnapshot.size > 0) {
@@ -19,7 +27,9 @@ export function update_chart(querySnapshot: QuerySnapshot<DocumentData, Document
     leftDiv.innerHTML = "";
     leftDiv.appendChild(gen_dropdown());
     leftDiv.appendChild(gen_trash());
-    leftDiv.appendChild(gen_draggable());
+    globalThis.roles.forEach((role) => {
+      leftDiv.appendChild(gen_draggable(role));
+    });
     leftDiv.style.display = "flex";
     draw_chart();
   } else {
@@ -34,12 +44,12 @@ export function draw_chart() {
   const main_div = document.getElementById("steps")! as HTMLDivElement;
   const delete_div = document.getElementsByClassName("trash")[0]! as HTMLDivElement;
   const gridDiv = document.createElement("div");
-
   main_div.innerHTML = "";
   gridDiv.id = "seating_chart_div";
   gridDiv.classList.add("grid-stack");
   main_div.appendChild(gen_seating_chart_title());
   main_div.appendChild(gridDiv);
+  main_div.appendChild(gen_save_button());
   let grid = GridStack.init({
     cellHeight: 70,
     acceptWidgets: true,
@@ -56,76 +66,33 @@ export function draw_chart() {
       delete_div.style.display = "none";
       //   console.log("dragstop");
       const serializedData = grid.save();
-      console.log(JSON.stringify(serializedData));
+      // console.log(JSON.stringify(serializedData));
     });
-  GridStack.setupDragIn(".newWidget", { appendTo: "body", helper: "clone" });
+  GridStack.setupDragIn(".newWidget", {
+    appendTo: "body",
+    helper: (e) => {
+      const target = e.target! as HTMLDivElement;
+      var innerText: string;
+      if (target.tagName == "SPAN") {
+        innerText = target.innerHTML;
+      } else {
+        innerText = (target.querySelector("span") as HTMLSpanElement).innerHTML;
+      }
+      const div = gen_temp_draggable(innerText);
+      return div;
+    },
+  });
 
   let items = JSON.parse(chart.chart);
-  //    [
-  //     { x: 2, y: 0, w: 10, noMove: true, noResize: true, locked: true, content: "Desk" },
-  //     { x: 0, y: 1, w: 2, h: 4, content: "6" },
-  //     { x: 2, y: 1, w: 2, h: 2, content: "8" },
-  //     { x: 4, y: 1, w: 2, h: 2, content: "9" },
-  //     {
-  //       w: 2,
-  //       h: 2,
-  //       x: 6,
-  //       y: 1,
-  //       content: "<span>TOP: Person Name</span>",
-  //     },
-  //     { x: 8, y: 1, h: 2, minW: 2, noResize: true, content: "cannot resize" },
-  //     { x: 10, y: 1, w: 2, h: 2, content: "4" },
-  //     { x: 2, y: 3, w: 2, h: 2, content: "5" },
-  //     { x: 8, y: 3, w: 2, h: 2, content: "10" },
-  //     { x: 10, y: 3, w: 2, h: 2, content: "11" },
-  //     { x: 8, y: 5, w: 4, h: 2, content: "7" },
-  //   ];
   grid.load(items);
 
   grid.on("added removed change", function (e: any, items: any) {
-    let str = "";
-    items.forEach(function (item: any) {
-      str += " (x,y)=" + item.x + "," + item.y;
-    });
-    console.log(e.type + " " + items.length + " items:" + str);
+    const serializedData = grid.save();
+    if (globalThis.is_editing_mode) {
+      document.getElementById("save_button")!.style.display = "block";
+    } else {
+      document.getElementById("save_button")!.style.display = "none";
+    }
+    globalThis.currently_displayed_seating_chart = JSON.stringify(serializedData);
   });
 }
-
-//   addEvents(grid);
-
-// 2.x method - just saving list of widgets with content (default)
-//   function loadGrid() {
-//     grid.load(serializedData);
-//   }
-
-//   // 2.x method
-//   function saveGrid() {
-//     const serializedData = grid.save();
-//     document.querySelector('#saved-data').value = JSON.stringify(serializedData, null, '  ');
-//   }
-
-//   // 3.1 full method saving the grid options + children (which is recursive for nested grids)
-//   function saveFullGrid() {
-//     serializedFull = grid.save(true, true);
-//     serializedData = serializedFull.children;
-//     document.querySelector('#saved-data').value = JSON.stringify(serializedFull, null, '  ');
-//   }
-
-//   // 3.1 full method to reload from scratch - delete the grid and add it back from JSON
-//   function loadFullGrid() {
-//     if (!serializedFull) return;
-//     grid.destroy(true); // nuke everything
-//     grid = GridStack.addGrid(document.querySelector('#gridCont'), serializedFull)
-//   }
-
-//   function clearGrid() {
-//     grid.removeAll();
-//   }
-
-//   function removeWidget(el) {
-//     // TEST removing from DOM first like Angular/React/Vue would do
-//     el.remove();
-//     grid.removeWidget(el, false);
-//   }
-
-// setTimeout(() => loadGrid(), 1000); // TEST force a second load which should be no-op

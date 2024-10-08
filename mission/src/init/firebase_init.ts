@@ -53,6 +53,10 @@ export async function initFirebase() {
         1: "Prep",
         2: "Flow",
       },
+      roles: {
+        TOP: ["Rajan P", "Will", "Kylie"],
+        TC: ["Nick"],
+      }
     });
     const querySnapshot = await getDocs(collection(globalThis.db, "9KS7qji/procedures/steps"));
     querySnapshot.forEach(async (doc_read) => {

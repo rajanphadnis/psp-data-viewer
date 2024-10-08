@@ -1,3 +1,9 @@
+## v0.4.12
+added roster and better dragging to seating chart
+
+### Changed
+- bug fixes
+
 ## v0.4.11
 added basic seating chart editor
 
