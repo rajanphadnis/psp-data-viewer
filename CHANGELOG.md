@@ -1,3 +1,9 @@
+## v0.4.14
+added roster editing mode lockout
+
+### Changed
+- bug fixes
+
 ## v0.4.13
 added roster management and improved seating
 

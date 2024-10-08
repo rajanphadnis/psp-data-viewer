@@ -20,7 +20,11 @@ export async function init_roster_modal() {
   });
   globalThis.roster.sort((a, b) => (a.operator < b.operator ? 1 : -1));
   document.getElementById("roster_save")?.addEventListener("click", (e) => {
-    save_roster();
+    if (globalThis.is_editing_mode) {
+      save_roster();
+    } else {
+      alert("must be in editing mode to make changes");
+    }
   });
 }
 
