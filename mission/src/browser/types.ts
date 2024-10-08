@@ -37,6 +37,11 @@ export interface RoleAssignments {
   name: string,
 }
 
+export interface Roster {
+  operator: string,
+  names: string[],
+}
+
 export function enum_to_string(to_convert: stepStatus) {
   let to_return = "";
   switch (to_convert) {
@@ -59,5 +64,13 @@ export function enum_to_string(to_convert: stepStatus) {
     default:
       break;
   }
+  return to_return;
+}
+
+export function roster_to_object(roster: Roster[]): { [index: string]: string[] } {
+  let to_return: { [index: string]: string[] } = {};
+  roster.forEach((roster_entry) => {
+    to_return[roster_entry.operator] = roster_entry.names;
+  });
   return to_return;
 }

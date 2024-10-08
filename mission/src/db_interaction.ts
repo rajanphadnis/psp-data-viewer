@@ -1,5 +1,13 @@
-import { collection, doc, getDoc, onSnapshot, query, updateDoc, where, writeBatch } from "firebase/firestore";
-import { enum_to_string, loadingStatus, stepStatus, type ProcedureStep, type SeatingChart } from "./browser/types";
+import { collection, doc, getDoc, getDocs, onSnapshot, query, updateDoc, where, writeBatch } from "firebase/firestore";
+import {
+  enum_to_string,
+  loadingStatus,
+  roster_to_object,
+  stepStatus,
+  type ProcedureStep,
+  type Roster,
+  type SeatingChart,
+} from "./browser/types";
 import { updateStatus } from "./dom/status";
 
 export function update_step_instructions(ref_id: string, new_instruction: string) {
@@ -93,10 +101,13 @@ export async function get_roles() {
   if (docSnap.exists()) {
     for (var key in docSnap.data()["roles"]) {
       const names = docSnap.data()["roles"][key] as string[];
+      globalThis.roster.push({ operator: key, names: names });
       names.forEach((name) => {
         globalThis.roles.push({ operator: key, name: name });
       });
     }
+    globalThis.roles.sort();
+    globalThis.mission_name = docSnap.data()["name"] ?? "Error";
   } else {
     console.log("No such document!");
   }
@@ -109,4 +120,22 @@ export async function update_seating_chart() {
       chart: globalThis.currently_displayed_seating_chart,
     }
   );
+}
+
+export async function get_all_operators() {
+  const q = query(collection(globalThis.db, `${globalThis.mission_id}/procedures/steps`), where("active", "==", true));
+  const docs = await getDocs(q);
+  let ops: string[] = [];
+  //  globalThis.roles.map((role) => role.operator);
+  docs.forEach((doc) => {
+    ops = [...ops, ...doc.data()["operators"]];
+  });
+  ops = Array.from(new Set(ops));
+  console.log(ops);
+  return ops;
+}
+
+export async function set_roster(roster: Roster[]) {
+  console.log(roster_to_object(roster));
+  await updateDoc(doc(globalThis.db, globalThis.mission_id, "procedures"), { roles: roster_to_object(roster) });
 }

@@ -5,10 +5,18 @@
   box-shadow: 1px 4px 6px rgba(255, 255, 255, 0.2);
 }
 
+.grid-stack-fixed {
+  background: white;
+  color: black;
+}
+.grid-stack-person {
+  background-color: transparent;
+  border-radius: 10px;
+}
+
 .grid-stack-item-content {
   text-align: center;
-  /* background-color: #18bc9c; */
-  background-color: transparent;
+  /* background-color: transparent; */
   border: 1px white solid;
   align-content: center;
   box-shadow: 1px 4px 6px rgba(255, 255, 255, 0.2);
@@ -138,4 +146,19 @@
 
 .show_seating_chart_dropdown {
   display: block;
+}
+
+#roster-modal-body {
+  padding: 10px;
+}
+.roster_entry_div {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+}
+
+.roster_entry_input {
+  height: fit-content;
+  margin-left: 10px;
 }

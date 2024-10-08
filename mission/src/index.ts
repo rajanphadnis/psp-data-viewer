@@ -1,7 +1,7 @@
 import { Firestore, type Unsubscribe } from "firebase/firestore";
 import { initFirebase } from "./init/firebase_init";
-import { type ProcedureStep, type RoleAssignments, type SeatingChart } from "./browser/types";
-import { initGlobalVars, initModal, initNavbar } from "./init/init";
+import { type ProcedureStep, type RoleAssignments, type Roster, type SeatingChart } from "./browser/types";
+import { initGlobalVars, initConfirmationModal, initNavbar, initRosterModal } from "./init/init";
 import { login } from "./browser/login";
 import type { Auth } from "firebase/auth";
 import { procs } from "./procs/procs";
@@ -27,6 +27,7 @@ declare global {
   var seating_chart: SeatingChart[];
   var currently_selected_seating_chart: SeatingChart;
   var roles: RoleAssignments[];
+  var roster: Roster[];
   var currently_displayed_seating_chart: string;
 }
 
@@ -35,7 +36,8 @@ initFirebase();
 login();
 initNavbar();
 browser_checks();
-initModal();
+initConfirmationModal();
+initRosterModal();
 
 if (location.pathname.includes("/procs/")) {
   procs();

@@ -1,3 +1,9 @@
+## v0.4.13
+added roster management and improved seating
+
+### Changed
+- bug fixes
+
 ## v0.4.12
 added roster and better dragging to seating chart
 

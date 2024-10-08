@@ -1,7 +1,7 @@
 .modal {
     display: none;
     position: fixed;
-    z-index: 1;
+    z-index: 101;
     padding-top: 25vh;
     left: 0;
     top: 0;
@@ -103,5 +103,23 @@
 }
 
 #modal_delete:hover {
+    background-color: var(--field);
+}
+
+#roster_save {
+    background-color: var(--rush);
+    color: black;
+    padding: 0.5em;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: "IBM Plex Mono", monospace;
+    display: block;
+    opacity: 1;
+    margin-left: 10px;
+}
+
+#roster_save:hover {
     background-color: var(--field);
 }

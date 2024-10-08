@@ -1,5 +1,6 @@
 import type { RoleAssignments, SeatingChart } from "../browser/types";
 import { update_seating_chart } from "../db_interaction";
+import { set_default_seating_chart } from "./caching";
 import { draw_chart } from "./seating_chart";
 
 export function gen_dropdown() {
@@ -28,6 +29,7 @@ function gen_link(entry: SeatingChart) {
   a.innerText = entry.room_name;
   a.addEventListener("click", (e) => {
     globalThis.currently_selected_seating_chart = entry;
+    set_default_seating_chart(globalThis.currently_selected_seating_chart.ref_id);
     document.getElementById("dropdown_list_div")!.classList.toggle("show_seating_chart_dropdown");
     draw_chart();
   });
@@ -59,29 +61,34 @@ export function gen_draggable(role: RoleAssignments) {
   if (role.operator == role.name && role.name == "") {
     span.innerHTML = "None";
   } else {
-    span.innerHTML = `${role.operator}: ${role.name}`;
+    span.innerHTML = `${role.operator}<br><br>${role.name}`;
   }
-  secondary_div.appendChild(third_div);
-  third_div.appendChild(span);
+  secondary_div.appendChild(span);
+  // third_div.appendChild(span);
   main_div.appendChild(secondary_div);
   return main_div;
 }
 
-export function gen_temp_draggable(unsplit: string) {
+export function gen_loaded_draggable(content: string) {
+  // console.log(content);
   const main_div = document.createElement("div");
   const first_div = document.createElement("div");
   const second_div = document.createElement("div");
   const span = document.createElement("span");
-  if (unsplit == "None") {
-    span.innerHTML = "Empty";
-  } else {
-    span.innerHTML = `${unsplit.split(": ")[0]}</br></br>${unsplit.split(": ")[1]}`;
+  first_div.innerHTML = content;
+  // first_div.appendChild(span);
+
+  if (content.includes("<br>") || content.includes("None")) {
+    first_div.classList.add("grid-stack-person");
   }
-  first_div.appendChild(span);
+  else {
+    first_div.classList.add("grid-stack-fixed");
+  }
 
   main_div.classList.add("grid-stack-item");
   main_div.setAttribute("gs-w", "2");
   main_div.setAttribute("gs-h", "2");
+  // main_div.style.width = "auto";
   first_div.classList.add("grid-stack-item-content");
   second_div.classList.add("ui-resizable-handle");
   second_div.classList.add("ui-resizable-se");
@@ -106,4 +113,18 @@ export function gen_save_button() {
   });
   button.innerText = "Save Layout";
   return button;
+}
+
+export function gen_roster_entry(role: RoleAssignments) {
+  const div = document.createElement("div");
+  const p = document.createElement("p");
+  const input = document.createElement("input");
+  div.classList.add("roster_entry_div");
+  input.id = `roster_entry_${role.operator}`;
+  input.value = role.name;
+  input.classList.add("roster_entry_input");
+  p.innerHTML = `${role.operator}: `;
+  div.appendChild(p);
+  div.appendChild(input);
+  return div;
 }

@@ -56,7 +56,7 @@ export async function initFirebase() {
       roles: {
         TOP: ["Rajan P", "Will", "Kylie"],
         TC: ["Nick"],
-      }
+      },
     });
     const querySnapshot = await getDocs(collection(globalThis.db, "9KS7qji/procedures/steps"));
     querySnapshot.forEach(async (doc_read) => {
@@ -86,6 +86,25 @@ export async function initFirebase() {
     });
     await addDoc(collection(globalThis.db, "9KS7qji/procedures/steps"), {
       active: true,
+      instructions: "START recording cameras",
+      major_id: 1,
+      minor_id: "003",
+      operators: ["MEDIA"],
+      status: "WRITTEN",
+      status_detials: "by rphadnis",
+    });
+
+    await addDoc(collection(globalThis.db, "9KS7qji/procedures/steps"), {
+      active: true,
+      instructions: "CONFIRM attendence",
+      major_id: 1,
+      minor_id: "004",
+      operators: ["DSO 1"],
+      status: "WRITTEN",
+      status_detials: "by rphadnis",
+    });
+    await addDoc(collection(globalThis.db, "9KS7qji/procedures/steps"), {
+      active: true,
       instructions: "Record Weather",
       major_id: 2,
       minor_id: "001",
@@ -96,13 +115,13 @@ export async function initFirebase() {
     await addDoc(collection(globalThis.db, "9KS7qji/seating/charts"), {
       active: true,
       name: "ZL8 Control Room",
-      chart: `[{"x":0,"y":0,"w":12,"noMove":true,"noResize":true,"locked":true,"content":"Desk"},{"x":0,"y":1,"w":2,"h":4,"content":"6"},{"x":2,"y":1,"w":2,"h":2,"content":"8"},{"x":4,"y":1,"w":2,"h":2,"content":"9"},{"w":2,"h":2,"x":6,"y":1,"content":"<span>TOP: Person Name</span>"},{"x":8,"y":1,"h":2,"minW":2,"noResize":true,"content":"cannot resize"},{"x":10,"y":1,"w":2,"h":2,"content":"4"},{"x":2,"y":3,"w":2,"h":2,"content":"5"},{"x":8,"y":3,"w":2,"h":2,"content":"10"},{"x":10,"y":3,"w":2,"h":2,"content":"11"},{"x":8,"y":5,"w":4,"h":2,"content":"7"}]`,
+      chart: `[{"x":0,"y":0,"w":12,"noMove":true,"noResize":true,"locked":true,"content":"Desk"},{"x":0,"y":1,"w":2,"h":2,"content":"<span>None</span>"},{"x":2,"y":1,"w":2,"h":2,"content":"<span>None</span>"},{"x":4,"y":1,"w":2,"h":2,"content":"<span>None</span>"},{"w":2,"h":2,"x":6,"y":1,"content":"<span>TOP<br><br>Person Name</span>"},{"x":8,"y":1,"h":2,"minW":2,"noResize":true,"content":"cannot resize"},{"x":10,"y":1,"w":2,"h":2,"content":"<span>None</span>"},{"w":2,"h":2,"x":6,"y":4,"content":"<span>None</span>"},{"x":8,"y":4,"w":2,"h":2,"content":"<span>None</span>"},{"x":10,"y":4,"w":2,"h":2,"content":"<span>None</span>"},{"x":0,"y":5,"w":2,"h":2,"content":"<span>None</span>"},{"x":2,"y":6,"w":2,"noMove":true,"noResize":true,"locked":true,"content":"<span>Door</span>"},{"x":6,"y":6,"w":6,"noMove":true,"noResize":true,"locked":true,"content":"<span>Desk</span>"}]`,
     });
 
     await addDoc(collection(globalThis.db, "9KS7qji/seating/charts"), {
       active: true,
       name: "ZL3 Control Room",
-      chart: `[{"x":0,"y":0,"w":2,"h":2,"content":"6"},{"x":2,"y":0,"w":10,"noMove":true,"noResize":true,"locked":true,"content":"Desk"},{"x":2,"y":1,"w":2,"h":2,"content":"8"},{"x":4,"y":1,"w":2,"h":2,"content":"9"},{"w":2,"h":2,"x":6,"y":1,"content":"<span>TOP: Person Name</span>"},{"x":8,"y":1,"h":2,"minW":2,"noResize":true,"content":"cannot resize"},{"x":10,"y":1,"w":2,"h":2,"content":"4"},{"x":3,"y":3,"w":2,"h":2,"content":"5"},{"x":7,"y":3,"w":2,"h":2,"content":"10"},{"x":9,"y":3,"w":2,"h":2,"content":"11"}]`,
+      chart: `[{"x":0,"y":0,"w":12,"noMove":true,"noResize":true,"locked":true,"content":"<span>Desk</span>"},{"x":2,"y":1,"w":2,"h":2,"content":"<span>8</span>"},{"x":4,"y":1,"w":2,"h":2,"content":"<span>9</span>"},{"w":2,"h":2,"x":6,"y":1,"content":"<span><span>TOP<br><br>Person Name</span></span>"},{"x":8,"y":1,"h":2,"minW":2,"noResize":true,"content":"<span>cannot resize</span>"},{"x":10,"y":1,"w":2,"h":2,"content":"<span>4</span>"},{"x":0,"y":2,"h":2,"noMove":true,"noResize":true,"locked":true,"content":"<span>Door</span>"},{"x":3,"y":3,"w":2,"h":2,"content":"<span>5</span>"},{"x":7,"y":3,"w":2,"h":2,"content":"<span>10</span>"},{"x":9,"y":3,"w":2,"h":2,"content":"<span>11</span>"}]`,
     });
   }
 }
