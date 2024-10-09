@@ -30,7 +30,7 @@ export function gen_major_step_header(major_step: number, name: string): HTMLBut
         globalThis.visible_procs = globalThis.visible_procs.filter((item) => item !== major_step);
       } else {
         if (globalThis.is_editing_mode) {
-          content.style.maxHeight = (content.scrollHeight + 15) + "px";
+          content.style.maxHeight = (content.scrollHeight + 75) + "px";
         }
         else {
           content.style.maxHeight = content.scrollHeight + "px";
