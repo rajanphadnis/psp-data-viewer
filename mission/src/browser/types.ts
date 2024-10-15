@@ -18,6 +18,7 @@ export interface ProcedureStep {
   status: stepStatus;
   status_details: string;
   operators: string[];
+  is_substep: boolean;
   ref_id: string;
 }
 
@@ -27,19 +28,19 @@ export interface SectionHeaders {
 }
 
 export interface SeatingChart {
-  room_name: string,
-  chart: string,
-  ref_id: string,
+  room_name: string;
+  chart: string;
+  ref_id: string;
 }
 
 export interface RoleAssignments {
-  operator: string,
-  name: string,
+  operator: string;
+  name: string;
 }
 
 export interface Roster {
-  operator: string,
-  names: string[],
+  operator: string;
+  names: string[];
 }
 
 export function enum_to_string(to_convert: stepStatus) {
@@ -58,6 +59,31 @@ export function enum_to_string(to_convert: stepStatus) {
       break;
     case stepStatus.WIP:
       to_return = "WIP";
+
+      break;
+
+    default:
+      break;
+  }
+  return to_return;
+}
+
+export function enum_to_icon(to_convert: string) {
+  let to_return = "";
+  switch (to_convert) {
+    case enum_to_string(stepStatus.WRITTEN):
+      to_return = "W";
+      break;
+    case enum_to_string(stepStatus.EDITING):
+      to_return = "E";
+
+      break;
+    case enum_to_string(stepStatus.COMPLETED):
+      to_return = "C";
+
+      break;
+    case enum_to_string(stepStatus.WIP):
+      to_return = "F";
 
       break;
 

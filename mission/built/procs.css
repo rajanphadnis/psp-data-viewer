@@ -1,5 +1,3 @@
-
-
 .major_step_header {
   background-color: #555;
   color: white;
@@ -196,4 +194,36 @@
 
 .procs_input_text_instructions {
   /* width: 200px; */
+}
+
+@media only screen and (max-width: 800px) {
+  #steps {
+    width: 95%;
+    padding-left: 0px;
+    padding-right: 0px;
+    font-size: smaller;
+  }
+  .minor_step_status {
+    min-width: 50px;
+    max-width: 50px;
+    width: 50px;
+  }
+  .minor_step_ops {
+    min-width: 60px;
+    max-width: 60px;
+    width: 60px;
+    overflow: scroll;
+    text-wrap: nowrap;
+    padding-left: 0px;
+    padding-right: 0px;
+    word-spacing: -8px;
+  }
+  .minor_step_number {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+  .minor_step_instructions {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
 }

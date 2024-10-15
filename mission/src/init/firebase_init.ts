@@ -102,6 +102,7 @@ export async function initFirebase() {
       operators: ["DSO 1"],
       status: "WRITTEN",
       status_detials: "by rphadnis",
+      is_substep: true,
     });
     await addDoc(collection(globalThis.db, "9KS7qji/procedures/steps"), {
       active: true,

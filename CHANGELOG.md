@@ -1,3 +1,9 @@
+## v0.4.17
+updated mobile procs css
+
+### Changed
+- bug fixes
+
 ## v0.4.16
 adjusted procs css
 

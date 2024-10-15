@@ -1,0 +1,55 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "runDevelopment",
+      "runOptions": {
+        "runOn": "folderOpen"
+      },
+      "dependsOrder": "parallel",
+      "dependsOn": [
+        "firebase-start",
+        "bun-run-debug-watch"
+      ],
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "firebase-start",
+      "type": "shell",
+      "command": "firebase emulators:start --only hosting,auth,firestore",
+      "presentation": {
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "bun-run-debug-watch",
+      "type": "shell",
+      "command": "bun run debug && bun run debug-watch",
+      "presentation": {
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "bun-patch",
+      "type": "shell",
+      "command": "cd .. & bun run deploy patch '${input:patch-commit-message}'",
+      "presentation": {
+        "panel": "dedicated"
+      },
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "patch-commit-message",
+      "type": "promptString",
+      "description": "Patch changelog (one sentence)"
+    }
+  ]
+}

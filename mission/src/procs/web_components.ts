@@ -1,5 +1,5 @@
 import { delete_icon, delete_icon_dark } from "../browser/icons";
-import { enum_to_string, stepStatus, type ProcedureStep } from "../browser/types";
+import { enum_to_icon, enum_to_string, stepStatus, type ProcedureStep } from "../browser/types";
 import {
   change_status,
   create_step_transaction,
@@ -30,11 +30,9 @@ export function gen_major_step_header(major_step: number, name: string): HTMLBut
         globalThis.visible_procs = globalThis.visible_procs.filter((item) => item !== major_step);
       } else {
         if (globalThis.is_editing_mode) {
-          content.style.maxHeight = (content.scrollHeight + 75) + "px";
-        }
-        else {
+          content.style.maxHeight = content.scrollHeight + 75 + "px";
+        } else {
           content.style.maxHeight = content.scrollHeight + "px";
-
         }
         globalThis.visible_procs.push(major_step);
         globalThis.visible_procs = Array.from(new Set(globalThis.visible_procs));
@@ -114,7 +112,11 @@ function gen_minor_step(step: ProcedureStep, proceeding_steps: ProcedureStep[]):
 
   number_p.innerText = `${step.major_id}.${step.minor_id}`;
   op_p.innerText = step.operators.join(", ");
-  instructions_p.innerText = step.instructions;
+  if (step.is_substep) {
+    instructions_p.innerHTML = `<span style="display:inline-block; width: 15px;"></span><i>${step.instructions}</i>`;
+  } else {
+    instructions_p.innerHTML = step.instructions;
+  }
 
   op_span.appendChild(globalThis.is_editing_mode ? gen_minor_ops_input(step) : op_p);
   left.appendChild(number_p);
@@ -181,6 +183,7 @@ function gen_add_minor_step_button(proceeding_steps: ProcedureStep[], major_id: 
       status: stepStatus.WRITTEN,
       status_details: "",
       operators: ["TC"],
+      is_substep: false,
       ref_id: "",
     };
     let to_update: { [index: string]: string } = {};
@@ -210,7 +213,7 @@ function status_toggle(status: stepStatus, ref: string) {
       button.classList.add("minor_step_status_written");
       break;
   }
-  button.innerText = status.toString();
+  button.innerText = enum_to_icon(status.valueOf().toString());
   if (globalThis.is_authenticated) {
     button.addEventListener("click", (e) => {
       if (status.toString() == enum_to_string(stepStatus.COMPLETED)) {
