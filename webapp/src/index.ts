@@ -20,8 +20,7 @@ import Coloris from "@melloware/coloris";
 declare global {
   var activeDatasets_to_add: string[];
   var activeDatasets_all: string[];
-  var activeDatasets_loading: string[];
-  var activeDatasets_cached: string[];
+  var activeDatasets_loading: string[]; // Need to implement the logic for this
   var activeDatasets_legend_side: number[];
   var test_id: string;
   var db: Firestore;
@@ -34,10 +33,10 @@ declare global {
   var displayedRangeEnd: number;
   var plotPalletteColors: string[];
   var plotDisplayedAxes: string[];
-  var x1: number | null;
-  var x2: number | null;
-  var y1: number[];
-  var y2: number[];
+  var measuringTool_x1: number | null;
+  var measuringTool_x2: number | null;
+  var measuringTool_y1: number[];
+  var measuringTool_y2: number[];
   var measuringToolColor: string;
   var calcChannels: CalcChannel[];
   var calcChannelWindow: number;

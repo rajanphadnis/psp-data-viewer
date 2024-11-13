@@ -16,6 +16,7 @@ export function initGlobalVars() {
   globalThis.roles = [{ operator: "", name: "" }];
   globalThis.roster = [];
   globalThis.currently_displayed_seating_chart = "";
+  globalThis.procs_update_queue = [];
 }
 
 export async function initNavbar() {
@@ -31,7 +32,7 @@ export async function initNavbar() {
   document.getElementById("role-search")!.addEventListener("click", () => {
     if (location.pathname.includes("/procs/")) {
       globalThis.role_search = prompt("What is your role?") ?? "";
-      generate_steps();
+      generate_steps(true);
     }
     if (location.pathname.includes("/seating/")) {
       document.getElementById("roster_modal")!.style.display = "block";

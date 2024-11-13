@@ -51,17 +51,17 @@ export function plot(
 
       draw: [
         (uplot: uPlot) => {
-          if (globalThis.x1 != null || globalThis.x2 != null) {
+          if (globalThis.measuringTool_x1 != null || globalThis.measuringTool_x2 != null) {
             uplot.ctx.save();
 
             uplot.ctx.lineWidth = 2;
 
-            if (globalThis.x1 != null) {
-              drawDatum(uplot, globalThis.x1, globalThis.y1[0], globalThis.measuringToolColor);
+            if (globalThis.measuringTool_x1 != null) {
+              drawDatum(uplot, globalThis.measuringTool_x1, globalThis.measuringTool_y1[0], globalThis.measuringToolColor);
             }
 
-            if (globalThis.x2 != null) {
-              drawDatum(uplot, globalThis.x2, globalThis.y2[0], globalThis.measuringToolColor);
+            if (globalThis.measuringTool_x2 != null) {
+              drawDatum(uplot, globalThis.measuringTool_x2, globalThis.measuringTool_y2[0], globalThis.measuringToolColor);
               updateDeltaText();
             }
 

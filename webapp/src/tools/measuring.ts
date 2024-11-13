@@ -19,7 +19,7 @@ export function drawDatum(u: uPlot, x: number, y: number, color: string) {
 }
 export function updateDeltaText() {
   const deltaDiv = document.getElementById("measurementPopup")! as HTMLDivElement;
-  let stringToWrite = `Δt=${formatTimeDelta((globalThis.x2! - globalThis.x1!) * 1000)}`;
+  let stringToWrite = `Δt=${formatTimeDelta((globalThis.measuringTool_x2! - globalThis.measuringTool_x1!) * 1000)}`;
   let calcChannelCounter = 0;
   for (let i = 0; i < globalThis.plotDisplayedAxes.length; i++) {
     const displayedAxis: string = globalThis.plotDisplayedAxes[i];
@@ -32,7 +32,7 @@ export function updateDeltaText() {
     } else {
       name = globalThis.activeDatasets_to_add[i].split("__")[0];
     }
-    const val = (globalThis.y2[i] - globalThis.y1[i]).toFixed(4);
+    const val = (globalThis.measuringTool_y2[i] - globalThis.measuringTool_y1[i]).toFixed(4);
     if (scaleName != "bin") {
       stringToWrite = stringToWrite + `</br>Δ${name}=${val}${displayedAxis.split("_")[0]}`;
     }
@@ -41,8 +41,8 @@ export function updateDeltaText() {
   deltaDiv.innerHTML = stringToWrite;
 }
 export function clearDatums(u: uPlot): void {
-  globalThis.x1 = globalThis.x2 = null;
-  globalThis.y1 = globalThis.y2 = [];
+  globalThis.measuringTool_x1 = globalThis.measuringTool_x2 = null;
+  globalThis.measuringTool_y1 = globalThis.measuringTool_y2 = [];
   const deltaDiv = document.getElementById("measurementPopup")! as HTMLDivElement;
   deltaDiv.innerHTML = `<a href="https://psp-docs.rajanphadnis.com/docs/webapp/tools/measuring_tool" target="_blank">Documentation${open_in_new_tab_icon}</a>`;
   u.redraw();
@@ -51,10 +51,10 @@ export function clearDatums(u: uPlot): void {
 export function setPoint1() {
   const { left, top } = globalThis.uplot.cursor;
   if (left && top && left >= 0 && top >= 0) {
-    globalThis.x1 = globalThis.uplot.posToVal(left, "x");
-    globalThis.y1 = [];
+    globalThis.measuringTool_x1 = globalThis.uplot.posToVal(left, "x");
+    globalThis.measuringTool_y1 = [];
     globalThis.plotDisplayedAxes.forEach((scale) => {
-      globalThis.y1.push(globalThis.uplot.posToVal(top, scale));
+      globalThis.measuringTool_y1.push(globalThis.uplot.posToVal(top, scale));
     });
     globalThis.uplot.redraw();
   }
@@ -63,10 +63,10 @@ export function setPoint1() {
 export function setPoint2() {
   const { left, top } = globalThis.uplot.cursor;
   if (left && top && left >= 0 && top >= 0) {
-    globalThis.x2 = globalThis.uplot.posToVal(left, "x");
-    globalThis.y2 = [];
+    globalThis.measuringTool_x2 = globalThis.uplot.posToVal(left, "x");
+    globalThis.measuringTool_y2 = [];
     globalThis.plotDisplayedAxes.forEach((scale) => {
-      globalThis.y2.push(globalThis.uplot.posToVal(top, scale));
+      globalThis.measuringTool_y2.push(globalThis.uplot.posToVal(top, scale));
     });
     globalThis.uplot.redraw();
   }

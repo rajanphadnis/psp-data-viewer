@@ -1,0 +1,12 @@
+.datasetSelector {
+  width: 12.5%;
+  max-height: calc(100vh - 100px);
+  overflow: auto;
+  padding-top: 20px;
+  scrollbar-color: white transparent;
+  scrollbar-gutter: stable;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+}

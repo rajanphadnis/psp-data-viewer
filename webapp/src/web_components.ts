@@ -30,13 +30,12 @@ export function initGlobalVariables() {
   globalThis.activeDatasets_to_add = [];
   globalThis.activeDatasets_all = [];
   globalThis.activeDatasets_loading = [];
-  globalThis.activeDatasets_cached = [];
   globalThis.activeDatasets_legend_side = [];
   globalThis.plotDisplayedAxes = [];
-  globalThis.x1 = null;
-  globalThis.x2 = null;
-  globalThis.y1 = [];
-  globalThis.y2 = [];
+  globalThis.measuringTool_x1 = null;
+  globalThis.measuringTool_x2 = null;
+  globalThis.measuringTool_y1 = [];
+  globalThis.measuringTool_y2 = [];
   globalThis.measuringToolColor = getDefaultMeasuringToolColor();
   globalThis.displayedSamples = 4000;
   globalThis.calcChannels = [];

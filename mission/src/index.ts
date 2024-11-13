@@ -29,26 +29,31 @@ declare global {
   var roles: RoleAssignments[];
   var roster: Roster[];
   var currently_displayed_seating_chart: string;
+  var procs_update_queue: string[];
 }
 
-initGlobalVars();
-initFirebase();
-login();
-initNavbar();
-browser_checks();
-initConfirmationModal();
-initRosterModal();
+async function run() {
+  initGlobalVars();
+  await initFirebase();
+  login();
+  initNavbar();
+  browser_checks();
+  initConfirmationModal();
+  initRosterModal();
 
-if (location.pathname.includes("/procs/")) {
-  procs();
-} else {
-  if (location.pathname.includes("/seating/")) {
-    seating();
+  if (location.pathname.includes("/procs/")) {
+    procs();
   } else {
-    if (location.pathname.includes("/login/")) {
-      login();
+    if (location.pathname.includes("/seating/")) {
+      seating();
     } else {
-      home();
+      if (location.pathname.includes("/login/")) {
+        login();
+      } else {
+        home();
+      }
     }
   }
 }
+
+run();

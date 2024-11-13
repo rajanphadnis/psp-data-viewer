@@ -41,3 +41,4 @@ formatter/*.csv
 mission/bun.lockb
 mission/firestore-debug.log
 mission/firebase-debug.log
+webapp_v2/.env.dev

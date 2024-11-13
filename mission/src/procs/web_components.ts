@@ -18,6 +18,7 @@ export function gen_major_step_header(major_step: number, name: string): HTMLBut
   const editing_div: HTMLDivElement = document.createElement("div");
   span.innerHTML = delete_icon;
   span.classList.add("major_step_header_delete_span");
+  button.id = `procs_header_${major_step}`;
 
   p.classList.add("major_step_header_p");
   editing_div.classList.add("major_step_editing_div");
@@ -25,14 +26,19 @@ export function gen_major_step_header(major_step: number, name: string): HTMLBut
     if (ev.target == button || ev.target == p) {
       button.classList.toggle("expanded_major_step");
       var content = button.nextElementSibling! as HTMLDivElement;
-      if (content.style.maxHeight) {
-        content.style.removeProperty("max-height");
+      if (!content.style.maxHeight) {
+        // content.style.removeProperty("max-height");
+        content.style.maxHeight = "0px";
         globalThis.visible_procs = globalThis.visible_procs.filter((item) => item !== major_step);
       } else {
         if (globalThis.is_editing_mode) {
-          content.style.maxHeight = content.scrollHeight + 75 + "px";
+          // content.style.maxHeight = content.scrollHeight + 75 + "px";
+
+          content.style.removeProperty("max-height");
         } else {
-          content.style.maxHeight = content.scrollHeight + "px";
+          // content.style.maxHeight = content.scrollHeight + "px";
+
+          content.style.removeProperty("max-height");
         }
         globalThis.visible_procs.push(major_step);
         globalThis.visible_procs = Array.from(new Set(globalThis.visible_procs));
@@ -80,7 +86,7 @@ export function gen_major_step_content(steps: ProcedureStep[]): HTMLDivElement {
   return main_div;
 }
 
-function gen_minor_step(step: ProcedureStep, proceeding_steps: ProcedureStep[]): HTMLDivElement {
+export function gen_minor_step(step: ProcedureStep, proceeding_steps: ProcedureStep[]): HTMLDivElement {
   const main: HTMLDivElement = document.createElement("div");
   const left: HTMLDivElement = document.createElement("div");
   const right: HTMLDivElement = document.createElement("div");

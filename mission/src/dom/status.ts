@@ -16,3 +16,12 @@ export function updateStatus(status: loadingStatus, message: string = "Ready") {
     document.getElementById("statusMessage")!.innerHTML = message;
   }
 }
+
+export function procs_step_exists(ref_id: string): boolean | HTMLDivElement {
+  const elem = document.getElementById(ref_id);
+  if (elem) {
+    return elem as HTMLDivElement;
+  } else {
+    return false;
+  }
+}

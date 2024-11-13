@@ -1,0 +1,21 @@
+.datasetButton {
+  width: 100%;
+  padding: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  color: rgb(143, 143, 143);
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-right: 5px;
+  background-color: var(--background-color);
+  border: none;
+  cursor: pointer;
+  font-family: "IBM Plex Mono", monospace;
+}
+
+.datasetButton:hover {
+    background-color: var(--cool-gray);
+    color: white;
+}

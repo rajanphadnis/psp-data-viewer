@@ -33,7 +33,7 @@ export function updateLockouts() {
   }
 
   if (location.pathname.includes("/procs/")) {
-    generate_steps();
+    generate_steps(true);
   }
   if (location.pathname.includes("/seating/") && globalThis.currently_selected_seating_chart) {
     draw_chart();

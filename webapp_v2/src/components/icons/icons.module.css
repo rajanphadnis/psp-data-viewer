@@ -1,0 +1,16 @@
+.check {
+  fill: greenyellow;
+  width: 20px;
+}
+
+.settings {
+  fill: black;
+  width: 18px;
+  padding: 4px;
+}
+
+.swap {
+  fill: black;
+  width: 15px;
+  padding: 5px;
+}
