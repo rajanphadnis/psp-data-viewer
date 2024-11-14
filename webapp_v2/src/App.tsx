@@ -33,13 +33,13 @@ const App: Component = (params) => {
     setSitePreferences,
     { addDataset, updateDataset, removeDataset },
   ]: any = useState();
-  const ctxt: any = useState();
+  // const ctxt: any = useState();
   // let testBasics = ctxt.testBasics();
   onMount(async () => {
     // Contact the Firestore database and get the default test data
     await getGeneralTestInfo(useParams().testID, setAllKnownTests, setTestBasics, testBasics);
     await getTestInfo(testBasics().id, setTestBasics, setPlotRange);
-    const ctx: any = useState();
+    // const ctx: any = useState();
     loadFromShareLink(testBasics, setPlotRange, setDatasetsLegendSide, setActiveDatasets);
     setLoadingState({ isLoading: false, statusMessage: "" });
     setAppReadyState(true);
@@ -66,7 +66,7 @@ const App: Component = (params) => {
         axesSets: axesSets,
       });
       setLoadingState({ isLoading: true, statusMessage: "Diffing..." });
-      await eventLoop(start, end, datasets, test_id, legend_sides, plotColors, displayed_samples, axesSets, ctxt);
+      await eventLoop(start, end, datasets, test_id, legend_sides, plotColors, displayed_samples, axesSets, setLoadingState, setPlotRange, testBasics, activeDatasets);
       setLoadingState({ isLoading: false, statusMessage: "" });
     } else {
       console.log("app not ready");

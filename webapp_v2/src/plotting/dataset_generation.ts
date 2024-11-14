@@ -1,9 +1,10 @@
 import { getSensorData } from "../db/db_interaction";
 import { generateAxisAndSeries } from "./axes_series_generation";
-import type { DatasetSeries } from "../types";
+import type { DatasetSeries, LoadingStateType } from "../types";
 // import { cacheFetchedData } from "../caching";
 // import { setLoadingState, testBasics } from "..";
 import { cacheFetchedData } from "../browser/caching";
+import { Setter } from "solid-js";
 
 export async function generatePlottedDatasets(
   datasets: string[],
@@ -13,7 +14,7 @@ export async function generatePlottedDatasets(
   dataset_legend_side: number[],
   plotColors: string[],
   displayedSamples: number,
-  context: any,
+  setLoadingState: Setter<LoadingStateType>
 ): Promise<[number[][], ({} | DatasetSeries)[]]> {
   let channelsToFetch: Map<string, number> = new Map();
   let toPlot: number[][] = new Array(datasets.length).fill([]);
@@ -45,7 +46,7 @@ export async function generatePlottedDatasets(
     return [toPlot_toReturn, series_toReturn];
   }
   console.log("fetching channels from database: " + need_to_fetch.toString());
-  context.setLoadingState({ isLoading: true, statusMessage: "Fetching..." });
+  setLoadingState({ isLoading: true, statusMessage: "Fetching..." });
   const [toPlot_fetched, series_fetched] = await getSensorData(
     need_to_fetch,
     startTimestamp,
@@ -62,7 +63,7 @@ export async function generatePlottedDatasets(
   }
   let toPlot_toReturn = [toPlot_fetched[toPlot_fetched.length - 1], ...toPlot];
   let series_toReturn = [{}, ...series];
-  context.setLoadingState({ isLoading: true, statusMessage: "Caching..." });
+  setLoadingState({ isLoading: true, statusMessage: "Caching..." });
   cacheFetchedData(toPlot_fetched, [...need_to_fetch, "time"], startTimestamp, endTimestamp, test_id, datasets, dataset_legend_side);
   return [toPlot_toReturn, series_toReturn];
 }

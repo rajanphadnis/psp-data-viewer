@@ -1,5 +1,3 @@
-import { plotPalletteColors } from ".";
-
 export const pspColors = {
   "night-sky": "#252526",
   rush: "#DAAA00",

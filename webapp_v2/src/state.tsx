@@ -61,7 +61,7 @@ export function AppStateProvider(props: any) {
         setActiveDatasets((prev) => [...prev, dataset]);
         setDatasetsLegendSide((prev) => [...prev, 1]);
         setAppReadyState(true);
-        setLoadingState({ isLoading: false, statusMessage: "" });
+        // setLoadingState({ isLoading: false, statusMessage: "" });
       },
       updateDataset(dataset: string) {
         setLoadingState({ isLoading: true, statusMessage: "Plotting..." });
@@ -78,7 +78,7 @@ export function AppStateProvider(props: any) {
             return prev;
           });
         }
-        setLoadingState({ isLoading: false, statusMessage: "" });
+        // setLoadingState({ isLoading: false, statusMessage: "" });
       },
       removeDataset(dataset: string) {
         setLoadingState({ isLoading: true, statusMessage: "Plotting..." });
@@ -87,7 +87,7 @@ export function AppStateProvider(props: any) {
           activeDatasets().splice(removeIndex, 1);
           datasetsLegendSide().splice(removeIndex, 1);
         }
-        setLoadingState({ isLoading: false, statusMessage: "" });
+        // setLoadingState({ isLoading: false, statusMessage: "" });
       },
     },
   ];

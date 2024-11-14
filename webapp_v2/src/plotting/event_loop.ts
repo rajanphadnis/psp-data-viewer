@@ -1,9 +1,9 @@
 import { AlignedData } from "uplot";
 import { storeActiveDatasets } from "../browser/caching";
-import { DatasetSeries } from "../types";
+import { DatasetSeries, LoadingStateType, PlotRange, TestBasics } from "../types";
 import { generatePlottedDatasets } from "./dataset_generation";
 import { plot } from "./plotting_helpers";
-import { createEffect } from "solid-js";
+import { Accessor, createEffect, Setter } from "solid-js";
 // import { useCounter } from "../App";
 
 // export async function update() {
@@ -19,7 +19,10 @@ export async function eventLoop(
   plotColors: string[],
   displayed_samples: number,
   axesSets: number,
-  context: any,
+  setLoadingState: Setter<LoadingStateType>,
+  setPlotRange: Setter<PlotRange>,
+  testBasics: Accessor<TestBasics>,
+  activeDatasets: Accessor<string[]>,
 ) {
   const [generated_toPlot, generated_series] = await generatePlottedDatasets(
     datasets,
@@ -29,10 +32,10 @@ export async function eventLoop(
     legend_sides,
     plotColors,
     displayed_samples,
-    context,
+    setLoadingState,
   );
   storeActiveDatasets(generated_toPlot, datasets);
-  plot(generated_toPlot as AlignedData, generated_series, axesSets);
+  plot(generated_toPlot as AlignedData, generated_series, axesSets, setPlotRange, testBasics, activeDatasets);
   // setLoadingState({ isLoading: true, statusMessage: "Diffing..." });
   // const [activeDatasets, setActiveDatasets, { buttonClickHandler }]: any = useCounter();
   // const [toPlot, series] = runCalcsEngine(generated_toPlot, generated_series);

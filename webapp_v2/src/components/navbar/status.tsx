@@ -1,4 +1,4 @@
-import { Component, Show } from "solid-js";
+import { Component, createEffect, Show } from "solid-js";
 import styles from "./navbar.module.css";
 import CheckIcon from "../icons/check";
 import { useState } from "../../state";
@@ -25,16 +25,15 @@ const Status: Component<{}> = (props) => {
     setSitePreferences,
     { addDataset, updateDataset, removeDataset },
   ]: any = useState();
+
+  createEffect(() => {
+    console.log(loadingState());
+  });
+
   return (
     <div class={styles.status}>
       <p class={styles.statusMessage}>{loadingState().isLoading ? loadingState().statusMessage : "Ready"}</p>
-      <Show
-        when={loadingState().isLoading}
-        fallback={
-        // <span class={`material-symbols-outlined ${styles.green_check}`}>done</span>
-        <CheckIcon/>
-      }
-      >
+      <Show when={loadingState().isLoading} fallback={<CheckIcon />}>
         <div class={styles.loader}></div>
       </Show>
     </div>
