@@ -61,24 +61,24 @@ export function AppStateProvider(props: any) {
         setActiveDatasets((prev) => [...prev, dataset]);
         setDatasetsLegendSide((prev) => [...prev, 1]);
         setAppReadyState(true);
-        // setLoadingState({ isLoading: false, statusMessage: "" });
       },
       updateDataset(dataset: string) {
         setLoadingState({ isLoading: true, statusMessage: "Updating..." });
         const updateIndex = activeDatasets().indexOf(dataset, 0);
         const currentAxis = datasetsLegendSide()[updateIndex];
+        setAppReadyState(false);
         if (currentAxis == sitePreferences().axesSets) {
           setDatasetsLegendSide((prev) => {
             prev[updateIndex] = 1;
-            return prev;
+            return [...prev];
           });
         } else {
           setDatasetsLegendSide((prev) => {
             prev[updateIndex] = prev[updateIndex] + 1;
-            return prev;
+            return [...prev];
           });
         }
-        // setLoadingState({ isLoading: false, statusMessage: "" });
+        setAppReadyState(true);
       },
       removeDataset(dataset: string) {
         setLoadingState({ isLoading: true, statusMessage: "Removing..." });
@@ -107,13 +107,3 @@ export function AppStateProvider(props: any) {
 export function useState() {
   return useContext(AppStateContext);
 }
-
-// export function getState(): [(Accessor<string[]> | Setter<string[]>)[] | (Accessor<boolean> | Setter<boolean>)[]] {
-//   const context: any = useState();
-//   const act: Accessor<string[]> = context.activeDatasets;
-//   const setAct: Setter<string[]> = context.setActiveDatasets;
-//   const ready: Accessor<boolean> = context.appReadyState;
-//   const setReady: Setter<boolean> = context.setAppReadyState;
-
-//   return [act, setAct, ready, setReady];
-// }
