@@ -19,3 +19,51 @@
     background-color: var(--cool-gray);
     color: white;
 }
+
+.datasetDiv {
+  width: 100%;
+  padding: 0px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  color: white;
+  align-items: center;
+}
+
+.datasetLabelDiv {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+}
+
+.datasetLabelDiv p {
+  margin: 0px;
+}
+
+.colorPicker {
+  width: 1em;
+  height: 1em;
+  border: none;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.removeButton {
+  padding: 0px;
+  background-color: var(--rush);
+  border: none;
+  height: fit-content;
+  cursor: pointer;
+
+}
+
+.removeButton:hover {
+ background-color: var(--aged);
+}
+
+.label {
+  font-stretch: condensed;
+}

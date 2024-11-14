@@ -65,12 +65,18 @@ const App: Component = (params) => {
         displayed_samples: displayed_samples,
         axesSets: axesSets,
       });
-      setLoadingState({ isLoading: true, statusMessage: "Diffing..." });
+      setLoadingState({ isLoading: true, statusMessage: "Generating..." });
       await eventLoop(start, end, datasets, test_id, legend_sides, plotColors, displayed_samples, axesSets, setLoadingState, setPlotRange, testBasics, activeDatasets);
       setLoadingState({ isLoading: false, statusMessage: "" });
     } else {
-      console.log("app not ready");
+      console.log("app not ready:");
+      console.log(activeDatasets())
     }
+  });
+
+  createEffect(() => {
+    console.log("Effect:")
+    console.log(activeDatasets());
   });
 
   return (

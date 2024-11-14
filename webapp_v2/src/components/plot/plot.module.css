@@ -1,5 +1,5 @@
 .plot {
-  width: 87.5%;
+  width: 85%;
   margin-left: auto;
   margin-right: auto;
   /* padding-left: auto;
@@ -11,7 +11,7 @@
 }
 
 .plotOverlayDiv {
-  width: 87.5%;
+  width: 85%;
   margin-left: auto;
   margin-right: auto;
   position: fixed;

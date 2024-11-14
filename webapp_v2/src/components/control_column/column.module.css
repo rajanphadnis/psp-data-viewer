@@ -1,5 +1,5 @@
 .datasetSelector {
-  width: 12.5%;
+  width: 15%;
   max-height: calc(100vh - 100px);
   overflow: auto;
   padding-top: 20px;
@@ -9,4 +9,8 @@
   flex-direction: column;
   justify-content: start;
   align-items: center;
+}
+
+.hr {
+  width: calc(100% - 10px);
 }

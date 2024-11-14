@@ -56,7 +56,7 @@ export function AppStateProvider(props: any) {
     setSitePreferences,
     {
       addDataset(dataset: string) {
-        setLoadingState({ isLoading: true, statusMessage: "Plotting..." });
+        setLoadingState({ isLoading: true, statusMessage: "Adding..." });
         setAppReadyState(false);
         setActiveDatasets((prev) => [...prev, dataset]);
         setDatasetsLegendSide((prev) => [...prev, 1]);
@@ -64,7 +64,7 @@ export function AppStateProvider(props: any) {
         // setLoadingState({ isLoading: false, statusMessage: "" });
       },
       updateDataset(dataset: string) {
-        setLoadingState({ isLoading: true, statusMessage: "Plotting..." });
+        setLoadingState({ isLoading: true, statusMessage: "Updating..." });
         const updateIndex = activeDatasets().indexOf(dataset, 0);
         const currentAxis = datasetsLegendSide()[updateIndex];
         if (currentAxis == sitePreferences().axesSets) {
@@ -81,13 +81,22 @@ export function AppStateProvider(props: any) {
         // setLoadingState({ isLoading: false, statusMessage: "" });
       },
       removeDataset(dataset: string) {
-        setLoadingState({ isLoading: true, statusMessage: "Plotting..." });
-        const removeIndex = activeDatasets().indexOf(dataset, 0);
+        setLoadingState({ isLoading: true, statusMessage: "Removing..." });
+        const removeIndex = activeDatasets().indexOf(dataset);
         if (removeIndex > -1) {
-          activeDatasets().splice(removeIndex, 1);
-          datasetsLegendSide().splice(removeIndex, 1);
+          setAppReadyState(false);
+          setActiveDatasets((prev) => {
+            const newDatasets = prev;
+            newDatasets.splice(removeIndex, 1);
+            return [...newDatasets];
+          });
+          setDatasetsLegendSide((prev) => {
+            const newLegendSide = datasetsLegendSide();
+            newLegendSide.splice(removeIndex, 1);
+            return [...newLegendSide];
+          });
+          setAppReadyState(true);
         }
-        // setLoadingState({ isLoading: false, statusMessage: "" });
       },
     },
   ];
