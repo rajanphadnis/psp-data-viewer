@@ -28,6 +28,9 @@ const ControlColumn: Component<{}> = (props) => {
   ]: any = useState();
   return (
     <div class={styles.datasetSelector}>
+      <div class={styles.titleDiv}>
+        <h3 class={styles.title}>Datasets:</h3>
+      </div>
       <For each={activeDatasets()}>
         {(item, index) => (
           // rendering logic for each element
@@ -35,7 +38,7 @@ const ControlColumn: Component<{}> = (props) => {
         )}
       </For>
       <Show when={activeDatasets().length > 0}>
-        <hr class={styles.hr}/>
+        <hr class={styles.hr} />
       </Show>
       <For
         each={
