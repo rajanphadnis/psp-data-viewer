@@ -1,10 +1,9 @@
-import { Accessor, Component, Show } from "solid-js";
+import { Component, Show } from "solid-js";
 import styles from "./navbar.module.css";
 import layout from "../../layout.module.css";
 import SwitchTestButton from "./switch_test";
 import SettingsButton from "./settings_button";
 import { useState } from "../../state";
-import { TestBasics } from "../../types";
 
 const NavBarTitle: Component<{ id: string; name: string; test_article: string; gse_article: string }> = (props) => {
   // : Component<{ children: any; testBasics: Accessor<TestBasics>; }>

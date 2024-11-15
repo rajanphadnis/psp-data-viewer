@@ -33,3 +33,18 @@
   width: 5px;
   fill: white;
 }
+
+.copy {
+  width: 15px;
+  fill: black;
+}
+
+.download {
+  width: 15px;
+  fill: black;
+}
+
+.csv {
+  width: 15px;
+  fill: black;
+}

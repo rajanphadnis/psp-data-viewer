@@ -1,0 +1,28 @@
+.button {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  padding: 5px;
+  background-color: var(--rush);
+  border: none;
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+
+.button:hover {
+  background-color: var(--field);
+}
+
+.icon {
+  padding: 5px;
+  margin-right: 5px;
+  padding-bottom: 2px;
+}
+
+.buttonTitle {
+  margin: 0px;
+  color: black;
+  font-weight: bold;
+}
