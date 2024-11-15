@@ -22,7 +22,7 @@ const DatasetListSelector: Component<{ dataset_id: string }> = (props) => {
     setPlotPalletteColors,
     sitePreferences,
     setSitePreferences,
-    { addDataset, updateDataset, removeDataset },
+    { addDataset, updateDataset, removeDataset, updateColor },
   ]: any = useState();
   return (
     <button

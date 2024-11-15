@@ -26,7 +26,7 @@ const NavBar: Component<{}> = () => {
     setPlotPalletteColors,
     sitePreferences,
     setSitePreferences,
-    { addDataset, updateDataset, removeDataset },
+    { addDataset, updateDataset, removeDataset, updateColor },
   ]: any = useState();
   return (
     <div class={styles.navBar}>

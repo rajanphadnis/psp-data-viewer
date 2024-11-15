@@ -23,7 +23,7 @@ const Plot: Component<{}> = (props) => {
     setPlotPalletteColors,
     sitePreferences,
     setSitePreferences,
-    { addDataset, updateDataset, removeDataset },
+    { addDataset, updateDataset, removeDataset, updateColor },
   ]: any = useState();
   createEffect(() => {
     console.log(activeDatasets().length == 0)

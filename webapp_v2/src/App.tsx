@@ -31,7 +31,7 @@ const App: Component = (params) => {
     setPlotPalletteColors,
     sitePreferences,
     setSitePreferences,
-    { addDataset, updateDataset, removeDataset },
+    { addDataset, updateDataset, removeDataset, updateColor },
   ]: any = useState();
   // const ctxt: any = useState();
   // let testBasics = ctxt.testBasics();

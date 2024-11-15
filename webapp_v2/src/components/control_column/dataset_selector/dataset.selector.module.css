@@ -16,8 +16,8 @@
 }
 
 .datasetButton:hover {
-    background-color: var(--cool-gray);
-    color: white;
+  background-color: var(--cool-gray);
+  color: white;
 }
 
 .datasetDiv {
@@ -42,17 +42,15 @@
 .legendSelector {
   margin: 0px;
   background-color: transparent;
-  border: none;
+  border: 1px solid white;
   cursor: pointer;
   color: white;
-}
-
-.colorPicker {
-  width: 1.5em;
-  height: 1.5em;
-  border: none;
-  cursor: pointer;
-  margin-right: 5px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 3px;
+  border-radius: 10px;
 }
 
 .removeButton {
@@ -61,11 +59,10 @@
   border: none;
   height: fit-content;
   cursor: pointer;
-
 }
 
 .removeButton:hover {
- background-color: var(--aged);
+  background-color: var(--aged);
 }
 
 .label {
@@ -73,4 +70,13 @@
   font-size: smaller;
   margin: 0px;
   margin-left: 5px;
+}
+
+.iconDiv {
+  margin: 0px;
+  padding: 0px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }

@@ -24,7 +24,7 @@ const ControlColumn: Component<{}> = (props) => {
     setPlotPalletteColors,
     sitePreferences,
     setSitePreferences,
-    { addDataset, updateDataset, removeDataset },
+    { addDataset, updateDataset, removeDataset, updateColor },
   ]: any = useState();
   return (
     <div class={styles.datasetSelector}>

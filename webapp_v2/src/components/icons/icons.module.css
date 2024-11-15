@@ -23,3 +23,13 @@
   padding-left: 5px;
   padding-right: 5px;
 }
+
+.chevron {
+  width: 7px;
+  fill: white;
+}
+
+.chart {
+  width: 5px;
+  fill: white;
+}

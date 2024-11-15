@@ -23,7 +23,7 @@ const Status: Component<{}> = (props) => {
     setPlotPalletteColors,
     sitePreferences,
     setSitePreferences,
-    { addDataset, updateDataset, removeDataset },
+    { addDataset, updateDataset, removeDataset, updateColor },
   ]: any = useState();
 
   createEffect(() => {

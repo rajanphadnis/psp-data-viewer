@@ -98,6 +98,14 @@ export function AppStateProvider(props: any) {
           setAppReadyState(true);
         }
       },
+      updateColor(dataset: string, color: string) {
+        setAppReadyState(false);
+        const index = activeDatasets().indexOf(dataset);
+        const listOfColors = [...plotPalletteColors()];
+        listOfColors[index] = color;
+        setPlotPalletteColors([...listOfColors]);
+        setAppReadyState(true);
+      },
     },
   ];
 

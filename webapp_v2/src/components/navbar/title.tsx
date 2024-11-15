@@ -28,7 +28,7 @@ const NavBarTitle: Component<{ id: string; name: string; test_article: string; g
     setPlotPalletteColors,
     sitePreferences,
     setSitePreferences,
-    { addDataset, updateDataset, removeDataset },
+    { addDataset, updateDataset, removeDataset, updateColor },
   ]: any = useState();
   return (
     <div class={layout.flexRowStart} style="justify-content: start;">
