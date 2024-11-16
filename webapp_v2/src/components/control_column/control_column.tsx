@@ -8,7 +8,8 @@ import { makePersisted } from "@solid-primitives/storage";
 import ToolCopyImage from "./tools/copy_image";
 import ToolDownloadImage from "./tools/download_image";
 import ToolDownloadCSV from "./tools/download_csv";
-import Popover from '@corvu/popover'
+import Popover from "@corvu/popover";
+import ToolMeasure from "./tools/measure";
 
 const ControlColumn: Component<{}> = (props) => {
   const [
@@ -30,6 +31,10 @@ const ControlColumn: Component<{}> = (props) => {
     setPlotPalletteColors,
     sitePreferences,
     setSitePreferences,
+    loadingDatasets,
+    setLoadingDatasets,
+    measuring,
+    setMeasuring,
     { addDataset, updateDataset, removeDataset, updateColor },
   ]: any = useState();
   const [sizes, setSizes] = makePersisted(createSignal<number[]>([]), {
@@ -69,23 +74,12 @@ const ControlColumn: Component<{}> = (props) => {
         <div class={styles.titleDiv}>
           <h3 class={styles.title}>Tools:</h3>
         </div>
-        <ToolCopyImage />
-        <ToolDownloadImage />
-        <ToolDownloadCSV />
-        {/* <Popover>
-<Popover.Anchor>
-  <Popover.Trigger />
-</Popover.Anchor>
-<Popover.Portal>
-  <Popover.Overlay />
-  <Popover.Content>
-    <Popover.Arrow />
-    <Popover.Close />
-    <Popover.Label />
-    <Popover.Description />
-  </Popover.Content>
-</Popover.Portal>
-</Popover> */}
+        <Show when={activeDatasets().length > 0} fallback={<p>No data plotted yet.</p>}>
+          <ToolCopyImage />
+          <ToolDownloadImage />
+          <ToolDownloadCSV />
+          <ToolMeasure />
+        </Show>
       </Resizable.Panel>
     </Resizable>
   );

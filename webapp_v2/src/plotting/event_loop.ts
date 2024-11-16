@@ -1,6 +1,6 @@
 import { AlignedData } from "uplot";
 import { storeActiveDatasets } from "../browser/caching";
-import { DatasetSeries, LoadingStateType, PlotRange, TestBasics } from "../types";
+import { DatasetSeries, LoadingStateType, MeasureData, PlotRange, TestBasics } from "../types";
 import { generatePlottedDatasets } from "./dataset_generation";
 import { plot } from "./plotting_helpers";
 import { Accessor, createEffect, Setter } from "solid-js";
@@ -23,6 +23,8 @@ export async function eventLoop(
   setPlotRange: Setter<PlotRange>,
   testBasics: Accessor<TestBasics>,
   activeDatasets: Accessor<string[]>,
+  measuring: Accessor<MeasureData>,
+  setMeasurement: Setter<MeasureData>
 ) {
   const [generated_toPlot, generated_series] = await generatePlottedDatasets(
     datasets,
@@ -32,17 +34,28 @@ export async function eventLoop(
     legend_sides,
     plotColors,
     displayed_samples,
-    setLoadingState,
+    setLoadingState
   );
   storeActiveDatasets(generated_toPlot, datasets);
-  plot(generated_toPlot as AlignedData, generated_series, axesSets, setPlotRange, testBasics, activeDatasets);
+  const displayedAxes = generated_series.slice(1).map((s, i) => {
+    const thing = s as DatasetSeries;
+    return thing.scale;
+  });
+  plot(
+    generated_toPlot as AlignedData,
+    generated_series,
+    axesSets,
+    setPlotRange,
+    testBasics,
+    activeDatasets,
+    measuring,
+    displayedAxes,
+    setMeasurement,
+    legend_sides,
+  );
   // setLoadingState({ isLoading: true, statusMessage: "Diffing..." });
   // const [activeDatasets, setActiveDatasets, { buttonClickHandler }]: any = useCounter();
   // const [toPlot, series] = runCalcsEngine(generated_toPlot, generated_series);
-  // globalThis.plotDisplayedAxes = generated_series.slice(1).map((s, i) => {
-  //   const thing = s as DatasetSeries;
-  //   return thing.scale;
-  // });
 
   // if (toPlot.length > 1) {
   //   // Save dT to global variable

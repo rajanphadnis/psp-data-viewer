@@ -23,12 +23,12 @@ const Status: Component<{}> = (props) => {
     setPlotPalletteColors,
     sitePreferences,
     setSitePreferences,
+    loadingDatasets,
+    setLoadingDatasets,
+    measuring,
+    setMeasuring,
     { addDataset, updateDataset, removeDataset, updateColor },
   ]: any = useState();
-
-  createEffect(() => {
-    console.log(loadingState());
-  });
 
   return (
     <div class={styles.status}>

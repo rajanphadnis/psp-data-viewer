@@ -1,9 +1,8 @@
 import uPlot, { type AlignedData, type Options } from "uplot";
-// import { update } from "./main";
 import { DateTime } from "luxon";
-import { DatasetAxis, PlotRange, TestBasics } from "../types";
+import { DatasetAxis, MeasureData, PlotRange, TestBasics } from "../types";
 import { Accessor, Setter } from "solid-js";
-// import { update } from "./update";
+import { clearDatums, setPoint1, setPoint2 } from "../browser/measure";
 
 export function legendRound(val: any, suffix: string, precision: number = 2) {
   if (val == null || val == undefined || val == "null") {
@@ -30,11 +29,13 @@ export function plot(
       }
   )[],
   axes_sets: number,
-  // start_time: number,
-  // end_time: number,
   setPlotRange: Setter<PlotRange>,
   testBasics: Accessor<TestBasics>,
-  activeDatasets: Accessor<string[]>
+  activeDatasets: Accessor<string[]>,
+  measuring: Accessor<MeasureData>,
+  displayedAxes: string[],
+  setMeasuring: Setter<MeasureData>,
+  datasetsLegendSide: number[]
 ) {
   const axes = generateAllAxes(axes_sets);
   let opts = {
@@ -57,18 +58,46 @@ export function plot(
 
       draw: [
         (uplot: uPlot) => {
-          // if (globalThis.measuringTool_x1 != null || globalThis.measuringTool_x2 != null) {
-          //   uplot.ctx.save();
-          //   uplot.ctx.lineWidth = 2;
-          // if (globalThis.measuringTool_x1 != null) {
-          //   drawDatum(uplot, globalThis.measuringTool_x1, globalThis.measuringTool_y1[0], globalThis.measuringToolColor);
-          // }
-          // if (globalThis.measuringTool_x2 != null) {
-          //   drawDatum(uplot, globalThis.measuringTool_x2, globalThis.measuringTool_y2[0], globalThis.measuringToolColor);
-          //   updateDeltaText();
-          // }
-          //   uplot.ctx.restore();
-          // }
+          if (measuring().x1 != undefined || measuring().x2 != undefined) {
+            uplot.ctx.save();
+            uplot.ctx.lineWidth = 2;
+            if (measuring().x1 != undefined) {
+              let cx = uplot.valToPos(measuring().x1!, "x", true);
+              let cy = uplot.valToPos(measuring().y1[0], displayedAxes[0], true);
+              let rad = 10;
+
+              uplot.ctx.strokeStyle = measuring().toolColor;
+              uplot.ctx.beginPath();
+
+              uplot.ctx.arc(cx, cy, rad, 0, 2 * Math.PI);
+
+              uplot.ctx.moveTo(cx - rad - 5, cy);
+              uplot.ctx.lineTo(cx + rad + 5, cy);
+              uplot.ctx.moveTo(cx, cy - rad - 5);
+              uplot.ctx.lineTo(cx, cy + rad + 5);
+
+              uplot.ctx.stroke();
+            }
+            if (measuring().x2 != undefined) {
+              let cx = uplot.valToPos(measuring().x2!, "x", true);
+              let cy = uplot.valToPos(measuring().y2[0], displayedAxes[0], true);
+              let rad = 10;
+
+              uplot.ctx.strokeStyle = measuring().toolColor;
+              uplot.ctx.beginPath();
+
+              uplot.ctx.arc(cx, cy, rad, 0, 2 * Math.PI);
+
+              uplot.ctx.moveTo(cx - rad - 5, cy);
+              uplot.ctx.lineTo(cx + rad + 5, cy);
+              uplot.ctx.moveTo(cx, cy - rad - 5);
+              uplot.ctx.lineTo(cx, cy + rad + 5);
+
+              uplot.ctx.stroke();
+              // updateDeltaText();
+            }
+            uplot.ctx.restore();
+          }
         },
       ],
       setSelect: [
@@ -100,25 +129,28 @@ export function plot(
     },
   };
   const plotDiv = document.getElementById("plot")! as HTMLDivElement;
-  // plotDiv.innerHTML = "";
   const plotDivs = document.getElementsByClassName("uplot");
   if (plotDivs.length > 0) {
     plotDivs[0].remove();
   }
-  // if (activeDatasets().length == 0) {
-  // } 
-  // else {
-    globalThis.uplot = new uPlot(opts as unknown as Options, toPlot, plotDiv);
-    window.addEventListener("resize", (e) => {
-      globalThis.uplot.setSize(getSize());
-    });
-  // }
-  // const overlayDiv = document.getElementById("plotOverlayDiv")! as HTMLDivElement;
-  // if (toPlot.length == 0) {
-  //   overlayDiv.style.display = "flex";
-  // } else {
-  //   overlayDiv.style.display = "none";
-  // }
+  let u = new uPlot(opts as unknown as Options, toPlot, plotDiv);
+  globalThis.uplot = u;
+  window.addEventListener("resize", (e) => {
+    globalThis.uplot.setSize(getSize());
+  });
+
+  window.addEventListener("keydown", (e) => {
+    if (e && e.key == "1") {
+      setPoint1(activeDatasets(), measuring, setMeasuring, datasetsLegendSide);
+    }
+    if (e && e.key == "2") {
+      setPoint2(activeDatasets(), measuring, setMeasuring, datasetsLegendSide);
+    }
+    if (e && e.key == "Escape") {
+      clearDatums(measuring, setMeasuring);
+    }
+  });
+
 }
 
 function getSize() {

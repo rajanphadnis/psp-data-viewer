@@ -27,6 +27,10 @@ const NavBarTitle: Component<{ id: string; name: string; test_article: string; g
     setPlotPalletteColors,
     sitePreferences,
     setSitePreferences,
+    loadingDatasets,
+    setLoadingDatasets,
+    measuring,
+    setMeasuring,
     { addDataset, updateDataset, removeDataset, updateColor },
   ]: any = useState();
   return (

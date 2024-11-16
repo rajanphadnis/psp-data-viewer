@@ -1,3 +1,17 @@
+export type SingleMeasurement = {
+  name: string;
+  units: string;
+  measurement: string;
+}
+
+export type MeasureData = {
+  x1: number | undefined;
+  x2: number | undefined;
+  y1: number[];
+  y2: number[];
+  toolColor: string;
+}
+
 export type TestBasics = {
   id: string;
   name: string;

@@ -23,11 +23,12 @@ const Plot: Component<{}> = (props) => {
     setPlotPalletteColors,
     sitePreferences,
     setSitePreferences,
+    loadingDatasets,
+    setLoadingDatasets,
+    measuring,
+    setMeasuring,
     { addDataset, updateDataset, removeDataset, updateColor },
   ]: any = useState();
-  createEffect(() => {
-    console.log(activeDatasets().length == 0)
-  });
   return (
     <div class={styles.plot} id="plot">
       <Show when={activeDatasets().length == 0}>

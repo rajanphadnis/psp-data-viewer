@@ -26,6 +26,10 @@ const NavBar: Component<{}> = () => {
     setPlotPalletteColors,
     sitePreferences,
     setSitePreferences,
+    loadingDatasets,
+    setLoadingDatasets,
+    measuring,
+    setMeasuring,
     { addDataset, updateDataset, removeDataset, updateColor },
   ]: any = useState();
   return (

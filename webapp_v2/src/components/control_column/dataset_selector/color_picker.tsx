@@ -24,6 +24,10 @@ const ColorPicker: Component<{ dataset_id: string }> = (props) => {
     setPlotPalletteColors,
     sitePreferences,
     setSitePreferences,
+    loadingDatasets,
+    setLoadingDatasets,
+    measuring,
+    setMeasuring,
     { addDataset, updateDataset, removeDataset, updateColor },
   ]: any = useState();
   const [isOpen, toggle] = createSignal<boolean>(false);

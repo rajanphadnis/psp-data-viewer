@@ -9,7 +9,7 @@ import ControlColumn from "./components/control_column/control_column";
 import { loadFromShareLink } from "./browser/sharelink";
 import { useState } from "./state";
 import { eventLoop } from "./plotting/event_loop";
-import NavBarTitle from "./components/navbar/title";
+import { clearDatums, setPoint1, setPoint2 } from "./browser/measure";
 
 const App: Component = (params) => {
   const [
@@ -31,18 +31,35 @@ const App: Component = (params) => {
     setPlotPalletteColors,
     sitePreferences,
     setSitePreferences,
+    loadingDatasets,
+    setLoadingDatasets,
+    measuring,
+    setMeasuring,
     { addDataset, updateDataset, removeDataset, updateColor },
   ]: any = useState();
-  // const ctxt: any = useState();
-  // let testBasics = ctxt.testBasics();
   onMount(async () => {
     // Contact the Firestore database and get the default test data
     await getGeneralTestInfo(useParams().testID, setAllKnownTests, setTestBasics, testBasics);
     await getTestInfo(testBasics().id, setTestBasics, setPlotRange);
-    // const ctx: any = useState();
     loadFromShareLink(testBasics, setPlotRange, setDatasetsLegendSide, setActiveDatasets);
     setLoadingState({ isLoading: false, statusMessage: "" });
     setAppReadyState(true);
+    // window.addEventListener("keydown", (e) => {
+    //   if (e && e.key == "1") {
+    //     console.log("1");
+    //     console.log(measuring);
+    //     setPoint1(activeDatasets(), measuring, setMeasuring, datasetsLegendSide);
+    //   }
+    //   if (e && e.key == "2") {
+    //     console.log("2");
+    //     console.log(measuring);
+    //     setPoint2(activeDatasets(), measuring, setMeasuring, datasetsLegendSide);
+    //   }
+    //   // if (e && e.key == "ESC") {
+    //   //   console.log("esc");
+    //   //   clearDatums(u, measuring, setMeasuring);
+    //   // }
+    // });
   });
 
   createEffect(async () => {
@@ -55,37 +72,39 @@ const App: Component = (params) => {
       const plotColors = plotPalletteColors();
       const displayed_samples = sitePreferences().displayedSamples;
       const axesSets = sitePreferences().axesSets;
-      console.log({
-        start: start,
-        end: end,
-        datasets: datasets,
-        test_id: test_id,
-        legend_sides: legend_sides,
-        plotColors: plotColors,
-        displayed_samples: displayed_samples,
-        axesSets: axesSets,
-      });
+      const measureData = measuring();
       setLoadingState({ isLoading: true, statusMessage: "Generating..." });
-      await eventLoop(start, end, datasets, test_id, legend_sides, plotColors, displayed_samples, axesSets, setLoadingState, setPlotRange, testBasics, activeDatasets);
+      // if (datasets.length == legend_sides.length && datasets.length == 0) {
+      //   console.log("clearing datums");
+      //   clearDatums(globalThis.uplot, measureData, setMeasuring);
+      // }
+      await eventLoop(
+        start,
+        end,
+        datasets,
+        test_id,
+        legend_sides,
+        plotColors,
+        displayed_samples,
+        axesSets,
+        setLoadingState,
+        setPlotRange,
+        testBasics,
+        activeDatasets,
+        measuring,
+        setMeasuring
+      );
       setLoadingState({ isLoading: false, statusMessage: "" });
     } else {
-      console.log("app not ready:");
-      console.log(activeDatasets())
+      console.log("skipping re-render");
     }
-  });
-
-  createEffect(() => {
-    console.log("Effect:")
-    console.log(activeDatasets());
   });
 
   return (
     <div class={styles.App}>
       <MetaProvider>
         <Show when={testBasics().id != ""} fallback={<Title>Loading...</Title>}>
-          <Title>
-            {testBasics().name}
-          </Title>
+          <Title>{testBasics().name}</Title>
         </Show>
       </MetaProvider>
       <NavBar />

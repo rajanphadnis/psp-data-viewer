@@ -1,6 +1,7 @@
 import { Accessor, createContext, createSignal, Setter, Signal, useContext } from "solid-js";
 import { defaultPlottingColors } from "./theming";
-import { LoadingStateType, TestBasics, Preferences, PlotRange } from "./types";
+import { LoadingStateType, TestBasics, Preferences, PlotRange, MeasureData } from "./types";
+import { clearDatums } from "./browser/measure";
 
 const init_loadingState: LoadingStateType = { isLoading: true, statusMessage: "Loading..." };
 const init_testData: TestBasics = {
@@ -16,6 +17,7 @@ const init_Preferences: Preferences = {
   displayedSamples: 4000,
   axesSets: 6,
 };
+const init_measuringTool: MeasureData = { x1: undefined, x2: undefined, y1: [], y2: [], toolColor: "#ffa500" };
 
 const AppStateContext = createContext();
 
@@ -27,7 +29,8 @@ export function AppStateProvider(props: any) {
   const [testBasics, setTestBasics]: Signal<TestBasics> = createSignal(init_testData);
   const [allKnownTests, setAllKnownTests]: Signal<TestBasics[]> = createSignal(new Array<TestBasics>());
 
-  // export const [activeDatasets, setActiveDatasets]: Signal<string[]> = createSignal(new Array<string>());
+  const [loadingDatasets, setLoadingDatasets]: Signal<string[]> = createSignal(new Array<string>());
+  const [measuring, setMeasuring]: Signal<MeasureData> = createSignal(init_measuringTool);
   const [datasetsLegendSide, setDatasetsLegendSide]: Signal<number[]> = createSignal(new Array<number>());
 
   const [plotRange, setPlotRange]: Signal<PlotRange> = createSignal({ start: 0, end: 0 });
@@ -54,12 +57,17 @@ export function AppStateProvider(props: any) {
     setPlotPalletteColors,
     sitePreferences,
     setSitePreferences,
+    loadingDatasets,
+    setLoadingDatasets,
+    measuring,
+    setMeasuring,
     {
       addDataset(dataset: string) {
         setLoadingState({ isLoading: true, statusMessage: "Adding..." });
         setAppReadyState(false);
         setActiveDatasets((prev) => [...prev, dataset]);
         setDatasetsLegendSide((prev) => [...prev, 1]);
+        clearDatums(measuring, setMeasuring);
         setAppReadyState(true);
       },
       updateDataset(dataset: string) {
@@ -78,6 +86,7 @@ export function AppStateProvider(props: any) {
             return [...prev];
           });
         }
+        clearDatums(measuring, setMeasuring);
         setAppReadyState(true);
       },
       removeDataset(dataset: string) {
@@ -95,6 +104,7 @@ export function AppStateProvider(props: any) {
             newLegendSide.splice(removeIndex, 1);
             return [...newLegendSide];
           });
+          clearDatums(measuring, setMeasuring);
           setAppReadyState(true);
         }
       },
