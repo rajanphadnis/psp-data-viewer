@@ -1,4 +1,4 @@
-import { Accessor, Component, For } from "solid-js";
+import { Accessor, Component, For, Show } from "solid-js";
 import Dialog from "@corvu/dialog";
 import "./modal.module.css";
 import { useState } from "../../state";
@@ -41,7 +41,8 @@ const TestSwitcherModal: Component<{}> = (props) => {
           <For each={allKnownTests() as TestBasics[]}>
             {(item, index) => (
               <TestEntry test_id={item.id}>
-                {item.test_article}:{item.gse_article}:{item.name}
+                {item.test_article}:{item.gse_article}:{item.name}{" "}
+                <Show when={item.id == globalThis.default_id}>(Default)</Show>
               </TestEntry>
             )}
           </For>

@@ -16,6 +16,7 @@ const root = document.getElementById("root");
 declare global {
   var db: Firestore;
   var uplot: uPlot;
+  var default_id: string;
 }
 
 if (import.meta.env.DEV && !(root instanceof HTMLElement)) {

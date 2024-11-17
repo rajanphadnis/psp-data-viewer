@@ -177,6 +177,7 @@ export async function getGeneralTestInfo(
     return -1;
   });
   const default_id: string = docData["default"];
+  globalThis.default_id = default_id;
   setAllKnownTests(tests);
 
   if (page_testID != undefined) {

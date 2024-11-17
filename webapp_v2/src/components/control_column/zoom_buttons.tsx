@@ -47,17 +47,10 @@ const ZoomButtons: Component<{}> = (props) => {
             const delta = (range * zoomOutFactor) / 2;
             const start = center - delta;
             const end = center + delta;
-            const min_converted = DateTime.fromMillis(start).setZone("utc", { keepLocalTime: false }).toMillis();
-            const max_converted = DateTime.fromMillis(end).setZone("utc", { keepLocalTime: false }).toMillis();
             setPlotRange({
-              start: Math.round(
-                min_converted < testdata.starting_timestamp! ? testdata.starting_timestamp! : min_converted
-              ),
-              end: Math.round(max_converted > testdata.ending_timestamp! ? testdata.ending_timestamp! : max_converted),
+              start: Math.round(start < testdata.starting_timestamp! ? testdata.starting_timestamp! : start),
+              end: Math.round(end > testdata.ending_timestamp! ? testdata.ending_timestamp! : end),
             });
-
-            // zoom to selection
-            // globalThis.uplot.setScale("x", { min: start, max: end });
           }}
         >
           <IconZoomOut />
@@ -74,17 +67,10 @@ const ZoomButtons: Component<{}> = (props) => {
             const delta = (range * zoomInFactor) / 2;
             const start = center - delta;
             const end = center + delta;
-            const min_converted = DateTime.fromMillis(start).setZone("utc", { keepLocalTime: false }).toMillis();
-            const max_converted = DateTime.fromMillis(end).setZone("utc", { keepLocalTime: false }).toMillis();
             setPlotRange({
-              start: Math.round(
-                min_converted < testdata.starting_timestamp! ? testdata.starting_timestamp! : min_converted
-              ),
-              end: Math.round(max_converted > testdata.ending_timestamp! ? testdata.ending_timestamp! : max_converted),
+              start: Math.round(start < testdata.starting_timestamp! ? testdata.starting_timestamp! : start),
+              end: Math.round(end > testdata.ending_timestamp! ? testdata.ending_timestamp! : end),
             });
-
-            // zoom to selection
-            // globalThis.uplot.setScale("x", { min: start, max: end });
           }}
         >
           <IconZoomIn />
