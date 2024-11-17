@@ -38,18 +38,11 @@ const ZoomButtons: Component<{}> = (props) => {
         <button
           class={styles.zoomButton}
           onclick={() => {
-            console.log("zoom out");
-            const zoomOutFactor = 2;
-            const currentRange: PlotRange = plotRange();
-            const testdata: TestBasics = testBasics();
-            const center = (currentRange.start + currentRange.end) / 2;
-            const range = currentRange.end! - currentRange.start;
-            const delta = (range * zoomOutFactor) / 2;
-            const start = center - delta;
-            const end = center + delta;
+            console.log("zoom out click");
+            const [start, end] = genZoomBounds(2, plotRange(), testBasics());
             setPlotRange({
-              start: Math.round(start < testdata.starting_timestamp! ? testdata.starting_timestamp! : start),
-              end: Math.round(end > testdata.ending_timestamp! ? testdata.ending_timestamp! : end),
+              start: start,
+              end: end,
             });
           }}
         >
@@ -58,18 +51,11 @@ const ZoomButtons: Component<{}> = (props) => {
         <button
           class={styles.zoomButton}
           onclick={() => {
-            console.log("zoom in");
-            const zoomInFactor = 0.5;
-            const currentRange: PlotRange = plotRange();
-            const testdata: TestBasics = testBasics();
-            const center = (currentRange.start + currentRange.end) / 2;
-            const range = currentRange.end! - currentRange.start;
-            const delta = (range * zoomInFactor) / 2;
-            const start = center - delta;
-            const end = center + delta;
+            console.log("zoom in click");
+            const [start, end] = genZoomBounds(0.5, plotRange(), testBasics());
             setPlotRange({
-              start: Math.round(start < testdata.starting_timestamp! ? testdata.starting_timestamp! : start),
-              end: Math.round(end > testdata.ending_timestamp! ? testdata.ending_timestamp! : end),
+              start: start,
+              end: end,
             });
           }}
         >
@@ -81,3 +67,14 @@ const ZoomButtons: Component<{}> = (props) => {
 };
 
 export default ZoomButtons;
+
+function genZoomBounds(zoomFactor: number, currentRange: PlotRange, testdata: TestBasics): number[] {
+  const center = (currentRange.start + currentRange.end) / 2;
+  const range = currentRange.end! - currentRange.start;
+  const delta = (range * zoomFactor) / 2;
+  const start = center - delta;
+  const end = center + delta;
+  const start_toReturn = Math.round(start < testdata.starting_timestamp! ? testdata.starting_timestamp! : start);
+  const end_toReturn = Math.round(end > testdata.ending_timestamp! ? testdata.ending_timestamp! : end);
+  return [start_toReturn, end_toReturn];
+}

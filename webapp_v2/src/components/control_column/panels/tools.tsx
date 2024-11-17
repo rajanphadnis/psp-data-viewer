@@ -7,6 +7,8 @@ import ToolDownloadCSV from "./tools/download_csv";
 import ToolDownloadImage from "./tools/download_image";
 import ToolMeasure from "./tools/measure";
 import { useState } from "../../../state";
+import ToolCalcChannel from "./tools/calc_channels";
+import ToolEasterEgg from "./tools/easter";
 
 const PanelTools: Component<{}> = (props) => {
   const [
@@ -45,6 +47,10 @@ const PanelTools: Component<{}> = (props) => {
         <ToolDownloadImage />
         <ToolDownloadCSV />
         <ToolMeasure />
+        <ToolCalcChannel />
+          <ToolEasterEgg />
+        {/* <Show when={activeDatasets().length > 3}>
+        </Show> */}
       </Show>
     </Resizable.Panel>
   );

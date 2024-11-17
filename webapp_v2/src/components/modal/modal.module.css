@@ -175,3 +175,7 @@
   font-weight: bold;
   margin-top: 0px;
 }
+
+.settingsButtonEaster svg {
+  width: 30px;
+}
