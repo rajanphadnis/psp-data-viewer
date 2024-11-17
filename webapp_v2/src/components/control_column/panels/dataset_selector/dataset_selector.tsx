@@ -1,10 +1,9 @@
 import { Component, createSignal } from "solid-js";
 import styles from "./dataset.selector.module.css";
-import { useState } from "../../../state";
-import XMark from "../../icons/x_mark";
 import DatasetSelectorLegendIndicator from "./legend_indicator";
 import ColorPicker from "./color_picker";
-import useClickOutside from "../../../browser/click_outside";
+import { useState } from "../../../../state";
+import XMark from "../../../icons/x_mark";
 
 const DatasetSelector: Component<{ dataset_id: string }> = (props) => {
   const [

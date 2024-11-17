@@ -1,8 +1,8 @@
 import { Component, createSignal, Show } from "solid-js";
 import { HexColorPicker } from "solid-colorful";
 import styles from "./color_picker.module.css";
-import { useState } from "../../../state";
-import useClickOutside from "../../../browser/click_outside";
+import useClickOutside from "../../../../browser/click_outside";
+import { useState } from "../../../../state";
 
 const ColorPicker: Component<{ dataset_id: string }> = (props) => {
   const [

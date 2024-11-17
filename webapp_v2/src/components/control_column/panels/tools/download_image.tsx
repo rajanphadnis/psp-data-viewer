@@ -1,11 +1,10 @@
 import { Component, createSignal, Show } from "solid-js";
 import styles from "./tools.module.css";
 import IconButton from "./icon_button";
-import IconCopy from "../../icons/copy";
-import { plotSnapshot } from "../../../browser/image_tools";
-import IconDownload from "../../icons/download";
-import CheckIcon from "../../icons/check";
-import { delay } from "../../../browser/util";
+import { plotSnapshot } from "../../../../browser/image_tools";
+import { delay } from "../../../../browser/util";
+import CheckIcon from "../../../icons/check";
+import IconDownload from "../../../icons/download";
 
 const ToolDownloadImage: Component<{}> = (props) => {
   const [showDone, setDone] = createSignal<boolean>(false);

@@ -37,6 +37,7 @@ const App: Component = (params) => {
     setMeasuring,
     { addDataset, updateDataset, removeDataset, updateColor },
   ]: any = useState();
+
   onMount(async () => {
     // Contact the Firestore database and get the default test data
     await getGeneralTestInfo(useParams().testID, setAllKnownTests, setTestBasics, testBasics);
@@ -44,22 +45,6 @@ const App: Component = (params) => {
     loadFromShareLink(testBasics, setPlotRange, setDatasetsLegendSide, setActiveDatasets);
     setLoadingState({ isLoading: false, statusMessage: "" });
     setAppReadyState(true);
-    // window.addEventListener("keydown", (e) => {
-    //   if (e && e.key == "1") {
-    //     console.log("1");
-    //     console.log(measuring);
-    //     setPoint1(activeDatasets(), measuring, setMeasuring, datasetsLegendSide);
-    //   }
-    //   if (e && e.key == "2") {
-    //     console.log("2");
-    //     console.log(measuring);
-    //     setPoint2(activeDatasets(), measuring, setMeasuring, datasetsLegendSide);
-    //   }
-    //   // if (e && e.key == "ESC") {
-    //   //   console.log("esc");
-    //   //   clearDatums(u, measuring, setMeasuring);
-    //   // }
-    // });
   });
 
   createEffect(async () => {
@@ -74,10 +59,6 @@ const App: Component = (params) => {
       const axesSets = sitePreferences().axesSets;
       const measureData = measuring();
       setLoadingState({ isLoading: true, statusMessage: "Generating..." });
-      // if (datasets.length == legend_sides.length && datasets.length == 0) {
-      //   console.log("clearing datums");
-      //   clearDatums(globalThis.uplot, measureData, setMeasuring);
-      // }
       await eventLoop(
         start,
         end,

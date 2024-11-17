@@ -1,13 +1,11 @@
 import { Component, createMemo, For, Show } from "solid-js";
 import styles from "./tools.module.css";
-import CheckIcon from "../../icons/check";
-import IconCopy from "../../icons/copy";
 import IconButton from "./icon_button";
-import IconMeasure from "../../icons/measure";
 import Popover from "@corvu/popover";
-import { useState } from "../../../state";
-import { formatTimeDelta } from "../../../browser/measure";
-import { SingleMeasurement } from "../../../types";
+import { formatTimeDelta } from "../../../../browser/measure";
+import { useState } from "../../../../state";
+import { SingleMeasurement } from "../../../../types";
+import IconMeasure from "../../../icons/measure";
 
 const ToolMeasure: Component<{}> = (props) => {
   const [

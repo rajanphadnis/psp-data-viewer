@@ -1,7 +1,7 @@
 import { Component, Show } from "solid-js";
 import styles from "./dataset.selector.module.css";
-import { useState } from "../../../state";
-import { IconChevronLeft, IconChevronRight } from "../../icons/chevron";
+import { useState } from "../../../../state";
+import { IconChevronLeft, IconChevronRight } from "../../../icons/chevron";
 
 const DatasetSelectorLegendIndicator: Component<{ dataset_id: string }> = (props) => {
   const [

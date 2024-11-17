@@ -1,13 +1,14 @@
 import { Component, Show } from "solid-js";
 import styles from "./navbar.module.css";
 import layout from "../../layout.module.css";
-import SwitchTestButton from "./switch_test";
-import SettingsButton from "./settings_button";
 import { useState } from "../../state";
+import Dialog from "@corvu/dialog";
+import TestSwitcherModal from "../modal/test_switcher";
+import SwapIcon from "../icons/swap";
+import SettingsIcon from "../icons/settings";
+import SettingsModal from "../modal/settings_panel";
 
 const NavBarTitle: Component<{ id: string; name: string; test_article: string; gse_article: string }> = (props) => {
-  // : Component<{ children: any; testBasics: Accessor<TestBasics>; }>
-  // const context: any = useState();
   const [
     activeDatasets,
     setActiveDatasets,
@@ -36,11 +37,24 @@ const NavBarTitle: Component<{ id: string; name: string; test_article: string; g
   return (
     <div class={layout.flexRowStart} style="justify-content: start;">
       <Show when={testBasics().id != ""} fallback={<div class={styles.title}>{testBasics().name}</div>}>
-        <div class={styles.title}>
-          PSP Data Viewer:{testBasics().test_article}:{testBasics().gse_article}:{testBasics().name}
-        </div>
-        <SwitchTestButton />
-        <SettingsButton />
+        <Dialog>
+          <Dialog.Trigger class={styles.title}>
+            PSP Data Viewer:{testBasics().test_article}:{testBasics().gse_article}:{testBasics().name}
+          </Dialog.Trigger>
+          <TestSwitcherModal />
+        </Dialog>
+        <Dialog>
+          <Dialog.Trigger title="Change Active Test" class={styles.navbarButtons}>
+            <SwapIcon />
+          </Dialog.Trigger>
+          <TestSwitcherModal />
+        </Dialog>
+        <Dialog>
+          <Dialog.Trigger title="Site Settings" class={styles.navbarButtons}>
+            <SettingsIcon />
+          </Dialog.Trigger>
+          <SettingsModal />
+        </Dialog>
       </Show>
     </div>
   );

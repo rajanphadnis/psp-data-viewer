@@ -43,6 +43,10 @@
   font-weight: bold;
   font-size: larger;
   cursor: pointer;
+  background-color: transparent;
+  color: white;
+  border: none;
+  font-family: "IBM Plex Mono", monospace;
 }
 
 .navbarButtons {

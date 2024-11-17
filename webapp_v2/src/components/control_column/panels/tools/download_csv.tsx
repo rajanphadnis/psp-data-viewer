@@ -1,14 +1,11 @@
 import { Component, createSignal, Show } from "solid-js";
 import styles from "./tools.module.css";
 import IconButton from "./icon_button";
-import IconCopy from "../../icons/copy";
-import { plotSnapshot } from "../../../browser/image_tools";
-import IconDownload from "../../icons/download";
-import CheckIcon from "../../icons/check";
-import { delay } from "../../../browser/util";
-import IconCSV from "../../icons/csv";
-import { downloadCSV } from "../../../browser/csv";
-import { useState } from "../../../state";
+import { downloadCSV } from "../../../../browser/csv";
+import { delay } from "../../../../browser/util";
+import { useState } from "../../../../state";
+import CheckIcon from "../../../icons/check";
+import IconCSV from "../../../icons/csv";
 
 const ToolDownloadCSV: Component<{}> = (props) => {
   const [showDone, setDone] = createSignal<boolean>(false);
