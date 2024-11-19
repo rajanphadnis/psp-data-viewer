@@ -21,23 +21,25 @@ export function getDatasetPlottingColor(colors: string[], index: number) {
 //   return plotPalletteColors().length;
 // }
 
-export const defaultPlottingColors = [
-  pspColors.field,
-  pspColors["bm-gold"],
-  pspColors.aged,
-  "#FF5733",
-  "#FFC300",
-  "#FFA07A",
-  "#8CE68C",
-  "red",
-  "#ABF1BC",
-  "#FF8C00",
-  "#CFFFF6",
-  "#FFD700",
-  "#AEE7F8",
-  "#87CDF6",
-  "blue",
-];
+// export const defaultPlottingColors = [
+//   pspColors.field,
+//   pspColors["bm-gold"],
+//   pspColors.aged,
+//   "#FF5733",
+//   "#FFC300",
+//   "#FFA07A",
+//   "#8CE68C",
+//   "red",
+//   "#ABF1BC",
+//   "#FF8C00",
+//   "#CFFFF6",
+//   "#FFD700",
+//   "#AEE7F8",
+//   "#87CDF6",
+//   "blue",
+// ];
+
+export const defaultPlottingColors = ["#FF4500", "#00FFFF", "#FFD700", "#00FF00", "#FF1493", "#1E90FF", "#9efff9", "#ffb5b5"];
 
 export const defaultMeasuringToolColors = ["#ffa500", "#5d00ff", "#d000ff", "#ff009d", "#00ff4c"];
 

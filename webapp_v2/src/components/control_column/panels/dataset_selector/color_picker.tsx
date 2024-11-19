@@ -31,7 +31,7 @@ const ColorPicker: Component<{ dataset_id: string }> = (props) => {
     { addDataset, updateDataset, removeDataset, updateColor },
   ]: any = useState();
   const [isOpen, toggle] = createSignal<boolean>(false);
-  const [color, setColor] = createSignal<string>(plotPalletteColors()[activeDatasets().indexOf(props.dataset_id)]);
+  const [color, setColor] = createSignal<string>(plotPalletteColors()[activeDatasets().indexOf(props.dataset_id) % plotPalletteColors().length]);
   const [target, setTarget] = createSignal<HTMLElement | undefined>();
 
   useClickOutside(target, () => {

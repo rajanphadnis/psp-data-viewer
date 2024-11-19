@@ -48,9 +48,9 @@ const PanelTools: Component<{}> = (props) => {
         <ToolDownloadCSV />
         <ToolMeasure />
         <ToolCalcChannel />
+        <Show when={activeDatasets().length > 2}>
           <ToolEasterEgg />
-        {/* <Show when={activeDatasets().length > 3}>
-        </Show> */}
+        </Show>
       </Show>
     </Resizable.Panel>
   );

@@ -5,6 +5,7 @@ import { useState } from "../../state";
 import { TestBasics } from "../../types";
 import TestEntry from "./test_button";
 import styles from "./modal.module.css";
+import RefreshListButton from "./refresh_list_button";
 
 const TestSwitcherModal: Component<{}> = (props) => {
   const [
@@ -36,7 +37,9 @@ const TestSwitcherModal: Component<{}> = (props) => {
     <Dialog.Portal>
       <Dialog.Overlay />
       <Dialog.Content class={styles.switcherModal}>
-        <Dialog.Label>Select Test</Dialog.Label>
+        <Dialog.Label>
+          Select Test <RefreshListButton />
+        </Dialog.Label>
         <div class={styles.switcherModalDescription}>
           <For each={allKnownTests() as TestBasics[]}>
             {(item, index) => (
