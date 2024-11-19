@@ -9,6 +9,7 @@
 .datasetSelector {
   /* width: 15%; */
   max-height: calc(100vh - 50px - 50px);
+  height: calc(100vh - 50px - 50px);
   overflow: hidden;
   padding-top: 5px;
   padding-left: 5px;
