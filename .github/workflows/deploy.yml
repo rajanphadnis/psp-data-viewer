@@ -51,7 +51,7 @@ jobs:
             NEW_NAME="${TAGNAME//v/}"
             echo GHA_NEW_TAG_NAME_WEBAPP=$NEW_NAME >> "$GITHUB_ENV"
         - name: Tag/Release search
-          run: echo "GHA_V_COUNTER_WEBAPP=$(grep '${{ format('"version"{0}', ':') }} "${{ env.GHA_NEW_TAG_NAME_WEBAPP }}"' webapp/package.json | wc -l)" >> "$GITHUB_ENV"
+          run: echo "GHA_V_COUNTER_WEBAPP=$(grep '${{ format('"version"{0}', ':') }} "${{ env.GHA_NEW_TAG_NAME_WEBAPP }}"' webapp_v2/package.json | wc -l)" >> "$GITHUB_ENV"
           shell: bash
         - name: Tag Output
           run: |
@@ -70,7 +70,7 @@ jobs:
           uses: actions/github-script@v2.1.0
           with:
             script: |
-                core.setFailed('webapp/package.json not updated to new version ${{ env.GHA_NEW_TAG_NAME_WEBAPP }}!')
+                core.setFailed('webapp_v2/package.json not updated to new version ${{ env.GHA_NEW_TAG_NAME_WEBAPP }}!')
   version-check-admin:
     runs-on: ubuntu-latest
     outputs:
@@ -179,7 +179,7 @@ jobs:
       with:
         bun-version: latest
     - name: Build Web App
-      working-directory: ./webapp
+      working-directory: ./webapp_v2
       run: bun install && bun run prod
     - name: Release Web App 
       uses: FirebaseExtended/action-hosting-deploy@v0
@@ -188,7 +188,7 @@ jobs:
         firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_PSP_PORTFOLIO_F1205 }}
         channelId: live
         projectId: psp-portfolio-f1205
-        target: webapp
+        target: webapp_v2
 
   build-and-release-admin:
     runs-on: ubuntu-latest

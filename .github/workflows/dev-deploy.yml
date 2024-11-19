@@ -31,7 +31,7 @@ jobs:
       - name: Setup Dev Environment
         run: bun run dev
       - name: Build Web App
-        working-directory: ./webapp
+        working-directory: ./webapp_v2
         run: bun install && bun run prod
       - name: Release Web App
         uses: FirebaseExtended/action-hosting-deploy@v0
@@ -40,7 +40,7 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_PSP_PORTFOLIO_F1205 }}
           channelId: live
           projectId: psp-portfolio-f1205
-          target: webapp
+          target: webapp_v2
 
   build-and-release-admin:
     runs-on: ubuntu-latest

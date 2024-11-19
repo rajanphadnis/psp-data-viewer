@@ -1,40 +1,40 @@
 {
-  "name": "webapp",
-  "module": "src/index.ts",
-  "type": "module",
-  "version": "0.4.17",
-  "description": "",
-  "scripts": {
-    "start": "vite",
-    "dev": "vite",
-    "build": "vite build",
-    "serve": "vite preview",
-    "debug": "bun run --env-file=.env.dev ./build_tools/compile.ts",
-    "prod": "bun run --env-file=.env.prod.publish ./build_tools/compile.ts"
-  },
-  "license": "MIT",
-  "devDependencies": {
-    "@types/bun": "^1.1.13",
-    "@types/evaluatex": "^2.2.8",
-    "@types/file-saver": "^2.0.7",
-    "@types/luxon": "^3.4.2",
-    "solid-devtools": "^0.30.1",
-    "typescript": "^5.3.3",
-    "vite": "^5.0.11",
-    "vite-plugin-solid": "^2.8.2"
-  },
-  "dependencies": {
-    "@melloware/coloris": "^0.24.0",
-    "@solid-primitives/storage": "^4.2.1",
-    "@solidjs/meta": "^0.29.4",
-    "@solidjs/router": "^0.15.1",
-    "corvu": "^0.7.1",
-    "evaluatex": "^2.2.0",
-    "file-saver": "^2.0.5",
-    "firebase": "^10.13.1",
-    "luxon": "^3.5.0",
-    "solid-colorful": "^0.0.2",
-    "solid-js": "^1.8.11",
-    "uplot": "^1.6.30"
-  }
+    "name": "webapp",
+    "module": "src/index.ts",
+    "type": "module",
+    "version": "0.5.0",
+    "description": "",
+    "scripts": {
+        "start": "vite",
+        "dev": "vite",
+        "build": "vite build",
+        "serve": "vite preview",
+        "debug": "bun run --env-file=.env.dev ./build_tools/compile.ts",
+        "prod": "bun run --env-file=.env.prod.publish ./build_tools/compile.ts"
+    },
+    "license": "MIT",
+    "devDependencies": {
+        "@types/bun": "^1.1.13",
+        "@types/evaluatex": "^2.2.8",
+        "@types/file-saver": "^2.0.7",
+        "@types/luxon": "^3.4.2",
+        "solid-devtools": "^0.30.1",
+        "typescript": "^5.3.3",
+        "vite": "^5.0.11",
+        "vite-plugin-solid": "^2.8.2"
+    },
+    "dependencies": {
+        "@melloware/coloris": "^0.24.0",
+        "@solid-primitives/storage": "^4.2.1",
+        "@solidjs/meta": "^0.29.4",
+        "@solidjs/router": "^0.15.1",
+        "corvu": "^0.7.1",
+        "evaluatex": "^2.2.0",
+        "file-saver": "^2.0.5",
+        "firebase": "^10.13.1",
+        "luxon": "^3.5.0",
+        "solid-colorful": "^0.0.2",
+        "solid-js": "^1.8.11",
+        "uplot": "^1.6.30"
+    }
 }

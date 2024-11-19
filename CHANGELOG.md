@@ -1,3 +1,15 @@
+## v0.5.0
+updated to v2
+
+### Changed
+- bug fixes
+- Rewrote entire project in SolidJS
+- Added easter egg
+- Added list refresh button
+- Removed calc channel feature
+- Updated app routing and metadata fetching strategy
+- updated color picker and default color pallette
+
 ## v0.4.17
 updated mobile procs css
 
