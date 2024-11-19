@@ -28,7 +28,7 @@
   ],
   "hosting": [
     {
-      "target": "webapp_v2",
+      "target": "webapp",
       "public": "webapp_v2/dist",
       "ignore": [
         "firebase.json",

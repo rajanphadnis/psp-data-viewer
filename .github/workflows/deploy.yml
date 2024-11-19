@@ -188,7 +188,7 @@ jobs:
         firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_PSP_PORTFOLIO_F1205 }}
         channelId: live
         projectId: psp-portfolio-f1205
-        target: webapp_v2
+        target: webapp
 
   build-and-release-admin:
     runs-on: ubuntu-latest
