@@ -1,3 +1,9 @@
+## v0.5.2
+updated webapp css
+
+### Changed
+- bug fixes
+
 ## v0.5.1
 updated firebase webapp deploy target
 
