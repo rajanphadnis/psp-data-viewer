@@ -14,7 +14,7 @@ const init_testData: TestBasics = {
   datasets: [""],
 };
 const init_Preferences: Preferences = {
-  displayedSamples: 4000,
+  displayedSamples: 3000,
   axesSets: 6,
 };
 const init_measuringTool: MeasureData = { x1: undefined, x2: undefined, y1: [], y2: [], toolColor: "#ffa500" };
