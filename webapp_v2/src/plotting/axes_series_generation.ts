@@ -33,6 +33,7 @@ export function generateAxisAndSeries(
   axis_side: number
   // indexOfDatasetList: number,
 ): DatasetSeries {
+  console.log(axis_side);
   // let legendSide = axis_side;
   // if (axis_side == 0) {
   //   // Get the legend side from the global app state

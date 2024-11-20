@@ -74,6 +74,8 @@ export async function checkFileName(target: HTMLInputElement): Promise<boolean> 
     } else {
       return false;
     }
+  } else if (fileExtension == "hdf5") {
+    return true;
   } else {
     return false;
   }

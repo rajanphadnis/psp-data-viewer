@@ -42,3 +42,7 @@ mission/bun.lockb
 mission/firestore-debug.log
 mission/firebase-debug.log
 webapp_v2/.env.dev
+local_tools/data
+local_tools/out
+local_tools/__pycache__
+local_tools/*.hdf5

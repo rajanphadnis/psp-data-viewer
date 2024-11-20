@@ -42,7 +42,14 @@ const PanelTools: Component<{}> = (props) => {
       <div class={styles.titleDiv}>
         <h3 class={styles.title}>Tools:</h3>
       </div>
-      <Show when={activeDatasets().length > 0} fallback={<NoDatasetsMessage />}>
+      <Show
+        when={activeDatasets().length > 0}
+        fallback={
+          <NoDatasetsMessage>
+            <p>No Datasets Selected</p>
+          </NoDatasetsMessage>
+        }
+      >
         <ToolCopyImage />
         <ToolDownloadImage />
         <ToolDownloadCSV />

@@ -36,6 +36,7 @@ export async function eventLoop(
     displayed_samples,
     setLoadingState
   );
+  console.log(generated_series);
   storeActiveDatasets(generated_toPlot, datasets, startTimestamp, endTimestamp, legend_sides);
   const displayedAxes = generated_series.slice(1).map((s, i) => {
     const thing = s as DatasetSeries;

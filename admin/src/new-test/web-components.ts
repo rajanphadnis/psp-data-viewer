@@ -4,7 +4,7 @@ import { updateTestCreateStatus } from "../status";
 import { loadingStatus, operationType, type NewTestConfig } from "../types";
 import { generateTitle, updateTestDisplay } from "../web_components";
 import { doc, onSnapshot } from "firebase/firestore";
-import { new_gdrive_links, new_upload_tdsm_csv } from "./finalize";
+import { new_gdrive_links, new_upload_hdf5, new_upload_tdsm_csv } from "./finalize";
 import { checkFileName, checkInput } from "./input-check";
 
 export async function updateConfigDisplay(config: NewTestConfig) {
@@ -41,6 +41,9 @@ function checkInputAndShowFinalizeButton(config: NewTestConfig) {
   finalizeButton.addEventListener("click", (e) => {
     if (config.name.includes("gdrive")) {
       new_gdrive_links(config);
+    } else if (config.id.includes("hdf5")) {
+      console.log("uploading hdf5");
+      new_upload_hdf5(config);
     } else {
       new_upload_tdsm_csv(config);
     }
@@ -236,7 +239,7 @@ function createUploadListItem(index: number): [HTMLDivElement, HTMLDivElement] {
   fileInput.id = "file_list_div_fileinput_" + index;
   fileInput.classList.add("test-field-file-upload");
   fileInput.type = "file";
-  fileInput.accept = ".csv,.tdms";
+  fileInput.accept = ".csv,.tdms,.hdf5";
   // const attr = document.createAttribute("multiple");
   // fileInput.attributes.setNamedItemNS(attr);
   deleteButton.innerHTML = delete_icon;
@@ -249,7 +252,7 @@ function createUploadListItem(index: number): [HTMLDivElement, HTMLDivElement] {
     document.getElementById("right-main")!.removeChild(progressDiv);
   });
   fileInput.addEventListener("change", async (e) => {
-    const checksOut = await checkFileName((e.target! as HTMLInputElement));
+    const checksOut = await checkFileName(e.target! as HTMLInputElement);
     if (!checksOut) {
       document.getElementById("test-upload")!.removeChild(listDiv);
       document.getElementById("right-main")!.removeChild(progressDiv);

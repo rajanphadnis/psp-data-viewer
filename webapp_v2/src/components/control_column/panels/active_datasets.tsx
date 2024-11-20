@@ -33,11 +33,11 @@ const PanelActiveDatasets: Component<{}> = (props) => {
   ]: any = useState();
 
   return (
-    <Resizable.Panel class={styles.panel} minSize={0.1} collapsedSize={0.025} collapsible={true}>
+    <Resizable.Panel class={styles.panel} minSize={0.1} collapsedSize={0.025} collapsible={false}>
       <div class={styles.titleDiv}>
         <h3 class={styles.title}>Active Datasets:</h3>
       </div>
-      <Show when={activeDatasets().length > 0} fallback={<NoDatasetsMessage />}>
+      <Show when={activeDatasets().length > 0} fallback={<NoDatasetsMessage><p>No Datasets Selected</p></NoDatasetsMessage>}>
         <For each={activeDatasets()}>{(item, index) => <DatasetSelector dataset_id={item}></DatasetSelector>}</For>
       </Show>
     </Resizable.Panel>

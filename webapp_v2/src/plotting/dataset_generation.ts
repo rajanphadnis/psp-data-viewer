@@ -29,6 +29,7 @@ export async function generatePlottedDatasets(
       datasets[i]
     }--${startTimestamp.toString()}--${endTimestamp.toString()}--${test_id}`;
     if (localStorage[dataset_key]) {
+      console.log(`thing: ${[...dataset_legend_side]}`);
       const axis = dataset_legend_side[i];
       const seriesToReturn = generateAxisAndSeries(scale, datasets[i], nameOnly, i, plotColors, axis);
       toPlot[i] = JSON.parse(localStorage.getItem(dataset_key)!);
@@ -38,6 +39,8 @@ export async function generatePlottedDatasets(
     }
   }
   let need_to_fetch: string[] = channelsToFetch.keys().toArray();
+  const need_to_fetch_legendSide = channelsToFetch.values().toArray();
+  const legendSidesToFetch = need_to_fetch_legendSide.map((index) => dataset_legend_side[index]);
 
   if (need_to_fetch.length == 0) {
     const dataset_key: string = `application_data__time--${startTimestamp.toString()}--${endTimestamp.toString()}--${test_id}`;
@@ -52,8 +55,10 @@ export async function generatePlottedDatasets(
     startTimestamp,
     endTimestamp,
     channelsToFetch,
-    test_id, displayedSamples,
+    test_id,
+    displayedSamples,
     plotColors,
+    legendSidesToFetch,
   );
   for (let i = 0; i < need_to_fetch.length; i++) {
     const fetched_dataset = need_to_fetch[i];
@@ -64,6 +69,14 @@ export async function generatePlottedDatasets(
   let toPlot_toReturn = [toPlot_fetched[toPlot_fetched.length - 1], ...toPlot];
   let series_toReturn = [{}, ...series];
   setLoadingState({ isLoading: true, statusMessage: "Caching..." });
-  cacheFetchedData(toPlot_fetched, [...need_to_fetch, "time"], startTimestamp, endTimestamp, test_id, datasets, dataset_legend_side);
+  cacheFetchedData(
+    toPlot_fetched,
+    [...need_to_fetch, "time"],
+    startTimestamp,
+    endTimestamp,
+    test_id,
+    datasets,
+    dataset_legend_side
+  );
   return [toPlot_toReturn, series_toReturn];
 }

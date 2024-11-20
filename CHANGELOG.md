@@ -1,3 +1,9 @@
+## v0.5.3
+updated legenside redraw, added localtools, updated hdf5 admin upload
+
+### Changed
+- bug fixes
+
 ## v0.5.2
 updated webapp css
 

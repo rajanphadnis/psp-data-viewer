@@ -22,7 +22,8 @@ export async function getSensorData(
   channelsToFetch: Map<string, number>,
   test_id: string,
   displayed_samples: number,
-  plotColors: string[]
+  plotColors: string[],
+  legendSidesToFetch: number[],
   // indexOfDatasetList: number,
 ): Promise<[number[][], ({} | DatasetSeries)[]]> {
   // Init empty variables
@@ -60,7 +61,7 @@ export async function getSensorData(
         nameOnly,
         channelsToFetch.get(dataset)!,
         plotColors,
-        1
+        legendSidesToFetch[i],
       );
 
       // Add plot series and data to main lists to return

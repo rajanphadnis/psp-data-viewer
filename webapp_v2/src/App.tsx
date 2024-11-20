@@ -59,6 +59,7 @@ const App: Component = (params) => {
       const axesSets = sitePreferences().axesSets;
       const measureData = measuring();
       setLoadingState({ isLoading: true, statusMessage: "Generating..." });
+      console.log(legend_sides);
       await eventLoop(
         start,
         end,
