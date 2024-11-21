@@ -51,9 +51,6 @@ export function plot(
             setPlotRange({ start: testBasics().starting_timestamp!, end: testBasics().ending_timestamp! });
           };
         },
-        // (uplot: uPlot) => {
-        //   addKeyPressListeners();
-        // },
       ],
 
       draw: [

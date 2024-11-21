@@ -1,8 +1,6 @@
 import { legendRound } from "./plotting_helpers";
 import { getDatasetPlottingColor } from "../theming";
 import type { DatasetSeries } from "../types";
-// import { useCounter } from "../App";
-// import { datasetsLegendSide, activeDatasets } from "..";
 
 /**
  * Generates a plot series entry based on provided vals
@@ -31,16 +29,7 @@ export function generateAxisAndSeries(
   dataset_index: number,
   plotColors: string[],
   axis_side: number
-  // indexOfDatasetList: number,
 ): DatasetSeries {
-  console.log(axis_side);
-  // let legendSide = axis_side;
-  // if (axis_side == 0) {
-  //   // Get the legend side from the global app state
-  //   const [activeDatasets, setActiveDatasets, { buttonClickHandler }]: any = useCounter();
-  //   legendSide = datasetsLegendSide()[activeDatasets().indexOf(dataset)];
-  // }
-
   // Create a string that will group units on the same axis together
   const scaleToUse: string = `${scale}_${axis_side}`;
 

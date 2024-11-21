@@ -21,15 +21,12 @@ export function setPoint1(
 ) {
   const { left, top } = globalThis.uplot.cursor;
   if (left && top && left >= 0 && top >= 0) {
-  console.log("run1");
     let y: number[] = [];
     if (datasetsLegendSide.length == datasets.length && datasetsLegendSide.length > 0) {
       let axes_names = Array(datasetsLegendSide.length);
       for (var i = 0; i < datasetsLegendSide.length; ++i) {
         axes_names[i] = `${datasets[i].split("__")[1]}_${datasetsLegendSide[i]}`;
       }
-      console.log(datasetsLegendSide);
-      console.log(datasets);
       axes_names.forEach((axis_name) => {
         y.push(globalThis.uplot.posToVal(top, axis_name));
       });
@@ -60,8 +57,6 @@ export function setPoint2(
       for (var i = 0; i < datasetsLegendSide.length; ++i) {
         axes_names[i] = `${datasets[i].split("__")[1]}_${datasetsLegendSide[i]}`;
       }
-      console.log(datasetsLegendSide);
-      console.log(datasets);
       axes_names.forEach((axis_name) => {
         y.push(uplot.posToVal(top, axis_name));
       });

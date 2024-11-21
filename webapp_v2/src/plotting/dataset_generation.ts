@@ -29,7 +29,6 @@ export async function generatePlottedDatasets(
       datasets[i]
     }--${startTimestamp.toString()}--${endTimestamp.toString()}--${test_id}`;
     if (localStorage[dataset_key]) {
-      console.log(`thing: ${[...dataset_legend_side]}`);
       const axis = dataset_legend_side[i];
       const seriesToReturn = generateAxisAndSeries(scale, datasets[i], nameOnly, i, plotColors, axis);
       toPlot[i] = JSON.parse(localStorage.getItem(dataset_key)!);

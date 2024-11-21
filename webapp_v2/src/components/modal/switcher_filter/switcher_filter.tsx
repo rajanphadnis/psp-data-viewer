@@ -52,11 +52,9 @@ const TestSwitcherFilter: Component<{
               if (props.filters().includes(item)) {
                 const index = newList.indexOf(item);
                 newList.splice(index, 1);
-                console.log(newList);
               } else {
                 newList.push(item);
               }
-              console.log([...newList]);
               props.setFilters([...newList]);
             }}
           />

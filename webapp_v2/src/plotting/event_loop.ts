@@ -4,11 +4,6 @@ import { DatasetSeries, LoadingStateType, MeasureData, PlotRange, TestBasics } f
 import { generatePlottedDatasets } from "./dataset_generation";
 import { plot } from "./plotting_helpers";
 import { Accessor, createEffect, Setter } from "solid-js";
-// import { useCounter } from "../App";
-
-// export async function update() {
-
-// }
 
 export async function eventLoop(
   startTimestamp: number,
@@ -36,7 +31,6 @@ export async function eventLoop(
     displayed_samples,
     setLoadingState
   );
-  console.log(generated_series);
   storeActiveDatasets(generated_toPlot, datasets, startTimestamp, endTimestamp, legend_sides);
   const displayedAxes = generated_series.slice(1).map((s, i) => {
     const thing = s as DatasetSeries;
@@ -54,20 +48,4 @@ export async function eventLoop(
     setMeasurement,
     legend_sides,
   );
-  // setLoadingState({ isLoading: true, statusMessage: "Diffing..." });
-  // const [activeDatasets, setActiveDatasets, { buttonClickHandler }]: any = useCounter();
-  // const [toPlot, series] = runCalcsEngine(generated_toPlot, generated_series);
-
-  // if (toPlot.length > 1) {
-  //   // Save dT to global variable
-  //   globalThis.calcChannelDt_seconds = toPlot[0][1] - toPlot[0][0];
-  // }
-  // setLoadingState({ isLoading: true, statusMessage: "Plotting..." });
-  // setPlotRange({ start: startTimestamp, end: endTimestamp });
-  // setActiveDatasets()
-  // globalThis.displayedRangeStart = startTimestamp;
-  // globalThis.displayedRangeEnd = endTimestamp;
-  // writeSelectorList(globalThis.activeDatasets_all);
-  // updateAvailableFeatures();
-  // setLoadingState({ isLoading: false, statusMessage: "" });
 }

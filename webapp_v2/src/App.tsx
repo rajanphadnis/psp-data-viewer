@@ -9,7 +9,6 @@ import ControlColumn from "./components/control_column/control_column";
 import { loadFromShareLink } from "./browser/sharelink";
 import { useState } from "./state";
 import { eventLoop } from "./plotting/event_loop";
-import { clearDatums, setPoint1, setPoint2 } from "./browser/measure";
 
 const App: Component = (params) => {
   const [
@@ -59,7 +58,6 @@ const App: Component = (params) => {
       const axesSets = sitePreferences().axesSets;
       const measureData = measuring();
       setLoadingState({ isLoading: true, statusMessage: "Generating..." });
-      console.log(legend_sides);
       await eventLoop(
         start,
         end,

@@ -1,3 +1,9 @@
+## v0.5.8
+added firefox support and cleaned console logs
+
+### Changed
+- bug fixes
+
 ## v0.5.7
 added measure tool hint
 
