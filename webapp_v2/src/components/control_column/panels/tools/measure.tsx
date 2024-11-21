@@ -6,6 +6,7 @@ import { formatTimeDelta } from "../../../../browser/measure";
 import { useState } from "../../../../state";
 import { SingleMeasurement } from "../../../../types";
 import IconMeasure from "../../../icons/measure";
+import { IconOneKey, IconTwoKey } from "../../../icons/keys";
 
 const ToolMeasure: Component<{}> = (props) => {
   const [
@@ -73,7 +74,16 @@ const ToolMeasure: Component<{}> = (props) => {
         <Popover.Content class={styles.popoverContent}>
           <Popover.Arrow />
           <Popover.Description>
-            <Show when={measuring().x2 != undefined} fallback={<p>No measuring points</p>}>
+            <Show
+              when={measuring().x2 != undefined}
+              fallback={
+                <div style={{ "text-align": "center" }}>
+                  Use the <IconOneKey /> and <IconTwoKey /> keys
+                  <br />
+                  on your keyboard to place points
+                </div>
+              }
+            >
               <For each={calculated_measurements()}>
                 {(item, index) => {
                   const name = item.name;

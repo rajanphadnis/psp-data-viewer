@@ -1,3 +1,9 @@
+## v0.5.7
+added measure tool hint
+
+### Changed
+- bug fixes
+
 ## v0.5.6
 updated image css rules
 
