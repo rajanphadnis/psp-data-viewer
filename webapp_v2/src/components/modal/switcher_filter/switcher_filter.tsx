@@ -4,7 +4,10 @@ import { useState } from "../../../state";
 import { TestBasics } from "../../../types";
 import FilterButton from "./filter_button";
 
-const TestSwitcherFilter: Component<{}> = (props) => {
+const TestSwitcherFilter: Component<{
+  setFilters: (newFilters: string[]) => void;
+  filters: () => string[];
+}> = (props) => {
   const [
     activeDatasets,
     setActiveDatasets,
@@ -43,8 +46,18 @@ const TestSwitcherFilter: Component<{}> = (props) => {
         {(item, index) => (
           <FilterButton
             name={item}
+            isActive={props.filters().includes(item)}
             onclick={() => {
-              console.log({ item });
+              let newList = [...props.filters()];
+              if (props.filters().includes(item)) {
+                const index = newList.indexOf(item);
+                newList.splice(index, 1);
+                console.log(newList);
+              } else {
+                newList.push(item);
+              }
+              console.log([...newList]);
+              props.setFilters([...newList]);
             }}
           />
         )}

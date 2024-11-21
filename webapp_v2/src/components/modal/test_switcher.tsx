@@ -1,4 +1,4 @@
-import { Accessor, Component, createSignal, For, Show } from "solid-js";
+import { Accessor, Component, createMemo, createSignal, For, on, Show } from "solid-js";
 import Dialog from "@corvu/dialog";
 import "./modal.module.css";
 import { useState } from "../../state";
@@ -37,7 +37,14 @@ const TestSwitcherModal: Component<{}> = (props) => {
   ]: any = useState();
 
   const [filters, setFilters] = makePersisted(createSignal<string[]>([]), {
-    name: "resizable-sizes",
+    name: "test-filters",
+  });
+
+  const filteredTestEntries = createMemo<TestBasics[]>(() => {
+    return (allKnownTests() as TestBasics[]).filter(
+      (obj) =>
+        filters().includes(obj.gse_article) || filters().includes(obj.test_article) || filters().includes(obj.name)
+    );
   });
 
   return (
@@ -48,8 +55,8 @@ const TestSwitcherModal: Component<{}> = (props) => {
           Select Test <RefreshListButton />
         </Dialog.Label>
         <div class={styles.switcherModalDescription}>
-          <TestSwitcherFilter/>
-          <For each={allKnownTests() as TestBasics[]}>
+          <TestSwitcherFilter setFilters={setFilters} filters={filters} />
+          <For each={filteredTestEntries().length == 0 ? allKnownTests() : filteredTestEntries()}>
             {(item, index) => (
               <TestEntry test_id={item.id}>
                 {item.test_article}:{item.gse_article}:{item.name}{" "}

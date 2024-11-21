@@ -1,3 +1,9 @@
+## v0.5.5
+added test switcher filter
+
+### Changed
+- bug fixes
+
 ## v0.5.4
 started adding filter, fixed hdf5 upload sequence
 
