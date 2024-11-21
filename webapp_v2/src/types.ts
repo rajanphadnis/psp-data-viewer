@@ -70,3 +70,9 @@ export type Preferences = {
   displayedSamples: number;
   axesSets: number;
 };
+
+declare global {
+  interface Window {
+      dataLayer:any;
+  }
+}

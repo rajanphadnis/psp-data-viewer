@@ -38,6 +38,16 @@ const App: Component = (params) => {
   ]: any = useState();
 
   onMount(async () => {
+    const s = document.createElement("script");
+    s.setAttribute("src", `https://www.googletagmanager.com/gtag/js?id=G-ZXCLEW88F6`);
+    s.async = true;
+    document.head.appendChild(s);
+    const dataLayer = (window.dataLayer = window.dataLayer || []);
+    function gtag(a: string, b: string | object) {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+    gtag("config", "G-ZXCLEW88F6");
     // Contact the Firestore database and get the default test data
     await getGeneralTestInfo(useParams().testID, setAllKnownTests, setTestBasics, testBasics);
     await getTestInfo(testBasics().id, setTestBasics, setPlotRange);

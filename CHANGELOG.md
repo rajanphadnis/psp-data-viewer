@@ -1,3 +1,9 @@
+## v0.5.9
+added back google analytics
+
+### Changed
+- bug fixes
+
 ## v0.5.8
 added firefox support and cleaned console logs
 
