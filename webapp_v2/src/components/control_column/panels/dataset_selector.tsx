@@ -38,7 +38,7 @@ const PanelDatasetSelector: Component<{}> = (props) => {
         <h3 class={styles.title}>Available Datasets:</h3>
       </div>
       <Show
-        when={testBasics().datasets != undefined ? activeDatasets().length != testBasics().datasets.length : false}
+        when={testBasics() != undefined ? testBasics().datasets != undefined ? activeDatasets().length != testBasics().datasets.length : false : false}
         fallback={
           <NoDatasetsMessage>
             <p>None</p>

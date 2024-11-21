@@ -155,7 +155,7 @@ export function new_upload_hdf5(config: NewTestConfig) {
   console.log(inputtedFiles);
   for (let i = 0; i < inputtedFiles.length; i++) {
     const inputtedFile = inputtedFiles[i];
-    const storageRef = ref(globalThis.storage, `${inputtedID}/raw-files/` + inputtedFile.name);
+    const storageRef = ref(globalThis.storage, `${inputtedID}/raw-files/${inputtedID}.hdf5`);
     const uploadTask = uploadBytesResumable(storageRef, inputtedFile);
     // Listen for state changes, errors, and completion of the upload.
     uploadTask.on(
@@ -207,14 +207,14 @@ export function new_upload_hdf5(config: NewTestConfig) {
           nextStatusText.innerHTML = "Preparing HDF5 files...";
           currentStatusBar.innerHTML = "Step 2 of 6";
           liveUpdate(inputtedID);
-          // const firestore_payload = {
-          //   creation_status: "HDF5 Upload Finished",
-          //   creation_status_next_step: "Uploading database...",
-          //   creation_status_max_steps: 6,
-          //   creation_status_current: 4,
-          // };
-          // const docRef = doc(db, `${inputtedID}/test_creation`);
-          // setDoc(docRef, firestore_payload, { merge: true });
+          const firestore_payload = {
+            creation_status: "HDF5 Upload Finished",
+            creation_status_next_step: "Uploading database...",
+            creation_status_max_steps: 6,
+            creation_status_current: 4,
+          };
+          const docRef = doc(db, `${inputtedID}/test_creation`);
+          setDoc(docRef, firestore_payload, { merge: true });
           const firestore_payload2 = {
             id: inputtedID,
             name: inputtedName,

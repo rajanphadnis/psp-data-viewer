@@ -85,7 +85,7 @@ const App: Component = (params) => {
   return (
     <div class={styles.App}>
       <MetaProvider>
-        <Show when={testBasics().id != ""} fallback={<Title>Loading...</Title>}>
+        <Show when={testBasics() != undefined ? testBasics().id != "" : false} fallback={<Title>Loading...</Title>}>
           <Title>{testBasics().name}</Title>
         </Show>
       </MetaProvider>

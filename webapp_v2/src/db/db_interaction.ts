@@ -190,8 +190,8 @@ export async function getGeneralTestInfo(
   }
   const default_test = tests.find((p) => p.id == default_id)!;
   setTestBasics(default_test);
-  console.log(testBasics().name);
-  window.history.pushState(null, testBasics().name, `/${default_id}${window.location.search}`);
+  console.log(default_test.name);
+  window.history.pushState(null, default_test.name, `/${default_id}${window.location.search}`);
 
   // return
   return;

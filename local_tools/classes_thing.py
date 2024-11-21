@@ -18,8 +18,10 @@ class SensorMapping:
         """
         Return a string representation of the SensorMapping instance.
         """
-        return (f"SensorMapping(id={self.id} ({self.nickname}), name='{self.name}', "
-                f"slope={self.slope}, offset={self.offset})")
+        return (
+            f"SensorMapping(id={self.id} ({self.nickname}), name='{self.name}', "
+            f"slope={self.slope}, offset={self.offset})"
+        )
 
     def apply_mapping(self, raw_value: float) -> float:
         """

@@ -36,7 +36,7 @@ const NavBarTitle: Component<{ id: string; name: string; test_article: string; g
   ]: any = useState();
   return (
     <div class={layout.flexRowStart} style="justify-content: start;">
-      <Show when={testBasics().id != ""} fallback={<div class={styles.title}>{testBasics().name}</div>}>
+      <Show when={testBasics() != undefined ? testBasics().id != "" : false} fallback={<div class={styles.title}>Loading...</div>}>
         <Dialog>
           <Dialog.Trigger class={styles.title}>
             PSP Data Viewer:{testBasics().test_article}:{testBasics().gse_article}:{testBasics().name}

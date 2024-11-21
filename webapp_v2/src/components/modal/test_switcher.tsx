@@ -1,4 +1,4 @@
-import { Accessor, Component, For, Show } from "solid-js";
+import { Accessor, Component, createSignal, For, Show } from "solid-js";
 import Dialog from "@corvu/dialog";
 import "./modal.module.css";
 import { useState } from "../../state";
@@ -6,6 +6,8 @@ import { TestBasics } from "../../types";
 import TestEntry from "./test_button";
 import styles from "./modal.module.css";
 import RefreshListButton from "./refresh_list_button";
+import { makePersisted } from "@solid-primitives/storage";
+import TestSwitcherFilter from "./switcher_filter/switcher_filter";
 
 const TestSwitcherModal: Component<{}> = (props) => {
   const [
@@ -33,6 +35,11 @@ const TestSwitcherModal: Component<{}> = (props) => {
     setMeasuring,
     { addDataset, updateDataset, removeDataset, updateColor },
   ]: any = useState();
+
+  const [filters, setFilters] = makePersisted(createSignal<string[]>([]), {
+    name: "resizable-sizes",
+  });
+
   return (
     <Dialog.Portal>
       <Dialog.Overlay />
@@ -41,6 +48,7 @@ const TestSwitcherModal: Component<{}> = (props) => {
           Select Test <RefreshListButton />
         </Dialog.Label>
         <div class={styles.switcherModalDescription}>
+          <TestSwitcherFilter/>
           <For each={allKnownTests() as TestBasics[]}>
             {(item, index) => (
               <TestEntry test_id={item.id}>

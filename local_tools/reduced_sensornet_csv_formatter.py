@@ -1,6 +1,6 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import pandas as pd
-from classes import SensorMapping
+from classes_thing import SensorMapping
 
 
 df = pd.read_csv("./data/sensornet_data_delta_cf_2_out.csv")
@@ -9,7 +9,10 @@ def valTime(data):
     test_date = data.split("-05:00")[0]
     if (len(test_date) == 19):
         test_date = test_date + ".000000"
-    return datetime.strptime(test_date, "%Y-%m-%d %H:%M:%S.%f")
+    dt = datetime.strptime(test_date, "%Y-%m-%d %H:%M:%S.%f")
+    dt = dt + timedelta(hours=5)
+    return dt
+
 
 def bool_to_int(data):
     if (data is False):
@@ -44,9 +47,9 @@ df1.columns = ["pt-fu-201_time", "pt-fu-201"]
 df2 = df[["time", "Oxygen_psi"]].copy()
 df2.columns = ["pt-ox-201_time", "pt-ox-201"]
 df3 = df[["time", "Bang_Bang_Fuel"]].copy()
-df3.columns = ["sv-he-202_time", "sv-he-202"]
+df3.columns = ["sv-he-202_state_time", "sv-he-202_state"]
 df4 = df[["time", "Bang_Bang_Oxygen"]].copy()
-df4.columns = ["sv-he-201_time", "sv-he-201"]
+df4.columns = ["sv-he-201_state_time", "sv-he-201_state"]
 
 result = pd.concat([df1, df2, df3, df4], axis=1)
 

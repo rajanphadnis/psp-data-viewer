@@ -10,13 +10,14 @@ from psp_liquids_daq_parser import (
     parseTDMS,
 )
 
+
 def organizeFiles(file_names: list[str]):
     csv_files = list(filter(lambda x: ".csv" in x, file_names))
     fileNames = list(filter(lambda x: ".csv" not in x, file_names))
     fileNames.sort()
     timestamps: list[int] = []
     for file in fileNames:
-        time_stamp_str = file[15:32]
+        time_stamp_str = file.split("DataLog_")[1][0:17]
         datetimeObj = datetime.strptime(time_stamp_str, "%Y-%m%d-%H%M-%S")
         dateString = time.mktime(datetimeObj.timetuple())
         timestamps.append(int(dateString))
@@ -35,21 +36,21 @@ def getUnits(dataset_name: str) -> str:
         scale = "V"
     return scale
 
+
 test_id = "local"
-tdms_timeSyncDelay_ms = 0
+tdms_timeSyncDelay_ms = 3650
 file_names = [
-    "./data/DataLog_2024-1102-2252-13_CMS_CF_Data_Wiring_5.tdms",
-    "./data/Oxygen_TC.csv",
-    "./data/Fuel_TC.csv",
-    "./data/Fuel_PT.csv",
-    "./data/Oxygen_PT.csv",
-    "./data/Helium_PT.csv",
-    "./data/Bang_Bang_Fuel_State.csv",
-    "./data/Bang_Bang_Oxygen_State.csv",
-    "./data/Fuel_Upper_Setpoint.csv",
-    "./data/Fuel_Lower_Setpoint.csv",
-    "./data/Oxygen_Upper_Setpoint.csv",
-    "./data/Oxygen_Lower_Setpoint.csv",
+    "./data/delta_cf1/DataLog_2024-1102-2252-13_CMS_CF_Data_Wiring_5.tdms",
+    "./out/pt-fu-201_setpoint_high.csv",
+    "./out/pt-fu-201_setpoint_low.csv",
+    "./out/pt-fu-201.csv",
+    "./out/pt-ox-201_setpoint_high.csv",
+    "./out/pt-ox-201_setpoint_low.csv",
+    "./out/pt-ox-201.csv",
+    "./out/sv-he-201_state.csv",
+    "./out/sv-he-202_state.csv",
+    "./out/tc-fu-202.csv",
+    "./out/tc-ox-202.csv",
 ]
 (tdms_filenames, csv_filenames, starting_timestamps) = organizeFiles(file_names)
 
