@@ -1,3 +1,9 @@
+## v0.5.4
+started adding filter, fixed hdf5 upload sequence
+
+### Changed
+- bug fixes
+
 ## v0.5.3
 updated legenside redraw, added localtools, updated hdf5 admin upload
 
