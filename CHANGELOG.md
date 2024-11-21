@@ -1,3 +1,9 @@
+## v0.5.6
+updated image css rules
+
+### Changed
+- bug fixes
+
 ## v0.5.5
 added test switcher filter
 

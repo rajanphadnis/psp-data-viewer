@@ -10,10 +10,10 @@ export async function plotSnapshot(type: string) {
   let htmlContent = uplot.root.outerHTML;
 
   let uPlotCssRules: any = document.styleSheets[2].cssRules;
-  let uPlotCssOverrideRules: any = document.styleSheets[3].cssRules;
+  // let uPlotCssOverrideRules: any = document.styleSheets[3].cssRules;
   let cssContent = "";
   for (let { cssText } of uPlotCssRules) cssContent += `${cssText} `;
-  for (let { cssText } of uPlotCssOverrideRules) cssContent += `${cssText} `;
+  // for (let { cssText } of uPlotCssOverrideRules) cssContent += `${cssText} `;
 
   let width = Math.ceil(rect.width * pxRatio);
   let height = Math.ceil(rect.height * pxRatio);
