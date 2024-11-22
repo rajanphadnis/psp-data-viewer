@@ -1,9 +1,10 @@
-import { Component, Show } from "solid-js";
+import { Component, createMemo, createSignal, Show } from "solid-js";
 import styles from "./column.module.css";
 import { IconZoomIn, IconZoomOut } from "../icons/zoom";
 import { useState } from "../../state";
 import { PlotRange, TestBasics } from "../../types";
 import { DateTime } from "luxon";
+import { eventLoop } from "../../plotting/event_loop";
 
 const ZoomButtons: Component<{}> = (props) => {
   const [
@@ -32,6 +33,15 @@ const ZoomButtons: Component<{}> = (props) => {
     { addDataset, updateDataset, removeDataset, updateColor },
   ]: any = useState();
 
+  const zoomRanges = createMemo<number[]>(() => {
+    const [inStart, inEnd] = genZoomBounds(0.5, plotRange(), testBasics());
+    const [outStart, outEnd] = genZoomBounds(2, plotRange(), testBasics());
+    return [inStart, inEnd, outStart, outEnd];
+  });
+
+  const [isLoadingOut, setIsLoadingOut] = createSignal<boolean>(false);
+  const [isLoadingIn, setIsLoadingIn] = createSignal<boolean>(false);
+
   return (
     <Show when={activeDatasets().length > 0}>
       <div class={styles.zoomButtonDiv}>
@@ -39,27 +49,87 @@ const ZoomButtons: Component<{}> = (props) => {
           class={styles.zoomButton}
           onclick={() => {
             console.log("zoom out click");
-            const [start, end] = genZoomBounds(2, plotRange(), testBasics());
             setPlotRange({
-              start: start,
-              end: end,
+              start: zoomRanges()[2],
+              end: zoomRanges()[3],
             });
+          }}
+          onmouseenter={async () => {
+            console.log("prefetching");
+            setIsLoadingOut(true);
+            const datasets = activeDatasets();
+            const test_id = testBasics().id;
+            const legend_sides = datasetsLegendSide();
+            const plotColors = plotPalletteColors();
+            const displayed_samples = sitePreferences().displayedSamples;
+            const axesSets = sitePreferences().axesSets;
+            await eventLoop(
+              zoomRanges()[2],
+              zoomRanges()[3],
+              datasets,
+              test_id,
+              legend_sides,
+              plotColors,
+              displayed_samples,
+              axesSets,
+              setLoadingState,
+              setPlotRange,
+              testBasics,
+              activeDatasets,
+              measuring,
+              setMeasuring,
+              true
+            );
+            setIsLoadingOut(false);
           }}
         >
           <IconZoomOut />
+          <Show when={isLoadingOut()}>
+            <div class={styles.loader}></div>
+          </Show>
         </button>
         <button
           class={styles.zoomButton}
           onclick={() => {
             console.log("zoom in click");
-            const [start, end] = genZoomBounds(0.5, plotRange(), testBasics());
             setPlotRange({
-              start: start,
-              end: end,
+              start: zoomRanges()[0],
+              end: zoomRanges()[1],
             });
+          }}
+          onmouseenter={async () => {
+            console.log("prefetching");
+            setIsLoadingIn(true);
+            const datasets = activeDatasets();
+            const test_id = testBasics().id;
+            const legend_sides = datasetsLegendSide();
+            const plotColors = plotPalletteColors();
+            const displayed_samples = sitePreferences().displayedSamples;
+            const axesSets = sitePreferences().axesSets;
+            await eventLoop(
+              zoomRanges()[0],
+              zoomRanges()[1],
+              datasets,
+              test_id,
+              legend_sides,
+              plotColors,
+              displayed_samples,
+              axesSets,
+              setLoadingState,
+              setPlotRange,
+              testBasics,
+              activeDatasets,
+              measuring,
+              setMeasuring,
+              true
+            );
+            setIsLoadingIn(false);
           }}
         >
           <IconZoomIn />
+          <Show when={isLoadingIn()}>
+            <div class={styles.loader}></div>
+          </Show>
         </button>
       </div>
     </Show>

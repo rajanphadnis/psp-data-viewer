@@ -1,3 +1,9 @@
+## v0.5.10
+added prefetch
+
+### Changed
+- bug fixes
+
 ## v0.5.9
 added back google analytics
 

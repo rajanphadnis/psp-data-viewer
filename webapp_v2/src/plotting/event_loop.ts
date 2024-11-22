@@ -19,7 +19,8 @@ export async function eventLoop(
   testBasics: Accessor<TestBasics>,
   activeDatasets: Accessor<string[]>,
   measuring: Accessor<MeasureData>,
-  setMeasurement: Setter<MeasureData>
+  setMeasurement: Setter<MeasureData>,
+  prefetch: boolean = false
 ) {
   const [generated_toPlot, generated_series] = await generatePlottedDatasets(
     datasets,
@@ -29,23 +30,26 @@ export async function eventLoop(
     legend_sides,
     plotColors,
     displayed_samples,
-    setLoadingState
+    setLoadingState,
+    prefetch
   );
   storeActiveDatasets(generated_toPlot, datasets, startTimestamp, endTimestamp, legend_sides);
   const displayedAxes = generated_series.slice(1).map((s, i) => {
     const thing = s as DatasetSeries;
     return thing.scale;
   });
-  plot(
-    generated_toPlot as AlignedData,
-    generated_series,
-    axesSets,
-    setPlotRange,
-    testBasics,
-    activeDatasets,
-    measuring,
-    displayedAxes,
-    setMeasurement,
-    legend_sides,
-  );
+  if (!prefetch) {
+    plot(
+      generated_toPlot as AlignedData,
+      generated_series,
+      axesSets,
+      setPlotRange,
+      testBasics,
+      activeDatasets,
+      measuring,
+      displayedAxes,
+      setMeasurement,
+      legend_sides
+    );
+  }
 }

@@ -14,7 +14,8 @@ export async function generatePlottedDatasets(
   dataset_legend_side: number[],
   plotColors: string[],
   displayedSamples: number,
-  setLoadingState: Setter<LoadingStateType>
+  setLoadingState: Setter<LoadingStateType>,
+  prefetch: boolean
 ): Promise<[number[][], ({} | DatasetSeries)[]]> {
   let channelsToFetch: Map<string, number> = new Map();
   let toPlot: number[][] = new Array(datasets.length).fill([]);
@@ -42,13 +43,16 @@ export async function generatePlottedDatasets(
   const legendSidesToFetch = need_to_fetch_legendSide.map((index) => dataset_legend_side[index]);
 
   if (need_to_fetch.length == 0) {
+    console.log("fetching all channels from cache");
     const dataset_key: string = `application_data__time--${startTimestamp.toString()}--${endTimestamp.toString()}--${test_id}`;
     let toPlot_toReturn = [JSON.parse(localStorage.getItem(dataset_key)!), ...toPlot];
     let series_toReturn = [{}, ...series];
     return [toPlot_toReturn, series_toReturn];
   }
   console.log("fetching channels from database: " + need_to_fetch.toString());
-  setLoadingState({ isLoading: true, statusMessage: "Fetching..." });
+  if (!prefetch) {
+    setLoadingState({ isLoading: true, statusMessage: "Fetching..." });
+  }
   const [toPlot_fetched, series_fetched] = await getSensorData(
     need_to_fetch,
     startTimestamp,
@@ -57,7 +61,7 @@ export async function generatePlottedDatasets(
     test_id,
     displayedSamples,
     plotColors,
-    legendSidesToFetch,
+    legendSidesToFetch
   );
   for (let i = 0; i < need_to_fetch.length; i++) {
     const fetched_dataset = need_to_fetch[i];
@@ -67,7 +71,9 @@ export async function generatePlottedDatasets(
   }
   let toPlot_toReturn = [toPlot_fetched[toPlot_fetched.length - 1], ...toPlot];
   let series_toReturn = [{}, ...series];
-  setLoadingState({ isLoading: true, statusMessage: "Caching..." });
+  if (!prefetch) {
+    setLoadingState({ isLoading: true, statusMessage: "Caching..." });
+  }
   cacheFetchedData(
     toPlot_fetched,
     [...need_to_fetch, "time"],
