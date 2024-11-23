@@ -3,7 +3,7 @@ import styles from "./tools.module.css";
 import IconButton from "./icon_button";
 import { IconJedi } from "../../../icons/easter";
 import Dialog from "@corvu/dialog";
-import EasterEggModal from "../../../modal/easter_egg_modal";
+import EasterEggModal from "../../../modal/easter/easter_egg_modal";
 
 const ToolEasterEgg: Component<{}> = (props) => {
   return (

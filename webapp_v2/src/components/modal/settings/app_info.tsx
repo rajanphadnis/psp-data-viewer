@@ -1,6 +1,6 @@
 import { Component } from "solid-js";
-import { appVersion, buildDate } from "../../generated_app_info";
-import styles from "./modal.module.css";
+import { appVersion, buildDate } from "../../../generated_app_info";
+import styles from "../modal.module.css";
 
 const AppInfo: Component<{}> = (props) => {
   return (

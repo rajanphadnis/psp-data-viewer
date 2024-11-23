@@ -54,7 +54,7 @@ const PanelTools: Component<{}> = (props) => {
         <ToolDownloadImage />
         <ToolDownloadCSV />
         <ToolMeasure />
-        <ToolCalcChannel />
+        {/* <ToolCalcChannel /> */}
         <Show when={activeDatasets().length > 2}>
           <ToolEasterEgg />
         </Show>

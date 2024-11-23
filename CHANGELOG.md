@@ -1,3 +1,9 @@
+## v0.5.11
+added plotting options modal and made easter eggs public
+
+### Changed
+- bug fixes
+
 ## v0.5.10
 added prefetch
 

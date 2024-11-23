@@ -1,8 +1,7 @@
 import { Component } from "solid-js";
-import { useState } from "../../state";
-import AppInfo from "./app_info";
+import { useState } from "../../../state";
 import Dialog from "@corvu/dialog";
-import styles from "./modal.module.css";
+import styles from "../modal.module.css";
 import {
   IconSpock,
   IconJedi,
@@ -10,7 +9,10 @@ import {
   IconJediOrder,
   IconGalacticSenate,
   IconGalacticRepublic,
-} from "../icons/easter";
+} from "../../icons/easter";
+import EasterAudioButton from "./audio_button";
+import EasterClickButton from "./click_button";
+import PlottingOptionsModal from "../settings/plotting_options";
 
 const EasterEggModal: Component<{}> = (props) => {
   const [
@@ -46,15 +48,15 @@ const EasterEggModal: Component<{}> = (props) => {
         <Dialog.Label>Join an Order</Dialog.Label>
         <div class={styles.settingsModalDescription}>
           <div class={styles.settingsContentDiv}>
-            <EasterButton name="Star Trek" onclick={() => {}}>
+            <EasterClickButton name="Star Trek">
               <IconSpock />
-            </EasterButton>
-            <EasterButton name="Jedi" onclick={() => {}}>
+            </EasterClickButton>
+            <EasterAudioButton name="Jedi">
               <IconJedi />
-            </EasterButton>
-            <EasterButton name="Jedi Order" onclick={() => {}}>
+            </EasterAudioButton>
+            <PlottingOptionsModal name="Jedi Order">
               <IconJediOrder />
-            </EasterButton>
+            </PlottingOptionsModal>
             <EasterButton name="Galactic Senate" onclick={() => {}}>
               <IconGalacticSenate />
             </EasterButton>

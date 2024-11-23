@@ -1,20 +1,18 @@
-import { Accessor, Component, For } from "solid-js";
+import { Component } from "solid-js";
 import Dialog from "@corvu/dialog";
-import "./modal.module.css";
-import { useState } from "../../state";
-import { TestBasics } from "../../types";
-import TestEntry from "./test_button";
-import styles from "./modal.module.css";
+import { useState } from "../../../state";
+import styles from "../modal.module.css";
 import AppInfo from "./app_info";
 import SettingsButton from "./settings_button";
-import IconRecycle from "../icons/recycle";
-import IconRefresh from "../icons/refresh";
-import IconCloudDownload from "../icons/cloud_download";
-import IconEyeDrop from "../icons/eye_drop";
-import IconFile from "../icons/file";
-import IconAdmin from "../icons/admin";
-import IconListCheck from "../icons/list_check";
-import { getSharelink } from "../../browser/sharelink";
+import IconRefresh from "../../icons/refresh";
+import IconCloudDownload from "../../icons/cloud_download";
+import IconEyeDrop from "../../icons/eye_drop";
+import IconFile from "../../icons/file";
+import IconAdmin from "../../icons/admin";
+import IconListCheck from "../../icons/list_check";
+import { getSharelink } from "../../../browser/sharelink";
+import SettingsIcon from "../../icons/settings";
+import PlottingOptionsModal from "./plotting_options";
 
 const SettingsModal: Component<{}> = (props) => {
   const [
@@ -90,14 +88,15 @@ const SettingsModal: Component<{}> = (props) => {
             >
               <IconRefresh />
             </SettingsButton>
-            <SettingsButton
-              name="Measuring Tool Color"
+            <PlottingOptionsModal name="Plotting Options"><SettingsIcon /></PlottingOptionsModal>
+            {/* <SettingsButton
+              name="Plotting Options"
               onclick={() => {
-                console.log("Measuring Tool Color");
+                console.log("Plotting Options");
               }}
             >
-              <IconEyeDrop />
-            </SettingsButton>
+              <SettingsIcon />
+            </SettingsButton> */}
             <SettingsButton
               name="Documentation"
               onclick={() => {

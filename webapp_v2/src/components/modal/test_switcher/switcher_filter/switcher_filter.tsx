@@ -1,8 +1,8 @@
 import { Component, For } from "solid-js";
 import styles from "./switcher.module.css";
-import { useState } from "../../../state";
-import { TestBasics } from "../../../types";
 import FilterButton from "./filter_button";
+import { useState } from "../../../../state";
+import { TestBasics } from "../../../../types";
 
 const TestSwitcherFilter: Component<{
   setFilters: (newFilters: string[]) => void;

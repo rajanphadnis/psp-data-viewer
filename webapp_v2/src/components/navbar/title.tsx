@@ -3,10 +3,10 @@ import styles from "./navbar.module.css";
 import layout from "../../layout.module.css";
 import { useState } from "../../state";
 import Dialog from "@corvu/dialog";
-import TestSwitcherModal from "../modal/test_switcher";
+import TestSwitcherModal from "../modal/test_switcher/test_switcher";
 import SwapIcon from "../icons/swap";
 import SettingsIcon from "../icons/settings";
-import SettingsModal from "../modal/settings_panel";
+import SettingsModal from "../modal/settings/settings_panel";
 
 const NavBarTitle: Component<{ id: string; name: string; test_article: string; gse_article: string }> = (props) => {
   const [

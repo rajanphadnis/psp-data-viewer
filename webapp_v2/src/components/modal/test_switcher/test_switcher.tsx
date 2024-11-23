@@ -1,10 +1,9 @@
-import { Accessor, Component, createMemo, createSignal, For, on, Show } from "solid-js";
+import { Component, createMemo, createSignal, For, Show } from "solid-js";
 import Dialog from "@corvu/dialog";
-import "./modal.module.css";
-import { useState } from "../../state";
-import { TestBasics } from "../../types";
+import { useState } from "../../../state";
+import { TestBasics } from "../../../types";
 import TestEntry from "./test_button";
-import styles from "./modal.module.css";
+import styles from "../modal.module.css";
 import RefreshListButton from "./refresh_list_button";
 import { makePersisted } from "@solid-primitives/storage";
 import TestSwitcherFilter from "./switcher_filter/switcher_filter";

@@ -1,5 +1,5 @@
 import { Component } from "solid-js";
-import styles from "./modal.module.css";
+import styles from "../modal.module.css";
 
 const SettingsButton: Component<{
   children?: any;

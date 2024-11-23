@@ -1,8 +1,8 @@
 import { Component } from "solid-js";
-import styles from "../navbar/navbar.module.css";
-import IconRefresh from "../icons/refresh";
-import { useState } from "../../state";
-import { getSharelink } from "../../browser/sharelink";
+import styles from "../../navbar/navbar.module.css";
+import IconRefresh from "../../icons/refresh";
+import { useState } from "../../../state";
+import { getSharelink } from "../../../browser/sharelink";
 
 const RefreshListButton: Component<{}> = (props) => {
   const [

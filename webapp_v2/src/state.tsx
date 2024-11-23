@@ -2,6 +2,7 @@ import { Accessor, createContext, createSignal, Setter, Signal, useContext } fro
 import { defaultPlottingColors } from "./theming";
 import { LoadingStateType, TestBasics, Preferences, PlotRange, MeasureData } from "./types";
 import { clearDatums } from "./browser/measure";
+import { makePersisted } from "@solid-primitives/storage";
 
 const init_loadingState: LoadingStateType = { isLoading: true, statusMessage: "Loading..." };
 const init_testData: TestBasics = {
@@ -30,13 +31,17 @@ export function AppStateProvider(props: any) {
   const [allKnownTests, setAllKnownTests]: Signal<TestBasics[]> = createSignal(new Array<TestBasics>());
 
   const [loadingDatasets, setLoadingDatasets]: Signal<string[]> = createSignal(new Array<string>());
-  const [measuring, setMeasuring]: Signal<MeasureData> = createSignal(init_measuringTool);
+  const [measuring, setMeasuring] = makePersisted(createSignal<MeasureData>(init_measuringTool), {
+    name: "measuring-storage",
+  });
   const [datasetsLegendSide, setDatasetsLegendSide]: Signal<number[]> = createSignal(new Array<number>());
 
   const [plotRange, setPlotRange]: Signal<PlotRange> = createSignal({ start: 0, end: 0 });
   const [plotPalletteColors, setPlotPalletteColors]: Signal<string[]> = createSignal(defaultPlottingColors);
 
-  const [sitePreferences, setSitePreferences]: Signal<Preferences> = createSignal(init_Preferences);
+  const [sitePreferences, setSitePreferences] = makePersisted(createSignal<Preferences>(init_Preferences), {
+    name: "preference-storage",
+  });
 
   const datasetsThing = [
     activeDatasets,

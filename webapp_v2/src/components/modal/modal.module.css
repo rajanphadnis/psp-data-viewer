@@ -26,6 +26,10 @@
   height: 50%;
 }
 
+.easterModal {
+  height: 40%;
+}
+
 
 @keyframes enter {
   from {
@@ -182,4 +186,35 @@
 
 .settingsButtonEaster svg {
   width: 30px;
+}
+
+.optionsDiv {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+}
+
+.optionsDiv p  {
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.optionsButton {
+  width: calc(100% - 20px);
+  /* margin-left: 10px;
+  margin-right: 10px; */
+  margin: 10px;
+  border: none;
+  font-family: "IBM Plex Mono", monospace;
+  text-align: center;
+  color: black;
+  background-color: var(--rush);
+  padding: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.optionsButton:hover {
+  background-color: var(--field);;
 }
