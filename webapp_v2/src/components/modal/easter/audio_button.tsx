@@ -1,6 +1,6 @@
 import { Component, createSignal, Show } from "solid-js";
 import styles from "../modal.module.css";
-import sw from "../../../assets/media/sw.mp3";
+import sw from "../../../assets/media/sw_trim.mp3";
 import { IconPause } from "../../icons/media";
 
 const EasterAudioButton: Component<{

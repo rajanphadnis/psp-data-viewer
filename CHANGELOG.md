@@ -1,3 +1,9 @@
+## v0.5.12
+trimmed audio size
+
+### Changed
+- bug fixes
+
 ## v0.5.11
 added plotting options modal and made easter eggs public
 
