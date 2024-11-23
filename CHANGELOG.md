@@ -1,3 +1,9 @@
+## v0.5.13
+fixed measuring tool
+
+### Changed
+- bug fixes
+
 ## v0.5.12
 trimmed audio size
 

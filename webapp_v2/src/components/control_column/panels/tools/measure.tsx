@@ -37,18 +37,21 @@ const ToolMeasure: Component<{}> = (props) => {
 
   const calculated_measurements = createMemo<SingleMeasurement[]>(() => {
     let toReturn: SingleMeasurement[] = [];
-    activeDatasets().forEach((dataset: string) => {
+    for (let index = 0; index < activeDatasets().length; index++) {
+      const dataset = activeDatasets()[index];
       const name = dataset.split("__")[0];
       const units = dataset.split("__")[1];
-      const y1 = measuring().y1;
-      const y2 = measuring().y2;
-      const dataPoint: SingleMeasurement = {
-        name: name,
-        units: units,
-        measurement: (y2 - y1).toFixed(4),
-      };
-      toReturn.push(dataPoint);
-    });
+      if (units != "bin") {
+        const y1 = measuring().y1[index];
+        const y2 = measuring().y2[index];
+        const dataPoint: SingleMeasurement = {
+          name: name,
+          units: units,
+          measurement: (y2 - y1).toFixed(4),
+        };
+        toReturn.push(dataPoint);
+      }
+    }
     return toReturn;
   });
 
@@ -97,7 +100,7 @@ const ToolMeasure: Component<{}> = (props) => {
                   );
                 }}
               </For>
-              <p>Δtime={formatTimeDelta((measuring().x2 - measuring().x1) * 1000)}s</p>
+              <p>Δtime={formatTimeDelta((measuring().x2 - measuring().x1) * 1000)}</p>
             </Show>
           </Popover.Description>
         </Popover.Content>

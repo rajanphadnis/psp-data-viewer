@@ -16,7 +16,7 @@ const SettingsColorPicker: Component<{ color: any; setColor: any }> = (props) =>
       }
       return false;
     });
-    console.log("clicked outside");
+    // console.log("clicked outside");
   });
 
   return (

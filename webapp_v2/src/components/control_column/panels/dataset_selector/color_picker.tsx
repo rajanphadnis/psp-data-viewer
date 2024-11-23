@@ -41,7 +41,7 @@ const ColorPicker: Component<{ dataset_id: string }> = (props) => {
       }
       return false;
     });
-    console.log("clicked outside");
+    // console.log("clicked outside");
   });
 
   return (
