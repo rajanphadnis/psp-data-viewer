@@ -1,7 +1,7 @@
 import { Accessor, Setter } from "solid-js";
 import { PlotRange, TestBasics } from "../types";
 
-function getQueryVariable(variable: string) {
+export function getQueryVariable(variable: string) {
   var query = window.location.search.substring(1);
   var vars = query.split("&");
   for (var i = 0; i < vars.length; i++) {
@@ -53,6 +53,6 @@ export function getSharelink(datasets: string[], start: number, end: number, leg
   return [sharelink_base, b64];
 }
 
-const decode = (str: string): string => atob(str);
+export const decode = (str: string): string => atob(str);
 
-const encode = (str: string): string => btoa(str);
+export const encode = (str: string): string => btoa(str);

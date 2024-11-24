@@ -1,3 +1,9 @@
+## v0.5.14
+started adding tests and admin v2
+
+### Changed
+- bug fixes
+
 ## v0.5.13
 fixed measuring tool
 

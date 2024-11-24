@@ -147,17 +147,16 @@ export function plot(
       clearDatums(measuring, setMeasuring);
     }
   });
-
 }
 
-function getSize() {
+export function getSize() {
   return {
     width: document.getElementById("plot")!.offsetWidth - 10,
     height: window.innerHeight - 90,
   };
 }
 
-function generateAllAxes(totalAxes: number) {
+export function generateAllAxes(totalAxes: number) {
   let axesToReturn: DatasetAxis[] = [];
   for (let i = 1; i < totalAxes + 1; i++) {
     axesToReturn = [...axesToReturn, ...generateAxes(i)];
@@ -177,7 +176,7 @@ function generateAllAxes(totalAxes: number) {
   ];
 }
 
-function generateAxes(axesSide: number): DatasetAxis[] {
+export function generateAxes(axesSide: number): DatasetAxis[] {
   let axesToReturn: DatasetAxis[] = [];
   const isOdd = axesSide % 2 == 1;
   axesToReturn.push(
