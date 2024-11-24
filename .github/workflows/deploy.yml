@@ -22,7 +22,7 @@ jobs:
       - name: Web App Unit Tests
         run: cd webapp_v2 && bun install && bun run test
       - name: Admin App Unit Tests
-        run: cd admin_v2 && bun install && ls
+        run: cd admin_v2 && bun install && bun run test
   changelog-check:
     runs-on: ubuntu-latest
     steps:
