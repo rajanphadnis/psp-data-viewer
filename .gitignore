@@ -46,3 +46,5 @@ local_tools/data
 local_tools/out
 local_tools/__pycache__
 local_tools/*.hdf5
+admin_v2/.env.dev
+admin_v2/src/generated_app_check_secret.ts

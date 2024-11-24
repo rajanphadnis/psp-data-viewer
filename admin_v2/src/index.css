@@ -1,0 +1,32 @@
+:root {
+  --night-sky: #252526;
+  --rush: #daaa00;
+  --moondust: #f2efe9;
+  --bm-gold: #cfb991;
+  --aged: #8e6f3e;
+  --field: #ddb945;
+  --dust: #ebd99f;
+  --steel: #555960;
+  --cool-gray: #6f727b;
+  --background-color: rgb(29, 29, 29);
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--background-color);
+  font-family: "IBM Plex Mono", monospace;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: white;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 40;
+}
+
+#main {
+  display: flex;
+  flex-direction: row;
+}

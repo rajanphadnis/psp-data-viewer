@@ -1,0 +1,32 @@
+{
+  "name": "admin",
+  "module": "src/index.ts",
+  "version": "0.5.13",
+  "description": "",
+  "scripts": {
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "debug": "bun run --env-file=.env.dev ./build_tools/compile.ts",
+    "prod": "bun run --env-file=.env.prod.publish ./build_tools/compile.ts"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "solid-devtools": "^0.29.2",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.11",
+    "vite-plugin-solid": "^2.8.2",
+    "@types/bun": "^1.1.13"
+  },
+  "dependencies": {
+    "solid-js": "^1.8.11",
+    "@azure/storage-file-share": "^12.24.0",
+    "firebase": "^10.11.1",
+    
+    "@solid-primitives/storage": "^4.2.1",
+    "@solidjs/meta": "^0.29.4",
+    "@solidjs/router": "^0.15.1",
+    "corvu": "^0.7.1"
+  }
+}
