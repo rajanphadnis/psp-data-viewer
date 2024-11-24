@@ -16,6 +16,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - name: Build Web App
+        working-directory: ./webapp_v2
+        run: bun install && bun run test
   changelog-check:
     runs-on: ubuntu-latest
     steps:

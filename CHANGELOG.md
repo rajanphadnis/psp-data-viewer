@@ -1,3 +1,9 @@
+## v0.5.15
+unit tests added to deploy sequence
+
+### Changed
+- bug fixes
+
 ## v0.5.14
 started adding tests and admin v2
 
