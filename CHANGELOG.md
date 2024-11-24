@@ -1,3 +1,9 @@
+## v0.5.16
+updated deploy sequence
+
+### Changed
+- bug fixes
+
 ## v0.5.15
 unit tests added to deploy sequence
 

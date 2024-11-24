@@ -2,7 +2,7 @@
     "name": "webapp",
     "module": "src/index.ts",
     "type": "module",
-    "version": "0.5.15",
+    "version": "0.5.16",
     "description": "",
     "scripts": {
         "start": "vite",

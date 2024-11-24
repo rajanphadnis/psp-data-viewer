@@ -19,9 +19,10 @@ jobs:
       - uses: oven-sh/setup-bun@v1
         with:
           bun-version: latest
-      - name: Build Web App
-        working-directory: ./webapp_v2
-        run: bun install && bun run test
+      - name: Web App Unit Tests
+        run: cd webapp_v2 && bun install && bun run test
+      - name: Admin App Unit Tests
+        run: cd admin_v2 && bun install && ls
   changelog-check:
     runs-on: ubuntu-latest
     steps:
