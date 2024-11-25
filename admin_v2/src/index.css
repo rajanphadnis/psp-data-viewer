@@ -20,13 +20,17 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: white;
+  height: 100%;
+  min-height: 100%;
+  max-height: 100%;
+}
+
+#root {
+  height: 100%;
+  min-height: 100%;
+  max-height: 100%;
 }
 
 .material-symbols-outlined {
   font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 40;
-}
-
-#main {
-  display: flex;
-  flex-direction: row;
 }

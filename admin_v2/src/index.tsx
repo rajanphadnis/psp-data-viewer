@@ -1,18 +1,27 @@
 /* @refresh reload */
 import { render } from "solid-js/web";
 import "./index.css";
-import App from "./App";
 import { Route, Router } from "@solidjs/router";
 import { Firestore } from "firebase/firestore";
-import { onMount } from "solid-js";
+import { createSignal, onMount, Show } from "solid-js";
 import "solid-devtools";
 import { initFirebase } from "./db/firebase_init";
-import { AppStateProvider } from "./state";
+import { AppStateProvider, useState } from "./state";
+import { MetaProvider, Title } from "@solidjs/meta";
+import Header from "./components/header/header";
+import styles from "./components/resizeable.module.css";
+import Resizable from "@corvu/resizable";
+import MetaStuff from "./meta_stuff";
+import HomeComponent from "./components/home/home";
+import { makePersisted } from "@solid-primitives/storage";
+import Instances from "./components/instances/instances";
+import MainLayout from "./components/layout";
 
 const root = document.getElementById("root");
 
 declare global {
   var db: Firestore;
+  var default_id: string;
 }
 
 if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
@@ -24,13 +33,11 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
 initFirebase();
 
 render(() => {
-  onMount(async () => {});
-
   return (
     <AppStateProvider>
-      <Router>
-        <Route path="/:testID?" component={App}></Route>
-      </Router>
+      <MetaStuff />
+      <Header />
+      <MainLayout/>
     </AppStateProvider>
   );
 }, root!);
