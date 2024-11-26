@@ -2,7 +2,6 @@ import { Accessor, Component, createSignal, Show } from "solid-js";
 import styles from "./instances.module.css";
 import { useState } from "../../state";
 import { runRequest } from "../../db/azure_interaction";
-import InstancesFetchButton from "./fetch_button";
 
 const InstanceUpdateButton: Component<{ instanceCount: Accessor<number> }> = (props) => {
   const [allKnownTests, setAllKnownTests, loadingState, setLoadingState]: any = useState();
