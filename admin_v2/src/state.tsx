@@ -10,7 +10,7 @@ const init_testData: TestBasics = {
   id: "",
   starting_timestamp: 0,
   ending_timestamp: 0,
-  datasets: [""],
+  // datasets: [""],
 };
 
 export function AppStateProvider(props: any) {

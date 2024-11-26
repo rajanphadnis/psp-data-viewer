@@ -1,4 +1,4 @@
-import { Component, createMemo, createSignal, For } from "solid-js";
+import { Component, createEffect, createMemo, createSignal, For } from "solid-js";
 import Resizable from "@corvu/resizable";
 import styles from "../resizeable.module.css";
 import home from "./home.module.css";
@@ -8,16 +8,7 @@ import { TestBasics } from "../../types";
 import { makePersisted } from "@solid-primitives/storage";
 import TestSwitcherFilter from "./switcher_filter/switcher_filter";
 import HomeEditor from "./editor/editor";
-
-const init_testData: TestBasics = {
-  name: "Loading...",
-  gse_article: "",
-  test_article: "",
-  id: "",
-  starting_timestamp: 0,
-  ending_timestamp: 0,
-  datasets: [""],
-};
+import SectionTitle from "../title";
 
 const HomeComponent: Component<{}> = (props) => {
   const [allKnownTests, setAllKnownTests, loadingState, setLoadingState]: any = useState();
@@ -49,6 +40,7 @@ const HomeComponent: Component<{}> = (props) => {
     <Resizable>
       <Resizable.Panel initialSize={0.4} minSize={0.2} class={`${styles.panel} ${styles.panelPadding}`}>
         <div class={home.homeNavBar}>
+          <SectionTitle title="Select Test:" />
           <TestSwitcherFilter setFilters={setFilters} filters={filters} />
           <For each={filteredTestEntries().length == 0 ? (allKnownTests() as TestBasics[]) : filteredTestEntries()}>
             {(item, index) => {

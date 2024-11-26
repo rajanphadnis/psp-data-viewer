@@ -76,7 +76,7 @@ const PanelLayout: Component<{ children?: any }> = (props) => {
     <Resizable sizes={sizes()} onSizesChange={setSizes}>
       <Resizable.Panel initialSize={0.2} minSize={0.2} class={`${styles.panel} ${styles.panelPadding}`}>
         <NavBarItem name="Manage Tests" route="/" />
-        <NavBarItem name="Manage Articles" route="/articles" />
+        {/* <NavBarItem name="Manage Articles" route="/articles" /> */}
         <NavBarItem name="New Test" route="/new" />
         <NavBarItem name="Instances" route="/instances" />
         <NavBarItem name="Analytics" route="/analytics" />

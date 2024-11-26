@@ -11,7 +11,7 @@ import { doc, getDocFromCache, getDoc, DocumentSnapshot, DocumentData } from "fi
  * `starting_timestamp`, `ending_timestamp`
  *
  */
-export async function getTestInfo(test_ID: string, setTestBasics: Setter<TestData>): Promise<void> {
+export async function getTestInfo(test_ID: string, setTestBasics: Setter<TestData>): Promise<TestData> {
     // Use the global (app state) database reference and currently selected test ID
     const docRef = doc(globalThis.db, test_ID, "general");
     let docSnap;
@@ -32,7 +32,7 @@ export async function getTestInfo(test_ID: string, setTestBasics: Setter<TestDat
     const gse_article: string = docData["gse_article"];
     const starting_timestamp: number = parseInt(docData["starting_timestamp"]);
     const ending_timestamp: number = parseInt(docData["ending_timestamp"]);
-    setTestBasics({
+    const toReturn: TestData = {
       id: test_ID,
       name: name,
       test_article: test_article,
@@ -40,7 +40,8 @@ export async function getTestInfo(test_ID: string, setTestBasics: Setter<TestDat
       starting_timestamp: starting_timestamp,
       ending_timestamp: ending_timestamp,
       datasets: datasets.sort((a, b) => a.localeCompare(b)),
-    });
+    };
+    setTestBasics(toReturn);
   
     // setAllDatasets(datasets.sort((a, b) => a.localeCompare(b)));
   
@@ -53,7 +54,7 @@ export async function getTestInfo(test_ID: string, setTestBasics: Setter<TestDat
     console.log("got test-specific data");
   
     // return
-    return;
+    return toReturn;
   }
   
   /**
@@ -69,13 +70,13 @@ export async function getTestInfo(test_ID: string, setTestBasics: Setter<TestDat
   ): Promise<void> {
     const docRef = doc(globalThis.db, "general", "tests");
     let docSnap: DocumentSnapshot<DocumentData, DocumentData>;
-    try {
-      console.log("fetching metadata from cache");
-      docSnap = await getDocFromCache(docRef);
-    } catch (error) {
-      console.log("cache miss. Fetching metadata from server");
+    // try {
+    //   console.log("fetching metadata from cache");
+    //   docSnap = await getDocFromCache(docRef);
+    // } catch (error) {
+      // console.log("cache miss. Fetching metadata from server");
       docSnap = await getDoc(docRef);
-    }
+    // }
   
     // Read document data
     const docData = docSnap.data()!;
@@ -101,7 +102,7 @@ export async function getTestInfo(test_ID: string, setTestBasics: Setter<TestDat
     });
     const default_id: string = docData["default"];
     globalThis.default_id = default_id;
-    setAllKnownTests(tests);
+    setAllKnownTests([...tests]);
   
     // if (page_testID != undefined) {
     //   const known_test = tests.find((p) => p.id == page_testID);

@@ -5,7 +5,7 @@ export type TestBasics = {
   gse_article: string;
   starting_timestamp: number | undefined;
   ending_timestamp: number | undefined;
-  datasets: string[] | undefined;
+  // datasets: string[] | undefined;
 };
 
 export type LoadingStateType = {
