@@ -9,6 +9,7 @@ import { makePersisted } from "@solid-primitives/storage";
 import TestSwitcherFilter from "./switcher_filter/switcher_filter";
 import HomeEditor from "./editor/editor";
 import SectionTitle from "../title";
+import { getDateLabel } from "../../browser_interactions";
 
 const HomeComponent: Component<{}> = (props) => {
   const [
@@ -47,13 +48,41 @@ const HomeComponent: Component<{}> = (props) => {
     }
   });
 
+  const sortedTests = createMemo(() => {
+    const tests_unsorted =
+      filteredTestEntries().length == 0 ? (allKnownTests() as TestBasics[]) : filteredTestEntries();
+    const tests = tests_unsorted.sort(function (a, b) {
+      if (a.test_article === b.test_article) {
+        if (a.gse_article === b.gse_article) {
+          if (a.starting_timestamp! == b.starting_timestamp!) {
+            return b.name < a.name ? 1 : -1;
+          } else if (a.starting_timestamp! < b.starting_timestamp!) {
+            return 1;
+          } else if (a.starting_timestamp! > b.starting_timestamp!) {
+            return -1;
+          }
+        } else if (a.gse_article < b.gse_article) {
+          return 1;
+        } else if (a.gse_article < b.gse_article) {
+          return -1;
+        }
+      } else if (a.test_article < b.test_article) {
+        return 1;
+      } else if (a.test_article < b.test_article) {
+        return -1;
+      }
+      return -1;
+    });
+    return tests;
+  });
+
   return (
     <Resizable>
       <Resizable.Panel initialSize={0.4} minSize={0.2} class={`${styles.panel} ${styles.panelPadding}`}>
         <div class={home.homeNavBar}>
           <SectionTitle title="Select Test:" />
           <TestSwitcherFilter setFilters={setFilters} filters={filters} />
-          <For each={filteredTestEntries().length == 0 ? (allKnownTests() as TestBasics[]) : filteredTestEntries()}>
+          <For each={sortedTests()}>
             {(item, index) => {
               return <HomeNavbarItem test={item} setter={setSelected} active={currentlySelectedTest().id == item.id} />;
             }}

@@ -1,3 +1,9 @@
+## v0.7.1
+added date to test title
+
+### Changed
+- bug fixes
+
 ## v0.7.0
 fixed admin deploy sequence
 

@@ -1,7 +1,8 @@
-import { Accessor, Component, For, Setter } from "solid-js";
+import { Accessor, Component, createMemo, For, Setter } from "solid-js";
 import styles from "./defaults.module.css";
 import { useState } from "../../state";
 import { TestBasics } from "../../types";
+import { getDateLabel } from "../../browser_interactions";
 
 const DefaultDropdown: Component<{
   onChange: Setter<string>;
@@ -36,11 +37,14 @@ const DefaultDropdown: Component<{
         class={styles.defaultSelect}
       >
         <For each={props.optionVals()}>
-          {(item, index) => (
-            <option value={item} selected={props.default() == item}>
-              {!props.isID ? item : (allKnownTests() as TestBasics[]).filter((thing) => thing.id == item)[0].name}
-            </option>
-          )}
+          {(item, index) => {
+            const filteredItem = (allKnownTests() as TestBasics[]).filter((thing) => thing.id == item)[0];
+            return (
+              <option value={item} selected={props.default() == item}>
+                {!props.isID ? item : `${getDateLabel(filteredItem.starting_timestamp!)}:${filteredItem.name}`}
+              </option>
+            );
+          }}
         </For>
       </select>
     </div>

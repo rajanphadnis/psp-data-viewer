@@ -7,6 +7,7 @@ import TestSwitcherModal from "../modal/test_switcher/test_switcher";
 import SwapIcon from "../icons/swap";
 import SettingsIcon from "../icons/settings";
 import SettingsModal from "../modal/settings/settings_panel";
+import { getDateLabel } from "../../browser/util";
 
 const NavBarTitle: Component<{ id: string; name: string; test_article: string; gse_article: string }> = (props) => {
   const [
@@ -36,10 +37,14 @@ const NavBarTitle: Component<{ id: string; name: string; test_article: string; g
   ]: any = useState();
   return (
     <div class={layout.flexRowStart} style="justify-content: start;">
-      <Show when={testBasics() != undefined ? testBasics().id != "" : false} fallback={<div class={styles.title}>Loading...</div>}>
+      <Show
+        when={testBasics() != undefined ? testBasics().id != "" : false}
+        fallback={<div class={styles.title}>Loading...</div>}
+      >
         <Dialog>
           <Dialog.Trigger class={styles.title}>
-            PSP Data Viewer:{testBasics().test_article}:{testBasics().gse_article}:{testBasics().name}
+            PSP Data Viewer:{testBasics().test_article}:{testBasics().gse_article}:
+            {`${getDateLabel(testBasics().starting_timestamp!)}:${testBasics().name}`}
           </Dialog.Trigger>
           <TestSwitcherModal />
         </Dialog>

@@ -370,6 +370,7 @@ def updateTestMetaData(req: https_fn.Request) -> https_fn.Response:
         test_ref: google.cloud.firestore.DocumentReference,
     ):
         list_of_visible: list = general_ref.get(transaction=transaction).get("visible")
+        timestamp: int = test_ref.get(transaction=transaction).get("starting_timestamp")
         print(list_of_visible)
         item_to_index = [item for item in list_of_visible if item["id"] == test_id]
         print(item_to_index)
@@ -390,6 +391,7 @@ def updateTestMetaData(req: https_fn.Request) -> https_fn.Response:
                             "name": test_name,
                             "test_article": test_article,
                             "gse_article": test_gse,
+                            "starting_timestamp": timestamp,
                         }
                     ]
                 )

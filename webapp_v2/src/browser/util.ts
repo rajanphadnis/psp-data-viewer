@@ -1,3 +1,5 @@
+import moment from "moment";
+
 function fallbackCopyTextToClipboard(text: string) {
   var textArea = document.createElement("textarea");
   textArea.value = text;
@@ -41,3 +43,15 @@ export function copyTextToClipboard(text: string) {
   );
 }
 export const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+
+export function getDateLabel(timestamp: number): string {
+  const offset = new Date().getTimezoneOffset();
+  const targetTime = moment.utc(timestamp).toDate();
+  const offsetTime = new Date(targetTime.getTime() + offset * 60 * 1000);
+  const toReturn = `${(offsetTime.getMonth() + 1).toString().padStart(2, "0")}/${offsetTime
+    .getDate()
+    .toString()
+    .padStart(2, "0")}/${offsetTime.getFullYear().toString().slice(2)}`;
+  console.log(toReturn);
+  return toReturn;
+}
