@@ -4,7 +4,18 @@ import CheckIcon from "../icons/check";
 import { useState } from "../../state";
 
 const Status: Component<{}> = (props) => {
-  const [allKnownTests, setAllKnownTests, loadingState, setLoadingState]: any = useState();
+  const [
+    allKnownTests,
+    setAllKnownTests,
+    loadingState,
+    setLoadingState,
+    defaultTest,
+    setDefaultTest,
+    defaultGSE,
+    setDefaultGSE,
+    defaultTestArticle,
+    setDefaultTestArticle,
+  ]: any = useState();
 
   return (
     <div class={styles.status}>

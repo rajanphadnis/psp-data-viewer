@@ -11,7 +11,18 @@ const EditorSaveButton: Component<{
   gseArticle: Accessor<string>;
   setloading: Setter<boolean>;
 }> = (props) => {
-  const [allKnownTests, setAllKnownTests, loadingState, setLoadingState]: any = useState();
+  const [
+    allKnownTests,
+    setAllKnownTests,
+    loadingState,
+    setLoadingState,
+    defaultTest,
+    setDefaultTest,
+    defaultGSE,
+    setDefaultGSE,
+    defaultTestArticle,
+    setDefaultTestArticle,
+  ]: any = useState();
 
   return (
     <button
@@ -29,7 +40,7 @@ const EditorSaveButton: Component<{
           .then(async (re) => {
             console.log("completed doc update");
             console.log(re);
-            await getGeneralTestInfo(setAllKnownTests);
+            await getGeneralTestInfo(setAllKnownTests, setDefaultTest);
           });
       }}
     >

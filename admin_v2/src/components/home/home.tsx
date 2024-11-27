@@ -11,7 +11,18 @@ import HomeEditor from "./editor/editor";
 import SectionTitle from "../title";
 
 const HomeComponent: Component<{}> = (props) => {
-  const [allKnownTests, setAllKnownTests, loadingState, setLoadingState]: any = useState();
+  const [
+    allKnownTests,
+    setAllKnownTests,
+    loadingState,
+    setLoadingState,
+    defaultTest,
+    setDefaultTest,
+    defaultGSE,
+    setDefaultGSE,
+    defaultTestArticle,
+    setDefaultTestArticle,
+  ]: any = useState();
 
   const [filters, setFilters] = makePersisted(createSignal<string[]>([]), {
     name: "test-filters",

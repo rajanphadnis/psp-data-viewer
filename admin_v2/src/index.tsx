@@ -16,12 +16,14 @@ import HomeComponent from "./components/home/home";
 import { makePersisted } from "@solid-primitives/storage";
 import Instances from "./components/instances/instances";
 import MainLayout from "./components/layout";
+import { FirebaseStorage } from "firebase/storage";
 
 const root = document.getElementById("root");
 
 declare global {
   var db: Firestore;
-  var default_id: string;
+  var storage: FirebaseStorage;
+  // var default_id: string;
 }
 
 if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
@@ -37,7 +39,7 @@ render(() => {
     <AppStateProvider>
       <MetaStuff />
       <Header />
-      <MainLayout/>
+      <MainLayout />
     </AppStateProvider>
   );
 }, root!);

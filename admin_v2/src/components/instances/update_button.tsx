@@ -4,7 +4,18 @@ import { useState } from "../../state";
 import { runRequest } from "../../db/azure_interaction";
 
 const InstanceUpdateButton: Component<{ instanceCount: Accessor<number> }> = (props) => {
-  const [allKnownTests, setAllKnownTests, loadingState, setLoadingState]: any = useState();
+  const [
+    allKnownTests,
+    setAllKnownTests,
+    loadingState,
+    setLoadingState,
+    defaultTest,
+    setDefaultTest,
+    defaultGSE,
+    setDefaultGSE,
+    defaultTestArticle,
+    setDefaultTestArticle,
+  ]: any = useState();
   const [isUpdateComplete, setisUpdateComplete] = createSignal<boolean>(false);
   const [loading, setloading] = createSignal<boolean>(false);
   return (

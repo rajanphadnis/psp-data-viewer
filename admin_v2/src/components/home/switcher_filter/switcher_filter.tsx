@@ -8,7 +8,18 @@ const TestSwitcherFilter: Component<{
   setFilters: (newFilters: string[]) => void;
   filters: () => string[];
 }> = (props) => {
-  const [allKnownTests, setAllKnownTests, loadingState, setLoadingState]: any = useState();
+  const [
+    allKnownTests,
+    setAllKnownTests,
+    loadingState,
+    setLoadingState,
+    defaultTest,
+    setDefaultTest,
+    defaultGSE,
+    setDefaultGSE,
+    defaultTestArticle,
+    setDefaultTestArticle,
+  ]: any = useState();
 
   return (
     <div class={styles.filterDiv}>

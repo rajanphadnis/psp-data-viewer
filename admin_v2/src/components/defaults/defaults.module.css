@@ -1,0 +1,55 @@
+.saveDefaultsButton {
+  padding: 20px;
+  background-color: var(--rush);
+  font-family: "IBM Plex Mono", monospace;
+  color: black;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  margin: 20px;
+}
+
+.saveDefaultsButton:hover {
+  background-color: var(--field);
+}
+
+.defaultLabel {
+  margin-right: 15px;
+  /* font-weight: bold; */
+  font-family: "IBM Plex Mono", monospace;
+  margin-bottom: 20px;
+}
+
+.defaultSelect {
+  background-color: var(--background-color);
+  border: 3px solid var(--field);
+  color: white;
+  padding: 10px;
+  /* font-weight: bold; */
+  font-family: "IBM Plex Mono", monospace;
+  width: 300px;
+}
+
+.defaultSelect:focus {
+  border: 3px solid var(--aged);
+  outline: 4px solid transparent;
+}
+
+.defaultsLoader {
+  border: 3px solid var(--background-color);
+  border-radius: 50%;
+  border-top: 3px solid var(--field);
+  width: 15px;
+  height: 15px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 0.5s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

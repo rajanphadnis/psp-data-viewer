@@ -5,7 +5,18 @@ import Status from "./status";
 import NavBarTitle from "./title";
 
 const Header: Component<{}> = () => {
-  const [allKnownTests, setAllKnownTests, loadingState, setLoadingState]: any = useState();
+  const [
+    allKnownTests,
+    setAllKnownTests,
+    loadingState,
+    setLoadingState,
+    defaultTest,
+    setDefaultTest,
+    defaultGSE,
+    setDefaultGSE,
+    defaultTestArticle,
+    setDefaultTestArticle,
+  ]: any = useState();
   return (
     <div class={styles.header}>
       <NavBarTitle title="Admin Console" />

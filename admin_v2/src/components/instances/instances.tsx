@@ -5,7 +5,18 @@ import InstanceUpdateButton from "./update_button";
 import InstancesFetchButton from "./fetch_button";
 
 const Instances: Component<{}> = (props) => {
-  const [allKnownTests, setAllKnownTests, loadingState, setLoadingState]: any = useState();
+  const [
+    allKnownTests,
+    setAllKnownTests,
+    loadingState,
+    setLoadingState,
+    defaultTest,
+    setDefaultTest,
+    defaultGSE,
+    setDefaultGSE,
+    defaultTestArticle,
+    setDefaultTestArticle,
+  ]: any = useState();
 
   const [instanceCount, setinstanceCount] = createSignal<number>(0);
 

@@ -1,0 +1,148 @@
+.editDiv {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+[data-corvu-resizable-root] {
+  width: 100%;
+  height: 100%;
+}
+
+.panel_handle {
+  background-color: transparent;
+  border: none;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.panel_handle_div {
+  width: 2px;
+  background-color: white;
+  height: 100%;
+}
+
+.panel {
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+.panelPadding {
+  padding-top: 10px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.finalizeButton {
+  width: 75%;
+  border: none;
+  margin: 10px;
+  color: black;
+  background-color: var(--rush);
+  cursor: pointer;
+  font-family: "IBM Plex Mono", monospace;
+  font-weight: bold;
+  /* font-size: larger; */
+  /* text-align: start; */
+  padding: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.finalizeButton:hover {
+  background-color: var(--field);
+}
+
+.fileTypeButton {
+  width: 50%;
+  border: none;
+  margin: 10px;
+  color: black;
+  cursor: pointer;
+  font-family: "IBM Plex Mono", monospace;
+  font-weight: bold;
+  padding: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.activeFileTypeButton {
+  background-color: var(--moondust);
+}
+
+.activeFileTypeButton:hover {
+  background-color: var(--dust);
+}
+
+.inactiveFileTypeButton {
+  background-color: var(--rush);
+}
+
+.inactiveFileTypeButton:hover {
+  background-color: var(--field);
+}
+
+.inputTitleDiv {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.addButton {
+  padding: 10px;
+  background-color: var(--rush);
+  font-family: "IBM Plex Mono", monospace;
+  color: black;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  padding-top: 10px;
+  padding-bottom: 6px;
+}
+
+.addButton:hover {
+  background-color: var(--field);
+}
+
+.deleteButton {
+  padding: 10px;
+  background-color: var(--rush);
+  font-family: "IBM Plex Mono", monospace;
+  color: black;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  padding-top: 10px;
+  padding-bottom: 6px;
+}
+
+.deleteButton:hover {
+  background-color: var(--field);
+}
+
+.uploadItemDiv {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: transparent;
+}
+
+.uploadItemDiv:hover {
+  background-color: var(--cool-gray);
+}

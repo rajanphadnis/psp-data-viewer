@@ -6,7 +6,7 @@ import open from "open";
 
 const patchType_cmdline: string = minimist(process.argv.slice(2))["_"][0] ?? "";
 const defaultMessage_cmdline: string = minimist(process.argv.slice(2))["_"][1];
-const app_names: string[] = ["admin", "docs", "webapp_v2", "mission"];
+const app_names: string[] = ["admin_v2", "docs", "webapp_v2", "mission"];
 let changeType = ChangeType.PATCH;
 let defaultCommitMessage = "None";
 

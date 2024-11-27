@@ -5,17 +5,30 @@ import { makePersisted } from "@solid-primitives/storage";
 import { Router, Route, A } from "@solidjs/router";
 import HomeComponent from "./home/home";
 import Instances from "./instances/instances";
-import { getGeneralTestInfo } from "../db/db_interaction";
+import { getDefaultArticles, getGeneralTestInfo } from "../db/db_interaction";
 import { useState } from "../state";
 import NavBarItem from "./navbar_item";
 import Analytics from "./analytics/analytics";
 import NewTest from "./new/new";
 import Articles from "./articles/articles";
+import DefaultPage from "./defaults/default";
 
 const MainLayout: Component<{}> = (props) => {
-  const [allKnownTests, setAllKnownTests, loadingState, setLoadingState]: any = useState();
+  const [
+    allKnownTests,
+    setAllKnownTests,
+    loadingState,
+    setLoadingState,
+    defaultTest,
+    setDefaultTest,
+    defaultGSE,
+    setDefaultGSE,
+    defaultTestArticle,
+    setDefaultTestArticle,
+  ]: any = useState();
   onMount(async () => {
-    await getGeneralTestInfo(setAllKnownTests);
+    await getGeneralTestInfo(setAllKnownTests, setDefaultTest);
+    await getDefaultArticles(setDefaultTestArticle, setDefaultGSE);
     setLoadingState({ isLoading: false, statusMessage: "" });
   });
   return (
@@ -30,10 +43,10 @@ const MainLayout: Component<{}> = (props) => {
           )}
         ></Route>
         <Route
-          path="/articles"
+          path="/defaults"
           component={() => (
             <PanelLayout>
-              <Articles />
+              <DefaultPage />
             </PanelLayout>
           )}
         ></Route>
@@ -80,6 +93,7 @@ const PanelLayout: Component<{ children?: any }> = (props) => {
         <NavBarItem name="New Test" route="/new" />
         <NavBarItem name="Instances" route="/instances" />
         <NavBarItem name="Analytics" route="/analytics" />
+        <NavBarItem name="Defaults" route="/defaults" />
       </Resizable.Panel>
       <Resizable.Handle aria-label="Resize Handle" class={styles.panel_handle}>
         <div class={styles.panel_handle_div} />

@@ -90,7 +90,7 @@ jobs:
             NEW_NAME="${TAGNAME//v/}"
             echo GHA_NEW_TAG_NAME_ADMIN=$NEW_NAME >> "$GITHUB_ENV"
         - name: Tag/Release search
-          run: echo "GHA_V_COUNTER_ADMIN=$(grep '${{ format('"version"{0}', ':') }} "${{ env.GHA_NEW_TAG_NAME_ADMIN }}"' admin/package.json | wc -l)" >> "$GITHUB_ENV"
+          run: echo "GHA_V_COUNTER_ADMIN=$(grep '${{ format('"version"{0}', ':') }} "${{ env.GHA_NEW_TAG_NAME_ADMIN }}"' admin_v2/package.json | wc -l)" >> "$GITHUB_ENV"
           shell: bash
         - name: Tag Output
           run: |
@@ -109,7 +109,7 @@ jobs:
           uses: actions/github-script@v2.1.0
           with:
             script: |
-                core.setFailed('admin/package.json not updated to new version ${{ env.GHA_NEW_TAG_NAME_ADMIN }}!')
+                core.setFailed('admin_v2/package.json not updated to new version ${{ env.GHA_NEW_TAG_NAME_ADMIN }}!')
   version-check-docs:
     runs-on: ubuntu-latest
     outputs:
@@ -208,7 +208,7 @@ jobs:
       with:
         bun-version: latest
     - name: Build Admin Webapp
-      working-directory: ./admin
+      working-directory: ./admin_v2
       run: bun install && bun run prod
     - name: Release Admin Webapp 
       uses: FirebaseExtended/action-hosting-deploy@v0

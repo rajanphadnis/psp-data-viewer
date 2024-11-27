@@ -2,6 +2,7 @@ import { initializeApp } from "firebase/app";
 import { ReCaptchaEnterpriseProvider, initializeAppCheck } from "firebase/app-check";
 import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from "firebase/firestore";
 import { appCheckSecret } from "../generated_app_check_secret";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAmJytERQ1hnORHswd-j07WhpTYH7yu6fA",
@@ -27,7 +28,7 @@ export function initFirebase() {
   globalThis.db = initializeFirestore(app, {
     localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
   });
-
+  globalThis.storage = getStorage();
   // functions = getFunctions(app);
   if (appCheckSecret != false) {
     console.log("in debug mode");

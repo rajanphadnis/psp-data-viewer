@@ -1,3 +1,11 @@
+## v0.6.0
+updated to admin_v2
+
+### Changed
+- bug fixes
+- moved to admin_v2 architecture (built with SolidJS)
+- Added "defaults" page to admin console
+
 ## v0.5.16
 updated deploy sequence
 
