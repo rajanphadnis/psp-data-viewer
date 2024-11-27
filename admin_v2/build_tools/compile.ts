@@ -1,3 +1,4 @@
+import { $ } from "bun";
 import { writeFileSync } from "fs";
 import { join } from "path";
 
@@ -22,10 +23,11 @@ syncWriteFile(
   "../src/generated_app_check_secret.ts",
   'export const appCheckSecret: string | boolean = ' + toWrite + ';'
 );
-await Bun.build({
-  entrypoints: ["./src/index.ts"],
-  outdir: "./built",
-  minify: true, // default false
-});
+// await Bun.build({
+//   entrypoints: ["./src/index.ts"],
+//   outdir: "./built",
+//   minify: true, // default false
+// });
+await $`bun run build`;
 console.log("Wrote env var, built, and minified");
 

@@ -1,3 +1,10 @@
+## v0.7.0
+fixed admin deploy sequence
+
+### Changed
+- bug fixes
+- bumping again bc why not
+
 ## v0.6.0
 updated to admin_v2
 
