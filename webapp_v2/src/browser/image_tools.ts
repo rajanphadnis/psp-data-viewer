@@ -3,16 +3,16 @@ import { saveAs } from "file-saver";
 export async function plotSnapshot(type: string) {
   let pxRatio = devicePixelRatio;
 
-  let rect = uplot.root.getBoundingClientRect();
+  let rect = globalThis.uplot.root.getBoundingClientRect();
   // rect of uPlot's canvas to get y shift due to title above it (if any)
-  let rect2 = uplot.ctx.canvas.getBoundingClientRect();
+  let rect2 = globalThis.uplot.ctx.canvas.getBoundingClientRect();
 
-  let htmlContent = uplot.root.outerHTML;
+  let htmlContent = globalThis.uplot.root.outerHTML;
 
-  let uPlotCssRules: any = document.styleSheets[2].cssRules;
+  // let uPlotCssRules: any = document.styleSheets[2].cssRules;
   // let uPlotCssOverrideRules: any = document.styleSheets[3].cssRules;
   let cssContent = "";
-  for (let { cssText } of uPlotCssRules) cssContent += `${cssText} `;
+  // for (let { cssText } of uPlotCssRules) cssContent += `${cssText} `;
   // for (let { cssText } of uPlotCssOverrideRules) cssContent += `${cssText} `;
 
   let width = Math.ceil(rect.width * pxRatio);
