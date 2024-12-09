@@ -1,3 +1,9 @@
+## v0.7.2
+removed png export css override
+
+### Changed
+- bug fixes
+
 ## v0.7.1
 added date to test title
 
