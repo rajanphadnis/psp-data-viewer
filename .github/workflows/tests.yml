@@ -1,0 +1,22 @@
+name: "Unit Tests"
+on:
+  workflow_dispatch:
+  push:
+
+env:
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - name: Web App Unit Tests
+        run: cd webapp_v2 && bun install && bun run test
+      - name: Admin App Unit Tests
+        run: cd admin_v2 && bun install && bun run test
+      - name: Customer Config Validity Checks
+        run: bun install && bun run config_check
