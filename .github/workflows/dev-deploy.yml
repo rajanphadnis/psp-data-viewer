@@ -1,11 +1,12 @@
 name: "[CD:Dev] Build and Release"
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - "dev"
-    paths:
-      - "**.ts"
+  # push:
+  #   branches:
+  #     - "dev"
+  #     - "main"
+  #   paths:
+  #     - "**.ts"
 
 env:
   PYTHON_VERSION: "3.11"
