@@ -2,12 +2,17 @@
     "dependencies": {
         "@types/node": "^22.5.2",
         "glob": "^11.0.0",
+        "install": "^0.13.0",
+        "js-yaml": "^4.1.0",
         "minimist": "^1.2.8",
-        "open": "^10.1.0"
+        "open": "^10.1.0",
+        "vitest": "^2.1.8",
+        "yaml-validator": "^5.1.0"
     },
     "scripts": {
         "deploy": "bun run ./build_tools/version.ts",
         "dev": "bun run ./build_tools/dev-setup.ts",
-        "instance-setup": "bun run ./build_tools/instance_config.ts"
+        "instance-setup": "bun run ./build_tools/customer_config/instance_config.ts",
+        "config_check": "cd customer_configs && vitest"
     }
 }

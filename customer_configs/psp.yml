@@ -1,0 +1,25 @@
+---
+azure:
+  function_app_name: psp-data-viewer-api
+  resource_group: pspdataviewer
+  share_name: psp-data-viewer3d1877
+firebase:
+  admin_string: psp-admin-portfolio
+  apiKey: AIzaSyAmJytERQ1hnORHswd-j07WhpTYH7yu6fA
+  appId: 1:493859450932:web:e4e3c67f0f46316c555a61
+  app_check_provider_token: 6Lctk8kpAAAAAI40QzMPFihZWMfGtiZ_-UC3H2n9
+  authDomain: psp-portfolio-f1205.firebaseapp.com
+  docs_string: psp-docs
+  messagingSenderId: '493859450932'
+  projectId: psp-portfolio-f1205
+  project_string: psp-portfolio-f1205
+  storageBucket: psp-portfolio-f1205.appspot.com
+  webapp_string: psp-portfolio-f1205
+naming:
+  name_long: 'Purdue Space Program: Liquids'
+  name_short: PSP Liquids
+  page_title: PSP Data Viewer
+urls:
+  admin_dashboard_url: psp-admin.rajanphadnis.com
+  api_base_url: https://psp-api.rajanphadnis.com
+  update_test_metadata_url: https://updatetestmetadata-w547ikcrwa-uc.a.run.app

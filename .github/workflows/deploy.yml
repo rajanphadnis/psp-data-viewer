@@ -23,6 +23,8 @@ jobs:
         run: cd webapp_v2 && bun install && bun run test
       - name: Admin App Unit Tests
         run: cd admin_v2 && bun install && bun run test
+      - name: Customer Config Validity Checks
+        run: bun install && bun run config_check
   changelog-check:
     runs-on: ubuntu-latest
     steps:
