@@ -54,6 +54,7 @@ if (appKey!.toString() == "false") {
   toWrite = '"' + appKey + '"';
 }
 
+const indexCSS = readFileSync("./src/index.css", "utf-8");
 const doc = yaml.load(readFileSync(`../customer_configs/${config_file}`, "utf8"), { json: true }) as any;
 
 syncWriteFile(
@@ -65,14 +66,14 @@ syncWriteFile(
   ).toString()}`
 );
 syncWriteFile(
-  "../src/generated.css",
+  "../src/index.css",
   `:root {
   --rush: ${doc.colors.primary_dark};
   --aged: ${doc.colors.accent};
   --field: ${doc.colors.primary};
   --cool-gray: ${doc.colors.background_light};
   --background-color: ${doc.colors.background};
-}`
+}\n\n${indexCSS}`
 );
 syncWriteFile(
   "../../.firebaserc",
