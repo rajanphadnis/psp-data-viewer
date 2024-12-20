@@ -1,6 +1,7 @@
 import { Component } from "solid-js";
 import styles from "./plot.module.css";
 import OpenInNewTabIcon from "../icons/open_in_new_tab";
+import { config } from "../../generated_app_info";
 
 const PlotOverlay: Component<{}> = (props) => {
   return (
@@ -11,7 +12,7 @@ const PlotOverlay: Component<{}> = (props) => {
       Double-click on plot to reset zoom
       <br />
       <br />
-      <a href="https://psp-docs.rajanphadnis.com" target="_blank">
+      <a href={config.urls.docs_url} target="_blank">
         Documentation
         <OpenInNewTabIcon />
       </a>
