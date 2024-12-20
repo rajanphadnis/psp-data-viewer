@@ -3,6 +3,12 @@ azure:
   function_app_name: psp-data-viewer-api
   resource_group: pspdataviewer
   share_name: psp-data-viewer3d1877
+colors:
+  accent: '#8e6f3e'
+  background: '#1D1D1D'
+  background_light: '#6f727b'
+  primary: '#ddb945'
+  primary_dark: '#daaa00'
 firebase:
   apiKey: AIzaSyDzZWBXQ5L9N92GRNUNGMse8AeUvbwFFyI
   appId: 1:267504321387:web:3c5b9c2a1ec15ff452822e
@@ -19,14 +25,8 @@ naming:
   page_title: PSP Data Viewer
   slug: pspl
 urls:
-  admin_dashboard_url: https://psp-admin.rajanphadnis.com
+  admin_dashboard_url: https://admin.dataviewer.space
   api_base_url: https://psp-api.rajanphadnis.com
-  update_test_metadata_url: https://updatetestmetadata-w547ikcrwa-uc.a.run.app
-  docs_url: https://psp-docs.rajanphadnis.com/
+  docs_url: https://docs.dataviewer.space
   github_url: https://github.com/rajanphadnis/psp-data-viewer
-colors:
-  accent: '#8e6f3e'
-  background: '#1D1D1D'
-  background_light: '#6f727b'
-  primary: '#ddb945'
-  primary_dark: '#daaa00'
+  update_test_metadata_url: https://updatetestmetadata-w547ikcrwa-uc.a.run.app
