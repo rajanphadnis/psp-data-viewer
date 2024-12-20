@@ -11,6 +11,39 @@ function syncWriteFile(filename: string, data: any) {
   });
 }
 
+function dateTimeStringGen(): string {
+  const currentdate = new Date();
+  const monthLookup = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  const datetimeString =
+    monthLookup[currentdate.getMonth()] +
+    " " +
+    currentdate.getDate().toString().padStart(2, "0") +
+    ", " +
+    currentdate.getFullYear() +
+    " @ " +
+    currentdate.getHours().toString().padStart(2, "0") +
+    ":" +
+    currentdate.getMinutes().toString().padStart(2, "0") +
+    ":" +
+    currentdate.getSeconds().toString().padStart(2, "0") +
+    " UTC-" +
+    (currentdate.getTimezoneOffset() / 60).toString();
+  return datetimeString;
+}
+
 const config_file: string = minimist(process.argv.slice(2))["_"][0] ?? "dev.yml";
 const appKey = Bun.env.APP_CHECK_KEY;
 let toWrite: string | boolean;
@@ -21,45 +54,15 @@ if (appKey!.toString() == "false") {
   toWrite = '"' + appKey + '"';
 }
 
-const currentdate = new Date();
-const monthLookup = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-const datetimeString =
-  monthLookup[currentdate.getMonth()] +
-  " " +
-  currentdate.getDate().toString().padStart(2, "0") +
-  ", " +
-  currentdate.getFullYear() +
-  " @ " +
-  currentdate.getHours().toString().padStart(2, "0") +
-  ":" +
-  currentdate.getMinutes().toString().padStart(2, "0") +
-  ":" +
-  currentdate.getSeconds().toString().padStart(2, "0") +
-  " UTC-" +
-  (currentdate.getTimezoneOffset() / 60).toString();
-
 const doc = yaml.load(readFileSync(`../customer_configs/${config_file}`, "utf8"), { json: true }) as any;
 
 syncWriteFile(
   "../src/generated_app_info.ts",
-  "export const appCheckSecret: string | boolean = " +
-    toWrite +
-    `;\nexport const appVersion: string = 'v${
-      package_json.version
-    }';\nexport const buildDate: string = '${datetimeString}';\nexport const config = ${JSON.stringify(doc).toString()}`
+  `export const appCheckSecret: string | boolean = ${toWrite};\nexport const appVersion: string = 'v${
+    package_json.version
+  }';\nexport const buildDate: string = '${dateTimeStringGen()}';\nexport const config = ${JSON.stringify(
+    doc
+  ).toString()}`
 );
 syncWriteFile(
   "../src/generated.css",
@@ -70,6 +73,31 @@ syncWriteFile(
   --cool-gray: ${doc.colors.background_light};
   --background-color: ${doc.colors.background};
 }`
+);
+syncWriteFile(
+  "../../.firebaserc",
+  `{
+  "projects": {
+    "default": "${doc.firebase.projectId}"
+  },
+  "targets": {
+    "${doc.firebase.projectId}": {
+      "hosting": {
+        "webapp": [
+          "${doc.firebase.webapp_site}"
+        ],
+        "admin": [
+          "dataviewer-admin"
+        ],
+        "docs": [
+          "dataviewer-docs"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
+`
 );
 await Bun.build({
   entrypoints: ["./src/index.ts"],

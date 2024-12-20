@@ -1,21 +1,18 @@
 {
   "projects": {
-    "default": "psp-portfolio-f1205"
+    "default": "dataviewer-space"
   },
   "targets": {
-    "psp-portfolio-f1205": {
+    "dataviewer-space": {
       "hosting": {
         "webapp": [
-          "psp-portfolio-f1205"
+          "dataviewer-psp"
         ],
         "admin": [
-          "psp-admin-portfolio"
+          "dataviewer-admin"
         ],
         "docs": [
-          "psp-docs"
-        ],
-        "mission": [
-          "psp-mission"
+          "dataviewer-docs"
         ]
       }
     }
