@@ -1,5 +1,5 @@
 import { Component } from "solid-js";
-import { appVersion, buildDate } from "../../../generated_app_info";
+import { appVersion, buildDate, config } from "../../../generated_app_info";
 import styles from "../modal.module.css";
 
 const AppInfo: Component<{}> = (props) => {
@@ -8,7 +8,7 @@ const AppInfo: Component<{}> = (props) => {
       Running webapp {appVersion}, built on {buildDate}.{" "}
       <a
         class={styles.appLink}
-        href={`https://github.com/rajanphadnis/psp-data-viewer/releases/tag/${appVersion}`}
+        href={`${config.urls.github_url}/releases/tag/${appVersion}`}
         target="_blank"
       >
         View Changelog and Release Notes

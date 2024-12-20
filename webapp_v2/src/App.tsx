@@ -9,6 +9,7 @@ import ControlColumn from "./components/control_column/control_column";
 import { loadFromShareLink } from "./browser/sharelink";
 import { useState } from "./state";
 import { eventLoop } from "./plotting/event_loop";
+import { config } from "./generated_app_info";
 
 const App: Component = (params) => {
   const [
@@ -39,7 +40,7 @@ const App: Component = (params) => {
 
   onMount(async () => {
     const s = document.createElement("script");
-    s.setAttribute("src", `https://www.googletagmanager.com/gtag/js?id=G-ZXCLEW88F6`);
+    s.setAttribute("src", `https://www.googletagmanager.com/gtag/js?id=${config.firebase.measurementId}`);
     s.async = true;
     document.head.appendChild(s);
     const dataLayer = (window.dataLayer = window.dataLayer || []);
@@ -47,7 +48,7 @@ const App: Component = (params) => {
       dataLayer.push(arguments);
     }
     gtag("js", new Date());
-    gtag("config", "G-ZXCLEW88F6");
+    gtag("config", config.firebase.measurementId);
     // Contact the Firestore database and get the default test data
     await getGeneralTestInfo(useParams().testID, setAllKnownTests, setTestBasics, testBasics);
     await getTestInfo(testBasics().id, setTestBasics, setPlotRange);

@@ -2,6 +2,7 @@ import { DocumentSnapshot, doc, getDoc, getDocFromCache, type DocumentData } fro
 import type { DatasetAxis, DatasetSeries, PlotRange, TestBasics } from "../types";
 import { generateAxisAndSeries } from "../plotting/axes_series_generation";
 import { Accessor, Setter } from "solid-js";
+import { config } from "../generated_app_info";
 
 /**
  * Requests a list of datasets from the API, parses the result,
@@ -37,7 +38,7 @@ export async function getSensorData(
 
   // Form the api request
   let datasets_string: string = datasets.join(",");
-  let requestURL: string = `https://psp-api.rajanphadnis.com/api/get_data?id=${test_id}&start=${startTimestamp}&end=${endTimestamp}&channels=${datasets_string}&max=${displayed_samples}`;
+  let requestURL: string = `${config.urls.api_base_url}/api/get_data?id=${test_id}&start=${startTimestamp}&end=${endTimestamp}&channels=${datasets_string}&max=${displayed_samples}`;
 
   // Send the request
   var startQueryTime = performance.now();

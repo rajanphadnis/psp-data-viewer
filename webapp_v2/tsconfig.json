@@ -11,5 +11,6 @@
     "types": ["vite/client", "bun", "@testing-library/jest-dom"],
     "noEmit": true,
     "isolatedModules": true,
+    "resolveJsonModule": true
   },
 }

@@ -183,3 +183,6 @@ dist
 bun.lockb
 firestore-debug.log
 firebase-debug.log
+
+src/generated_app_info.ts
+src/generated.css

@@ -1,12 +1,7 @@
-name: "[CD:Dev] Build and Release"
+name: "dev build"
 on:
   workflow_dispatch:
-  # push:
-  #   branches:
-  #     - "dev"
-  #     - "main"
-  #   paths:
-  #     - "**.ts"
+  push:
 
 env:
   PYTHON_VERSION: "3.11"
@@ -27,51 +22,198 @@ jobs:
         run: cd admin_v2 && bun install && bun run test
       - name: Customer Config Validity Checks
         run: bun install && bun run config_check
-
-  build-and-release-webapp:
+  changelog-check:
     runs-on: ubuntu-latest
-    needs: unit-tests
-    environment:
-      name: "Production"
     steps:
       - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v1
+      - name: Tag/Release search
+        run: echo "GHA_V_COUNTER=$(grep ${{ github.ref_name }} CHANGELOG.md | wc -l)" >> "$GITHUB_ENV"
+        shell: bash
+      - name: Tag Output
+        run: echo "env.GHA_V_COUNTER = ${{ env.GHA_V_COUNTER }}"
+        shell: bash
+      - name: "If changelog isn't updated, delete the release and tag"
+        uses: dev-drprasad/delete-tag-and-release@v1.0
+        if: env.GHA_V_COUNTER == '0'
         with:
-          bun-version: latest
-      - name: Setup Dev Environment
-        run: bun run dev
-      - name: Build Web App
-        working-directory: ./webapp_v2
-        run: bun install && bun run prod
-      - name: Release Web App
-        uses: FirebaseExtended/action-hosting-deploy@v0
+          tag_name: ${{ github.ref_name }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          delete_release: true
+      - name: Find '${{ github.ref_name }}' in CHANGELOG.md
+        if: env.GHA_V_COUNTER == '0'
+        uses: actions/github-script@v2.1.0
         with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_PSP_PORTFOLIO_F1205 }}
-          channelId: live
-          projectId: psp-portfolio-f1205
-          target: webapp_v2
-
-  build-and-release-admin:
+          script: |
+            core.setFailed('CHANGELOG.md not updated to include new release notes for ${{ github.ref_name }}!')
+  version-check-webapp:
     runs-on: ubuntu-latest
-    needs: unit-tests
-    environment:
-      name: "Production"
+    outputs:
+      version-code: ${{ steps.version-code-gen.outputs.GHA_VERSION_CODE }}
     steps:
       - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v1
+      - name: Set up new test tag
+        run: |
+          TAGNAME=${{ github.ref_name }}
+          NEW_NAME="${TAGNAME//v/}"
+          echo GHA_NEW_TAG_NAME_WEBAPP=$NEW_NAME >> "$GITHUB_ENV"
+      - name: Tag/Release search
+        run: echo "GHA_V_COUNTER_WEBAPP=$(grep '${{ format('"version"{0}', ':') }} "${{ env.GHA_NEW_TAG_NAME_WEBAPP }}"' webapp_v2/package.json | wc -l)" >> "$GITHUB_ENV"
+        shell: bash
+      - name: Tag Output
+        run: |
+          echo "env.GHA_V_COUNTER_WEBAPP = ${{ env.GHA_V_COUNTER_WEBAPP }}"
+          echo "env.GHA_NEW_TAG_NAME_WEBAPP = ${{ env.GHA_NEW_TAG_NAME_WEBAPP }}"
+        shell: bash
+      - name: "If pubspec isn't updated, delete the release and tag"
+        uses: dev-drprasad/delete-tag-and-release@v1.0
+        if: env.GHA_V_COUNTER_WEBAPP == '0'
         with:
-          bun-version: latest
-      - name: Setup Dev Environment
-        run: bun run dev
-      - name: Build Admin Webapp
-        working-directory: ./admin
-        run: bun install && bun run prod
-      - name: Release Admin Webapp
-        uses: FirebaseExtended/action-hosting-deploy@v0
+          tag_name: ${{ github.ref_name }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          delete_release: true
+      - name: Find '${{ github.ref_name }}' in package.json
+        if: env.GHA_V_COUNTER_WEBAPP == '0'
+        uses: actions/github-script@v2.1.0
         with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_PSP_PORTFOLIO_F1205 }}
-          channelId: live
-          projectId: psp-portfolio-f1205
-          target: admin
+          script: |
+            core.setFailed('webapp_v2/package.json not updated to new version ${{ env.GHA_NEW_TAG_NAME_WEBAPP }}!')
+  version-check-admin:
+    runs-on: ubuntu-latest
+    outputs:
+      version-code: ${{ steps.version-code-gen.outputs.GHA_VERSION_CODE }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up new test tag
+        run: |
+          TAGNAME=${{ github.ref_name }}
+          NEW_NAME="${TAGNAME//v/}"
+          echo GHA_NEW_TAG_NAME_ADMIN=$NEW_NAME >> "$GITHUB_ENV"
+      - name: Tag/Release search
+        run: echo "GHA_V_COUNTER_ADMIN=$(grep '${{ format('"version"{0}', ':') }} "${{ env.GHA_NEW_TAG_NAME_ADMIN }}"' admin_v2/package.json | wc -l)" >> "$GITHUB_ENV"
+        shell: bash
+      - name: Tag Output
+        run: |
+          echo "env.GHA_V_COUNTER_ADMIN = ${{ env.GHA_V_COUNTER_ADMIN }}"
+          echo "env.GHA_NEW_TAG_NAME_ADMIN = ${{ env.GHA_NEW_TAG_NAME_ADMIN }}"
+        shell: bash
+      - name: "If pubspec isn't updated, delete the release and tag"
+        uses: dev-drprasad/delete-tag-and-release@v1.0
+        if: env.GHA_V_COUNTER_ADMIN == '0'
+        with:
+          tag_name: ${{ github.ref_name }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          delete_release: true
+      - name: Find '${{ github.ref_name }}' in package.json
+        if: env.GHA_V_COUNTER_ADMIN == '0'
+        uses: actions/github-script@v2.1.0
+        with:
+          script: |
+            core.setFailed('admin_v2/package.json not updated to new version ${{ env.GHA_NEW_TAG_NAME_ADMIN }}!')
+  version-check-docs:
+    runs-on: ubuntu-latest
+    outputs:
+      version-code: ${{ steps.version-code-gen.outputs.GHA_VERSION_CODE }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up new test tag
+        run: |
+          TAGNAME=${{ github.ref_name }}
+          NEW_NAME="${TAGNAME//v/}"
+          echo GHA_NEW_TAG_NAME_ADMIN=$NEW_NAME >> "$GITHUB_ENV"
+      - name: Tag/Release search
+        run: echo "GHA_V_COUNTER_ADMIN=$(grep '${{ format('"version"{0}', ':') }} "${{ env.GHA_NEW_TAG_NAME_ADMIN }}"' docs/package.json | wc -l)" >> "$GITHUB_ENV"
+        shell: bash
+      - name: Tag Output
+        run: |
+          echo "env.GHA_V_COUNTER_ADMIN = ${{ env.GHA_V_COUNTER_ADMIN }}"
+          echo "env.GHA_NEW_TAG_NAME_ADMIN = ${{ env.GHA_NEW_TAG_NAME_ADMIN }}"
+        shell: bash
+      - name: "If package.json isn't updated, delete the release and tag"
+        uses: dev-drprasad/delete-tag-and-release@v1.0
+        if: env.GHA_V_COUNTER_ADMIN == '0'
+        with:
+          tag_name: ${{ github.ref_name }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          delete_release: true
+      - name: Find '${{ github.ref_name }}' in package.json
+        if: env.GHA_V_COUNTER_ADMIN == '0'
+        uses: actions/github-script@v2.1.0
+        with:
+          script: |
+            core.setFailed('docs/package.json not updated to new version ${{ env.GHA_NEW_TAG_NAME_ADMIN }}!')
+  version-check-mission:
+    runs-on: ubuntu-latest
+    outputs:
+      version-code: ${{ steps.version-code-gen.outputs.GHA_VERSION_CODE }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up new test tag
+        run: |
+          TAGNAME=${{ github.ref_name }}
+          NEW_NAME="${TAGNAME//v/}"
+          echo GHA_NEW_TAG_NAME_MISSION=$NEW_NAME >> "$GITHUB_ENV"
+      - name: Tag/Release search
+        run: echo "GHA_V_COUNTER_MISSION=$(grep '${{ format('"version"{0}', ':') }} "${{ env.GHA_NEW_TAG_NAME_MISSION }}"' mission/package.json | wc -l)" >> "$GITHUB_ENV"
+        shell: bash
+      - name: Tag Output
+        run: |
+          echo "env.GHA_V_COUNTER_MISSION = ${{ env.GHA_V_COUNTER_MISSION }}"
+          echo "env.GHA_NEW_TAG_NAME_MISSION = ${{ env.GHA_NEW_TAG_NAME_MISSION }}"
+        shell: bash
+      - name: "If pubspec isn't updated, delete the release and tag"
+        uses: dev-drprasad/delete-tag-and-release@v1.0
+        if: env.GHA_V_COUNTER_MISSION == '0'
+        with:
+          tag_name: ${{ github.ref_name }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          delete_release: true
+      - name: Find '${{ github.ref_name }}' in package.json
+        if: env.GHA_V_COUNTER_MISSION == '0'
+        uses: actions/github-script@v2.1.0
+        with:
+          script: |
+            core.setFailed('mission/package.json not updated to new version ${{ env.GHA_NEW_TAG_NAME_MISSION }}!')
+
+  generate_matrix:
+    needs: unit-tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get list of YAML files
+        id: list-matrix
+        run: find ./customer_configs/ -type f -name "*.yml" | sed 's/\.\/customer_configs\///' | sed 's/.*/"&"/' | awk '{print}' ORS=', ' | rev | cut -c 3- | rev | sed 's/.*/configs={\"config\":[&]}/' >> $GITHUB_OUTPUT
+    outputs:
+      configs: ${{ steps.list-matrix.outputs.configs }}
+
+  build:
+    runs-on: ubuntu-latest
+    needs: generate_matrix
+    # strategy:
+    #   matrix: ${{ fromJson(needs.generate_matrix.outputs.configs) }}
+    strategy:
+      matrix:
+        config: ["dev.yml"]
+    name: Build & Deploy Webapp from ${{ matrix.config }}
+    environment:
+      name: 'Production'
+    steps:
+    - uses: actions/checkout@v4
+    - name: Read Config File
+      uses: pietrobolcato/action-read-yaml@1.1.0
+      id: get_config
+      with:
+        config: ${{ github.workspace }}/customer_configs/${{ matrix.config }}
+    - uses: oven-sh/setup-bun@v1
+      with:
+        bun-version: latest
+    - name: Build Web App
+      working-directory: ./webapp_v2
+      run: bun install && bun run prod ${{ matrix.config }}
+    - name: Release Web App 
+      uses: FirebaseExtended/action-hosting-deploy@v0
+      with:
+        repoToken: ${{ secrets.GITHUB_TOKEN }}
+        firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DATAVIEWER_SPACE }}
+        channelId: live
+        projectId: dataviewer-space
+        target: webapp

@@ -29,3 +29,6 @@ gitignore
 Thumbs.db
 
 coverage/*
+
+src/generated_app_info.ts
+src/generated.css

@@ -1,16 +1,3 @@
-:root {
-  --night-sky: #252526;
-  --rush: #daaa00;
-  --moondust: #f2efe9;
-  --bm-gold: #cfb991;
-  --aged: #8e6f3e;
-  --field: #ddb945;
-  --dust: #ebd99f;
-  --steel: #555960;
-  --cool-gray: #6f727b;
-  --background-color: rgb(29, 29, 29);
-}
-
 html,
 body {
   margin: 0;

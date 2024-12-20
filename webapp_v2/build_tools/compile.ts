@@ -1,7 +1,9 @@
-import { writeFileSync } from "fs";
+import { writeFileSync, readFileSync } from "fs";
 import { join } from "path";
 import { $ } from "bun";
-const package_json = require("../package.json");
+import package_json from "../package.json";
+import minimist from "minimist";
+import yaml from "js-yaml";
 
 function syncWriteFile(filename: string, data: any) {
   writeFileSync(join(__dirname, filename), data, {
@@ -9,6 +11,7 @@ function syncWriteFile(filename: string, data: any) {
   });
 }
 
+const config_file: string = minimist(process.argv.slice(2))["_"][0] ?? "dev.yml";
 const appKey = Bun.env.APP_CHECK_KEY;
 let toWrite: string | boolean;
 
@@ -44,19 +47,34 @@ const datetimeString =
   ":" +
   currentdate.getMinutes().toString().padStart(2, "0") +
   ":" +
-  currentdate.getSeconds().toString().padStart(2, "0") + " UTC-" + (currentdate.getTimezoneOffset()/60).toString();
+  currentdate.getSeconds().toString().padStart(2, "0") +
+  " UTC-" +
+  (currentdate.getTimezoneOffset() / 60).toString();
 
+const doc = yaml.load(readFileSync(`../customer_configs/${config_file}`, "utf8"), { json: true }) as any;
 
 syncWriteFile(
   "../src/generated_app_info.ts",
   "export const appCheckSecret: string | boolean = " +
     toWrite +
-    `;\nexport const appVersion: string = 'v${package_json.version}';\nexport const buildDate: string = '${datetimeString}';`
+    `;\nexport const appVersion: string = 'v${
+      package_json.version
+    }';\nexport const buildDate: string = '${datetimeString}';\nexport const config = ${JSON.stringify(doc).toString()}`
 );
-// await Bun.build({
-//   entrypoints: ["./src/index.ts"],
-//   outdir: "./built",
-//   minify: false, // default false
-// });
+syncWriteFile(
+  "../src/generated.css",
+  `:root {
+  --rush: ${doc.colors.primary_dark};
+  --aged: ${doc.colors.accent};
+  --field: ${doc.colors.primary};
+  --cool-gray: ${doc.colors.background_light};
+  --background-color: ${doc.colors.background};
+}`
+);
+await Bun.build({
+  entrypoints: ["./src/index.ts"],
+  outdir: "./built",
+  minify: false, // default false
+});
 await $`bun run build`;
 console.log("Wrote env var file");

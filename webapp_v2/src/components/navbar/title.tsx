@@ -8,6 +8,7 @@ import SwapIcon from "../icons/swap";
 import SettingsIcon from "../icons/settings";
 import SettingsModal from "../modal/settings/settings_panel";
 import { getDateLabel } from "../../browser/util";
+import { config } from "../../generated_app_info";
 
 const NavBarTitle: Component<{ id: string; name: string; test_article: string; gse_article: string }> = (props) => {
   const [
@@ -43,7 +44,7 @@ const NavBarTitle: Component<{ id: string; name: string; test_article: string; g
       >
         <Dialog>
           <Dialog.Trigger class={styles.title}>
-            PSP Data Viewer:{testBasics().test_article}:{testBasics().gse_article}:
+            {config.naming.page_title}:{testBasics().test_article}:{testBasics().gse_article}:
             {`${getDateLabel(testBasics().starting_timestamp!)}:${testBasics().name}`}
           </Dialog.Trigger>
           <TestSwitcherModal />

@@ -13,6 +13,7 @@ import IconListCheck from "../../icons/list_check";
 import { getSharelink } from "../../../browser/sharelink";
 import SettingsIcon from "../../icons/settings";
 import PlottingOptionsModal from "./plotting_options";
+import { config } from "../../../generated_app_info";
 
 const SettingsModal: Component<{}> = (props) => {
   const [
@@ -100,7 +101,7 @@ const SettingsModal: Component<{}> = (props) => {
             <SettingsButton
               name="Documentation"
               onclick={() => {
-                window.open("https://psp-docs.rajanphadnis.com/", "_blank");
+                window.open(config.urls.docs_url, "_blank");
               }}
             >
               <IconFile />
@@ -108,7 +109,7 @@ const SettingsModal: Component<{}> = (props) => {
             <SettingsButton
               name="Admin Console"
               onclick={() => {
-                window.open("https://admin.pspl.space/", "_blank");
+                window.open(config.urls.admin_dashboard_url, "_blank");
               }}
             >
               <IconAdmin />

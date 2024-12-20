@@ -3,19 +3,18 @@ export const structure = {
     name_long: "string",
     name_short: "string",
     page_title: "string",
+    slug: "string"
   },
   firebase: {
     app_check_provider_token: "string",
-    project_string: "string",
-    webapp_string: "string",
-    admin_string: "string",
-    docs_string: "string",
+    webapp_site: "string",
     apiKey: "string",
     authDomain: "string",
     projectId: "string",
     storageBucket: "string",
     messagingSenderId: "string",
     appId: "string",
+    measurementId: "string"
   },
   azure: {
     share_name: "string",
@@ -26,5 +25,14 @@ export const structure = {
     api_base_url: "string",
     update_test_metadata_url: "string",
     admin_dashboard_url: "string",
+    docs_url: "string",
+    github_url: "string"
   },
+  colors: {
+    primary: "string",
+    primary_dark: "string",
+    accent: "string",
+    background: "string",
+    background_light: "string"
+  }
 };
