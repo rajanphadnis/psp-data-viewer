@@ -19,6 +19,7 @@ firebase:
   projectId: dataviewer-space
   storageBucket: dataviewer-space.firebasestorage.app
   webapp_site: dataviewer-psp
+  databaseID: pspl
 naming:
   name_long: 'Purdue Space Program: Liquids'
   name_short: PSP Liquids

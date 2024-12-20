@@ -14,7 +14,8 @@ export const structure = {
     storageBucket: "string",
     messagingSenderId: "string",
     appId: "string",
-    measurementId: "string"
+    measurementId: "string",
+    databaseID: "string"
   },
   azure: {
     share_name: "string",

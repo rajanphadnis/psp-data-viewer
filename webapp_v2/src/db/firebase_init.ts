@@ -27,7 +27,7 @@ export function initFirebase() {
   // });
   globalThis.db = initializeFirestore(app, {
     localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
-  });
+  }, config.firebase.databaseID);
 
   // functions = getFunctions(app);
   if (appCheckSecret != false) {
