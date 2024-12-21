@@ -92,6 +92,9 @@ syncWriteFile(
         ],
         "docs": [
           "dataviewer-docs"
+        ],
+        "website": [
+          "dataviewer-space"
         ]
       }
     }

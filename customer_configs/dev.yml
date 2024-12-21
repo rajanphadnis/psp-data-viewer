@@ -21,9 +21,9 @@ firebase:
   webapp_site: dataviewer-staging-1
   databaseID: staging-1
 naming:
-  name_long: 'Staging: Dataviewer'
+  name_long: 'Staging: Dev Dataviewer'
   name_short: Dev Dataviewer
-  page_title: "Staging: Dataviewer"
+  page_title: "Staging"
   slug: dev
 urls:
   admin_dashboard_url: https://admin.dataviewer.space
