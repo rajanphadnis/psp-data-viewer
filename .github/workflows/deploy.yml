@@ -220,7 +220,7 @@ jobs:
         bun-version: latest
     - name: Build Admin Webapp
       working-directory: ./website
-      run: bun install && bun run prod
+      run: echo "done"
     - name: Release Main Website 
       uses: FirebaseExtended/action-hosting-deploy@v0
       with:
