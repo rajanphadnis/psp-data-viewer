@@ -2,8 +2,10 @@ name: "dev build"
 on:
   workflow_dispatch:
   push:
-      tags-ignore:
-          - "v*.*.*"
+    branches:
+      - '**'
+    tags-ignore:
+      - "v*.*.*"
 
 env:
   PYTHON_VERSION: "3.11"
