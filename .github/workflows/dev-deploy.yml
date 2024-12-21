@@ -2,10 +2,8 @@ name: "Dev Check and Deploy"
 on:
   workflow_dispatch:
   push:
-    branches:
-      - '**'
-    tags-ignore:
-      - "v*.*.*"
+    branches-ignore:
+      - 'refs/tags/*'
 
 env:
   PYTHON_VERSION: "3.11"
