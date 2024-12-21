@@ -1,4 +1,4 @@
-name: "dev build"
+name: "Dev Check and Deploy"
 on:
   workflow_dispatch:
   push:

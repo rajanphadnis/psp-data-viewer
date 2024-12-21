@@ -1,3 +1,9 @@
+## v0.7.4
+updated
+
+### Changed
+- bug fixes
+
 ## v0.7.3
 initial
 
