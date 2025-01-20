@@ -14,7 +14,7 @@ const MetaStuff: Component<{}> = (props) => {
     setDefaultGSE,
     defaultTestArticle,
     setDefaultTestArticle,
-  ]: any = useState();
+  ] = useState();
 
   return (
     <MetaProvider>

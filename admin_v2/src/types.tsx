@@ -1,3 +1,5 @@
+import { Accessor, Setter } from "solid-js";
+
 export type TestBasics = {
   id: string;
   name: string;
@@ -22,3 +24,18 @@ export type TestData = {
   test_article: string;
   starting_timestamp: number;
 };
+
+export type State = [
+  Accessor<TestBasics[]>,
+  Setter<TestBasics[]>,
+  Accessor<LoadingStateType>,
+  Setter<LoadingStateType>,
+  Accessor<string>,
+  Setter<string>,
+  Accessor<string>,
+  Setter<string>,
+  Accessor<string>,
+  Setter<string>,
+  Accessor<string[] | null>,
+  Setter<string[] | null>
+];

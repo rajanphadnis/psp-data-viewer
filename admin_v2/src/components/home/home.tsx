@@ -23,7 +23,7 @@ const HomeComponent: Component<{}> = (props) => {
     setDefaultGSE,
     defaultTestArticle,
     setDefaultTestArticle,
-  ]: any = useState();
+  ] = useState();
 
   const [filters, setFilters] = makePersisted(createSignal<string[]>([]), {
     name: "test-filters",

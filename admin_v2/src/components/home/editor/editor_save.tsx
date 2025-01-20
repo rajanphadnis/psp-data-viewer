@@ -22,7 +22,7 @@ const EditorSaveButton: Component<{
     setDefaultGSE,
     defaultTestArticle,
     setDefaultTestArticle,
-  ]: any = useState();
+  ] = useState();
 
   return (
     <button

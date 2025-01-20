@@ -1,31 +1,4 @@
 {
-  "firestore": {
-    "databases": {
-      "default": {
-        "rules": "firestore.rules",
-        "indexes": "firestore.indexes.json"
-      },
-      "mission-management": {
-        "rules": "firestore.mission-management.rules",
-        "indexes": "firestore.mission-management.indexes.json"
-      }
-    }
-  },
-  "functions": [
-    {
-      "runtime": "python312",
-      "source": "functions",
-      "codebase": "default",
-      "ignore": [
-        "venv",
-        ".git",
-        "firebase-debug.log",
-        "firebase-debug.*.log",
-        "test_data",
-        "psp-portfolio-key.json"
-      ]
-    }
-  ],
   "hosting": [
     {
       "target": "webapp",
@@ -121,5 +94,18 @@
       "port": 4000
     },
     "singleProjectMode": true
-  }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "venv",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ]
+    }
+  ]
 }

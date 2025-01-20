@@ -1,4 +1,4 @@
-import { children, Component, createSignal, onMount } from "solid-js";
+import { Component, createMemo, createSignal, onMount, Show } from "solid-js";
 import styles from "./resizeable.module.css";
 import Resizable from "@corvu/resizable";
 import { makePersisted } from "@solid-primitives/storage";
@@ -10,8 +10,9 @@ import { useState } from "../state";
 import NavBarItem from "./navbar_item";
 import Analytics from "./analytics/analytics";
 import NewTest from "./new/new";
-import Articles from "./articles/articles";
 import DefaultPage from "./defaults/default";
+import { LogInComponent } from "./auth/auth";
+import Logout from "./auth/logout";
 
 const MainLayout: Component<{}> = (props) => {
   const [
@@ -25,7 +26,10 @@ const MainLayout: Component<{}> = (props) => {
     setDefaultGSE,
     defaultTestArticle,
     setDefaultTestArticle,
-  ]: any = useState();
+    auth,
+    setAuth,
+  ] = useState();
+  const permissions = createMemo(() => auth());
   onMount(async () => {
     await getGeneralTestInfo(setAllKnownTests, setDefaultTest);
     await getDefaultArticles(setDefaultTestArticle, setDefaultGSE);
@@ -46,7 +50,9 @@ const MainLayout: Component<{}> = (props) => {
           path="/defaults"
           component={() => (
             <PanelLayout>
-              <DefaultPage />
+              <Show when={permissions()! && permissions()!.includes("manage:defaults")} fallback={<LogInComponent />}>
+                <DefaultPage />
+              </Show>
             </PanelLayout>
           )}
         ></Route>
@@ -74,6 +80,22 @@ const MainLayout: Component<{}> = (props) => {
             </PanelLayout>
           )}
         ></Route>
+        <Route
+          path="/login"
+          component={() => (
+            <PanelLayout>
+              <LogInComponent />
+            </PanelLayout>
+          )}
+        ></Route>
+        <Route
+          path="/logout"
+          component={() => (
+            <PanelLayout>
+              <Logout />
+            </PanelLayout>
+          )}
+        ></Route>
       </Router>
     </div>
   );
@@ -85,6 +107,21 @@ const PanelLayout: Component<{ children?: any }> = (props) => {
   const [sizes, setSizes] = makePersisted(createSignal<number[]>([]), {
     name: "resizable-index-sizes",
   });
+  const [
+    allKnownTests,
+    setAllKnownTests,
+    loadingState,
+    setLoadingState,
+    defaultTest,
+    setDefaultTest,
+    defaultGSE,
+    setDefaultGSE,
+    defaultTestArticle,
+    setDefaultTestArticle,
+    auth,
+    setAuth,
+  ] = useState();
+  const permissions = createMemo(() => auth());
   return (
     <Resizable sizes={sizes()} onSizesChange={setSizes}>
       <Resizable.Panel initialSize={0.2} minSize={0.2} class={`${styles.panel} ${styles.panelPadding}`}>
@@ -93,7 +130,15 @@ const PanelLayout: Component<{ children?: any }> = (props) => {
         <NavBarItem name="New Test" route="/new" />
         <NavBarItem name="Instances" route="/instances" />
         <NavBarItem name="Analytics" route="/analytics" />
-        <NavBarItem name="Defaults" route="/defaults" />
+        <Show when={permissions()! && permissions()!.includes("manage:defaults")}>
+          <NavBarItem name="Defaults" route="/defaults" />
+        </Show>
+        <Show when={permissions()! && permissions()!.includes("manage:billing")}>
+          <NavBarItem name="Billing" route="/billing" />
+        </Show>
+        <Show when={permissions()!}>
+          <NavBarItem name="Account" route="/account" />
+        </Show>
       </Resizable.Panel>
       <Resizable.Handle aria-label="Resize Handle" class={styles.panel_handle}>
         <div class={styles.panel_handle_div} />

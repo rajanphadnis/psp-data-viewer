@@ -15,7 +15,7 @@ const Status: Component<{}> = (props) => {
     setDefaultGSE,
     defaultTestArticle,
     setDefaultTestArticle,
-  ]: any = useState();
+  ] = useState();
 
   return (
     <div class={styles.status}>

@@ -3,9 +3,9 @@
   padding: 0px;
   display: flex;
   flex-direction: row;
-  height: calc(100% - 35px);
-  min-height: calc(100% - 35px);
-  max-height: calc(100% - 35px);
+  height: calc(100% - 46px);
+  min-height: calc(100% - 60px);
+  max-height: calc(100% - 40px);
 }
 
 .root {

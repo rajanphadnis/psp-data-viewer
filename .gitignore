@@ -55,3 +55,4 @@ admin_v2/src/generated.css
 .env
 webapp_v2/src/generated_app_info.ts
 webapp_v2/src/generated.css
+functions/application_default_credentials.json

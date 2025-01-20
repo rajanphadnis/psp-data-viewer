@@ -22,7 +22,7 @@ const DefaultDropdown: Component<{
     setDefaultGSE,
     defaultTestArticle,
     setDefaultTestArticle,
-  ]: any = useState();
+  ] = useState();
 
   return (
     <div>

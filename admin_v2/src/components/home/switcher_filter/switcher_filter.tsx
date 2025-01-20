@@ -19,7 +19,7 @@ const TestSwitcherFilter: Component<{
     setDefaultGSE,
     defaultTestArticle,
     setDefaultTestArticle,
-  ]: any = useState();
+  ] = useState();
 
   return (
     <div class={styles.filterDiv}>

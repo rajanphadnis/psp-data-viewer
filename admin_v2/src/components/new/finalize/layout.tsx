@@ -25,7 +25,7 @@ const UploadFinalizeLayout: Component<{
     setDefaultGSE,
     defaultTestArticle,
     setDefaultTestArticle,
-  ]: any = useState();
+  ] = useState();
 
   const [status, setStatus] = createSignal<string[]>(["Something Went Wrong", "Something Went Wrong", "0", "0"]);
   const [uploadPercent, setUploadPercent] = createSignal<number[]>(new Array<number>());

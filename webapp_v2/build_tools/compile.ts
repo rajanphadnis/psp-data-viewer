@@ -103,10 +103,10 @@ syncWriteFile(
 }
 `
 );
-await Bun.build({
-  entrypoints: ["./src/index.ts"],
-  outdir: "./built",
-  minify: false, // default false
-});
+// await Bun.build({
+//   entrypoints: ["./src/index.ts"],
+//   outdir: "./built",
+//   minify: false, // default false
+// });
 await $`bun run build`;
 console.log("Wrote env var file");

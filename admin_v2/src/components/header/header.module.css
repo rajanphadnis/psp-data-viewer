@@ -70,3 +70,17 @@
 .green_check {
   color: greenyellow;
 }
+
+.authButton {
+  padding: 10px;
+  background-color: var(--rush);
+  font-family: "IBM Plex Mono", monospace;
+  color: black;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+}
+
+.authButton:hover {
+  background-color: var(--field);
+}

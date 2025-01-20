@@ -16,7 +16,7 @@ const NewTest: Component<{}> = (props) => {
     setDefaultGSE,
     defaultTestArticle,
     setDefaultTestArticle,
-  ]: any = useState();
+  ] = useState();
   const [id, setId] = createSignal<string>(genId(7));
   const [isFinalizing, setisFinalizing] = createSignal<boolean>(false);
   const [name, setName] = createSignal<string>("");

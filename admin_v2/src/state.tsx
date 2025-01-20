@@ -1,5 +1,5 @@
 import { createContext, createSignal, Signal, useContext } from "solid-js";
-import { LoadingStateType, TestBasics } from "./types";
+import { LoadingStateType, State, TestBasics } from "./types";
 
 const AppStateContext = createContext();
 
@@ -22,6 +22,7 @@ export function AppStateProvider(props: any) {
     isLoading: true,
     statusMessage: "Loading...",
   } as LoadingStateType);
+  const [auth, setAuth] = createSignal<string[] | null>(null);
 
   const datasetsThing = [
     allKnownTests,
@@ -34,11 +35,13 @@ export function AppStateProvider(props: any) {
     setDefaultGSE,
     defaultTestArticle,
     setDefaultTestArticle,
+    auth,
+    setAuth,
   ];
 
   return <AppStateContext.Provider value={datasetsThing}>{props.children}</AppStateContext.Provider>;
 }
 
-export function useState() {
-  return useContext(AppStateContext);
+export function useState(): State {
+  return useContext(AppStateContext) as State;
 }

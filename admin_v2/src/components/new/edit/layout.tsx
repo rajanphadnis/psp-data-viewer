@@ -35,7 +35,7 @@ const UploadEditLayout: Component<{
     setDefaultGSE,
     defaultTestArticle,
     setDefaultTestArticle,
-  ]: any = useState();
+  ] = useState();
   // const [files, setFiles] = createSignal<UploadFile[]>([]);
   const {
     files: tdmsFiles,

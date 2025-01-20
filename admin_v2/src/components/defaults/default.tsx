@@ -18,7 +18,7 @@ const DefaultPage: Component<{}> = (props) => {
     setDefaultGSE,
     defaultTestArticle,
     setDefaultTestArticle,
-  ]: any = useState();
+  ] = useState();
 
   const [testID, setTestID] = createSignal<string>(defaultTest());
   const [gseArticle, setGseArticle] = createSignal<string>(defaultGSE());
@@ -26,36 +26,34 @@ const DefaultPage: Component<{}> = (props) => {
   const [isLoading, setIsLoading] = createSignal<boolean>(true);
 
   const availableTestIDs = createMemo(() => {
-    if(allKnownTests().length > 1) {
+    if (allKnownTests().length > 1) {
       const tests = (allKnownTests() as TestBasics[]).sort(function (a, b) {
-      if (a.test_article === b.test_article) {
-        if (a.gse_article === b.gse_article) {
-          if (a.starting_timestamp! == b.starting_timestamp!) {
-            return b.name < a.name ? 1 : -1;
-          } else if (a.starting_timestamp! < b.starting_timestamp!) {
+        if (a.test_article === b.test_article) {
+          if (a.gse_article === b.gse_article) {
+            if (a.starting_timestamp! == b.starting_timestamp!) {
+              return b.name < a.name ? 1 : -1;
+            } else if (a.starting_timestamp! < b.starting_timestamp!) {
+              return 1;
+            } else if (a.starting_timestamp! > b.starting_timestamp!) {
+              return -1;
+            }
+          } else if (a.gse_article < b.gse_article) {
             return 1;
-          } else if (a.starting_timestamp! > b.starting_timestamp!) {
+          } else if (a.gse_article < b.gse_article) {
             return -1;
           }
-        } else if (a.gse_article < b.gse_article) {
+        } else if (a.test_article < b.test_article) {
           return 1;
-        } else if (a.gse_article < b.gse_article) {
+        } else if (a.test_article < b.test_article) {
           return -1;
         }
-      } else if (a.test_article < b.test_article) {
-        return 1;
-      } else if (a.test_article < b.test_article) {
         return -1;
-      }
-      return -1;
-    });
-    // return tests;
-    return tests.map((test: TestBasics) => test.id);
+      });
+      // return tests;
+      return tests.map((test: TestBasics) => test.id);
+    } else {
+      return allKnownTests().map((test: TestBasics) => test.id);
     }
-    else {
-      return allKnownTests();
-    }
-    
   });
 
   const availableGSE = createMemo<string[]>(() => {

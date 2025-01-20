@@ -3,14 +3,16 @@ import { ReCaptchaEnterpriseProvider, initializeAppCheck } from "firebase/app-ch
 import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from "firebase/firestore";
 import { appCheckSecret } from "../generated_app_check_secret";
 import { getStorage } from "firebase/storage";
+import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAmJytERQ1hnORHswd-j07WhpTYH7yu6fA",
-  authDomain: "psp-portfolio-f1205.firebaseapp.com",
-  projectId: "psp-portfolio-f1205",
-  storageBucket: "psp-portfolio-f1205.appspot.com",
-  messagingSenderId: "493859450932",
-  appId: "1:493859450932:web:e4e3c67f0f46316c555a61",
+  apiKey: "AIzaSyDzZWBXQ5L9N92GRNUNGMse8AeUvbwFFyI",
+  authDomain: "dataviewer-space.firebaseapp.com",
+  projectId: "dataviewer-space",
+  storageBucket: "dataviewer-space.firebasestorage.app",
+  messagingSenderId: "267504321387",
+  appId: "1:267504321387:web:54b41a98a46466cf52822e",
+  measurementId: "G-Z8MPQGXT00"
 };
 
 /**
@@ -21,15 +23,17 @@ const firebaseConfig = {
  */
 export function initFirebase() {
   const app = initializeApp(firebaseConfig);
-  initializeAppCheck(app, {
-    provider: new ReCaptchaEnterpriseProvider("6Lctk8kpAAAAAI40QzMPFihZWMfGtiZ_-UC3H2n9"),
-    isTokenAutoRefreshEnabled: true,
-  });
+  // initializeAppCheck(app, {
+  //   provider: new ReCaptchaEnterpriseProvider("6Lctk8kpAAAAAI40QzMPFihZWMfGtiZ_-UC3H2n9"),
+  //   isTokenAutoRefreshEnabled: true,
+  // });
   globalThis.db = initializeFirestore(app, {
     localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
-  });
+  }, "staging-1");
   globalThis.storage = getStorage();
   // functions = getFunctions(app);
+  globalThis.auth = getAuth(app);
+  globalThis.auth.useDeviceLanguage();
   if (appCheckSecret != false) {
     console.log("in debug mode");
     // connectFunctionsEmulator(functions, "127.0.0.1", 5001);

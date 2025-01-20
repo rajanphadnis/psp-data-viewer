@@ -10,8 +10,23 @@ import { useNavigate } from "@solidjs/router";
 import EditorSaveButton from "./editor_save";
 import Resizable from "@corvu/resizable";
 import { makePersisted } from "@solid-primitives/storage";
+import { useState } from "../../../state";
 
 const HomeEditor: Component<{ testBasics: Accessor<TestBasics> }> = (props) => {
+  const [
+    allKnownTests,
+    setAllKnownTests,
+    loadingState,
+    setLoadingState,
+    defaultTest,
+    setDefaultTest,
+    defaultGSE,
+    setDefaultGSE,
+    defaultTestArticle,
+    setDefaultTestArticle,
+    auth,
+    setAuth,
+  ] = useState();
   const [testData, setTestData] = createSignal<TestData>({
     datasets: [""],
     ending_timestamp: 0,
@@ -53,6 +68,8 @@ const HomeEditor: Component<{ testBasics: Accessor<TestBasics> }> = (props) => {
     return `${testData().starting_timestamp} --> ${testData().ending_timestamp}`;
   });
 
+  const permissions = createMemo(() => auth());
+
   return (
     <div style={{ "padding-left": "10px", "padding-right": "10px", height: "100%" }}>
       <Show when={!loading()} fallback={<div class={loaderStyles.loader}></div>}>
@@ -60,7 +77,9 @@ const HomeEditor: Component<{ testBasics: Accessor<TestBasics> }> = (props) => {
           <Resizable.Panel initialSize={0.55} minSize={0.55} class={`${styles.panel} ${styles.panelPadding}`}>
             <div class={styles.inputTitleDiv}>
               <SectionTitle title="Edit Test:" />
-              <EditorDeleteButton id={testData().id} />
+              <Show when={permissions()! && permissions()!.includes("delete:tests")}>
+                <EditorDeleteButton id={testData().id} />
+              </Show>
             </div>
             <EditorEntry testData={testData().id} name="Test ID" input={false} />
             <EditorEntry testData={timeRange()} name="Timestamp" input={false} />

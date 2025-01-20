@@ -17,7 +17,7 @@ const NavBarTitle: Component<{ title: string }> = (props) => {
     setDefaultGSE,
     defaultTestArticle,
     setDefaultTestArticle,
-  ]: any = useState();
+  ] = useState();
   return (
     <div class={styles.flexRowStart} style="justify-content: start;">
       <Show when={allKnownTests().length != 0} fallback={<div class={styles.title}>Loading...</div>}>
