@@ -37,6 +37,6 @@ export function initFirebase() {
   globalThis.auth.useDeviceLanguage();
   if (appCheckSecret != false) {
     console.log("in debug mode");
-    connectFunctionsEmulator(globalThis.functions, "localhost", 5001);
+    // connectFunctionsEmulator(globalThis.functions, "localhost", 5001);
   }
 }

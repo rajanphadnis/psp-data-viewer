@@ -11,9 +11,15 @@ def beforeUserCreateClaims(
     if doc.exists:
         doc_info = doc.to_dict()
         print(f"Document data: {doc.to_dict()}")
-        if event.data.email in doc_info:
+        print(event.data)
+        print(event.data.provider_data[0].email)
+        if (event.data.email is None):
+            email = event.data.provider_data[0].email
+        else:
+            email = event.data.email
+        if email in doc_info:
             try:
-                perms = doc_info[event.data.email]
+                perms = doc_info[email]
                 return identity_fn.BeforeSignInResponse(
                     custom_claims={"permissions": perms}
                 )
@@ -40,11 +46,15 @@ def beforeSignInClaims(
     if doc.exists:
         doc_info = doc.to_dict()
         print(f"Document data: {doc.to_dict()}")
-        print(event.data.email)
+        print(event.data)
         print(event.data.provider_data[0].email)
-        if event.data.email in doc_info:
+        if (event.data.email is None):
+            email = event.data.provider_data[0].email
+        else:
+            email = event.data.email
+        if email in doc_info:
             try:
-                perms = doc_info[event.data.email]
+                perms = doc_info[email]
                 return identity_fn.BeforeSignInResponse(
                     custom_claims={"permissions": perms}
                 )
