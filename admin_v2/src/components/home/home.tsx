@@ -89,8 +89,8 @@ const HomeComponent: Component<{}> = (props) => {
           </For>
         </div>
       </Resizable.Panel>
-      <Resizable.Handle aria-label="Resize Handle" class={styles.panel_handle}>
-        <div class={styles.panel_handle_div} />
+      <Resizable.Handle aria-label="Resize Handle" class="bg-transparent border-none px-2 py-2">
+        <div class="w-[2px] bg-white h-full" />
       </Resizable.Handle>
       <Resizable.Panel initialSize={0.6} minSize={0.2} class={`${styles.panel} ${styles.panelPadding}`}>
         <HomeEditor testBasics={currentlySelectedTest} />

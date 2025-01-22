@@ -35,7 +35,7 @@ export const AuthComponent: Component<{}> = (props) => {
     if (user) {
       const uid = user.uid;
       console.log(user.toJSON());
-      const email = user.email!;
+      const email = user.email ?? user.providerData[0].email;
       user
         .getIdTokenResult()
         .then((idTokenResult) => {
@@ -87,7 +87,7 @@ export const LogInComponent: Component<{}> = (props) => {
       <p>Log In</p>
       <SignInButton name="Google" provider={new GoogleAuthProvider()} svg={GoogleSVG} />
       <SignInButton name="Microsoft" provider={new OAuthProvider("microsoft.com")} svg={MicrosoftSVG} />
-      <SignInButton name="GitHub" provider={new GithubAuthProvider()} svg={GitHubSVG} />
+      <SignInButton name="GitHub" provider={(new GithubAuthProvider()).addScope("user:email")} svg={GitHubSVG} />
     </div>
   );
 };
@@ -163,6 +163,7 @@ const SignInButton: Component<{ name: string; svg: JSX.Element; provider: AuthPr
         setLoadingState({ isLoading: true, statusMessage: "Authenticating..." });
         // const provider = new GoogleAuthProvider();
         const auth = getAuth();
+        console.log(props.provider);
         signInWithPopup(auth, props.provider)
           .then((result) => {
             const user = result.user;
@@ -170,18 +171,22 @@ const SignInButton: Component<{ name: string; svg: JSX.Element; provider: AuthPr
             window.location.pathname = "/";
           })
           .catch((error) => {
-            console.log(error.toJSON());
+            console.log(error);
+            // console.log(error);
             // Step 2: User's email already exists.
             if (error.code === "auth/account-exists-with-different-credential") {
+              globalThis.errorThing = error;
+              // console.log(error);
               // The pending Google credential.
-              let pendingCred = error.credential;
-              console.log(pendingCred);
+              // let pendingCred = error.credential;
+              // console.log(pendingCred);
 
               // Step 3: Save the pending credential in temporary storage,
 
               // Step 4: Let the user know that they already have an account
               // but with a different provider, and let them choose another
               // sign-in method.
+              alert("Account already exists with another identity provider");
             }
           });
       }}

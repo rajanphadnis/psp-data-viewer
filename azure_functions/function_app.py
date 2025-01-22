@@ -7,6 +7,8 @@ import math
 import json
 import sys
 import requests
+import stripe
+import os
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
@@ -14,6 +16,12 @@ app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 @app.route(route="get_data")
 def get_data(req: func.HttpRequest) -> func.HttpResponse:
     logging.info("Python HTTP trigger function processed a request.")
+    stripe.api_key = os.environ["STRIPE_API_KEY"]
+    stripe.billing.MeterEvent.create(
+        event_name="api_requests",
+        payload={"stripe_customer_id": os.environ["STRIPE_CUSTOMER_ID"]},
+    )
+    print("logged to stripe")
 
     maxValsAllowed = 4500
 
@@ -128,6 +136,12 @@ def get_data(req: func.HttpRequest) -> func.HttpResponse:
 @app.route(route="get_database_info")
 def get_database_info(req: func.HttpRequest) -> func.HttpResponse:
     logging.info("Python HTTP trigger function processed a request.")
+    stripe.api_key = os.environ["STRIPE_API_KEY"]
+    stripe.billing.MeterEvent.create(
+        event_name="api:_get_database_info",
+        payload={"stripe_customer_id": os.environ["STRIPE_CUSTOMER_ID"]},
+    )
+    print("logged to stripe")
 
     param_testID = req.params.get("id")
     param_annotations = req.params.get("annotations")

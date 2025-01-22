@@ -96,8 +96,8 @@ const HomeEditor: Component<{ testBasics: Accessor<TestBasics> }> = (props) => {
               />
             </Show>
           </Resizable.Panel>
-          <Resizable.Handle aria-label="Resize Handle" class={styles.panel_handle}>
-            <div class={styles.panel_handle_div} />
+          <Resizable.Handle aria-label="Resize Handle" class="bg-transparent border-none px-0 py-2">
+            <div class="h-[2px] bg-white w-full" />
           </Resizable.Handle>
           <Resizable.Panel
             initialSize={0.45}

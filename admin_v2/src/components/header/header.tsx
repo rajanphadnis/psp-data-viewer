@@ -21,7 +21,7 @@ const Header: Component<{}> = () => {
     setAuth,
   ] = useState();
   return (
-    <div class={styles.header}>
+    <div class="px-4 flex flex-row items-center justify-between pb-0 pt-2 h-16 max-h-16 min-h-16">
       <NavBarTitle title="Admin Console" />
       <div class={styles.flexRowEnd} style="justify-content: end;">
         <Status />

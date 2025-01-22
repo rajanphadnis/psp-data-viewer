@@ -10,6 +10,7 @@ import MetaStuff from "./meta_stuff";
 import { FirebaseStorage } from "firebase/storage";
 import { Auth } from "firebase/auth";
 import { AuthComponent } from "./components/auth/auth";
+import { Functions } from "firebase/functions";
 
 
 //ANJALI IS SO AWESOMEEEEEEE
@@ -19,6 +20,7 @@ declare global {
   var db: Firestore;
   var storage: FirebaseStorage;
   var auth: Auth;
+  var functions: Functions;
 }
 
 if (import.meta.env.DEV && !(root instanceof HTMLElement)) {

@@ -39,3 +39,19 @@ export type State = [
   Accessor<string[] | null>,
   Setter<string[] | null>
 ];
+
+export type BillingData = {
+  date: number;
+  value: number;
+};
+
+export type InvoiceData = {
+  amount_due: number;
+  amount_paid: number;
+  amount_remaining: number;
+  billing_reason: string;
+  collection_method: string;
+  next_payment_attempt: number;
+  period_end: number;
+  period_start: number;
+};

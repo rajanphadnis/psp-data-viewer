@@ -4,6 +4,7 @@ import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager
 import { appCheckSecret } from "../generated_app_check_secret";
 import { getStorage } from "firebase/storage";
 import { getAuth } from "firebase/auth";
+import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDzZWBXQ5L9N92GRNUNGMse8AeUvbwFFyI",
@@ -31,11 +32,11 @@ export function initFirebase() {
     localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
   }, "staging-1");
   globalThis.storage = getStorage();
-  // functions = getFunctions(app);
+  globalThis.functions = getFunctions(app);
   globalThis.auth = getAuth(app);
   globalThis.auth.useDeviceLanguage();
   if (appCheckSecret != false) {
     console.log("in debug mode");
-    // connectFunctionsEmulator(functions, "127.0.0.1", 5001);
+    connectFunctionsEmulator(globalThis.functions, "localhost", 5001);
   }
 }

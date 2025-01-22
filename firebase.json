@@ -106,6 +106,17 @@
         "firebase-debug.*.log",
         "*.local"
       ]
+    },
+    {
+      "source": "fxns_create_dataset",
+      "codebase": "create_dataset",
+      "ignore": [
+        "venv",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ]
     }
   ]
 }
