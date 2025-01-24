@@ -37,7 +37,9 @@ export type State = [
   Accessor<string>,
   Setter<string>,
   Accessor<string[] | null>,
-  Setter<string[] | null>
+  Setter<string[] | null>,
+  Accessor<string | undefined>,
+  Setter<string | undefined>
 ];
 
 export type BillingData = {

@@ -1,4 +1,4 @@
-import { Component, createSignal, JSX, onMount, Show } from "solid-js";
+import { Component, createEffect, createSignal, JSX, onMount, Show } from "solid-js";
 import {
   AuthProvider,
   getAuth,
@@ -29,27 +29,35 @@ export const AuthComponent: Component<{}> = (props) => {
     setDefaultTestArticle,
     auth,
     setAuth,
+    org,
+    setOrg,
   ] = useState();
 
-  onAuthStateChanged(getAuth(), (user) => {
-    if (user) {
-      const uid = user.uid;
-      console.log(user.toJSON());
-      const email = user.email ?? user.providerData[0].email;
-      user
-        .getIdTokenResult()
-        .then((idTokenResult) => {
-          console.log(idTokenResult.claims.permissions);
-          console.log((idTokenResult.claims.permissions as string[]).length);
-          setAuth(idTokenResult.claims.permissions as string[]);
-          setLoadingState({ isLoading: false, statusMessage: "" });
-        })
-        .catch((error) => {
-          console.log(error);
+  createEffect(() => {
+    if (org()) {
+      onAuthStateChanged(getAuth(), (user) => {
+        if (user) {
+          const uid = user.uid;
+          console.log(user.toJSON());
+          const email = user.email ?? user.providerData[0].email;
+          user
+            .getIdTokenResult()
+            .then((idTokenResult) => {
+              console.log(idTokenResult.claims.permissions);
+              console.log((idTokenResult.claims.permissions as string[]).length);
+              setAuth(idTokenResult.claims.permissions as string[]);
+              setLoadingState({ isLoading: false, statusMessage: "" });
+            })
+            .catch((error) => {
+              console.log(error);
+              setAuth(null);
+            });
+        } else {
           setAuth(null);
-        });
+        }
+      });
     } else {
-      setAuth(null);
+      console.log("org not set");
     }
   });
 
@@ -70,15 +78,16 @@ export const LogInComponent: Component<{}> = (props) => {
     setDefaultTestArticle,
     auth,
     setAuth,
+    org,
+    setOrg,
   ] = useState();
 
   const [pendingCreds, setPendingCreds] = createSignal<any | null>(null);
 
   onMount(() => {
-    console.log("mounted");
     if (auth()!) {
       const navigate = useNavigate();
-      navigate("/", { replace: true });
+      navigate(`/${org() ?? ""}`, { replace: true });
     }
   });
 
@@ -87,7 +96,7 @@ export const LogInComponent: Component<{}> = (props) => {
       <p>Log In</p>
       <SignInButton name="Google" provider={new GoogleAuthProvider()} svg={GoogleSVG} />
       <SignInButton name="Microsoft" provider={new OAuthProvider("microsoft.com")} svg={MicrosoftSVG} />
-      <SignInButton name="GitHub" provider={(new GithubAuthProvider()).addScope("user:email")} svg={GitHubSVG} />
+      <SignInButton name="GitHub" provider={new GithubAuthProvider().addScope("user:email")} svg={GitHubSVG} />
     </div>
   );
 };
@@ -155,6 +164,8 @@ const SignInButton: Component<{ name: string; svg: JSX.Element; provider: AuthPr
     setDefaultTestArticle,
     auth,
     setAuth,
+    org,
+    setOrg,
   ] = useState();
   return (
     <button
@@ -168,7 +179,7 @@ const SignInButton: Component<{ name: string; svg: JSX.Element; provider: AuthPr
           .then((result) => {
             const user = result.user;
             console.log(user);
-            window.location.pathname = "/";
+            window.location.pathname = `/${org() ?? ""}`;
           })
           .catch((error) => {
             console.log(error);

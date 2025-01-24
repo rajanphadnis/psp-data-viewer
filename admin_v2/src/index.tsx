@@ -12,7 +12,6 @@ import { Auth } from "firebase/auth";
 import { AuthComponent } from "./components/auth/auth";
 import { Functions } from "firebase/functions";
 
-
 //ANJALI IS SO AWESOMEEEEEEE
 const root = document.getElementById("root");
 
@@ -21,6 +20,7 @@ declare global {
   var storage: FirebaseStorage;
   var auth: Auth;
   var functions: Functions;
+  var availableDBs: { [slug: string]: Firestore };
 }
 
 if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
@@ -28,6 +28,8 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
     "Root element not found. Did you forget to add it to your index.html? Or maybe the id attribute got misspelled?"
   );
 }
+
+globalThis.availableDBs = {};
 
 initFirebase();
 

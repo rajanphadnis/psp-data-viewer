@@ -1,10 +1,10 @@
 import { initializeApp } from "firebase/app";
 import { ReCaptchaEnterpriseProvider, initializeAppCheck } from "firebase/app-check";
 import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from "firebase/firestore";
-import { appCheckSecret } from "../generated_app_check_secret";
+import { appCheckSecret, config } from "../generated_app_check_secret";
 import { getStorage } from "firebase/storage";
 import { getAuth } from "firebase/auth";
-import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
+import { connectFunctionsEmulator, getFunctions } from "firebase/functions";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDzZWBXQ5L9N92GRNUNGMse8AeUvbwFFyI",
@@ -13,7 +13,7 @@ const firebaseConfig = {
   storageBucket: "dataviewer-space.firebasestorage.app",
   messagingSenderId: "267504321387",
   appId: "1:267504321387:web:54b41a98a46466cf52822e",
-  measurementId: "G-Z8MPQGXT00"
+  measurementId: "G-Z8MPQGXT00",
 };
 
 /**
@@ -28,9 +28,15 @@ export function initFirebase() {
   //   provider: new ReCaptchaEnterpriseProvider("6Lctk8kpAAAAAI40QzMPFihZWMfGtiZ_-UC3H2n9"),
   //   isTokenAutoRefreshEnabled: true,
   // });
-  globalThis.db = initializeFirestore(app, {
-    localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
-  }, "staging-1");
+  Object.keys(config).forEach((slug) => {
+    globalThis.availableDBs[slug] = initializeFirestore(
+      app,
+      {
+        localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
+      },
+      (config as any)[slug]["firebase"]["databaseID"]
+    );
+  });
   globalThis.storage = getStorage();
   globalThis.functions = getFunctions(app);
   globalThis.auth = getAuth(app);

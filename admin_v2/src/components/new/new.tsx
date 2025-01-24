@@ -16,6 +16,10 @@ const NewTest: Component<{}> = (props) => {
     setDefaultGSE,
     defaultTestArticle,
     setDefaultTestArticle,
+    auth,
+    setAuth,
+    org,
+    setOrg,
   ] = useState();
   const [id, setId] = createSignal<string>(genId(7));
   const [isFinalizing, setisFinalizing] = createSignal<boolean>(false);

@@ -22,6 +22,10 @@ const DefaultDropdown: Component<{
     setDefaultGSE,
     defaultTestArticle,
     setDefaultTestArticle,
+    auth,
+    setAuth,
+    org,
+    setOrg,
   ] = useState();
 
   return (

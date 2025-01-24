@@ -15,6 +15,10 @@ const InstancesFetchButton: Component<{ setCurrentConfig: Setter<string> }> = (p
     setDefaultGSE,
     defaultTestArticle,
     setDefaultTestArticle,
+    auth,
+    setAuth,
+    org,
+    setOrg,
   ] = useState();
   const [loading, setloading] = createSignal<boolean>(false);
 

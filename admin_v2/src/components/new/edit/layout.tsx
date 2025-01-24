@@ -2,7 +2,7 @@ import { Accessor, Component, createEffect, createMemo, createSignal, For, Sette
 import { useState } from "../../../state";
 import styles from "./edit.module.css";
 import Resizable from "@corvu/resizable";
-import { EditorEntry } from "../../home/editor/editor_entry";
+import { EditorEntry } from "../../manage_tests/editor/editor_entry";
 import SectionTitle from "../../title";
 import UploadCreateButton from "./add_file_button";
 import NewUploadComponent from "./upload_component";
@@ -35,6 +35,10 @@ const UploadEditLayout: Component<{
     setDefaultGSE,
     defaultTestArticle,
     setDefaultTestArticle,
+    auth,
+    setAuth,
+    org,
+    setOrg,
   ] = useState();
   // const [files, setFiles] = createSignal<UploadFile[]>([]);
   const {

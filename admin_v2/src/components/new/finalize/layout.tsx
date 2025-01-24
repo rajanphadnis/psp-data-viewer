@@ -25,6 +25,10 @@ const UploadFinalizeLayout: Component<{
     setDefaultGSE,
     defaultTestArticle,
     setDefaultTestArticle,
+    auth,
+    setAuth,
+    org,
+    setOrg,
   ] = useState();
 
   const [status, setStatus] = createSignal<string[]>(["Something Went Wrong", "Something Went Wrong", "0", "0"]);

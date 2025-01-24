@@ -1,4 +1,4 @@
-import { Component, createEffect, createMemo, createSignal, For } from "solid-js";
+import { Component, createMemo, createSignal, For } from "solid-js";
 import Resizable from "@corvu/resizable";
 import styles from "../resizeable.module.css";
 import home from "./home.module.css";
@@ -9,9 +9,8 @@ import { makePersisted } from "@solid-primitives/storage";
 import TestSwitcherFilter from "./switcher_filter/switcher_filter";
 import HomeEditor from "./editor/editor";
 import SectionTitle from "../title";
-import { getDateLabel } from "../../browser_interactions";
 
-const HomeComponent: Component<{}> = (props) => {
+const ManageTests: Component<{}> = (props) => {
   const [
     allKnownTests,
     setAllKnownTests,
@@ -23,6 +22,10 @@ const HomeComponent: Component<{}> = (props) => {
     setDefaultGSE,
     defaultTestArticle,
     setDefaultTestArticle,
+    auth,
+    setAuth,
+    org,
+    setOrg,
   ] = useState();
 
   const [filters, setFilters] = makePersisted(createSignal<string[]>([]), {
@@ -99,4 +102,4 @@ const HomeComponent: Component<{}> = (props) => {
   );
 };
 
-export default HomeComponent;
+export default ManageTests;

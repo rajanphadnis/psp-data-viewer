@@ -15,6 +15,10 @@ const InstanceUpdateButton: Component<{ instanceCount: Accessor<number> }> = (pr
     setDefaultGSE,
     defaultTestArticle,
     setDefaultTestArticle,
+    auth,
+    setAuth,
+    org,
+    setOrg,
   ] = useState();
   const [isUpdateComplete, setisUpdateComplete] = createSignal<boolean>(false);
   const [loading, setloading] = createSignal<boolean>(false);

@@ -23,6 +23,7 @@ export function AppStateProvider(props: any) {
     statusMessage: "Loading...",
   } as LoadingStateType);
   const [auth, setAuth] = createSignal<string[] | null>(null);
+  const [org, setOrg] = createSignal<string | undefined>();
 
   const datasetsThing = [
     allKnownTests,
@@ -37,6 +38,8 @@ export function AppStateProvider(props: any) {
     setDefaultTestArticle,
     auth,
     setAuth,
+    org,
+    setOrg,
   ];
 
   return <AppStateContext.Provider value={datasetsThing}>{props.children}</AppStateContext.Provider>;

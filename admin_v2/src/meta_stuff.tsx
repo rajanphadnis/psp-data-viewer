@@ -14,6 +14,10 @@ const MetaStuff: Component<{}> = (props) => {
     setDefaultGSE,
     defaultTestArticle,
     setDefaultTestArticle,
+    auth,
+    setAuth,
+    org,
+    setOrg,
   ] = useState();
 
   return (

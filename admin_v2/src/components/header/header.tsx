@@ -1,9 +1,9 @@
 import { Component } from "solid-js";
 import styles from "./header.module.css";
-import { useState } from "../../state";
 import Status from "./status";
 import NavBarTitle from "./title";
 import AuthButton from "./login_button";
+import { useState } from "../../state";
 
 const Header: Component<{}> = () => {
   const [
@@ -19,6 +19,8 @@ const Header: Component<{}> = () => {
     setDefaultTestArticle,
     auth,
     setAuth,
+    org,
+    setOrg,
   ] = useState();
   return (
     <div class="px-4 flex flex-row items-center justify-between pb-0 pt-2 h-16 max-h-16 min-h-16">

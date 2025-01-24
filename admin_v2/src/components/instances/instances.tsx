@@ -16,6 +16,10 @@ const Instances: Component<{}> = (props) => {
     setDefaultGSE,
     defaultTestArticle,
     setDefaultTestArticle,
+    auth,
+    setAuth,
+    org,
+    setOrg,
   ] = useState();
 
   const [instanceCount, setinstanceCount] = createSignal<number>(0);

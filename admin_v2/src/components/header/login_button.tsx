@@ -1,6 +1,5 @@
-import { Component, Show } from "solid-js";
+import { Component, createEffect, createMemo, Show } from "solid-js";
 import styles from "./header.module.css";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useState } from "../../state";
 
 const AuthButton: Component<{}> = () => {
@@ -17,10 +16,16 @@ const AuthButton: Component<{}> = () => {
     setDefaultTestArticle,
     auth,
     setAuth,
+    org,
+    setOrg,
   ] = useState();
+  const orgSlug = createMemo(() => {
+    console.log(org());
+    return org() ?? "general";
+  });
 
   return (
-    <a href={auth() != null ? "/logout" : "/login"}>
+    <a href={auth() != null ? `/${orgSlug()}/logout` : `/${orgSlug()}/login`}>
       <button title="Login or Logout" class={styles.authButton}>
         <Show when={auth() != null} fallback={"Login"}>
           Logout

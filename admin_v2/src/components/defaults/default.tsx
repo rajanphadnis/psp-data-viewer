@@ -18,6 +18,10 @@ const DefaultPage: Component<{}> = (props) => {
     setDefaultGSE,
     defaultTestArticle,
     setDefaultTestArticle,
+    auth,
+    setAuth,
+    org,
+    setOrg,
   ] = useState();
 
   const [testID, setTestID] = createSignal<string>(defaultTest());
