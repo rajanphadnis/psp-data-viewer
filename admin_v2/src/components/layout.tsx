@@ -16,6 +16,8 @@ import Billing from "./billing/billing";
 import SelectOrg from "./select_org/select_org";
 import { config } from "../generated_app_check_secret";
 import { initFirebase } from "../db/firebase_init";
+import Header from "./header/header";
+import AccountPage from "./account/account";
 
 const MainLayout: Component<{}> = (props) => {
   const [
@@ -31,11 +33,13 @@ const MainLayout: Component<{}> = (props) => {
     setDefaultTestArticle,
     auth,
     setAuth,
+    org,
+    setOrg,
   ] = useState();
   const permissions = createMemo(() => auth());
 
   return (
-    <div class="m-0 p-0 flex flex-row h-[calc(100%-4rem)]">
+    <div class="m-0 p-0 flex flex-row h-full w-full">
       <Router>
         <Route path="/" component={() => <SelectOrg />}></Route>
         <Route
@@ -62,7 +66,10 @@ const MainLayout: Component<{}> = (props) => {
           path="/:org/defaults"
           component={() => (
             <PanelLayout>
-              <Show when={permissions()! && permissions()!.includes("manage:defaults")} fallback={<LogInComponent />}>
+              <Show
+                when={permissions()! && permissions()!.includes(`${org()}:manage:defaults`)}
+                fallback={<LogInComponent />}
+              >
                 <DefaultPage />
               </Show>
             </PanelLayout>
@@ -100,9 +107,20 @@ const MainLayout: Component<{}> = (props) => {
           path="/:org/billing"
           component={() => (
             <PanelLayout>
-              <Show when={permissions()! && permissions()!.includes("manage:billing")} fallback={<LogInComponent />}>
+              <Show
+                when={permissions()! && permissions()!.includes(`${org()}:manage:billing`)}
+                fallback={<LogInComponent />}
+              >
                 <Billing />
               </Show>
+            </PanelLayout>
+          )}
+        ></Route>
+        <Route
+          path="/:org/account"
+          component={() => (
+            <PanelLayout>
+              <AccountPage />
             </PanelLayout>
           )}
         ></Route>
@@ -176,36 +194,41 @@ const PanelLayout: Component<{ children?: any }> = (props) => {
   });
 
   return (
-    <Resizable sizes={sizes()} onSizesChange={setSizes}>
-      <Resizable.Panel initialSize={0.2} minSize={0.2} class="pt-3">
-        <Show when={org()}>
-          <NavBarItem name={permissions() ? "Manage Tests" : "Tests"} route={`/${params.org}/tests`} />
-        </Show>
-        <Show when={permissions()!}>
-          <NavBarItem name="New Test" route={`/${params.org}/new`} />
-        </Show>
-        <Show when={permissions()!}>
-          <NavBarItem name="Instances" route={`/${params.org}/instances`} />
-        </Show>
-        <Show when={org()!}>
-          <NavBarItem name="Analytics" route={`/${params.org}/analytics`} />
-        </Show>
-        <Show when={permissions()! && permissions()!.includes("manage:defaults")}>
-          <NavBarItem name="Defaults" route={`/${params.org}/defaults`} />
-        </Show>
-        <Show when={permissions()! && permissions()!.includes("manage:billing")}>
-          <NavBarItem name="Billing" route={`/${params.org}/billing`} />
-        </Show>
-        <Show when={permissions()!}>
-          <NavBarItem name="Account" route={`/${params.org}/account`} />
-        </Show>
-      </Resizable.Panel>
-      <Resizable.Handle aria-label="Resize Handle" class="bg-transparent border-none px-2 py-2">
-        <div class="w-[2px] bg-white h-full" />
-      </Resizable.Handle>
-      <Resizable.Panel initialSize={0.8} minSize={0.5} class="p-0">
-        {props.children}
-      </Resizable.Panel>
-    </Resizable>
+    <div class="flex flex-col w-full h-full">
+      <Header />
+      <div class="w-full h-[calc(100%-4rem)] m-0 p-0">
+        <Resizable sizes={sizes()} onSizesChange={setSizes}>
+          <Resizable.Panel initialSize={0.2} minSize={0.2} class="pt-3">
+            <Show when={org()}>
+              <NavBarItem name={permissions() ? "Manage Tests" : "Tests"} route={`/${params.org}/tests`} />
+            </Show>
+            <Show when={permissions()!}>
+              <NavBarItem name="New Test" route={`/${params.org}/new`} />
+            </Show>
+            <Show when={permissions()!}>
+              <NavBarItem name="Instances" route={`/${params.org}/instances`} />
+            </Show>
+            <Show when={org()!}>
+              <NavBarItem name="Analytics" route={`/${params.org}/analytics`} />
+            </Show>
+            <Show when={permissions()! && permissions()!.includes(`${org()}:manage:defaults`)}>
+              <NavBarItem name="Defaults" route={`/${params.org}/defaults`} />
+            </Show>
+            <Show when={permissions()! && permissions()!.includes(`${org()}:manage:billing`)}>
+              <NavBarItem name="Billing" route={`/${params.org}/billing`} />
+            </Show>
+            <Show when={permissions()!}>
+              <NavBarItem name="Account" route={`/${params.org}/account`} />
+            </Show>
+          </Resizable.Panel>
+          <Resizable.Handle aria-label="Resize Handle" class="bg-transparent border-none px-2 py-2">
+            <div class="w-[2px] bg-white h-full" />
+          </Resizable.Handle>
+          <Resizable.Panel initialSize={0.8} minSize={0.5} class="p-0">
+            {props.children}
+          </Resizable.Panel>
+        </Resizable>
+      </div>
+    </div>
   );
 };

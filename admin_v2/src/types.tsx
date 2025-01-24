@@ -57,3 +57,7 @@ export type InvoiceData = {
   period_end: number;
   period_start: number;
 };
+
+export type AccessControlDoc = {
+  [email: string]: string[];
+};

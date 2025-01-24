@@ -26,6 +26,8 @@ const HomeEditor: Component<{ testBasics: Accessor<TestBasics> }> = (props) => {
     setDefaultTestArticle,
     auth,
     setAuth,
+    org,
+    setOrg,
   ] = useState();
   const [testData, setTestData] = createSignal<TestData>({
     datasets: [""],
@@ -77,7 +79,7 @@ const HomeEditor: Component<{ testBasics: Accessor<TestBasics> }> = (props) => {
           <Resizable.Panel initialSize={0.55} minSize={0.55} class={`${styles.panel} ${styles.panelPadding}`}>
             <div class={styles.inputTitleDiv}>
               <SectionTitle title="Edit Test:" />
-              <Show when={permissions()! && permissions()!.includes("delete:tests")}>
+              <Show when={permissions()! && permissions()!.includes(`${org()}:delete:tests`)}>
                 <EditorDeleteButton id={testData().id} />
               </Show>
             </div>

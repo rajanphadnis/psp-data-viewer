@@ -28,6 +28,9 @@ export function initFirebase() {
   //   provider: new ReCaptchaEnterpriseProvider("6Lctk8kpAAAAAI40QzMPFihZWMfGtiZ_-UC3H2n9"),
   //   isTokenAutoRefreshEnabled: true,
   // });
+  globalThis.adminDB = initializeFirestore(app, {
+    localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
+  });
   Object.keys(config).forEach((slug) => {
     globalThis.availableDBs[slug] = initializeFirestore(
       app,

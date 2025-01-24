@@ -21,6 +21,7 @@ declare global {
   var auth: Auth;
   var functions: Functions;
   var availableDBs: { [slug: string]: Firestore };
+  var adminDB: Firestore;
 }
 
 if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
@@ -37,7 +38,6 @@ render(() => {
   return (
     <AppStateProvider>
       <MetaStuff />
-      <Header />
       <AuthComponent />
     </AppStateProvider>
   );

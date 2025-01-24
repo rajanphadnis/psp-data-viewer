@@ -1,6 +1,7 @@
 import { Component, createEffect, createMemo, Show } from "solid-js";
 import styles from "./header.module.css";
 import { useState } from "../../state";
+import { A } from "@solidjs/router";
 
 const AuthButton: Component<{}> = () => {
   const [
@@ -25,13 +26,13 @@ const AuthButton: Component<{}> = () => {
   });
 
   return (
-    <a href={auth() != null ? `/${orgSlug()}/logout` : `/${orgSlug()}/login`}>
+    <A href={auth() != null ? `/${orgSlug()}/logout` : `/${orgSlug()}/login`}>
       <button title="Login or Logout" class={styles.authButton}>
         <Show when={auth() != null} fallback={"Login"}>
           Logout
         </Show>
       </button>
-    </a>
+    </A>
   );
 };
 

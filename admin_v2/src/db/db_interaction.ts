@@ -1,6 +1,6 @@
 import { Accessor, Setter } from "solid-js";
-import { TestBasics, TestData } from "../types";
-import { doc, getDocFromCache, getDoc, DocumentSnapshot, DocumentData } from "firebase/firestore";
+import { AccessControlDoc, TestBasics, TestData } from "../types";
+import { doc, getDocFromCache, getDoc, DocumentSnapshot, DocumentData, query } from "firebase/firestore";
 
 /**
  * Contacts the Firestore database and gets the document specific to the currently selected test.
@@ -130,4 +130,22 @@ export async function getDefaultArticles(
   setDefaultTestArticle(default_test_article);
   setDefaultGSE(default_gse);
   return;
+}
+
+export async function fetchOrgPermissions(org: string) {
+  const docRef = doc(globalThis.adminDB, "access_control", "users");
+  const docSnap = await getDoc(docRef);
+  const dat = docSnap.data()! as AccessControlDoc;
+  let toReturn: AccessControlDoc = {};
+  const keys = Object.keys(dat);
+  keys.forEach((key) => {
+    const list = dat[key].filter((val) => {
+      return val.includes(org);
+    });
+    if (list.length > 0) {
+      toReturn[key] = list;
+    }
+  });
+  console.log(toReturn);
+  return toReturn;
 }

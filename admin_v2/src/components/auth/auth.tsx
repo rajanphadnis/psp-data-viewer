@@ -186,7 +186,7 @@ const SignInButton: Component<{ name: string; svg: JSX.Element; provider: AuthPr
             // console.log(error);
             // Step 2: User's email already exists.
             if (error.code === "auth/account-exists-with-different-credential") {
-              globalThis.errorThing = error;
+              // globalThis.errorThing = error;
               // console.log(error);
               // The pending Google credential.
               // let pendingCred = error.credential;
