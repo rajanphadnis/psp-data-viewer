@@ -1,6 +1,19 @@
 import { Accessor, Setter } from "solid-js";
 import { AccessControlDoc, TestBasics, TestData } from "../types";
-import { doc, getDocFromCache, getDoc, DocumentSnapshot, DocumentData, query } from "firebase/firestore";
+import {
+  doc,
+  getDocFromCache,
+  getDoc,
+  DocumentSnapshot,
+  DocumentData,
+  query,
+  updateDoc,
+  FieldValue,
+  arrayRemove,
+  setDoc,
+  arrayUnion,
+} from "firebase/firestore";
+import { decode, encode } from "./firebase-encode";
 
 /**
  * Contacts the Firestore database and gets the document specific to the currently selected test.
@@ -148,4 +161,20 @@ export async function fetchOrgPermissions(org: string) {
   });
   console.log(toReturn);
   return toReturn;
+}
+
+export async function deletePermission(email: string, permission: string) {
+  const docRef = doc(globalThis.adminDB, "access_control", "users");
+  let obj: any = {};
+  obj[email] = arrayRemove(permission);
+  await setDoc(docRef, obj, { merge: true });
+  return true;
+}
+
+export async function addPermission(email: string, permission: string) {
+  const docRef = doc(globalThis.adminDB, "access_control", "users");
+  let obj: any = {};
+  obj[email] = arrayUnion(permission);
+  await setDoc(docRef, obj, { merge: true });
+  return true;
 }

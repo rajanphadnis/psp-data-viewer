@@ -1,7 +1,8 @@
 import { Component, createMemo, createSignal, For, onMount, Show } from "solid-js";
-import { fetchOrgPermissions } from "../../db/db_interaction";
+import { addPermission, deletePermission, fetchOrgPermissions } from "../../db/db_interaction";
 import { useState } from "../../state";
 import { AccessControlDoc } from "../../types";
+import { doc, onSnapshot } from "firebase/firestore";
 
 const PermissionsSection: Component<{}> = (props) => {
   const [
@@ -27,7 +28,20 @@ const PermissionsSection: Component<{}> = (props) => {
   onMount(async () => {
     if (org()) {
       if (globalThis.adminDB) {
-        setOrgPermissions(await fetchOrgPermissions(org()!));
+        onSnapshot(doc(globalThis.adminDB, "access_control", "users"), (doc) => {
+          const dat = doc.data()! as AccessControlDoc;
+          let toReturn: AccessControlDoc = {};
+          const keys = Object.keys(dat);
+          keys.forEach((key) => {
+            const list = dat[key].filter((val) => {
+              return val.includes(org()!);
+            });
+            if (list.length > 0) {
+              toReturn[key] = list;
+            }
+          });
+          setOrgPermissions(toReturn);
+        });
       }
     }
   });
@@ -73,7 +87,14 @@ const PermissionsSection: Component<{}> = (props) => {
                 {(perm, index) => (
                   <div class="flex flex-row border-b border-white">
                     <button class="hover:bg-neutral-400 p-3 flex-grow text-start">{perm}</button>
-                    <button class="hover:bg-red-500 p-3 w-fit">Delete</button>
+                    <button
+                      class="hover:bg-red-500 p-3 w-fit"
+                      onclick={async () => {
+                        await deletePermission(selectedEmail()!, perm);
+                      }}
+                    >
+                      Delete
+                    </button>
                   </div>
                 )}
               </For>
@@ -84,7 +105,15 @@ const PermissionsSection: Component<{}> = (props) => {
       <div class="flex flex-row justify-between items-center">
         <button class="hover:bg-neutral-400 p-3 w-fit border border-white mt-3">Add User</button>
         <Show when={selectedEmail()}>
-          <button class="hover:bg-neutral-400 p-3 w-fit border border-white mt-3">Add Permission</button>
+          <button
+            class="hover:bg-neutral-400 p-3 w-fit border border-white mt-3"
+            onclick={async () => {
+              const perm = prompt("type permission to grant");
+              await addPermission(selectedEmail()!, perm!);
+            }}
+          >
+            Add Permission
+          </button>
         </Show>
       </div>
     </div>
