@@ -14,17 +14,19 @@ const AddPermission: Component<{
   const [perms, setPerms] = createSignal<string[] | undefined>();
 
   createEffect(async () => {
-    console.log("running");
     const permsAndDescs = props.allPerms!;
     const perms = Object.keys(permsAndDescs);
     const userPerms = props.orgPermissions()![props.selectedEmail()!];
-    const filteredPerms = perms.filter((perm) => {
-      const orgPerm = `${props.org()!}:${perm}`;
-      const includesPerm = userPerms.includes(orgPerm);
-      console.log(includesPerm);
-      return !includesPerm;
-    });
-    setPerms(filteredPerms);
+    if (userPerms) {
+      if (userPerms.length > 0) {
+        const filteredPerms = perms.filter((perm) => {
+          const orgPerm = `${props.org()!}:${perm}`;
+          const includesPerm = userPerms.includes(orgPerm);
+          return !includesPerm;
+        });
+        setPerms(filteredPerms);
+      }
+    }
   });
 
   return (

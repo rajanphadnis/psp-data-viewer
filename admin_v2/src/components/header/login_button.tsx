@@ -21,7 +21,6 @@ const AuthButton: Component<{}> = () => {
     setOrg,
   ] = useState();
   const orgSlug = createMemo(() => {
-    console.log(org());
     return org() ?? "general";
   });
 

@@ -12,6 +12,7 @@ import {
   arrayRemove,
   setDoc,
   arrayUnion,
+  deleteField,
 } from "firebase/firestore";
 import { decode, encode } from "./firebase-encode";
 
@@ -168,6 +169,14 @@ export async function deletePermission(email: string, permission: string) {
   let obj: any = {};
   obj[email] = arrayRemove(permission);
   await setDoc(docRef, obj, { merge: true });
+  const afterDoc = await getDoc(docRef);
+  const emailData = afterDoc.data()![email];
+  console.log(emailData.length);
+  if (emailData.length == 0) {
+    const delObj: any = {};
+    delObj[email] = deleteField();
+    await setDoc(docRef, delObj, { merge: true });
+  }
   return true;
 }
 

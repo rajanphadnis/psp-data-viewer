@@ -24,7 +24,7 @@ const AccountPage: Component<{}> = (props) => {
   const [currentUser, setCurrentUser] = createSignal<User | null | undefined>();
   createEffect(() => {
     const perms = auth();
-    console.log(perms);
+    console.debug(perms);
     setCurrentUser(globalThis.auth.currentUser);
   });
 

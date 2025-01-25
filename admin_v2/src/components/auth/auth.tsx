@@ -38,13 +38,10 @@ export const AuthComponent: Component<{}> = (props) => {
       onAuthStateChanged(getAuth(), (user) => {
         if (user) {
           const uid = user.uid;
-          console.log(user.toJSON());
           const email = user.email ?? user.providerData[0].email;
           user
             .getIdTokenResult()
             .then((idTokenResult) => {
-              console.log(idTokenResult.claims.permissions);
-              console.log((idTokenResult.claims.permissions as string[]).length);
               setAuth(idTokenResult.claims.permissions as string[]);
               setLoadingState({ isLoading: false, statusMessage: "" });
             })
@@ -57,7 +54,7 @@ export const AuthComponent: Component<{}> = (props) => {
         }
       });
     } else {
-      console.log("org not set");
+      console.debug("org not set");
     }
   });
 

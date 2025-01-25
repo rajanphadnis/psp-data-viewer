@@ -175,7 +175,6 @@ const PanelLayout: Component<{ children?: any }> = (props) => {
   const navigate = useNavigate();
 
   onMount(async () => {
-    console.log(params.org);
     const keys = Object.keys(config);
     if (keys.includes(params.org) || params.org == "general") {
       if (params.org == "general") {
