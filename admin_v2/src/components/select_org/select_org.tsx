@@ -29,7 +29,9 @@ const SelectOrg: Component<{}> = (props) => {
       <For each={Object.keys(config)}>
         {(slug, index) => {
           const name = (config as any)[slug]["naming"]["name_long"] as string;
-          return <A href={`/${slug}/`} class="p-3 border border-white rounded-lg my-3 hover:bg-neutral-600">{name}</A>;
+          return <A href={`/${slug}/`} class="p-3 border border-white rounded-lg my-3 hover:bg-neutral-600" onclick={() => {
+            setLoadingState({ isLoading: true, statusMessage: "configuring DB..." })
+          }}>{name}</A>;
         }}
       </For>
     </div>

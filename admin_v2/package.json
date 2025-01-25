@@ -38,6 +38,7 @@
         "@solid-primitives/upload": "^0.0.117",
         "@solidjs/meta": "^0.29.4",
         "@solidjs/router": "^0.15.1",
+        "@thisbeyond/solid-select": "^0.15.0",
         "chart.js": "^4.4.7",
         "corvu": "^0.7.1",
         "date-time-picker-solid": "^1.1.2",

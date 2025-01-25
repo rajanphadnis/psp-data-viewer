@@ -61,3 +61,7 @@ export type InvoiceData = {
 export type AccessControlDoc = {
   [email: string]: string[];
 };
+
+export type PermissionType = {
+  [perm: string]: string;
+};

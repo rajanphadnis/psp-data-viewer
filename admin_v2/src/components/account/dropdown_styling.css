@@ -1,0 +1,37 @@
+.dropdown_styling {
+    .solid-select-input {
+        color: white;
+        background-color: transparent;
+    }
+    &.solid-select-container {
+      color: white;
+      background-color: transparent;
+    }
+    .solid-select-control {
+      border-color: white;
+      background-color: transparent;
+      &:focus-within {
+        outline-color: white;
+      }
+    }
+    .solid-select-placeholder {
+      color: white;
+      background-color: transparent;
+    }
+    .solid-select-list {
+        padding: 0px;
+    }
+    .solid-select-option {
+        background-color: white;
+        color: black;
+        /* padding: 0px; */
+      &:hover {
+        background-color: var(--rush);
+        color: #fff;
+      }
+      /* &[data-focused="true"] {
+        background-color: #fca560;
+        color: #fff;
+      } */
+    }
+  }

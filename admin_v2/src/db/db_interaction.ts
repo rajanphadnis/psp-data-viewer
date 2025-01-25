@@ -1,5 +1,5 @@
 import { Accessor, Setter } from "solid-js";
-import { AccessControlDoc, TestBasics, TestData } from "../types";
+import { AccessControlDoc, PermissionType, TestBasics, TestData } from "../types";
 import {
   doc,
   getDocFromCache,
@@ -177,4 +177,11 @@ export async function addPermission(email: string, permission: string) {
   obj[email] = arrayUnion(permission);
   await setDoc(docRef, obj, { merge: true });
   return true;
+}
+
+export async function fetchAvailablePermissions(org: string) {
+  const permsDoc = doc(globalThis.adminDB, "access_control", "permissions");
+  const snap = await getDoc(permsDoc);
+  const permissions = snap.data() as PermissionType;
+  return permissions;
 }
