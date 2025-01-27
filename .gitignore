@@ -56,3 +56,5 @@ admin_v2/src/generated.css
 webapp_v2/src/generated_app_info.ts
 webapp_v2/src/generated.css
 functions/application_default_credentials.json
+build_tools/venv
+azure_service_principal.json

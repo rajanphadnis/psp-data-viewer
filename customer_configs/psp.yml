@@ -2,6 +2,7 @@
 azure:
   function_app_name: psp-data-viewer-api
   resource_group: pspdataviewer
+  storage_account: pspdataviewer
   share_name: psp-data-viewer3d1877
 colors:
   accent: '#8e6f3e'
@@ -31,3 +32,5 @@ urls:
   docs_url: https://docs.dataviewer.space
   github_url: https://github.com/rajanphadnis/psp-data-viewer
   update_test_metadata_url: https://updatetestmetadata-w547ikcrwa-uc.a.run.app
+stripe:
+  customerID: cus_Rd3rxFXqFVkWGf
