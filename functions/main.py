@@ -8,3 +8,4 @@ from src.stripe import *  # noqa: E402, F403
 from src.auth import *  # noqa: E402, F403
 from src.db_management import *  # noqa: E402, F403
 from src.azure_cli import *  # noqa: E402, F403
+from src.create_new_customer import *  # noqa: E402, F403

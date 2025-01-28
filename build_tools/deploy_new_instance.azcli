@@ -1,4 +1,6 @@
 # Variable block
+stripeKey="key"
+stripeCustomerId="cus_Rd3rxFXqFVkWGf"
 randomIdentifier="dev"
 location="eastus"
 resourceGroup="dataviewer-rg-$randomIdentifier"
@@ -37,13 +39,23 @@ az storage share create --name $share
 echo "Creating $directory in $share"
 az storage directory create --share-name $share --name $directory
 
-# Create webapp config storage account
+# webapp config storage account
 echo "Creating $AZURE_STORAGE_ACCOUNT"
 az webapp config storage-account add --resource-group $resourceGroup --name $functionApp --custom-id $shareId --storage-type AzureFiles --share-name $share --account-name $AZURE_STORAGE_ACCOUNT --mount-path $mountPath --access-key $AZURE_STORAGE_KEY
 
+# set environment variables
+az functionapp config appsettings set --name $functionApp --resource-group $resourceGroup --settings STRIPE_API_KEY=$stripeKey STRIPE_CUSTOMER_ID=$stripeCustomerId
+
+# Set CORS
+az functionapp cors add -g $resourceGroup -n $functionApp --allowed-origins "*"
+
+# Fetch functions and deploy
+curl "https://dataviewer-space.web.app/az-compiled.zip" -O
+az functionapp deployment source config-zip -g $resourceGroup -n $functionApp --src az-compiled.zip
+
 # List webapp storage account
-az webapp config storage-account list --resource-group $resourceGroup --name $functionApp
+# az webapp config storage-account list --resource-group $resourceGroup --name $functionApp
 
 # List fileshare usage
-az storage share stats --name dataviewer-fileshare-pspl --account-name dataviewerstoragepspl
-az storage share stats --name psp-data-viewer3d1877 --account-name pspdataviewer
+# az storage share stats --name dataviewer-fileshare-pspl --account-name dataviewerstoragepspl
+# az storage share stats --name psp-data-viewer3d1877 --account-name pspdataviewer

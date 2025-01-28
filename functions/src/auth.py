@@ -1,5 +1,5 @@
 from firebase_functions import identity_fn
-from firebase_admin import firestore, initialize_app
+from firebase_admin import firestore
 
 
 @identity_fn.before_user_created()

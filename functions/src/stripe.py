@@ -6,7 +6,6 @@ import stripe
 from google.cloud.firestore_v1.base_query import FieldFilter
 from datetime import datetime, timezone
 from azure.cli.core import get_default_cli
-import yaml
 
 
 class optionsThing:

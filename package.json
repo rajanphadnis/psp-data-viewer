@@ -1,6 +1,7 @@
 {
     "dependencies": {
         "@types/node": "^22.5.2",
+        "archiver": "^7.0.1",
         "glob": "^11.0.0",
         "install": "^0.13.0",
         "js-yaml": "^4.1.0",
@@ -12,8 +13,12 @@
     "scripts": {
         "deploy": "bun run ./build_tools/version.ts",
         "dev": "bun run ./build_tools/dev-setup.ts",
-        "instance-setup": "bun run ./build_tools/customer_config/instance_config.ts",
         "config_check": "cd customer_configs && vitest",
-        "domain": "cd customer_configs/domain_connect && bun run index.ts"
+        "domain": "cd customer_configs/domain_connect && bun run index.ts",
+        "zip-azure": "bun run ./build_tools/zip_azure.ts",
+        "new-customer": "bun run ./build_tools/customer_config/deploy_new.ts"
+    },
+    "devDependencies": {
+        "@types/archiver": "^6.0.3"
     }
 }
