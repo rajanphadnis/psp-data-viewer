@@ -33,7 +33,7 @@ az functionapp create --name $functionApp --storage-account $AZURE_STORAGE_ACCOU
 # Work with Storage account using the set env variables.
 # Create a share in Azure Files.
 echo "Creating $share"
-az storage share create --name $share
+az storage share-rm create --name $share
 
 # Create a directory in the share.
 echo "Creating $directory in $share"

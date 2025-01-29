@@ -1,6 +1,7 @@
-import fs from "fs";
+import fs, { writeFileSync } from "fs";
 import readline from "readline";
 import { ChangeType } from "./types";
+import { join } from "path";
 
 export async function getCurrentChangelogVersion(): Promise<string> {
   const fileStream = fs.createReadStream("CHANGELOG.md");
@@ -57,8 +58,7 @@ export async function generateChangelog(
       } else {
         headline = response == "" ? "Minor Changes" : response;
       }
-    }
-    else {
+    } else {
       headline = defaultMessage;
     }
     const toReturn = `## v${version}\n${headline}\n\n### Changed\n- bug fixes\n- \n\n`;
@@ -68,4 +68,10 @@ export async function generateChangelog(
     const toReturn = `## v${version}\n${headline}\n\n### Changed\n- bug fixes\n\n`;
     return toReturn;
   }
+}
+
+export function syncWriteFile(filename: string, data: any) {
+  writeFileSync(join(__dirname, filename), data, {
+    flag: "w",
+  });
 }

@@ -2,6 +2,7 @@
     "dependencies": {
         "@types/node": "^22.5.2",
         "archiver": "^7.0.1",
+        "firebase-admin": "^13.0.2",
         "glob": "^11.0.0",
         "install": "^0.13.0",
         "js-yaml": "^4.1.0",
@@ -15,10 +16,11 @@
         "dev": "bun run ./build_tools/dev-setup.ts",
         "config_check": "cd customer_configs && vitest",
         "domain": "cd customer_configs/domain_connect && bun run index.ts",
-        "zip-azure": "bun run ./build_tools/zip_azure.ts",
+        "zip-azure": "bun --env-file=./build_tools/.env ./build_tools/zip_azure.ts",
         "new-customer": "bun run ./build_tools/customer_config/deploy_new.ts"
     },
     "devDependencies": {
-        "@types/archiver": "^6.0.3"
+        "@types/archiver": "^6.0.3",
+        "@types/js-yaml": "^4.0.9"
     }
 }

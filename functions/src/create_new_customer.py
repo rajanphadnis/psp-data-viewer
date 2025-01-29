@@ -1,10 +1,12 @@
 import os
+import subprocess
 from firebase_functions import options, https_fn
 import json
 from azure.cli.core import get_default_cli
 import stripe
 from firebase_admin import firestore
 from google.cloud.firestore_v1.base_query import FieldFilter
+from firebase_admin import storage
 
 
 @https_fn.on_request(
@@ -68,9 +70,13 @@ def createStripeAndFirebaseResources(req: https_fn.Request) -> https_fn.Response
         "azure_storage_account": f"dataviewerstorage{slug}",
     }
     db = firestore.client()
+    customerDB = firestore.client(database_id=f"{slug}-firestore")
     update_time, city_ref = db.collection("accounts").add(docToBuild)
     db.collection("access_control").document("users").set(
         {f"{email}": firestore.ArrayUnion([f"{slug}:manage:permissions"])}, merge=True
+    )
+    customerDB.collection("general").document("tests").set(
+        {"default": "", "visible": []}
     )
     # Still need to create a new database and set the "general>tests>default" field to an emtpy string and the "general>tests>visible" field to an empty array
     return https_fn.Response(
@@ -215,12 +221,16 @@ def createAzureResources(req: https_fn.Request) -> https_fn.Response:
         thing = cli.invoke(
             [
                 "storage",
-                "share",
+                "share-rm",
                 "create",
                 "--name",
                 share,
-                "--account-name",
+                "--storage-account",
                 AZURE_STORAGE_ACCOUNT,
+                "--access-tier",
+                "Hot",
+                "--resource-group",
+                resourceGroup,
             ]
         )
         thing = cli.invoke(
@@ -288,6 +298,47 @@ def createAzureResources(req: https_fn.Request) -> https_fn.Response:
                 "*",
             ]
         )
+        print("downloading zip file")
+        result_rm1 = subprocess.run(
+            ["rm", "-rf", "./main.py"], capture_output=True, text=True
+        )
+        print(result_rm1.stdout)
+        result_rm2 = subprocess.run(
+            ["rm", "-rf", "./__pycache__/"], capture_output=True, text=True
+        )
+        print(result_rm2.stdout)
+        result_rm3 = subprocess.run(
+            ["rm", "-rf", "requirements.txt"], capture_output=True, text=True
+        )
+        print(result_rm3.stdout)
+        result_rm4 = subprocess.run(
+            ["rm", "-rf", "./src/"], capture_output=True, text=True
+        )
+        print(result_rm4.stdout)
+        result1 = subprocess.run(["ls", "-l"], capture_output=True, text=True)
+        print(result1.stdout)
+        os.system("curl https://dataviewer.space/azcompiled.zip -o ./azcompiled.zip")
+        destination_file_name = "./azcompiled.zip"
+        # bucket = storage.bucket()
+        # blob = bucket.blob("az-compiled.zip")
+        # blob.download_to_filename(destination_file_name, raw_download=True)
+        print(f"downloaded to: {destination_file_name}")
+        result2 = subprocess.run(["ls", "-l"], capture_output=True, text=True)
+        print(result2.stdout)
+        thing = cli.invoke(
+            [
+                "functionapp",
+                "deployment",
+                "source",
+                "config-zip",
+                "-g",
+                resourceGroup,
+                "-n",
+                functionApp,
+                "--src",
+                destination_file_name,
+            ]
+        )
 
     except Exception as e:
         return https_fn.Response(json.dumps({"status": f"error: {e}"}), status=500)
@@ -306,3 +357,50 @@ def createAzureResources(req: https_fn.Request) -> https_fn.Response:
             json.dumps({"status": "Failed with exit code", "result": cli.result.error}),
             status=500,
         )
+
+
+@https_fn.on_request(
+    cors=options.CorsOptions(
+        cors_origins="*",
+        cors_methods=["get", "post"],
+    ),
+    memory=options.MemoryOption.GB_2,
+    timeout_sec=600,
+)
+def createNewDatabase(req: https_fn.Request) -> https_fn.Response:
+    slug = req.args["slug"] if "slug" in req.args else None
+    if slug is None:
+        return https_fn.Response(
+            json.dumps({"status": "'slug' is a required argument"}), status=400
+        )
+    dbID = f"{slug}-firestore"
+    result1 = subprocess.Popen(
+        'echo \'{"projects": {"default": "dataviewer-space"}}\' > .firebaserc',
+        shell=True,
+        stdout=subprocess.PIPE,
+    ).stdout.read()
+    result2 = subprocess.Popen(
+        f"curl -L https://firebase.tools/bin/linux/latest -o fb_tools && chmod +x ./fb_tools && ./fb_tools firestore:databases:create {dbID} --location=nam5 --token {os.environ['CLI_FIREBASE_TOKEN']}",
+        shell=True,
+        stdout=subprocess.PIPE,
+    ).stdout.read()
+    result3 = subprocess.Popen(
+        f"./fb_tools hosting:sites:create dataviewer-{slug}",
+        shell=True,
+        stdout=subprocess.PIPE,
+    ).stdout.read()
+    print(result1)
+    print(result2)
+    print(result3)
+    print("done")
+    return https_fn.Response(
+        json.dumps(
+            {
+                "status": "Success",
+                "result1": str(result1),
+                "result2": str(result2),
+                "result3": str(result3),
+            }
+        ),
+        status=200,
+    )

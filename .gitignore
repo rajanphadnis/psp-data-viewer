@@ -58,3 +58,4 @@ webapp_v2/src/generated.css
 functions/application_default_credentials.json
 build_tools/venv
 azure_service_principal.json
+build_tools/application_default_credentials.json

@@ -1,0 +1,36 @@
+---
+azure:
+  function_app_name: dataviewer-serverless-function-tamu
+  resource_group: dataviewer-rg-tamu
+  storage_account: dataviewerstoragetamu
+  share_name: dataviewer-fileshare-tamu
+colors:
+  accent: '#8e6f3e'
+  background: '#1D1D1D'
+  background_light: '#6f727b'
+  primary: '#ddb945'
+  primary_dark: '#daaa00'
+firebase:
+  apiKey: AIzaSyDzZWBXQ5L9N92GRNUNGMse8AeUvbwFFyI
+  appId: 1:267504321387:web:3c5b9c2a1ec15ff452822e
+  app_check_provider_token: ''
+  authDomain: dataviewer-space.firebaseapp.com
+  measurementId: G-WRP7BXPKHK
+  messagingSenderId: '267504321387'
+  projectId: dataviewer-space
+  storageBucket: dataviewer-space.firebasestorage.app
+  webapp_site: dataviewer-tamu
+  databaseID: tamu-firestore
+naming:
+  name_long: Texas A&M REDS Dataviewer
+  name_short: REDS Dataviewer
+  page_title: REDS
+  slug: tamu
+urls:
+  admin_dashboard_url: https://admin.dataviewer.space
+  api_base_url: https://psp-api.rajanphadnis.com
+  docs_url: https://docs.dataviewer.space
+  github_url: https://github.com/rajanphadnis/psp-data-viewer
+  update_test_metadata_url: https://updatetestmetadata-w547ikcrwa-uc.a.run.app
+stripe:
+  customerID: cus_Rg3jCx2kuzEQwV
