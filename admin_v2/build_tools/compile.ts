@@ -2,6 +2,7 @@ import { $ } from "bun";
 import { readdirSync, readFileSync, writeFileSync } from "fs";
 import { join } from "path";
 import yaml from "js-yaml";
+import package_json from "../package.json";
 
 function syncWriteFile(filename: string, data: any) {
   writeFileSync(join(__dirname, filename), data, {
@@ -32,7 +33,9 @@ readdirSync("../customer_configs/").forEach((file) => {
 
 syncWriteFile(
   "../src/generated_app_check_secret.ts",
-  `export const appCheckSecret: string | boolean = " + toWrite + ";\nexport const config = ${JSON.stringify(
+  `export const appCheckSecret: string | boolean = " + toWrite + ";\nexport const appVersion: string = 'v${
+    package_json.version
+  }';\nexport const config = ${JSON.stringify(
     toWriteJSON
   ).toString()}`
 );

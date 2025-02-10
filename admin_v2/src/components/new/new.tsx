@@ -27,7 +27,7 @@ const NewTest: Component<{}> = (props) => {
   const [testArticle, setTestArticle] = createSignal<string>("");
   const [gseArticle, setGseArticle] = createSignal<string>("");
   const [filePaths, setFilePaths] = createSignal<File[]>(new Array<File>());
-  const [isHDF5, setIsHDF5] = createSignal<boolean>(false);
+  const [isHDF5, setIsHDF5] = createSignal<boolean>(true);
   const [tdmsDelayStr, setTdmsDelay] = createSignal<string>("0");
 
   const tdmsDelay = createMemo(() => {

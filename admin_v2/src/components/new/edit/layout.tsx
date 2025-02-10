@@ -8,6 +8,7 @@ import UploadCreateButton from "./add_file_button";
 import NewUploadComponent from "./upload_component";
 import { createFileUploader } from "@solid-primitives/upload";
 import { new_upload_hdf5, new_upload_tdsm_csv } from "../../../db/new";
+import { appVersion } from "../../../generated_app_check_secret";
 
 const UploadEditLayout: Component<{
   name: Accessor<string>;
@@ -91,31 +92,19 @@ const UploadEditLayout: Component<{
               setter={props.setTestArticle}
             />
             <EditorEntry testData={props.gseArticle()} name="GSE Article" input={true} setter={props.setGseArticle} />
-            <div style={{ width: "100%", display: "flex", "flex-direction": "row", margin: "0px" }}>
-              <button
-                class={`${styles.fileTypeButton} ${
-                  props.isHDF5() ? styles.inactiveFileTypeButton : styles.activeFileTypeButton
-                }`}
-                on:click={() => {
-                  props.setIsHDF5(false);
-                }}
-              >
-                TDMS + CSV
-              </button>
-              <button
-                class={`${styles.fileTypeButton} ${
-                  props.isHDF5() ? styles.activeFileTypeButton : styles.inactiveFileTypeButton
-                }`}
-                on:click={() => {
-                  props.setIsHDF5(true);
-                }}
-              >
-                HDF5
-              </button>
+            <div class="mr-3">
+              <h3 class="text-xl font-bold mt-4 mb-2">Looking for TDMS and CSV file upload?</h3>
+              <p>
+                Download{" "}
+                <a
+                  href={`https://github.com/rajanphadnis/psp-data-viewer/releases/download/${appVersion}/dataviewer.exe`}
+                  class="underline underline-offset-auto"
+                >
+                  the desktop app
+                </a>{" "}
+                to combine your TDMS and CSV files, then come back here and upload your new HDF5 file
+              </p>
             </div>
-            <Show when={!props.isHDF5()}>
-              <EditorEntry testData={props.tdmsDelay()} name="TDMS Delay" input={true} setter={props.setTdmsDelay} />
-            </Show>
           </div>
 
           <Show when={props.filePaths().length > 0}>
