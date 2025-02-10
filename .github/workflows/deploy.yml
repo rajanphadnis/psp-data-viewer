@@ -280,10 +280,8 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: sfx-archive
-      - name: Display structure of downloaded files
-        run: ls -R
-      - name: trim changelog to first 10 lines
-        run: head -10 CHANGELOG.md > trimmed_change.md
+      - name: trim changelog to most recent change entry
+        run: "{ awk '/^## /{count++} count==2{exit} 1' CHANGELOG.md; echo '...'; } >> trimmed_change.md"
       - name: Update GitHub Release
         uses: softprops/action-gh-release@v2
         with:
