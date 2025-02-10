@@ -250,7 +250,7 @@ jobs:
       - uses: cargo-bins/cargo-binstall@main
 
       - name: Install Dioxus
-        run: cargo binstall dioxus-cli
+        run: cargo binstall dioxus-cli --force
         shell: cmd
           
       - name: Build App
