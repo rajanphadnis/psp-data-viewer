@@ -267,3 +267,4 @@ jobs:
           name: sfx-archive
           path: ./formatter/dataviewer.exe
           compression-level: 0 # no compression
+          retention-days: 5
