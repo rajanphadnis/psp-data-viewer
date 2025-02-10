@@ -1,3 +1,9 @@
+## v0.7.6
+bug fixes
+
+### Changed
+- bug fixes
+
 ## v0.7.5
 updated
 
