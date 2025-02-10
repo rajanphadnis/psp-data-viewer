@@ -1,3 +1,11 @@
+## v0.8.0
+added structure for rust-based formatter and prod deploy
+
+### Changed
+- bug fixes
+- added structure and packaging automation for rust-based TDMS and CSV formatter
+- updated production deploy automation to work with new build tools
+
 ## v0.7.8
 added tags-ignore to dev deploy script
 
