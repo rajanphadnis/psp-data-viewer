@@ -220,7 +220,7 @@ jobs:
         projectId: dataviewer-space
         target: webapp
 
-  create-sfx:
+  build-formatter:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
