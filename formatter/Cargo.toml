@@ -9,19 +9,27 @@ edition = "2021"
 [dependencies]
 dioxus = { version = "0.6.0", features = ["desktop"] }
 tdms = "0.3"
-plotly = "0.8"
-ndarray = "0.15"
+# plotly = "0.8"
+# ndarray = "0.15"
 polars = { version = "0.46.0", features = [
-    "asof_join",
+    # "asof_join",
     "fmt",
     "lazy",
     "ndarray",
     "streaming",
-    "timezones",
-    "zip_with",
+    # "timezones",
+    # "zip_with",
 ] }
 rayon = "1.10.0"
-tokio = { version = "1.43.0", features = ["rt", "time", "sync"] }
+tokio = { version = "1.43.0", features = [
+    # "rt",
+    # "time",
+    "sync",
+    # "",
+    # "",
+    # "",
+    # "",
+] }
 image = "0.25.5"
 
 [features]

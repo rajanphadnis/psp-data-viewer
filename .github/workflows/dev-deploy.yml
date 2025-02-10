@@ -243,9 +243,9 @@ jobs:
           toolchain: stable
           profile: minimal
 
-      # - uses: Swatinem/rust-cache@v2
-      #   with:
-      #     workspace:
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: "formatter -> target"
 
       - uses: cargo-bins/cargo-binstall@main
 
@@ -258,8 +258,7 @@ jobs:
         shell: cmd
 
       - name: Create SFX Archive
-        run: |
-          cd build_tools/ && ./formatter.bat
+        run: cd build_tools/ && formatter.bat
         shell: cmd
 
       - name: Upload SFX Archive

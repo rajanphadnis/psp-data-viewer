@@ -1,6 +1,4 @@
 #![cfg_attr(feature = "bundle", windows_subsystem = "windows")]
-use std::path::Path;
-
 use dioxus::desktop::muda::Menu;
 use dioxus::desktop::tao::window::Icon;
 use dioxus::desktop::{Config, WindowBuilder};
