@@ -219,3 +219,46 @@ jobs:
         channelId: live
         projectId: dataviewer-space
         target: webapp
+
+  create-sfx:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Ensure WinRAR is installed
+        run: |
+          $winrarPath = "${env:ProgramFiles}\WinRAR\WinRAR.exe"
+          if (-Not (Test-Path $winrarPath)) {
+            Write-Host "WinRAR not found. Downloading and installing..."
+            Invoke-WebRequest -Uri "https://www.win-rar.com/fileadmin/winrar-versions/winrar-x64-701.exe" -OutFile "winrar.exe"
+            Start-Process -FilePath ".\winrar.exe" -ArgumentList "/S" -NoNewWindow -Wait
+          } else {
+            Write-Host "WinRAR is already installed."
+          }
+        shell: pwsh
+      
+      - uses: Swatinem/rust-cache@v2
+      - uses: actions-rs/toolchain@v1.0.6
+        with:
+          toolchain: stable
+          profile: minimal
+
+      - name: Install Dioxus
+        run: cargo install dioxus-cli
+        shell: cmd
+          
+      - name: Build App
+        run: cd formatter && dx bundle --platform windows --features bundle
+        shell: cmd
+
+      - name: Create SFX Archive
+        run: |
+          cd build_tools/ && ./formatter.bat
+        shell: cmd
+
+      - name: Upload SFX Archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: sfx-archive
+          path: ./formatter/dataviewer.exe

@@ -1,8 +1,6 @@
-"%ProgramFiles%\WinRAR\WinRAR.exe" a -afrar -cfg- -ed -ep1 -k -m3 -tl -s2 -r -sfx ^
+cls
+"%ProgramFiles%\WinRAR\WinRAR.exe" a -afrar -cfg- -ed -ep1 -m3 -tl -r -sfx -s1 -o+ ^
 -zformatter_config.txt ^
-"../formatter/dataviewer.sfx.exe" ^
-"../formatter/target/dx/formatter/release/windows/app/*"
-
-
-:: -iicon"Path to icon file\MyApplicationInstall.ico" `
-:: "-sfx%ProgramFiles%\WinRAR\Zip.sfx" `
+-iicon"../formatter/assets/icon.ico" ^
+-iimg"../formatter/assets/icon.png" ^
+"../formatter/dataviewer.exe" -@ "../formatter/target/dx/formatter/release/windows/app/"
