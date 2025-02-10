@@ -2,8 +2,8 @@ name: "Dev Check and Deploy"
 on:
   workflow_dispatch:
   push:
-    branches-ignore:
-      - 'refs/tags/*'
+    tags-ignore:
+      - '**'
 
 env:
   PYTHON_VERSION: "3.11"
@@ -24,157 +24,6 @@ jobs:
         run: cd admin_v2 && bun install && bun run test
       - name: Customer Config Validity Checks
         run: bun install && bun run config_check
-  changelog-check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Tag/Release search
-        run: echo "GHA_V_COUNTER=$(grep ${{ github.ref_name }} CHANGELOG.md | wc -l)" >> "$GITHUB_ENV"
-        shell: bash
-      - name: Tag Output
-        run: echo "env.GHA_V_COUNTER = ${{ env.GHA_V_COUNTER }}"
-        shell: bash
-      - name: "If changelog isn't updated, delete the release and tag"
-        uses: dev-drprasad/delete-tag-and-release@v1.0
-        if: env.GHA_V_COUNTER == '0'
-        with:
-          tag_name: ${{ github.ref_name }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          delete_release: true
-      - name: Find '${{ github.ref_name }}' in CHANGELOG.md
-        if: env.GHA_V_COUNTER == '0'
-        uses: actions/github-script@v2.1.0
-        with:
-          script: |
-            core.setFailed('CHANGELOG.md not updated to include new release notes for ${{ github.ref_name }}!')
-  version-check-webapp:
-    runs-on: ubuntu-latest
-    outputs:
-      version-code: ${{ steps.version-code-gen.outputs.GHA_VERSION_CODE }}
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up new test tag
-        run: |
-          TAGNAME=${{ github.ref_name }}
-          NEW_NAME="${TAGNAME//v/}"
-          echo GHA_NEW_TAG_NAME_WEBAPP=$NEW_NAME >> "$GITHUB_ENV"
-      - name: Tag/Release search
-        run: echo "GHA_V_COUNTER_WEBAPP=$(grep '${{ format('"version"{0}', ':') }} "${{ env.GHA_NEW_TAG_NAME_WEBAPP }}"' webapp_v2/package.json | wc -l)" >> "$GITHUB_ENV"
-        shell: bash
-      - name: Tag Output
-        run: |
-          echo "env.GHA_V_COUNTER_WEBAPP = ${{ env.GHA_V_COUNTER_WEBAPP }}"
-          echo "env.GHA_NEW_TAG_NAME_WEBAPP = ${{ env.GHA_NEW_TAG_NAME_WEBAPP }}"
-        shell: bash
-      - name: "If pubspec isn't updated, delete the release and tag"
-        uses: dev-drprasad/delete-tag-and-release@v1.0
-        if: env.GHA_V_COUNTER_WEBAPP == '0'
-        with:
-          tag_name: ${{ github.ref_name }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          delete_release: true
-      - name: Find '${{ github.ref_name }}' in package.json
-        if: env.GHA_V_COUNTER_WEBAPP == '0'
-        uses: actions/github-script@v2.1.0
-        with:
-          script: |
-            core.setFailed('webapp_v2/package.json not updated to new version ${{ env.GHA_NEW_TAG_NAME_WEBAPP }}!')
-  version-check-admin:
-    runs-on: ubuntu-latest
-    outputs:
-      version-code: ${{ steps.version-code-gen.outputs.GHA_VERSION_CODE }}
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up new test tag
-        run: |
-          TAGNAME=${{ github.ref_name }}
-          NEW_NAME="${TAGNAME//v/}"
-          echo GHA_NEW_TAG_NAME_ADMIN=$NEW_NAME >> "$GITHUB_ENV"
-      - name: Tag/Release search
-        run: echo "GHA_V_COUNTER_ADMIN=$(grep '${{ format('"version"{0}', ':') }} "${{ env.GHA_NEW_TAG_NAME_ADMIN }}"' admin_v2/package.json | wc -l)" >> "$GITHUB_ENV"
-        shell: bash
-      - name: Tag Output
-        run: |
-          echo "env.GHA_V_COUNTER_ADMIN = ${{ env.GHA_V_COUNTER_ADMIN }}"
-          echo "env.GHA_NEW_TAG_NAME_ADMIN = ${{ env.GHA_NEW_TAG_NAME_ADMIN }}"
-        shell: bash
-      - name: "If pubspec isn't updated, delete the release and tag"
-        uses: dev-drprasad/delete-tag-and-release@v1.0
-        if: env.GHA_V_COUNTER_ADMIN == '0'
-        with:
-          tag_name: ${{ github.ref_name }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          delete_release: true
-      - name: Find '${{ github.ref_name }}' in package.json
-        if: env.GHA_V_COUNTER_ADMIN == '0'
-        uses: actions/github-script@v2.1.0
-        with:
-          script: |
-            core.setFailed('admin_v2/package.json not updated to new version ${{ env.GHA_NEW_TAG_NAME_ADMIN }}!')
-  version-check-docs:
-    runs-on: ubuntu-latest
-    outputs:
-      version-code: ${{ steps.version-code-gen.outputs.GHA_VERSION_CODE }}
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up new test tag
-        run: |
-          TAGNAME=${{ github.ref_name }}
-          NEW_NAME="${TAGNAME//v/}"
-          echo GHA_NEW_TAG_NAME_ADMIN=$NEW_NAME >> "$GITHUB_ENV"
-      - name: Tag/Release search
-        run: echo "GHA_V_COUNTER_ADMIN=$(grep '${{ format('"version"{0}', ':') }} "${{ env.GHA_NEW_TAG_NAME_ADMIN }}"' docs/package.json | wc -l)" >> "$GITHUB_ENV"
-        shell: bash
-      - name: Tag Output
-        run: |
-          echo "env.GHA_V_COUNTER_ADMIN = ${{ env.GHA_V_COUNTER_ADMIN }}"
-          echo "env.GHA_NEW_TAG_NAME_ADMIN = ${{ env.GHA_NEW_TAG_NAME_ADMIN }}"
-        shell: bash
-      - name: "If package.json isn't updated, delete the release and tag"
-        uses: dev-drprasad/delete-tag-and-release@v1.0
-        if: env.GHA_V_COUNTER_ADMIN == '0'
-        with:
-          tag_name: ${{ github.ref_name }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          delete_release: true
-      - name: Find '${{ github.ref_name }}' in package.json
-        if: env.GHA_V_COUNTER_ADMIN == '0'
-        uses: actions/github-script@v2.1.0
-        with:
-          script: |
-            core.setFailed('docs/package.json not updated to new version ${{ env.GHA_NEW_TAG_NAME_ADMIN }}!')
-  version-check-mission:
-    runs-on: ubuntu-latest
-    outputs:
-      version-code: ${{ steps.version-code-gen.outputs.GHA_VERSION_CODE }}
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up new test tag
-        run: |
-          TAGNAME=${{ github.ref_name }}
-          NEW_NAME="${TAGNAME//v/}"
-          echo GHA_NEW_TAG_NAME_MISSION=$NEW_NAME >> "$GITHUB_ENV"
-      - name: Tag/Release search
-        run: echo "GHA_V_COUNTER_MISSION=$(grep '${{ format('"version"{0}', ':') }} "${{ env.GHA_NEW_TAG_NAME_MISSION }}"' mission/package.json | wc -l)" >> "$GITHUB_ENV"
-        shell: bash
-      - name: Tag Output
-        run: |
-          echo "env.GHA_V_COUNTER_MISSION = ${{ env.GHA_V_COUNTER_MISSION }}"
-          echo "env.GHA_NEW_TAG_NAME_MISSION = ${{ env.GHA_NEW_TAG_NAME_MISSION }}"
-        shell: bash
-      - name: "If pubspec isn't updated, delete the release and tag"
-        uses: dev-drprasad/delete-tag-and-release@v1.0
-        if: env.GHA_V_COUNTER_MISSION == '0'
-        with:
-          tag_name: ${{ github.ref_name }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          delete_release: true
-      - name: Find '${{ github.ref_name }}' in package.json
-        if: env.GHA_V_COUNTER_MISSION == '0'
-        uses: actions/github-script@v2.1.0
-        with:
-          script: |
-            core.setFailed('mission/package.json not updated to new version ${{ env.GHA_NEW_TAG_NAME_MISSION }}!')
 
   generate_matrix:
     needs: unit-tests
@@ -222,6 +71,7 @@ jobs:
 
   build-formatter:
     runs-on: windows-latest
+    needs: unit-tests
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

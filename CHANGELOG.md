@@ -1,3 +1,9 @@
+## v0.7.8
+added tags-ignore to dev deploy script
+
+### Changed
+- bug fixes
+
 ## v0.7.7
 removed
 
