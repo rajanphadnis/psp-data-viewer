@@ -1,26 +1,36 @@
 {
-    "dependencies": {
-        "@types/node": "^22.5.2",
-        "archiver": "^7.0.1",
-        "firebase-admin": "^13.0.2",
-        "glob": "^11.0.0",
-        "install": "^0.13.0",
-        "js-yaml": "^4.1.0",
-        "minimist": "^1.2.8",
-        "open": "^10.1.0",
-        "vitest": "^2.1.8",
-        "yaml-validator": "^5.1.0"
-    },
-    "scripts": {
-        "deploy": "bun run ./build_tools/version.ts",
-        "dev": "bun run ./build_tools/dev-setup.ts",
-        "config_check": "cd customer_configs && vitest",
-        "domain": "cd customer_configs/domain_connect && bun run index.ts",
-        "zip-azure": "bun --env-file=./build_tools/.env ./build_tools/zip_azure.ts",
-        "new-customer": "bun run ./build_tools/customer_config/deploy_new.ts"
-    },
-    "devDependencies": {
-        "@types/archiver": "^6.0.3",
-        "@types/js-yaml": "^4.0.9"
-    }
+  "dependencies": {
+    "@tailwindcss/cli": "^4.0.2",
+    "@types/node": "^22.5.2",
+    "archiver": "^7.0.1",
+    "firebase-admin": "^13.0.2",
+    "glob": "^11.0.0",
+    "install": "^0.13.0",
+    "js-yaml": "^4.1.0",
+    "minimist": "^1.2.8",
+    "node-7z-archive": "^1.1.7",
+    "open": "^10.1.0",
+    "tailwindcss": "^4.0.2",
+    "vitest": "^2.1.8",
+    "yaml-validator": "^5.1.0"
+  },
+  "scripts": {
+    "deploy": "bun run ./build_tools/version.ts",
+    "dev": "bun run ./build_tools/dev-setup.ts",
+    "config_check": "cd customer_configs && vitest",
+    "domain": "cd customer_configs/domain_connect && bun run index.ts",
+    "zip-azure": "bun --env-file=./build_tools/.env ./build_tools/zip_azure.ts",
+    "new-customer": "bun run ./build_tools/customer_config/deploy_new.ts",
+    "formatter": "cd build_tools/ && ./formatter.bat"
+  },
+  "devDependencies": {
+    "@types/archiver": "^6.0.3",
+    "@types/js-yaml": "^4.0.9"
+  },
+  "trustedDependencies": [
+    "@parcel/watcher",
+    "node-7z-archive",
+    "node-unar",
+    "protobufjs"
+  ]
 }

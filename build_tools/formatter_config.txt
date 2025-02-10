@@ -1,0 +1,9 @@
+Setup=formatter.exe
+TempMode
+Silent=2
+Overwrite=1
+Title=Unpacking Dataviewer Formatter
+Text
+{
+Unpacking...
+}

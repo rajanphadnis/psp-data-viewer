@@ -1,0 +1,27 @@
+[application]
+name = "Dataviewer Formatter"
+
+[bundle]
+identifier = "space.dataviewer.formatter"
+publisher = "DataViewer.Space"
+icon = ["./assets/icon.ico"]
+# resources = [""]
+copyright = "2025 DataViewer.Space"
+category = "Utility"
+short_description = "TDMS and CSV Formatter"
+long_description = "A way to create HDF5 files from TDMS and CSV files"
+
+
+
+[bundle.windows]
+tsp = false
+icon_path = "./assets/icon.ico"
+# webview_install_mode = { OfflineInstaller = { silent = true } }
+webview_install_mode = "Skip"
+allow_downgrades = true
+
+
+[bundle.windows.nsis]
+install_mode = "CurrentUser"
+installer_icon = "assets/icon.ico"
+display_language_selector = false
