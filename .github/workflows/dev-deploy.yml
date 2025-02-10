@@ -238,14 +238,19 @@ jobs:
           }
         shell: pwsh
       
-      - uses: Swatinem/rust-cache@v2
       - uses: actions-rs/toolchain@v1.0.6
         with:
           toolchain: stable
           profile: minimal
 
+      # - uses: Swatinem/rust-cache@v2
+      #   with:
+      #     workspace:
+
+      - uses: cargo-bins/cargo-binstall@main
+
       - name: Install Dioxus
-        run: cargo install dioxus-cli
+        run: cargo binstall dioxus-cli
         shell: cmd
           
       - name: Build App
