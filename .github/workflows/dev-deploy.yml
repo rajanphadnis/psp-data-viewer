@@ -165,7 +165,7 @@ jobs:
           bun-version: latest
       - name: Build Web App
         working-directory: ./admin_v2
-        run: bun install && bun run build
+        run: bun install && bun run prod
       - name: Release Web App
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
