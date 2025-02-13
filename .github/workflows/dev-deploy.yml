@@ -136,9 +136,9 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: sfx-archive
-          path: website/src/assets
+          path: website/public
       - name: Display structure of downloaded files
-        working-directory: ./website
+        working-directory: ./website/public
         run: ls -lR
       - name: Build Web App
         working-directory: ./website
