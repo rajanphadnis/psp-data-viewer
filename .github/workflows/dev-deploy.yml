@@ -139,7 +139,7 @@ jobs:
           path: website/src/assets
       - name: Display structure of downloaded files
         working-directory: ./website
-        run: ls -R
+        run: ls -lR
       - name: Build Web App
         working-directory: ./website
         run: bun install && bun run build
