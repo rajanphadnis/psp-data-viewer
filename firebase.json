@@ -56,7 +56,7 @@
     },
     {
       "target": "website",
-      "public": "website/public",
+      "public": "website/dist",
       "ignore": [
         "firebase.json",
         "**/.*",

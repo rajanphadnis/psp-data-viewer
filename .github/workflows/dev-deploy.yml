@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     tags-ignore:
-      - '**'
+      - "**"
 
 env:
   PYTHON_VERSION: "3.11"
@@ -22,6 +22,8 @@ jobs:
         run: cd webapp_v2 && bun install && bun run test
       - name: Admin App Unit Tests
         run: cd admin_v2 && bun install && bun run test
+      - name: Website Unit Tests
+        run: cd website && bun install && bun run test
       - name: Customer Config Validity Checks
         run: bun install && bun run config_check
 
@@ -46,28 +48,28 @@ jobs:
         config: ["dev.yml"]
     name: Build & Deploy Webapp from ${{ matrix.config }}
     environment:
-      name: 'Production'
+      name: "Production"
     steps:
-    - uses: actions/checkout@v4
-    - name: Read Config File
-      uses: pietrobolcato/action-read-yaml@1.1.0
-      id: get_config
-      with:
-        config: ${{ github.workspace }}/customer_configs/${{ matrix.config }}
-    - uses: oven-sh/setup-bun@v1
-      with:
-        bun-version: latest
-    - name: Build Web App
-      working-directory: ./webapp_v2
-      run: bun install && bun run prod ${{ matrix.config }}
-    - name: Release Web App 
-      uses: FirebaseExtended/action-hosting-deploy@v0
-      with:
-        repoToken: ${{ secrets.GITHUB_TOKEN }}
-        firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DATAVIEWER_SPACE }}
-        channelId: live
-        projectId: dataviewer-space
-        target: webapp
+      - uses: actions/checkout@v4
+      - name: Read Config File
+        uses: pietrobolcato/action-read-yaml@1.1.0
+        id: get_config
+        with:
+          config: ${{ github.workspace }}/customer_configs/${{ matrix.config }}
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - name: Build Web App
+        working-directory: ./webapp_v2
+        run: bun install && bun run prod ${{ matrix.config }}
+      - name: Release Web App
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DATAVIEWER_SPACE }}
+          channelId: live
+          projectId: dataviewer-space
+          target: webapp
 
   build-formatter:
     runs-on: windows-latest
@@ -87,7 +89,7 @@ jobs:
             Write-Host "WinRAR is already installed."
           }
         shell: pwsh
-      
+
       - uses: actions-rs/toolchain@v1.0.6
         with:
           toolchain: stable
@@ -102,7 +104,7 @@ jobs:
       - name: Install Dioxus
         run: cargo binstall dioxus-cli --force
         shell: cmd
-          
+
       - name: Build App
         run: cd formatter && dx bundle --platform windows --features bundle
         shell: cmd
@@ -118,3 +120,31 @@ jobs:
           path: ./formatter/dataviewer.exe
           compression-level: 0 # no compression
           retention-days: 5
+
+  build-site:
+    runs-on: ubuntu-latest
+    needs: [unit-tests, build-formatter]
+    name: Build & Deploy Website
+    environment:
+      name: "Production"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - name: Download EXE
+        uses: actions/download-artifact@v4
+        with:
+          name: sfx-archive
+          path: website/src/assets
+      - name: Build Web App
+        working-directory: ./website
+        run: bun install && bun run build
+      - name: Release Web App
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DATAVIEWER_SPACE }}
+          channelId: dev
+          projectId: dataviewer-space
+          target: website
