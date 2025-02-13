@@ -121,7 +121,7 @@ jobs:
           compression-level: 0 # no compression
           retention-days: 5
 
-  build-site:
+  deploy-site:
     runs-on: ubuntu-latest
     needs: [unit-tests, build-formatter]
     name: Build & Deploy Website
@@ -137,6 +137,9 @@ jobs:
         with:
           name: sfx-archive
           path: website/src/assets
+      - name: Display structure of downloaded files
+        working-directory: ./website
+        run: ls -R
       - name: Build Web App
         working-directory: ./website
         run: bun install && bun run build
@@ -148,3 +151,26 @@ jobs:
           channelId: dev
           projectId: dataviewer-space
           target: website
+
+  deploy-admin:
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    name: Build & Deploy Admin Console
+    environment:
+      name: "Production"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - name: Build Web App
+        working-directory: ./admin_v2
+        run: bun install && bun run build
+      - name: Release Web App
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DATAVIEWER_SPACE }}
+          channelId: dev
+          projectId: dataviewer-space
+          target: admin

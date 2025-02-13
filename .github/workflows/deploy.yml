@@ -1,8 +1,8 @@
 name: "[CD:Production] Build and Release"
 on:
   push:
-      tags:
-          - "v*.*.*"
+    tags:
+      - "v*.*.*"
 
 env:
   PYTHON_VERSION: "3.11"
@@ -176,7 +176,15 @@ jobs:
             core.setFailed('mission/package.json not updated to new version ${{ env.GHA_NEW_TAG_NAME_MISSION }}!')
 
   generate_matrix:
-    needs: [unit-tests, changelog-check, version-check-webapp, version-check-admin, version-check-docs, version-check-mission]
+    needs:
+      [
+        unit-tests,
+        changelog-check,
+        version-check-webapp,
+        version-check-admin,
+        version-check-docs,
+        version-check-mission,
+      ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -196,32 +204,40 @@ jobs:
     #     config: ["dev.yml"]
     name: Build & Deploy Webapp from ${{ matrix.config }}
     environment:
-      name: 'Production'
+      name: "Production"
     steps:
-    - uses: actions/checkout@v4
-    - name: Read Config File
-      uses: pietrobolcato/action-read-yaml@1.1.0
-      id: get_config
-      with:
-        config: ${{ github.workspace }}/customer_configs/${{ matrix.config }}
-    - uses: oven-sh/setup-bun@v1
-      with:
-        bun-version: latest
-    - name: Build Web App
-      working-directory: ./webapp_v2
-      run: bun install && bun run prod ${{ matrix.config }}
-    - name: Release Web App 
-      uses: FirebaseExtended/action-hosting-deploy@v0
-      with:
-        repoToken: ${{ secrets.GITHUB_TOKEN }}
-        firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DATAVIEWER_SPACE }}
-        channelId: live
-        projectId: dataviewer-space
-        target: webapp
+      - uses: actions/checkout@v4
+      - name: Read Config File
+        uses: pietrobolcato/action-read-yaml@1.1.0
+        id: get_config
+        with:
+          config: ${{ github.workspace }}/customer_configs/${{ matrix.config }}
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - name: Build Web App
+        working-directory: ./webapp_v2
+        run: bun install && bun run prod ${{ matrix.config }}
+      - name: Release Web App
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DATAVIEWER_SPACE }}
+          channelId: live
+          projectId: dataviewer-space
+          target: webapp
 
   build-formatter:
     runs-on: windows-latest
-    needs: [unit-tests, changelog-check, version-check-webapp, version-check-admin, version-check-docs, version-check-mission]
+    needs:
+      [
+        unit-tests,
+        changelog-check,
+        version-check-webapp,
+        version-check-admin,
+        version-check-docs,
+        version-check-mission,
+      ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -237,7 +253,7 @@ jobs:
             Write-Host "WinRAR is already installed."
           }
         shell: pwsh
-      
+
       - uses: actions-rs/toolchain@v1.0.6
         with:
           toolchain: stable
@@ -252,7 +268,7 @@ jobs:
       - name: Install Dioxus
         run: cargo binstall dioxus-cli --force
         shell: cmd
-          
+
       - name: Build App
         run: cd formatter && dx bundle --platform windows --features bundle
         shell: cmd
@@ -269,11 +285,62 @@ jobs:
           compression-level: 0 # no compression
           retention-days: 1
 
+  deploy-site:
+    runs-on: ubuntu-latest
+    needs: build-formatter
+    name: Build & Deploy Website
+    environment:
+      name: "Production"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - name: Download EXE
+        uses: actions/download-artifact@v4
+        with:
+          name: sfx-archive
+          path: website/src/assets
+      - name: Build Web App
+        working-directory: ./website
+        run: bun install && bun run build
+      - name: Release Web App
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DATAVIEWER_SPACE }}
+          channelId: live
+          projectId: dataviewer-space
+          target: website
+
+  deploy-admin:
+    runs-on: ubuntu-latest
+    needs: generate_matrix
+    name: Build & Deploy Admin Console
+    environment:
+      name: "Production"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - name: Build Web App
+        working-directory: ./admin_v2
+        run: bun install && bun run build
+      - name: Release Web App
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DATAVIEWER_SPACE }}
+          channelId: live
+          projectId: dataviewer-space
+          target: admin
+
   github-release:
     runs-on: ubuntu-latest
-    needs: [build, build-formatter]
+    needs: [build, build-formatter, deploy-site, deploy-admin]
     environment:
-      name: 'Production'
+      name: "Production"
     steps:
       - uses: actions/checkout@v4
       - name: Download a single artifact
