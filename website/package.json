@@ -8,7 +8,9 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "debug": "bun run --env-file=.env.dev ./build_tools/compile.ts",
+    "prod": "bun run --env-file=.env.prod.publish ./build_tools/compile.ts"
   },
   "license": "MIT",
   "devDependencies": {
@@ -20,7 +22,11 @@
     "@vitest/coverage-v8": "^2.1.5"
   },
   "dependencies": {
+    "@solidjs/router": "^0.15.3",
     "@tailwindcss/vite": "^4.0.6",
+    "@types/bun": "^1.2.2",
+    "@types/minimist": "^1.2.5",
+    "firebase": "11.3.1",
     "solid-js": "^1.9.3",
     "tailwindcss": "^4.0.6",
     "vite-plugin-static-copy": "^2.2.0"

@@ -1,10 +1,19 @@
 /* @refresh reload */
 import { render } from "solid-js/web";
+import { Route, Router } from "@solidjs/router";
 
 import "./index.css";
-import App from "./App.jsx";
+import { AppStateProvider } from "./state";
+import Home from "./home";
+import Status from "./status";
+import { Firestore } from "firebase/firestore";
+import { initFirebase } from "./firebase";
 
 const root = document.getElementById("root");
+
+declare global {
+  var db: Firestore;
+}
 
 if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
   throw new Error(
@@ -12,4 +21,15 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
   );
 }
 
-render(() => <App />, root!);
+initFirebase();
+
+render(() => {
+  return (
+    <AppStateProvider>
+      <Router>
+        <Route path="/" component={Home}></Route>
+        <Route path={"/status"} component={Status}></Route>
+      </Router>
+    </AppStateProvider>
+  );
+}, root!);
