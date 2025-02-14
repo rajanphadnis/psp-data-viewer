@@ -137,9 +137,6 @@ jobs:
         with:
           name: sfx-archive
           path: website/public
-      - name: Display structure of downloaded files
-        working-directory: ./website/public
-        run: ls -lR
       - name: Build Web App
         working-directory: ./website
         run: bun install && bun run build

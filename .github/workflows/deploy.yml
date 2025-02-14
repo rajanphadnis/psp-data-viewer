@@ -300,7 +300,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: sfx-archive
-          path: website/src/assets
+          path: website/public
       - name: Build Web App
         working-directory: ./website
         run: bun install && bun run build
