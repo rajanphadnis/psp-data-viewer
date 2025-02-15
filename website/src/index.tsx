@@ -4,10 +4,10 @@ import { Route, Router } from "@solidjs/router";
 
 import "./index.css";
 import { AppStateProvider } from "./state";
-import Home from "./home";
-import Status from "./status";
+import Home from "./pages/home";
 import { Firestore } from "firebase/firestore";
 import { initFirebase } from "./firebase";
+import Status from "./pages/status";
 
 const root = document.getElementById("root");
 
