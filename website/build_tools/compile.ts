@@ -42,18 +42,18 @@ function dateTimeStringGen(): string {
   return datetimeString;
 }
 
-const appKey = Bun.env.APP_CHECK_KEY;
+// const appKey = Bun.env.APP_CHECK_KEY;
 let toWrite: string | boolean;
 
-if (appKey!.toString() == "false") {
-  toWrite = false;
-} else {
-  toWrite = '"' + appKey + '"';
-}
+// if (appKey!.toString() == "false") {
+//   toWrite = false;
+// } else {
+//   toWrite = '"' + appKey + '"';
+// }
 
 syncWriteFile(
   "../src/generated_app_info.ts",
-  `export const appCheckSecret: string | boolean = ${toWrite};\nexport const appVersion: string = 'v${
+  `export const appVersion: string = 'v${
     package_json.version
   }';\nexport const buildDate: string = '${dateTimeStringGen()}';\n`
 );
