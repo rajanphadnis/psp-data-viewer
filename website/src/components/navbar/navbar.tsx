@@ -4,6 +4,7 @@ import OpenIcon from "../icons/open";
 import { A } from "@solidjs/router";
 import { doc, getDoc } from "firebase/firestore";
 import { SiteStatus, stringToSiteStatus } from "../../types";
+import LogoIcon from "../icons/logo";
 
 const NavBar: Component<{}> = (props) => {
   const [overallStatus, setOverallStatus] = createSignal<SiteStatus>(SiteStatus.UNKNOWN);
@@ -23,19 +24,26 @@ const NavBar: Component<{}> = (props) => {
 
   return (
     <div class="w-full p-5">
-      <div class="flex flex-row w-full justify-between shadow-amber-400 bg-neutral-700/75 border-b-amber-400 border-b-2 border-t-0 border-l-0 border-r-0">
-        <div class="flex flex-row">
-          <A href="/" class="p-3 hover:bg-neutral-600 cursor-pointer text-amber-500">
-            Dataviewer.space
+      <div class="flex flex-row w-full justify-between items-center shadow-amber-400 bg-neutral-700/75 border-b-amber-400 border-b-2 border-t-0 border-l-0 border-r-0">
+        <div class="flex flex-row items-center">
+          <A
+            href="/"
+            class="p-3 hover:bg-neutral-600 cursor-pointer text-amber-500 flex flex-row items-center font-bold"
+          >
+            <LogoIcon class="h-6 mr-2" />
+            <p class="logo-font-type">Dataviewer.Space</p>
           </A>
-          <A href="/#platform" class="p-3 hover:bg-neutral-600 cursor-pointer hover:underline underline-offset-3">
-            Platform
+          <A href="/#features" class="p-3 hover:bg-neutral-600 cursor-pointer hover:underline underline-offset-3">
+            Features
           </A>
           <A href="/#pricing" class="p-3 hover:bg-neutral-600 cursor-pointer hover:underline underline-offset-3">
             Pricing
           </A>
+          <A href="/#contact" class="p-3 hover:bg-neutral-600 cursor-pointer hover:underline underline-offset-3">
+            Get Started
+          </A>
         </div>
-        <div class="flex flex-row">
+        <div class="flex flex-row items-center">
           <StatusChip link="./status" status={overallStatus} />
           <A
             href="https://pspl.space"

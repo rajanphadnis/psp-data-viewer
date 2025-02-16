@@ -27,7 +27,7 @@ render(() => {
   return (
     <AppStateProvider>
       <Router>
-        <Route path="/" component={Home}></Route>
+        <Route path="/:feature?" component={Home}></Route>
         <Route path={"/status"} component={Status}></Route>
       </Router>
     </AppStateProvider>

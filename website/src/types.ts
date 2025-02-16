@@ -7,22 +7,41 @@ export enum SiteStatus {
   LOADING,
 }
 
-export function siteStatusToString(status: SiteStatus): string {
-  switch (status) {
-    case SiteStatus.FULLY_DEGRADED:
-      return "FULLY_DEGRADED";
-    case SiteStatus.LOADING:
-      return "LOADING";
-    case SiteStatus.NOMINAL:
-      return "NOMINAL";
-    case SiteStatus.OFFLINE:
-      return "OFFLINE";
-    case SiteStatus.PARTIALLY_DEGRADED:
-      return "PARTIALLY_DEGRADED";
-    case SiteStatus.UNKNOWN:
-      return "UNKNOWN";
-    default:
-      return "UNKNOWN";
+export function siteStatusToString(status: SiteStatus, humanReadable: boolean = false): string {
+  if (humanReadable) {
+    switch (status) {
+      case SiteStatus.FULLY_DEGRADED:
+        return "FULLY_DEGRADED";
+      case SiteStatus.LOADING:
+        return "LOADING";
+      case SiteStatus.NOMINAL:
+        return "NOMINAL";
+      case SiteStatus.OFFLINE:
+        return "OFFLINE";
+      case SiteStatus.PARTIALLY_DEGRADED:
+        return "PARTIALLY_DEGRADED";
+      case SiteStatus.UNKNOWN:
+        return "UNKNOWN";
+      default:
+        return "UNKNOWN";
+    }
+  } else {
+    switch (status) {
+      case SiteStatus.FULLY_DEGRADED:
+        return "Highly Degraded Service";
+      case SiteStatus.LOADING:
+        return "Loading...";
+      case SiteStatus.NOMINAL:
+        return "Nominal Service";
+      case SiteStatus.OFFLINE:
+        return "Offline";
+      case SiteStatus.PARTIALLY_DEGRADED:
+        return "Partially Degraded Service";
+      case SiteStatus.UNKNOWN:
+        return "UNKNOWN";
+      default:
+        return "UNKNOWN";
+    }
   }
 }
 
