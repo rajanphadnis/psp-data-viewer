@@ -1,11 +1,11 @@
 import { Component } from "solid-js";
-import FeatureTile from "./feature_tile";
 import LinkIcon from "../icons/link";
 import DatabaseIcon from "../icons/database";
 import SackMoneyIcon from "../icons/sack_money";
 import BoltIcon from "../icons/bolt";
 import MagnifyingGlassChart from "../icons/magnifying_glass_chart";
 import DownloadIcon from "../icons/download";
+import FeatureTile from "./features/feature_tile";
 
 const FeaturesSegment: Component<{}> = (props) => {
   return (

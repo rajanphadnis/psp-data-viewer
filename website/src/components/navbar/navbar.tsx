@@ -6,7 +6,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { SiteStatus, stringToSiteStatus } from "../../types";
 import LogoIcon from "../icons/logo";
 
-const NavBar: Component<{}> = (props) => {
+const NavBar: Component<{ featuresDiv?: HTMLDivElement }> = (props) => {
   const [overallStatus, setOverallStatus] = createSignal<SiteStatus>(SiteStatus.UNKNOWN);
   onMount(async () => {
     setOverallStatus(SiteStatus.LOADING);
@@ -14,7 +14,7 @@ const NavBar: Component<{}> = (props) => {
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       const data = docSnap.data();
-      setOverallStatus(stringToSiteStatus(data["overview"]));
+      setOverallStatus(stringToSiteStatus(data["overview"]["status"]));
     } else {
       // docSnap.data() will be undefined in this case
       console.log("No such document!");
@@ -39,12 +39,12 @@ const NavBar: Component<{}> = (props) => {
           <A href="/#pricing" class="p-3 hover:bg-neutral-600 cursor-pointer hover:underline underline-offset-3">
             Pricing
           </A>
-          <A href="/#contact" class="p-3 hover:bg-neutral-600 cursor-pointer hover:underline underline-offset-3">
+          <A href="/#start" class="p-3 hover:bg-neutral-600 cursor-pointer hover:underline underline-offset-3">
             Get Started
           </A>
         </div>
         <div class="flex flex-row items-center">
-          <StatusChip link="./status" status={overallStatus} />
+          <StatusChip link="./status" status={overallStatus()} generic={true} />
           <A
             href="https://pspl.space"
             target="__blank"

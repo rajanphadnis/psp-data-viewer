@@ -28,7 +28,7 @@ export function siteStatusToString(status: SiteStatus, humanReadable: boolean = 
   } else {
     switch (status) {
       case SiteStatus.FULLY_DEGRADED:
-        return "Highly Degraded Service";
+        return "Highly Degraded";
       case SiteStatus.LOADING:
         return "Loading...";
       case SiteStatus.NOMINAL:
@@ -36,7 +36,7 @@ export function siteStatusToString(status: SiteStatus, humanReadable: boolean = 
       case SiteStatus.OFFLINE:
         return "Offline";
       case SiteStatus.PARTIALLY_DEGRADED:
-        return "Partially Degraded Service";
+        return "Partially Degraded";
       case SiteStatus.UNKNOWN:
         return "UNKNOWN";
       default:
@@ -62,4 +62,10 @@ export function stringToSiteStatus(status: string): SiteStatus {
     default:
       return SiteStatus.UNKNOWN;
   }
+}
+
+export type statusType = {
+  status: SiteStatus;
+  note: string | undefined;
+  title: string;
 }

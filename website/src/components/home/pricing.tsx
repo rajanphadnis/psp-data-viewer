@@ -1,5 +1,5 @@
-import { Accessor, Component, createMemo, createSignal } from "solid-js";
-import PricingItemSelector from "./pricing_item";
+import { Component, createMemo, createSignal } from "solid-js";
+import PricingItemSelector from "./pricing/pricing_item";
 
 const PricingSegment: Component<{}> = (props) => {
   const [apiReqs, setApiReqs] = createSignal<number>(100);
@@ -20,7 +20,11 @@ const PricingSegment: Component<{}> = (props) => {
       <p class="mb-6 text-center">Simple, clear-cut pricing that pays for itself</p>
       <div class="flex flex-row">
         <div class="flex flex-col bg-neutral-950 rounded-2xl p-6 w-1/2 mr-4">
-          <h3 class="text-center text-lg">Pricing is based on the following categories:</h3>
+          {/* <h3 class="text-xl">Pricing is based on the following categories:</h3> */}
+          <p>
+            At the end of each billing cycle, API requests, tests created, and total data stored is tallied and billed
+            accordingly:
+          </p>
           <div class="flex flex-col justify-center h-full">
             <p>API requests:</p>
             <ul class="ml-5">

@@ -1,7 +1,9 @@
 import { A } from "@solidjs/router";
-import { Component } from "solid-js";
+import { Component, Show } from "solid-js";
+import GetStartedButton from "./contact/get_started_button";
 
 const Hero: Component<{}> = (props) => {
+  const link = false;
   return (
     <div class="flex flex-col justify-center items-center w-full min-h-2/3">
       <div class="flex flex-col justify-center items-center">
@@ -16,12 +18,21 @@ const Hero: Component<{}> = (props) => {
           >
             Explore Features
           </A>
-          <A
-            href="#contact"
-            class="p-3 ml-3 bg-amber-400 hover:bg-amber-300 hover:shadow-2xl text-black border-2 border-black cursor-pointer whitespace-nowrap rounded-md"
+          <Show
+            when={link}
+            fallback={
+              <div class="ml-3">
+                <GetStartedButton />
+              </div>
+            }
           >
-            Get Started
-          </A>
+            <A
+              href="#start"
+              class="p-3 ml-3 bg-amber-400 hover:bg-amber-300 hover:shadow-2xl text-black border-2 border-black cursor-pointer whitespace-nowrap rounded-md"
+            >
+              Get Started
+            </A>
+          </Show>
         </div>
       </div>
       {/* <img src={heroImage} alt="Dataviewer Demo: Hero Picture" class="w-1/3"></img> */}
