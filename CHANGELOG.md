@@ -1,3 +1,10 @@
+## v0.8.1
+initial website structure ready
+
+### Changed
+- bug fixes
+- added website structure and components
+
 ## v0.8.0
 added structure for rust-based formatter and prod deploy
 
