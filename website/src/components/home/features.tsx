@@ -13,7 +13,7 @@ const FeaturesSegment: Component<{}> = (props) => {
       <div class="mx-5 bg-neutral-950 rounded-2xl p-4">
         <h1 class="text-3xl font-bold mb-3 ml-2">Features</h1>
         <p class="mb-3 mx-2">why use this? bc of these things</p>
-        <div class="flex flex-row justify-start">
+        <div class="flex flex-row justify-start max-md:flex-col">
           <div class="flex flex-col w-1/2 min-w-1/2">
             <FeatureTile icon={LinkIcon} name="Sharelinks" desc="desc" />
             <FeatureTile icon={DatabaseIcon} name="API" desc="desc" />

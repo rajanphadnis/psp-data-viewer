@@ -1,7 +1,7 @@
 import { Component, createSignal, For, onMount, Show } from "solid-js";
 import StatusItem from "./status_item";
 import { collection, getDocs } from "firebase/firestore";
-import { SiteStatus, statusType, stringToSiteStatus } from "../../types";
+import { statusType, stringToSiteStatus } from "../../types";
 
 const StatusList: Component<{}> = (props) => {
   const [statuses, setStatuses] = createSignal<statusType[]>();
@@ -28,8 +28,15 @@ const StatusList: Component<{}> = (props) => {
   });
 
   return (
-    <div class="mb-8 w-1/2 flex flex-col">
-      <Show when={statuses()} fallback={<div class="w-full flex flex-col justify-center items-center"><div class="loader"></div></div>}>
+    <div class="mb-8 w-1/2 flex flex-col max-md:w-9/10">
+      <Show
+        when={statuses()}
+        fallback={
+          <div class="w-full flex flex-col justify-center items-center">
+            <div class="loader"></div>
+          </div>
+        }
+      >
         <For each={statuses()}>
           {(item, i) => {
             return <StatusItem name={item.title} status={item.status} note={item.note} />;

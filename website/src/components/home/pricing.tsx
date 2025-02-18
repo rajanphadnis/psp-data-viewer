@@ -18,8 +18,8 @@ const PricingSegment: Component<{}> = (props) => {
     <div id="pricing" class="pt-12 px-5">
       <h1 class="text-3xl font-bold mb-3 text-center">Pricing</h1>
       <p class="mb-6 text-center">Simple, clear-cut pricing that pays for itself</p>
-      <div class="flex flex-row">
-        <div class="flex flex-col bg-neutral-950 rounded-2xl p-6 w-1/2 mr-4">
+      <div class="flex flex-row max-md:flex-col">
+        <div class="flex flex-col bg-neutral-950 rounded-2xl p-6 w-1/2 mr-4 max-md:mr-0 max-md:w-full">
           {/* <h3 class="text-xl">Pricing is based on the following categories:</h3> */}
           <p>
             At the end of each billing cycle, API requests, tests created, and total data stored is tallied and billed
@@ -36,7 +36,7 @@ const PricingSegment: Component<{}> = (props) => {
             <p>Data Storage: $0.03/GB</p>
           </div>
         </div>
-        <div class="flex flex-col bg-neutral-950 rounded-2xl p-6 w-1/2 ml-4">
+        <div class="flex flex-col bg-neutral-950 rounded-2xl p-6 w-1/2 ml-4 max-md:ml-0 max-md:w-full max-md:mt-4">
           <h1 class="text-xl mb-6">Calculator</h1>
           <PricingItemSelector
             name="API Requests"
