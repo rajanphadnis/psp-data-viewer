@@ -1,3 +1,9 @@
+## v0.8.2
+added mobile site
+
+### Changed
+- bug fixes
+
 ## v0.8.1
 initial website structure ready
 
