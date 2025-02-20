@@ -1,4 +1,6 @@
-import { Accessor, Component, Setter } from "solid-js";
+import { Accessor, Component, Setter, Show } from "solid-js";
+import Popover from "@corvu/popover";
+import HelpIcon from "../../icons/help";
 
 const InputFieldText: Component<{
   slug: string;
@@ -6,13 +8,33 @@ const InputFieldText: Component<{
   accessor: Accessor<string>;
   setter: Setter<string>;
   validator: (val: string) => boolean;
+  children?: any;
 }> = (props) => {
   return (
     <div class="mb-3 flex flex-col">
-      <label for={props.slug}>
+      <label for={props.slug} class="mb-2">
         {props.label}: <span class="text-red-600">*</span>
+        <Show when={props.children}>
+          <Popover
+            floatingOptions={{
+              offset: 13,
+              flip: true,
+              shift: true,
+            }}
+          >
+            <Popover.Trigger class="my-auto mx-3 rounded-full bg-neutral-500 p-1 transition-all duration-100 hover:bg-neutral-600 active:translate-y-0.5">
+              <HelpIcon class="fill-white w-3 h-3" />
+              <span class="sr-only">Help</span>
+            </Popover.Trigger>
+            <Popover.Portal>
+              <Popover.Content class="z-50 rounded-lg bg-neutral-500 px-3 py-2 shadow-md data-open:animate-in data-open:fade-in-50% data-open:slide-in-from-top-1 data-closed:animate-out data-closed:fade-out-50% data-closed:slide-out-to-top-1">
+                {props.children}
+                <Popover.Arrow class="text-neutral-500" />
+              </Popover.Content>
+            </Popover.Portal>
+          </Popover>
+        </Show>
       </label>
-      {/* <br /> */}
       <input
         type="text"
         id={props.slug}

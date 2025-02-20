@@ -60,23 +60,23 @@ const GetStartedButton: Component<{}> = (props) => {
           />
           <InputFieldText
             slug="orgName"
-            label="Organization Name"
+            label="Full Organization Name"
             accessor={orgName}
             setter={setOrgName}
             validator={validateName}
-          />
+          >
+            <p>You'll have the chance to set up a shorter name later</p>
+          </InputFieldText>
           <div class="mt-3 flex justify-between">
-            <button class="rounded-md bg-red-400 px-3 py-2 text-black cursor-pointer">Cancel</button>
+            <Dialog.Close class="rounded-md bg-red-400 px-3 py-2 text-black cursor-pointer">Cancel</Dialog.Close>
             <button
-              class="rounded-md bg-amber-400 px-3 py-2 font-bold text-black cursor-pointer"
+              class="rounded-md bg-amber-400 px-3 py-2 text-black cursor-pointer"
               onclick={() => {
                 const b64 = encode(`${firstName()}:::${lastName()}:::${email()}:::${orgName()}`);
-                window.location.pathname = `/start`;
-                
-                setSearchParams({init: b64});
+                window.location.pathname = `/start/${b64}`;
               }}
             >
-              Submit
+              Next
             </button>
           </div>
         </Dialog.Content>

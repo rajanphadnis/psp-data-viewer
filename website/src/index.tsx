@@ -9,6 +9,7 @@ import { Firestore } from "firebase/firestore";
 import { initFirebase } from "./firebase";
 import Status from "./pages/status";
 import StartPage from "./pages/start";
+import FinishPage from "./pages/finish";
 
 const root = document.getElementById("root");
 
@@ -28,9 +29,10 @@ render(() => {
   return (
     <AppStateProvider>
       <Router>
-        <Route path="/:feature?" component={Home}></Route>
+        <Route path="/" component={Home}></Route>
         <Route path={"/status"} component={Status}></Route>
-        <Route path={"/start"} component={StartPage}></Route>
+        <Route path={"/start/:b64"} component={StartPage}></Route>
+        <Route path={"/finish/:b64"} component={FinishPage}></Route>
       </Router>
     </AppStateProvider>
   );
