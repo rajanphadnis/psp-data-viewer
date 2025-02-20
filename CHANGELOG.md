@@ -1,3 +1,9 @@
+## v0.8.4
+finished website structure
+
+### Changed
+- bug fixes
+
 ## v0.8.3
 started mobile site updates
 
