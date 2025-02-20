@@ -28,7 +28,7 @@ const StatusList: Component<{}> = (props) => {
   });
 
   return (
-    <div class="mb-8 w-1/2 flex flex-col max-md:w-9/10">
+    <div class="mb-8 w-1/2 flex flex-col max-md:w-full">
       <Show
         when={statuses()}
         fallback={
@@ -39,7 +39,7 @@ const StatusList: Component<{}> = (props) => {
       >
         <For each={statuses()}>
           {(item, i) => {
-            return <StatusItem name={item.title} status={item.status} note={item.note} />;
+            return <StatusItem name={item.title} status={item.status} note={item.note} hiddenStatusCapable={true} />;
           }}
         </For>
       </Show>

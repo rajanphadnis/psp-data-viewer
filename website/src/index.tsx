@@ -8,6 +8,7 @@ import Home from "./pages/home";
 import { Firestore } from "firebase/firestore";
 import { initFirebase } from "./firebase";
 import Status from "./pages/status";
+import StartPage from "./pages/start";
 
 const root = document.getElementById("root");
 
@@ -29,6 +30,7 @@ render(() => {
       <Router>
         <Route path="/:feature?" component={Home}></Route>
         <Route path={"/status"} component={Status}></Route>
+        <Route path={"/start"} component={StartPage}></Route>
       </Router>
     </AppStateProvider>
   );

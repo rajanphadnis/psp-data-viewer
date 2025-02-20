@@ -71,13 +71,13 @@ const NavBar: Component<{ featuresDiv?: HTMLDivElement }> = (props) => {
         </div>
       </div>
       <div class="hidden flex-col items-center border-b-amber-400 border-b-2" id="mobileNavbar">
-        <A href="/#features" class="p-3 hover:bg-neutral-600 cursor-pointer hover:underline underline-offset-3">
+        <A href="/#features" class="p-3 hover:bg-neutral-600 cursor-pointer hover:underline underline-offset-3 w-full text-center">
           Features
         </A>
-        <A href="/#pricing" class="p-3 hover:bg-neutral-600 cursor-pointer hover:underline underline-offset-3">
+        <A href="/#pricing" class="p-3 hover:bg-neutral-600 cursor-pointer hover:underline underline-offset-3 w-full text-center">
           Pricing
         </A>
-        <A href="/#start" class="p-3 hover:bg-neutral-600 cursor-pointer hover:underline underline-offset-3">
+        <A href="/#start" class="p-3 hover:bg-neutral-600 cursor-pointer hover:underline underline-offset-3 w-full text-center">
           Get Started
         </A>
         <StatusChip link="./status" status={overallStatus()} generic={true} />

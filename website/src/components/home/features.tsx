@@ -14,12 +14,12 @@ const FeaturesSegment: Component<{}> = (props) => {
         <h1 class="text-3xl font-bold mb-3 ml-2">Features</h1>
         <p class="mb-3 mx-2">why use this? bc of these things</p>
         <div class="flex flex-row justify-start max-md:flex-col">
-          <div class="flex flex-col w-1/2 min-w-1/2">
+          <div class="flex flex-col w-1/2 min-w-1/2 max-md:w-full">
             <FeatureTile icon={LinkIcon} name="Sharelinks" desc="desc" />
             <FeatureTile icon={DatabaseIcon} name="API" desc="desc" />
             <FeatureTile icon={SackMoneyIcon} name="Affordable" desc="desc" />
           </div>
-          <div class="flex flex-col w-1/2 min-w-1/2">
+          <div class="flex flex-col w-1/2 min-w-1/2 max-md:w-full">
             <FeatureTile icon={BoltIcon} name="Lightning-fast access" desc="desc" />
             <FeatureTile icon={MagnifyingGlassChart} name="Analysis Tools" desc="desc" />
             <FeatureTile icon={DownloadIcon} name="Data Export" desc="desc" />

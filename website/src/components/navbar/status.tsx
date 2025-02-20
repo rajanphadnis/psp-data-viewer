@@ -2,7 +2,9 @@ import { Accessor, Component, createMemo, Show } from "solid-js";
 import { SiteStatus, siteStatusToString } from "../../types";
 import Tooltip from "@corvu/tooltip";
 
-const StatusChip: Component<{ link: string; status: SiteStatus; generic?: boolean }> = (props) => {
+const StatusChip: Component<{ link: string; status: SiteStatus; generic?: boolean; hiddenCapable?: boolean }> = (
+  props
+) => {
   let color = createMemo<[color1: string, color2: string]>(() => {
     switch (props.status) {
       case SiteStatus.NOMINAL:
@@ -10,7 +12,7 @@ const StatusChip: Component<{ link: string; status: SiteStatus; generic?: boolea
 
       case SiteStatus.LOADING:
         return ["bg-sky-400", "bg-sky-500"];
-        // return ["bg-neutral-500", "bg-neutral-600"];
+      // return ["bg-neutral-500", "bg-neutral-600"];
 
       case SiteStatus.OFFLINE:
         return ["bg-red-500", "bg-red-600"];
@@ -42,9 +44,14 @@ const StatusChip: Component<{ link: string; status: SiteStatus; generic?: boolea
       <Tooltip.Trigger
         as="A"
         href={props.link}
-        class={`p-3 flex flex-row items-center cursor-pointer ${props.generic ? "hover:bg-neutral-600" : ""}`}
+        class={`p-3 flex flex-row items-center cursor-pointer ${
+          props.generic ? "hover:bg-neutral-600  max-md:w-full max-md:justify-center" : ""
+        }`}
       >
-        <Show when={props.generic} fallback={<p>{siteStatusToString(props.status)}</p>}>
+        <Show
+          when={props.generic}
+          fallback={<p class={`${props.hiddenCapable ? "max-xs:hidden" : ""}`}>{siteStatusToString(props.status)}</p>}
+        >
           <p class="whitespace-nowrap">Status</p>
         </Show>
         <span class="relative flex size-3 ml-2">

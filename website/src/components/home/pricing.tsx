@@ -25,7 +25,7 @@ const PricingSegment: Component<{}> = (props) => {
             At the end of each billing cycle, API requests, tests created, and total data stored is tallied and billed
             accordingly:
           </p>
-          <div class="flex flex-col justify-center h-full">
+          <div class="flex flex-col justify-center h-full max-md:mt-6">
             <p>API requests:</p>
             <ul class="ml-5">
               <li>0-250: $0.001/request</li>

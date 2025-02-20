@@ -7,7 +7,7 @@ const StatusExplainer: Component<{}> = (props) => {
   return (
     <div class="w-full mb-12 flex flex-col items-center">
       <p class="text-xl mb-2">Table key:</p>
-      <div class="flex flex-col w-fit border max-md:w-9/10">
+      <div class="flex flex-col w-fit border max-md:w-full">
         <StatusChip link="" status={SiteStatus.NOMINAL} />
         <StatusChip link="" status={SiteStatus.PARTIALLY_DEGRADED} />
         <StatusChip link="" status={SiteStatus.FULLY_DEGRADED} />
