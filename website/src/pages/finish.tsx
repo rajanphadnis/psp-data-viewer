@@ -5,7 +5,7 @@ import { githubKey, stripe_pk } from "../generated_app_info";
 import { loadStripe } from "@stripe/stripe-js";
 import Stepper from "../components/finish/stepper";
 import { ProvisioningStatus } from "../types";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { Octokit } from "@octokit/core";
 import { setTimeout } from "timers/promises";
 import { delay } from "../misc";
@@ -35,17 +35,29 @@ const FinishPage: Component<{}> = (props) => {
     setStartingMessages(newList);
   }
 
-  const logs = createMemo(() => {
-    const ghMessages = githubMessages().split("\n").filter((val) => val.includes("dv-log:::"));
-    if (ghMessages.includes("dv-log:::firebase-complete")) {
+  createEffect(() => {
+    if (githubMessages().includes("dv-log:::firebase-complete")) {
       setCreateFirebase(ProvisioningStatus.SUCCEEDED);
     }
-    if (ghMessages.includes("dv-log:::azure-complete")) {
+    if (githubMessages().includes("dv-log:::azure-complete")) {
       setCreateAzure(ProvisioningStatus.SUCCEEDED);
     }
-    if (ghMessages.includes("dv-log:::deploy-complete")) {
+    if (githubMessages().includes("dv-log:::deploy-complete")) {
       setCreateSite(ProvisioningStatus.SUCCEEDED);
     }
+  });
+
+  const logs = createMemo(() => {
+    const ghMessages = githubMessages().split("\n").filter((val) => val.includes("dv-log:::"));
+    // if (ghMessages.includes("dv-log:::firebase-complete")) {
+    //   setCreateFirebase(ProvisioningStatus.SUCCEEDED);
+    // }
+    // if (ghMessages.includes("dv-log:::azure-complete")) {
+    //   setCreateAzure(ProvisioningStatus.SUCCEEDED);
+    // }
+    // if (ghMessages.includes("dv-log:::deploy-complete")) {
+    //   setCreateSite(ProvisioningStatus.SUCCEEDED);
+    // }
     return [...startingMessages(), ...ghMessages, ...endingMessages()];
   });
 
@@ -141,7 +153,12 @@ const FinishPage: Component<{}> = (props) => {
         });
         console.log(job);
         console.log(job.data.jobs[0].id);
-        for (let i = 0; i < 5; i++) {
+        setGitHubJobID(job.data.jobs[0].id);
+        const docRef = doc(globalThis.db, "temp_accounts", docIDthing());
+        await updateDoc(docRef, {
+          github_jobID: job.data.jobs[0].id
+        });
+        for (let i = 0; i < 20; i++) {
           console.log(i);
           await delay(5000);
           const req = await octokit.request('GET /repos/{owner}/{repo}/actions/jobs/{job_id}/logs', {
@@ -152,6 +169,7 @@ const FinishPage: Component<{}> = (props) => {
               'X-GitHub-Api-Version': '2022-11-28'
             }
           });
+          console.log(req.data);
           // const dat = (req.data as string).split("\n").filter((val) => val.includes("dv-log:::"));
           setGithubMessages(req.data as string);
 
