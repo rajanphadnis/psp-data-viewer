@@ -5,12 +5,17 @@ on:
     inputs:
       docID:
         required: true
+      id:
+        required: false
+        description: "run identifier"
 
 jobs:
-  greet:
+  id:
     runs-on: ubuntu-latest
 
     steps:
+      - name: ${{github.event.inputs.id}}
+        run: echo "ready"
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
         with:
