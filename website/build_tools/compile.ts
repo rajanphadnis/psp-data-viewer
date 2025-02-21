@@ -44,6 +44,7 @@ function dateTimeStringGen(): string {
 
 const appKey = Bun.env.APP_CHECK_KEY;
 const stripe_key = Bun.env.STRIPE_PK;
+const githubKey = Bun.env.GITHUB_WORKFLOW_KEY;
 let toWrite: string | boolean;
 
 if (appKey!.toString() == "false") {
@@ -54,7 +55,7 @@ if (appKey!.toString() == "false") {
 
 syncWriteFile(
   "../src/generated_app_info.ts",
-  `export const appKey: string= '${toWrite}';\nexport const stripe_pk: string = '${stripe_key}';\nexport const appVersion: string = 'v${
+  `export const appKey: string= '${toWrite}';\nexport const stripe_pk: string = '${stripe_key}';\nexport const githubKey: string = '${githubKey}';\nexport const appVersion: string = 'v${
     package_json.version
   }';\nexport const buildDate: string = '${dateTimeStringGen()}';\n`
 );

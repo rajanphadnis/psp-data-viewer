@@ -137,7 +137,7 @@ const StartPage: Component<{}> = (props) => {
               setter={setBackgroundLightColor}
             />
           </div>
-          <div class="flex flex-col justify-center w-1/2 max-md:w-full max-md:mt-8">
+          <div class="flex flex-col justify-start w-1/2 max-md:w-full max-md:mt-8 mt-0.5">
             <div class="mb-4 text-lg font-bold">
               Add a payment method
               <Popover
@@ -216,7 +216,7 @@ const StartPage: Component<{}> = (props) => {
                   customerID: customer_id,
                 });
                 console.log(docRef.id);
-                const newB64 = encode(`${email()}:::${client_secret}`);
+                const newB64 = encode(`${email()}:::${client_secret}:::${docRef.id}`);
                 const newURL = `${window.location.origin}/finish/${newB64}`;
                 const { error } = await stripe()!.confirmSetup({
                   elements: elem,

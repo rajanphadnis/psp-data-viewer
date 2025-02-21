@@ -142,6 +142,7 @@ jobs:
         with:
           envkey_APP_CHECK_KEY: ${{ secrets.APP_CHECK_DEV_KEY }}
           envkey_STRIPE_PK: ${{ secrets.STRIPE_PK }}
+          envkey_GITHUB_WORKFLOW_KEY: ${{ secrets.WORKFLOW_KEY }}
           directory: ./website
           file_name: .env.prod.publish
           fail_on_empty: true
