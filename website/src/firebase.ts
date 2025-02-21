@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from "firebase/firestore";
 import { getFunctions, httpsCallable } from "firebase/functions";
+import { appKey } from "./generated_app_info";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDzZWBXQ5L9N92GRNUNGMse8AeUvbwFFyI",
@@ -25,8 +26,8 @@ export function initFirebase() {
   });
 
   globalThis.functions = getFunctions(app);
-  // if (appCheckSecret != false) {
-  //   console.log("in debug mode");
-  //   // connectFunctionsEmulator(functions, "127.0.0.1", 5001);
-  // }
+  if (appKey != "false") {
+    console.log("in debug mode");
+    // connectFunctionsEmulator(functions, "127.0.0.1", 5001);
+  }
 }

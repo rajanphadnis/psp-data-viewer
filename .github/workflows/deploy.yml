@@ -301,6 +301,15 @@ jobs:
         with:
           name: sfx-archive
           path: website/public
+      - name: Make envfile
+        uses: SpicyPizza/create-envfile@v2.0
+        with:
+          envkey_APP_CHECK_KEY: ${{ secrets.APP_CHECK_DEV_KEY }}
+          envkey_STRIPE_PK: ${{ vars.STRIPE_PK }}
+          directory: ./website
+          file_name: .env.prod.publish
+          fail_on_empty: false
+          sort_keys: false
       - name: Build Web App
         working-directory: ./website
         run: bun install && bun run prod
