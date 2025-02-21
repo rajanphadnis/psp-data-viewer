@@ -1,26 +1,21 @@
-name: Mixed inputs
+name: Deploy Instance
 
 on:
   workflow_dispatch:
     inputs:
-      name:
-        type: choice
-        description: Who to greet
-        options:
-          - monalisa
-          - cschleiden
-      message:
+      docID:
         required: true
-      use-emoji:
-        type: boolean
-        description: Include 🎉🤣 emojis
-      environment:
-        type: environment
 
 jobs:
   greet:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Send greeting
-        run: echo "${{ github.event.inputs.message }} ${{ fromJSON('["", "🥳"]')[github.event.inputs.use-emoji == 'true'] }} ${{ github.event.inputs.name }}"
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - name: Create SA JSON
+        run: echo "${{ secrets.GOOGLECLOUDSA_GITHUBACCESS }}" > ./build_tools/GoogleCloudSA_GitHubAccess.json
+      - name: Run Script
+        run: bun install && bun run ts ${{ github.event.inputs.docID }}

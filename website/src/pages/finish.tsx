@@ -107,16 +107,55 @@ const FinishPage: Component<{}> = (props) => {
       setCreateFirebase(ProvisioningStatus.DEPLOYING);
       if (gitHubJobID() == undefined) {
         addStartingMessage("Starting new runner...");
-        const req = await octokit.request('GET /repos/{owner}/{repo}/actions/jobs/{job_id}/logs', {
+        await octokit.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
           owner: 'rajanphadnis',
           repo: 'psp-data-viewer',
-          job_id: 37587398353,
+          workflow_id: 'create_instance.yml',
+          ref: 'main',
+          inputs: {
+            docID: docIDthing(),
+          },
           headers: {
             'X-GitHub-Api-Version': '2022-11-28'
           }
         });
-        // const dat = (req.data as string).split("\n").filter((val) => val.includes("dv-log:::"));
-        setGithubMessages(req.data as string);
+        const send = await octokit.request('GET /repos/{owner}/{repo}/actions/runs', {
+          owner: 'rajanphadnis',
+          repo: 'psp-data-viewer',
+          event: 'workflow_dispatch',
+          headers: {
+            'X-GitHub-Api-Version': '2022-11-28'
+          }
+        });
+        console.log(send);
+        console.log(send.data.workflow_runs[0].id);
+        const job = await octokit.request('GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs', {
+          owner: 'rajanphadnis',
+          repo: 'psp-data-viewer',
+          run_id: send.data.workflow_runs[0].id,
+          headers: {
+            'X-GitHub-Api-Version': '2022-11-28'
+          }
+        });
+        console.log(job);
+        console.log(job.data.jobs[0].id);
+        for (let i = 0; i < 5; i++) {
+          console.log(i);
+          setTimeout(async () => {
+            const req = await octokit.request('GET /repos/{owner}/{repo}/actions/jobs/{job_id}/logs', {
+              owner: 'rajanphadnis',
+              repo: 'psp-data-viewer',
+              job_id: job.data.jobs[0].id,
+              headers: {
+                'X-GitHub-Api-Version': '2022-11-28'
+              }
+            });
+            // const dat = (req.data as string).split("\n").filter((val) => val.includes("dv-log:::"));
+            setGithubMessages(req.data as string);
+          }, 5000);
+
+        }
+
       }
       else {
         addStartingMessage("Reading existing runner...");
