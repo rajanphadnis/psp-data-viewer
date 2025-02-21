@@ -7,6 +7,8 @@ import Stepper from "../components/finish/stepper";
 import { ProvisioningStatus } from "../types";
 import { doc, getDoc } from "firebase/firestore";
 import { Octokit } from "@octokit/core";
+import { setTimeout } from "timers/promises";
+import { delay } from "../misc";
 
 const FinishPage: Component<{}> = (props) => {
   const [email, setEmail] = createSignal<string>("");
@@ -141,18 +143,17 @@ const FinishPage: Component<{}> = (props) => {
         console.log(job.data.jobs[0].id);
         for (let i = 0; i < 5; i++) {
           console.log(i);
-          setTimeout(async () => {
-            const req = await octokit.request('GET /repos/{owner}/{repo}/actions/jobs/{job_id}/logs', {
-              owner: 'rajanphadnis',
-              repo: 'psp-data-viewer',
-              job_id: job.data.jobs[0].id,
-              headers: {
-                'X-GitHub-Api-Version': '2022-11-28'
-              }
-            });
-            // const dat = (req.data as string).split("\n").filter((val) => val.includes("dv-log:::"));
-            setGithubMessages(req.data as string);
-          }, 5000);
+          await delay(5000);
+          const req = await octokit.request('GET /repos/{owner}/{repo}/actions/jobs/{job_id}/logs', {
+            owner: 'rajanphadnis',
+            repo: 'psp-data-viewer',
+            job_id: job.data.jobs[0].id,
+            headers: {
+              'X-GitHub-Api-Version': '2022-11-28'
+            }
+          });
+          // const dat = (req.data as string).split("\n").filter((val) => val.includes("dv-log:::"));
+          setGithubMessages(req.data as string);
 
         }
 

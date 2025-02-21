@@ -14,3 +14,6 @@ export function formatName(str: string) {
   const trimmed = str.trim();
   return capitalizeWords(trimmed);
 }
+
+
+export const delay = (ms: number | undefined) => new Promise(res => setTimeout(res, ms));

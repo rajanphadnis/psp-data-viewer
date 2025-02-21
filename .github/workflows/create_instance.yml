@@ -16,6 +16,8 @@ jobs:
         with:
           bun-version: latest
       - name: Create SA JSON
-        run: echo "${{ secrets.GOOGLECLOUDSA_GITHUBACCESS }}" > ./build_tools/GoogleCloudSA_GitHubAccess.json
+        run: echo '${{ secrets.GOOGLECLOUDSA_GITHUBACCESS }}' > ./build_tools/GoogleCloudSA_GitHubAccess.json
+      - name: list
+        run: ls -lR
       - name: Run Script
         run: bun install && bun run ts ${{ github.event.inputs.docID }}
