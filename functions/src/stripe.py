@@ -177,3 +177,58 @@ def addAzureStoragePricing(req: https_fn.Request) -> https_fn.Response:
             ),
             status=500,
         )
+
+
+@https_fn.on_call(
+    # cors=options.CorsOptions(
+    #     cors_origins="*",
+    #     cors_methods=["get", "post"],
+    # ),
+    # memory=options.MemoryOption.MB_512,
+)
+def createCustomerIntentAndCustomerSession(req: https_fn.CallableRequest) -> any:
+    body = req.data
+    slug = body["slug"] if "slug" in body else None
+    name = body["name"] if "name" in body else None
+    zipCode = body["zipCode"] if "zipCode" in body else None
+    email = body["email"] if "email" in body else None
+    if slug is None:
+        return https_fn.Response(
+            json.dumps({"status": "'slug' is a required argument"}), status=400
+        )
+    if name is None:
+        return https_fn.Response(
+            json.dumps({"status": "'name' is a required argument"}), status=400
+        )
+    if zipCode is None:
+        return https_fn.Response(
+            json.dumps({"status": "'zipCode' is a required argument"}), status=400
+        )
+    if email is None:
+        return https_fn.Response(
+            json.dumps({"status": "'email' is a required argument"}), status=400
+        )
+    stripe.api_key = os.environ.get("STRIPE_TEST")
+    customer = stripe.Customer.create(
+        name=name,
+        email=email,
+        tax={"validate_location": "immediately"},
+        address={
+            "country": "US",
+            "postal_code": zipCode,
+        },
+        shipping={
+            "address": {"country": "US", "postal_code": zipCode},
+            "name": name,
+        },
+        metadata={"slug": slug},
+    )
+    intent = stripe.SetupIntent.create(
+        # In the latest version of the API, specifying the `automatic_payment_methods` parameter
+        # is optional because Stripe enables its functionality by default.
+        automatic_payment_methods={
+            "enabled": True,
+        },
+        customer=customer.id,
+    )
+    return {"client_secret": intent.client_secret, "customer_id": customer.id}

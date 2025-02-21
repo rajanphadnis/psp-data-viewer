@@ -10,11 +10,13 @@ import { initFirebase } from "./firebase";
 import Status from "./pages/status";
 import StartPage from "./pages/start";
 import FinishPage from "./pages/finish";
+import { Functions } from "firebase/functions";
 
 const root = document.getElementById("root");
 
 declare global {
   var db: Firestore;
+  var functions: Functions;
 }
 
 if (import.meta.env.DEV && !(root instanceof HTMLElement)) {

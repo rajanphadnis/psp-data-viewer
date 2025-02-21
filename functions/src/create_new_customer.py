@@ -20,8 +20,8 @@ def createStripeAndFirebaseResources(req: https_fn.Request) -> https_fn.Response
     body = req.get_json()
     slug = body["slug"] if "slug" in body else None
     name = body["name"] if "name" in body else None
-    country = body["country"] if "country" in body else "US"
-    zipCode = body["zipCode"] if "zipCode" in body else None
+    # country = body["country"] if "country" in body else "US"
+    customerID = body["customerID"] if "customerID" in body else None
     email = body["email"] if "email" in body else None
     if slug is None:
         return https_fn.Response(
@@ -31,31 +31,31 @@ def createStripeAndFirebaseResources(req: https_fn.Request) -> https_fn.Response
         return https_fn.Response(
             json.dumps({"status": "'name' is a required argument"}), status=400
         )
-    if zipCode is None:
+    if customerID is None:
         return https_fn.Response(
-            json.dumps({"status": "'zipCode' is a required argument"}), status=400
+            json.dumps({"status": "'customerID' is a required argument"}), status=400
         )
     if email is None:
         return https_fn.Response(
             json.dumps({"status": "'email' is a required argument"}), status=400
         )
     stripe.api_key = os.environ.get("STRIPE_TEST")
-    customer = stripe.Customer.create(
-        name=name,
-        email=email,
-        tax={"validate_location": "immediately"},
-        address={
-            "country": country,
-            "postal_code": zipCode,
-        },
-        shipping={
-            "address": {"country": country, "postal_code": zipCode},
-            "name": name,
-        },
-        metadata={"slug": slug},
-    )
+    # customer = stripe.Customer.create(
+    #     name=name,
+    #     email=email,
+    #     tax={"validate_location": "immediately"},
+    #     address={
+    #         "country": country,
+    #         "postal_code": customerID,
+    #     },
+    #     shipping={
+    #         "address": {"country": country, "postal_code": customerID},
+    #         "name": name,
+    #     },
+    #     metadata={"slug": slug},
+    # )
     subscription = stripe.Subscription.create(
-        customer=customer.id,
+        customer=customerID,
         collection_method="charge_automatically",
         items=[{"price": "price_1QljEnL6hziDD75cG8eOInvb"}],
         payment_settings={"save_default_payment_method": "on_subscription"},
@@ -65,7 +65,7 @@ def createStripeAndFirebaseResources(req: https_fn.Request) -> https_fn.Response
         "access_control": [email],
         "name": name,
         "slug": slug,
-        "stripe_customer_id": customer.id,
+        "stripe_customer_id": customerID,
         "azure_share_name": f"dataviewer-fileshare-{slug}",
         "azure_storage_account": f"dataviewerstorage{slug}",
     }
@@ -86,7 +86,7 @@ def createStripeAndFirebaseResources(req: https_fn.Request) -> https_fn.Response
                 "result": {
                     "firestore_org_set": True,
                     "firestore_permissions_updated": True,
-                    "customer": customer.id,
+                    "customer": customerID,
                     "subscription": subscription.id,
                 },
             }

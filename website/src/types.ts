@@ -68,4 +68,11 @@ export type statusType = {
   status: SiteStatus;
   note: string | undefined;
   title: string;
+};
+
+export enum ProvisioningStatus {
+  PENDING,
+  DEPLOYING,
+  SUCCEEDED,
+  FAILED,
 }

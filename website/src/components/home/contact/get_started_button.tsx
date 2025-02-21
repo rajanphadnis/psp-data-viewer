@@ -1,9 +1,10 @@
-import { Component, createMemo, createSignal } from "solid-js";
+import { Component, createSignal } from "solid-js";
 import Dialog from "@corvu/dialog";
 import InputFieldText from "./input_field";
-import { validateEmail, validateName } from "../../../pages/start";
-import { useNavigate, useSearchParams } from "@solidjs/router";
+import { validateEmail, validateName, validateZipCode } from "../../../pages/start";
+import { useSearchParams } from "@solidjs/router";
 import { encode } from "../../../state";
+import { formatName } from "../../../misc";
 
 const GetStartedButton: Component<{}> = (props) => {
   const [firstName, setFirstName] = createSignal<string>("");
@@ -27,6 +28,7 @@ const GetStartedButton: Component<{}> = (props) => {
     primary_dark: "#daaa00",
   });
   const [searchParams, setSearchParams] = useSearchParams();
+  const [zipCode, setZipCode] = createSignal<string>("");
 
   return (
     <Dialog>
@@ -43,6 +45,7 @@ const GetStartedButton: Component<{}> = (props) => {
             accessor={firstName}
             setter={setFirstName}
             validator={validateName}
+            inputRestrictor={validateName}
           />
           <InputFieldText
             slug="lastName"
@@ -50,6 +53,7 @@ const GetStartedButton: Component<{}> = (props) => {
             accessor={lastName}
             setter={setLastName}
             validator={validateName}
+            inputRestrictor={validateName}
           />
           <InputFieldText
             slug="email"
@@ -57,6 +61,17 @@ const GetStartedButton: Component<{}> = (props) => {
             accessor={email}
             setter={setEmail}
             validator={validateEmail}
+            inputRestrictor={() => true}
+          />
+          <InputFieldText
+            slug="zipCode"
+            label="Billing Zip Code"
+            accessor={zipCode}
+            setter={setZipCode}
+            validator={validateZipCode}
+            inputRestrictor={(s) => {
+              return /^[0-9]{0,5}(-[0-9]{0,4})?$/.test(s);
+            }}
           />
           <InputFieldText
             slug="orgName"
@@ -64,6 +79,7 @@ const GetStartedButton: Component<{}> = (props) => {
             accessor={orgName}
             setter={setOrgName}
             validator={validateName}
+            inputRestrictor={validateName}
           >
             <p>You'll have the chance to set up a shorter name later</p>
           </InputFieldText>
@@ -72,7 +88,11 @@ const GetStartedButton: Component<{}> = (props) => {
             <button
               class="rounded-md bg-amber-400 px-3 py-2 text-black cursor-pointer"
               onclick={() => {
-                const b64 = encode(`${firstName()}:::${lastName()}:::${email()}:::${orgName()}`);
+                const b64 = encode(
+                  `${formatName(firstName())}:::${formatName(lastName())}:::${email()}:::${formatName(
+                    orgName()
+                  )}:::${zipCode()}`
+                );
                 window.location.pathname = `/start/${b64}`;
               }}
             >

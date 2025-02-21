@@ -33,7 +33,7 @@ const StatusList: Component<{}> = (props) => {
         when={statuses()}
         fallback={
           <div class="w-full flex flex-col justify-center items-center">
-            <div class="loader"></div>
+            <div class="loader w-10 h-10 border-t-6 border-6"></div>
           </div>
         }
       >

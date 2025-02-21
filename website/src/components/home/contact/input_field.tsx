@@ -8,6 +8,7 @@ const InputFieldText: Component<{
   accessor: Accessor<string>;
   setter: Setter<string>;
   validator: (val: string) => boolean;
+  inputRestrictor: (val: string) => boolean;
   children?: any;
 }> = (props) => {
   return (
@@ -22,7 +23,7 @@ const InputFieldText: Component<{
               shift: true,
             }}
           >
-            <Popover.Trigger class="my-auto mx-3 rounded-full bg-neutral-500 p-1 transition-all duration-100 hover:bg-neutral-600 active:translate-y-0.5">
+            <Popover.Trigger class="my-auto mx-3 rounded-full bg-neutral-500 p-1 transition-all duration-100 hover:bg-neutral-600 active:translate-y-0.5 cursor-pointer">
               <HelpIcon class="fill-white w-3 h-3" />
               <span class="sr-only">Help</span>
             </Popover.Trigger>
@@ -48,6 +49,11 @@ const InputFieldText: Component<{
             e.target.setCustomValidity("");
           } else {
             e.target.setCustomValidity("Invalid");
+          }
+        }}
+        onBeforeInput={(e) => {
+          if (e.data != null && !props.inputRestrictor(e.data)) {
+            e.preventDefault();
           }
         }}
       />
