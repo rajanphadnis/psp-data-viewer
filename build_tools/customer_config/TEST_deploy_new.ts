@@ -2,13 +2,20 @@ import minimist from "minimist";
 import { cert, initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 import { exit } from "process";
+import { setTimeout } from "timers/promises";
 
 const docID: string = minimist(process.argv.slice(2))["_"][0] ?? "";
+// const stepToRun: number = minimist(process.argv.slice(2))["_"][0] ?? 0;
 
 if (docID == "") {
   console.log("dv-log:::Missing document ID");
   exit(1);
 }
+
+// if (stepToRun == 0) {
+//   console.log("dv-log:::Missing step to run");
+//   exit(1);
+// }
 
 async function main(docID: string) {
   console.log(`id: "${docID}"`);
@@ -40,17 +47,22 @@ async function main(docID: string) {
     console.log(`dv-log:::country: ${country}`);
     console.log(`dv-log:::zipCode: ${zipCode}`);
     console.log(`dv-log:::email: ${email}`);
-    setTimeout(() => {
-      console.log("dv-log:::firebase-complete");
 
-      setTimeout(() => {
-        console.log("dv-log:::azure-complete");
+    // switch (stepToRun) {
+    //   case 1:
+    //     setTimeout()
+    //     break;
 
-        setTimeout(() => {
-          console.log("dv-log:::deploy-complete");
-        }, 10000);
-      }, 10000);
-    }, 10000);
+    //   default:
+    //     break;
+    // }
+
+    await setTimeout(10000);
+    console.log("dv-log:::firebase-complete");
+    await setTimeout(10000);
+    console.log("dv-log:::azure-complete");
+    await setTimeout(10000);
+    console.log("dv-log:::deploy-complete");
   }
 }
 
