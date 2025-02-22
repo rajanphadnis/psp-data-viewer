@@ -129,60 +129,80 @@ const FinishPage: Component<{}> = (props) => {
           ref: 'main',
           inputs: {
             docID: docIDthing(),
-            // id: randomUID,
+            id: randomUID,
           },
           headers: {
             'X-GitHub-Api-Version': '2022-11-28'
           }
         });
-        for (let i = 0; i < 20; i++) {
-          // const element = array[i];
-          
+        let jobID = 0;
+        let count = 0;
+        while (jobID == 0 && count < 5) {
+          count += 1;
+          await delay(2000);
+          const send = await octokit.request('GET /repos/{owner}/{repo}/actions/runs', {
+            owner: 'rajanphadnis',
+            repo: 'psp-data-viewer',
+            event: 'workflow_dispatch',
+            headers: {
+              'X-GitHub-Api-Version': '2022-11-28'
+            }
+          });
+          const runs = send.data.workflow_runs.filter((run) => run.status != "completed");
+          console.log("filtered runs:");
+          console.log(runs);
+          if (runs.length > 0) {
+            runs.forEach(async (run) => {
+              const job = await octokit.request('GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs', {
+                owner: 'rajanphadnis',
+                repo: 'psp-data-viewer',
+                run_id: run.id,
+                headers: {
+                  'X-GitHub-Api-Version': '2022-11-28'
+                }
+              });
+              // console.log(job);
+              const filteredJobs = job.data.jobs.filter((job) => (job.steps != undefined && job.steps.length > 0));
+              console.log("filtered jobs:");
+              console.log(filteredJobs);
+              filteredJobs.forEach((job) => {
+                const stepNames = job.steps!.map((step) => step.name);
+                if (stepNames.includes(randomUID)) {
+                  jobID = job.id;
+                  return;
+                }
+              });
+            });
+          }
         }
-        await delay(2000);
-        const send = await octokit.request('GET /repos/{owner}/{repo}/actions/runs', {
-          owner: 'rajanphadnis',
-          repo: 'psp-data-viewer',
-          event: 'workflow_dispatch',
-          headers: {
-            'X-GitHub-Api-Version': '2022-11-28'
-          }
-        });
-        const runs = send.data.workflow_runs.filter((run) => run.status != "completed");
-        console.log(send);
-        console.log(send.data.workflow_runs[0].id);
-        console.log(runs);
-        const job = await octokit.request('GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs', {
-          owner: 'rajanphadnis',
-          repo: 'psp-data-viewer',
-          run_id: send.data.workflow_runs[0].id,
-          headers: {
-            'X-GitHub-Api-Version': '2022-11-28'
-          }
-        });
-        console.log(job);
-        console.log(job.data.jobs[0].id);
-        setGitHubJobID(job.data.jobs[0].id);
-        // const docRef = doc(globalThis.db, "temp_accounts", docIDthing());
-        // await updateDoc(docRef, {
-        //   github_jobID: job.data.jobs[0].id
-        // });
-        // for (let i = 0; i < 20; i++) {
-        //   console.log(i);
-        //   await delay(5000);
-        //   const req = await octokit.request('GET /repos/{owner}/{repo}/actions/jobs/{job_id}/logs', {
-        //     owner: 'rajanphadnis',
-        //     repo: 'psp-data-viewer',
-        //     job_id: job.data.jobs[0].id,
-        //     headers: {
-        //       'X-GitHub-Api-Version': '2022-11-28'
-        //     }
-        //   });
-        //   console.log(req.data);
-        //   // const dat = (req.data as string).split("\n").filter((val) => val.includes("dv-log:::"));
-        //   setGithubMessages(req.data as string);
 
-        // }
+        if (jobID == 0) {
+          console.log("failed to find dispatch event");
+        }
+        else {
+          console.log(jobID);
+          setGitHubJobID(jobID);
+          const docRef = doc(globalThis.db, "temp_accounts", docIDthing());
+          await updateDoc(docRef, {
+            github_jobID: jobID
+          });
+          for (let i = 0; i < 20; i++) {
+            console.log(i);
+            await delay(5000);
+            const req = await octokit.request('GET /repos/{owner}/{repo}/actions/jobs/{job_id}/logs', {
+              owner: 'rajanphadnis',
+              repo: 'psp-data-viewer',
+              job_id: jobID,
+              headers: {
+                'X-GitHub-Api-Version': '2022-11-28'
+              }
+            });
+            console.log(req.data);
+            // const dat = (req.data as string).split("\n").filter((val) => val.includes("dv-log:::"));
+            setGithubMessages(req.data as string);
+
+          }
+        }
 
       }
       else {
