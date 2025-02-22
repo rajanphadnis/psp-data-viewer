@@ -32,7 +32,7 @@ export function siteStatusToString(status: SiteStatus, humanReadable: boolean = 
       case SiteStatus.LOADING:
         return "Loading...";
       case SiteStatus.NOMINAL:
-        return "Nominal Service";
+        return "Norminal Service";
       case SiteStatus.OFFLINE:
         return "Offline";
       case SiteStatus.PARTIALLY_DEGRADED:

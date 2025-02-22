@@ -10,9 +10,8 @@ on:
         description: "run identifier"
 
 jobs:
-  id:
+  deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: ${{github.event.inputs.id}}
         run: echo "ready"

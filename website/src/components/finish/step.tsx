@@ -1,4 +1,4 @@
-import { Component, Match, Switch } from "solid-js";
+import { Component, Match, Show, Switch } from "solid-js";
 import { ProvisioningStatus } from "../../types";
 
 const Step: Component<{ title: string; desc: string; children: any; status: ProvisioningStatus }> = (props) => {
@@ -31,8 +31,10 @@ const Step: Component<{ title: string; desc: string; children: any; status: Prov
             </Match>
         </Switch>
         <div class="ml-2">
-            <h3 class="font-medium leading-tight">{props.title}</h3>
-            <p class="text-sm">{props.desc}</p>
+            <h3 class={`font-medium leading-tight ${props.desc == "" ? "pt-2.5" : ""}`}>{props.title}</h3>
+            <Show when={props.desc != ""}>
+                <p class="text-sm">{props.desc}</p>
+            </Show>
         </div>
     </li>;
 };

@@ -1,5 +1,5 @@
 import { useParams } from "@solidjs/router";
-import { Component, createEffect, createMemo, createSignal, For, onMount } from "solid-js";
+import { Component, createEffect, createMemo, createSignal, For, onMount, Show } from "solid-js";
 import { decode } from "../state";
 import { githubKey, stripe_pk } from "../generated_app_info";
 import { loadStripe } from "@stripe/stripe-js";
@@ -9,6 +9,7 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { Octokit } from "@octokit/core";
 import { setTimeout } from "timers/promises";
 import { delay } from "../misc";
+import { getHtmlURLFromExistingJob, getJobAndURL, listenForEventCompletion, octokit } from "../components/finish/github_misc";
 
 const FinishPage: Component<{}> = (props) => {
   const [email, setEmail] = createSignal<string>("");
@@ -24,10 +25,7 @@ const FinishPage: Component<{}> = (props) => {
   const [githubMessages, setGithubMessages] = createSignal<string>("");
   const [gitHubJobID, setGitHubJobID] = createSignal<number>();
   const [endingMessages, setEndingMessages] = createSignal<string[]>([]);
-
-  const octokit = new Octokit({
-    auth: githubKey
-  })
+  const [htmlURL, setHtmlURL] = createSignal<string>("");
 
   function addStartingMessage(log: string) {
     const current = startingMessages();
@@ -49,20 +47,11 @@ const FinishPage: Component<{}> = (props) => {
 
   const logs = createMemo(() => {
     const ghMessages = githubMessages().split("\n").filter((val) => val.includes("dv-log:::"));
-    // if (ghMessages.includes("dv-log:::firebase-complete")) {
-    //   setCreateFirebase(ProvisioningStatus.SUCCEEDED);
-    // }
-    // if (ghMessages.includes("dv-log:::azure-complete")) {
-    //   setCreateAzure(ProvisioningStatus.SUCCEEDED);
-    // }
-    // if (ghMessages.includes("dv-log:::deploy-complete")) {
-    //   setCreateSite(ProvisioningStatus.SUCCEEDED);
-    // }
     return [...startingMessages(), ...ghMessages, ...endingMessages()];
   });
 
-
   // http://localhost:3000/finish/cmFqYW5zZDI4QGdtYWlsLmNvbTo6OnNldGlfMVF1cXYzTDZoemlERDc1Y3RCR1Z6RHRMX3NlY3JldF9Sb1RzWjl6UTAyUDlkTXVFRFRIRkVDWXN4ZFozRmxoOjo6U2I3VXVxam4xcm5nbHFxU1FQWkM=?setup_intent=seti_1Quqv3L6hziDD75ctBGVzDtL&setup_intent_client_secret=seti_1Quqv3L6hziDD75ctBGVzDtL_secret_RoTsZ9zQ02P9dMuEDTHFECYsxdZ3Flh&redirect_status=succeeded
+
   onMount(async () => {
     addStartingMessage("Validating Accounts...");
     // addLog("");
@@ -87,7 +76,7 @@ const FinishPage: Component<{}> = (props) => {
         }
 
         case "requires_payment_method": {
-          addStartingMessage("STRIPE: Failed to process payment details. Please try another payment method")
+          addStartingMessage("STRIPE: Failed to process payment details. Please go back and try another payment method")
           setValidatePayment(ProvisioningStatus.FAILED);
           // Redirect your user back to your payment page to attempt collecting
           // payment again
@@ -107,7 +96,9 @@ const FinishPage: Component<{}> = (props) => {
         addStartingMessage(`FIREBASE: Validated customer doc (${docIDthing()})`);
         const data = docSnap.data();
         setGitHubJobID(data["github_jobID"]);
+        setHtmlURL(data["github_html_url"]);
         setCreateAccount(ProvisioningStatus.SUCCEEDED);
+        startInstanceDeploy();
       } else {
         // docSnap.data() will be undefined in this case
         addStartingMessage(`FIREBASE: Could not find docment: ${docIDthing()}`);
@@ -116,121 +107,59 @@ const FinishPage: Component<{}> = (props) => {
     }
   });
 
-  createEffect(async () => {
+  async function startInstanceDeploy() {
     if (createAccount() == ProvisioningStatus.SUCCEEDED && createFirebase() != ProvisioningStatus.DEPLOYING) {
       setCreateFirebase(ProvisioningStatus.DEPLOYING);
+      setCreateAzure(ProvisioningStatus.DEPLOYING);
+      setCreateSite(ProvisioningStatus.DEPLOYING);
       if (gitHubJobID() == undefined) {
         addStartingMessage("Starting new runner...");
-        const randomUID = crypto.randomUUID();
-        await octokit.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
-          owner: 'rajanphadnis',
-          repo: 'psp-data-viewer',
-          workflow_id: 'create_instance.yml',
-          ref: 'main',
-          inputs: {
-            docID: docIDthing(),
-            id: randomUID,
-          },
-          headers: {
-            'X-GitHub-Api-Version': '2022-11-28'
-          }
-        });
-        let jobID = 0;
-        let count = 0;
-        while (jobID == 0 && count < 5) {
-          count += 1;
-          await delay(2000);
-          const send = await octokit.request('GET /repos/{owner}/{repo}/actions/runs', {
-            owner: 'rajanphadnis',
-            repo: 'psp-data-viewer',
-            event: 'workflow_dispatch',
-            headers: {
-              'X-GitHub-Api-Version': '2022-11-28'
-            }
-          });
-          const runs = send.data.workflow_runs.filter((run) => run.status != "completed");
-          console.log("filtered runs:");
-          console.log(runs);
-          if (runs.length > 0) {
-            runs.forEach(async (run) => {
-              const job = await octokit.request('GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs', {
-                owner: 'rajanphadnis',
-                repo: 'psp-data-viewer',
-                run_id: run.id,
-                headers: {
-                  'X-GitHub-Api-Version': '2022-11-28'
-                }
-              });
-              // console.log(job);
-              const filteredJobs = job.data.jobs.filter((job) => (job.steps != undefined && job.steps.length > 0));
-              console.log("filtered jobs:");
-              console.log(filteredJobs);
-              filteredJobs.forEach((job) => {
-                const stepNames = job.steps!.map((step) => step.name);
-                if (stepNames.includes(randomUID)) {
-                  jobID = job.id;
-                  return;
-                }
-              });
-            });
-          }
-        }
-
-        if (jobID == 0) {
-          console.log("failed to find dispatch event");
+        const results = await getJobAndURL(docIDthing());
+        if (results != undefined) {
+          setGitHubJobID(results.jobID);
+          setHtmlURL(results.html_url);
         }
         else {
-          console.log(jobID);
-          setGitHubJobID(jobID);
-          const docRef = doc(globalThis.db, "temp_accounts", docIDthing());
-          await updateDoc(docRef, {
-            github_jobID: jobID
-          });
-          for (let i = 0; i < 20; i++) {
-            console.log(i);
-            await delay(5000);
-            const req = await octokit.request('GET /repos/{owner}/{repo}/actions/jobs/{job_id}/logs', {
-              owner: 'rajanphadnis',
-              repo: 'psp-data-viewer',
-              job_id: jobID,
-              headers: {
-                'X-GitHub-Api-Version': '2022-11-28'
-              }
-            });
-            console.log(req.data);
-            // const dat = (req.data as string).split("\n").filter((val) => val.includes("dv-log:::"));
-            setGithubMessages(req.data as string);
-
-          }
+          addStartingMessage("Failed to launch interactive log viewer. Your deployment probably already started (to confirm, look for a deployment job on our repo's Actions tab)");
         }
-
       }
       else {
         addStartingMessage("Reading existing runner...");
-        const req = await octokit.request('GET /repos/{owner}/{repo}/actions/jobs/{job_id}/logs', {
-          owner: 'rajanphadnis',
-          repo: 'psp-data-viewer',
-          job_id: gitHubJobID()!,
-          headers: {
-            'X-GitHub-Api-Version': '2022-11-28'
-          }
-        });
-        setGithubMessages(req.data as string);
+        if (htmlURL() == "") {
+          const htmlURL = await getHtmlURLFromExistingJob(gitHubJobID()!);
+          setHtmlURL(htmlURL);
+        }
+      }
+      addStartingMessage(`Interactive viewer:`);
+      addStartingMessage(htmlURL());
+      addStartingMessage("Listening to provisioning runner...")
+      const jobResults = await listenForEventCompletion(gitHubJobID()!);
+      if (jobResults.firebase) {
+        setCreateFirebase(ProvisioningStatus.SUCCEEDED);
+        addStartingMessage("Database deploy succeeded");
+      }
+      else {
+        setCreateFirebase(ProvisioningStatus.FAILED);
+        addStartingMessage("Database deploy failed");
+      }
+      if (jobResults.azure) {
+        setCreateAzure(ProvisioningStatus.SUCCEEDED);
+        addStartingMessage("Azure deploy succeeded");
+      }
+      else {
+        setCreateAzure(ProvisioningStatus.FAILED);
+        addStartingMessage("Azure deploy failed");
+      }
+      if (jobResults.deploy) {
+        setCreateSite(ProvisioningStatus.SUCCEEDED);
+        addStartingMessage("Site deploy succeeded");
+      }
+      else {
+        setCreateSite(ProvisioningStatus.FAILED);
+        addStartingMessage("Site deploy failed");
       }
     }
-  });
-
-  createEffect(() => {
-    if (createFirebase() == ProvisioningStatus.SUCCEEDED) {
-      setCreateAzure(ProvisioningStatus.DEPLOYING);
-    }
-  });
-
-  createEffect(() => {
-    if (createAzure() == ProvisioningStatus.SUCCEEDED) {
-      setCreateSite(ProvisioningStatus.DEPLOYING);
-    }
-  });
+  };
 
   createEffect(() => {
     if (createSite() == ProvisioningStatus.SUCCEEDED) {
@@ -244,7 +173,8 @@ const FinishPage: Component<{}> = (props) => {
         <Stepper validatePayment={validatePayment} createAccount={createAccount} createAzure={createAzure} createFirebase={createFirebase} createSite={createSite} complete={complete} />
       </div>
       <div class="w-full h-full flex flex-col justify-start items-center px-24 pt-24">
-        <h1 class="text-xl font-bold mb-12">Deploying and Provisioning Instance:</h1>
+        <h1 class="text-xl font-bold mb-4">Deploying and Provisioning Instance:</h1>
+        <p class="mb-12">You can close this page without interrupting the provisioning process</p>
         <div class="w-1/2 max-md:w-full h-full max-h-full overflow-auto text-start">
           <For each={logs()}>
             {(log, i) => {

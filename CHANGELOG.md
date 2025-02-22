@@ -1,3 +1,9 @@
+## v0.8.5
+finished initial website minus actual provisioing script
+
+### Changed
+- bug fixes
+
 ## v0.8.4
 finished website structure
 
