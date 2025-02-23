@@ -1,3 +1,9 @@
+## v0.8.7
+updated to support firestore-less fxn calls
+
+### Changed
+- bug fixes
+
 ## v0.8.6
 converting to livemode
 
