@@ -9,7 +9,7 @@ from azure.cli.core import get_default_cli
 
 
 class optionsThing:
-    cors_origins = ["http://localhost:3000"]
+    cors_origins = ["https://admin.dataviewer.space"]
 
 
 @https_fn.on_call(cors=optionsThing)

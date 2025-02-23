@@ -8,6 +8,9 @@ on:
       id:
         required: false
         description: "run identifier"
+permissions:
+  actions: write
+  contents: write
 
 jobs:
   deploy:
@@ -23,3 +26,6 @@ jobs:
         run: echo '${{ secrets.GOOGLECLOUDSA_GITHUBACCESS }}' > ./build_tools/GoogleCloudSA_GitHubAccess.json
       - name: Run Script
         run: bun install && bun run ts ${{ github.event.inputs.docID }}
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: New Instance Provisioned

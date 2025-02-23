@@ -1,27 +1,56 @@
+import minimist from "minimist";
 import { writeFileSync } from "fs";
 import { dump } from "js-yaml";
-import { createInterface } from "readline/promises";
+import { exit } from "process";
+import { initializeApp } from "firebase-admin";
+import { cert } from "firebase-admin/app";
+import { getFirestore } from "firebase-admin/firestore";
 
-async function main() {
-  const slug = "tamu";
-  const name = "Texas A&M REDS";
-  const short_name = "REDS";
-  const country = "US";
-  const zipCode = "92069";
-  const email = "rajansd28@gmail.com";
+const docID: string = minimist(process.argv.slice(2))["_"][0] ?? "";
 
-  const rl = createInterface({
-    input: process.stdin,
-    output: process.stdout,
+if (docID == "") {
+  console.log("dv-log:::Missing document ID");
+  exit(1);
+}
+
+async function main(docID: string) {
+  console.log(`id: "${docID}"`);
+  const serviceAccount = require("../GoogleCloudSA_GitHubAccess.json");
+  initializeApp({
+    credential: cert(serviceAccount),
   });
 
-  const answer = await rl.question(`Initialize for ${name}(${slug}) [y/n] `);
-  if (answer == "y") {
+  const db = getFirestore();
+
+  const cityRef = db.collection("temp_accounts").doc(docID);
+  const doc = await cityRef.get();
+  if (!doc.exists) {
+    console.log("dv-log:::Couldn't find temporary account info!");
+    exit(1);
+  } else {
+    console.log("dv-log:::Reading Account Info...");
+    console.log("Document data:", doc.data());
+    const data = doc.data()!;
+    const slug = data["slug"];
+    const name = data["orgName"];
+    const short_name = data["orgNameShort"];
+    const country = "US";
+    const zipCode = data["zipCode"];
+    const email = data["email"];
+    console.log(`dv-log:::Slug: ${slug}`);
+    console.log(`dv-log:::name: ${name}`);
+    console.log(`dv-log:::short_name: ${short_name}`);
+    console.log(`dv-log:::country: ${country}`);
+    console.log(`dv-log:::zipCode: ${zipCode}`);
+    console.log(`dv-log:::email: ${email}`);
+
+    console.log("Creating database and hosting site...");
     const dbSetup = await fetch(`https://createnewdatabase-apichvaima-uc.a.run.app/?slug=${slug}`, {
       method: "GET",
     });
+    console.log("dbSetup:");
     console.log(await dbSetup.json());
-
+    console.log("Creating Stripe and other Firebase resources...");
     const stripeResources = await fetch("https://createstripeandfirebaseresources-apichvaima-uc.a.run.app", {
       method: "POST",
       body: JSON.stringify({ slug: slug, name: name, country: country, zipCode: zipCode, email: email }),
@@ -29,17 +58,24 @@ async function main() {
     });
     const stripeResult = await stripeResources.json();
     const customerID = stripeResult["result"]["customer"];
+    console.log("Stripe Resources:");
+    console.log(stripeResources);
+    console.log("Stripe Result:");
     console.log(stripeResult);
+    console.log("Customer ID:");
     console.log(customerID);
-
+    console.log("dv-log:::firebase-complete");
+    console.log("Creating Azure resources...");
     const azureResources = await fetch(`https://createazureresources-apichvaima-uc.a.run.app?slug=${slug}`, {
       method: "GET",
     });
     const azureResponse = await azureResources.json();
+    console.log("Azure Response:");
     console.log(azureResponse);
-    // need to extract api url from here
+    // TODO: need to extract api url from here
+    console.log("dv-log:::azure-complete");
 
-    const data = {
+    const dataYAML = {
       azure: {
         function_app_name: `dataviewer-serverless-function-${slug}`,
         resource_group: `dataviewer-rg-${slug}`,
@@ -82,12 +118,10 @@ async function main() {
         customerID: customerID,
       },
     };
-
-    const yamlString = "---\n" + dump(data);
+    const yamlString = "---\n" + dump(dataYAML);
     writeFileSync(`./customer_configs/${slug}.yml`, yamlString);
-  } else {
-    console.log("Exiting...");
+    console.log("dv-log:::deploy-complete");
   }
 }
 
-main();
+main(docID);

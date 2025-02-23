@@ -42,6 +42,7 @@ const StartPage: Component<{}> = (props) => {
       toReturn.slug = "Missing slug";
       failed = true;
     }
+    // TODO: add check against known/current slugs here
     if (pageTitle() == "") {
       toReturn.title = "Missing page title";
       failed = true;
