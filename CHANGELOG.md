@@ -1,3 +1,9 @@
+## v0.8.8
+ready for first trial with production and live services
+
+### Changed
+- bug fixes
+
 ## v0.8.7
 updated to support firestore-less fxn calls
 
