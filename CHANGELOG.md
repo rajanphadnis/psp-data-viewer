@@ -1,3 +1,9 @@
+## v0.8.6
+converting to livemode
+
+### Changed
+- bug fixes
+
 ## v0.8.5
 finished initial website minus actual provisioing script
 
