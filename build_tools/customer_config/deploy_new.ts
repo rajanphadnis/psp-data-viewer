@@ -2,8 +2,7 @@ import minimist from "minimist";
 import { writeFileSync } from "fs";
 import { dump } from "js-yaml";
 import { exit } from "process";
-import { initializeApp } from "firebase-admin";
-import { cert } from "firebase-admin/app";
+import { cert, initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 
 const docID: string = minimist(process.argv.slice(2))["_"][0] ?? "";
