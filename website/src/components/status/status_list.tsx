@@ -22,7 +22,7 @@ const StatusList: Component<{}> = (props) => {
         });
       });
 
-      console.log(data);
+      console.debug(data);
     });
     setStatuses(listOfStatuses);
   });

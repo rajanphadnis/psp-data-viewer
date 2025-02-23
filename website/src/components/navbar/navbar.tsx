@@ -18,7 +18,7 @@ const NavBar: Component<{ featuresDiv?: HTMLDivElement }> = (props) => {
       setOverallStatus(stringToSiteStatus(data["overview"]["status"]));
     } else {
       // docSnap.data() will be undefined in this case
-      console.log("No such document!");
+      console.error("No such document!");
       setOverallStatus(SiteStatus.UNKNOWN);
     }
   });

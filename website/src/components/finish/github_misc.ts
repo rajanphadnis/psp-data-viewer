@@ -38,8 +38,8 @@ export async function getJobAndURL(docID: string) {
       },
     });
     const runs = send.data.workflow_runs.filter((run) => run.status != "completed");
-    console.log("filtered runs:");
-    console.log(runs);
+    console.debug("filtered runs:");
+    console.debug(runs);
     if (runs.length > 0) {
       runs.forEach(async (run) => {
         const job = await octokit.request("GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs", {
@@ -51,8 +51,8 @@ export async function getJobAndURL(docID: string) {
           },
         });
         const filteredJobs = job.data.jobs.filter((job) => job.steps != undefined && job.steps.length > 0);
-        console.log("filtered jobs:");
-        console.log(filteredJobs);
+        console.debug("filtered jobs:");
+        console.debug(filteredJobs);
         filteredJobs.forEach((job) => {
           const stepNames = job.steps!.map((step) => step.name);
           if (stepNames.includes(randomUID)) {
@@ -73,7 +73,7 @@ export async function getJobAndURL(docID: string) {
   if (html_url == "") {
     html_url = constructGithubHtmlURL(jobID, runID);
   }
-  console.log(jobID);
+  console.debug(jobID);
   const docRef = doc(globalThis.db, "temp_accounts", docID);
   await updateDoc(docRef, {
     github_jobID: jobID,
@@ -84,7 +84,7 @@ export async function getJobAndURL(docID: string) {
     html_url: html_url,
   };
   // for (let i = 0; i < 20; i++) {
-  //   console.log(i);
+  //   console.debug(i);
   //   await delay(5000);
   //   const req = await octokit.request('GET /repos/{owner}/{repo}/actions/jobs/{job_id}/logs', {
   //     owner: 'rajanphadnis',
@@ -94,7 +94,7 @@ export async function getJobAndURL(docID: string) {
   //       'X-GitHub-Api-Version': '2022-11-28'
   //     }
   //   });
-  //   console.log(req.data);
+  //   console.debug(req.data);
   //   // const dat = (req.data as string).split("\n").filter((val) => val.includes("dv-log:::"));
   //   setGithubMessages(req.data as string);
 
@@ -122,7 +122,7 @@ export async function listenForEventCompletion(jobID: number) {
   var totalJobStatus = "";
   while (totalJobStatus == "") {
     await delay(5000);
-    console.debug(`Pinging for job status update. Current status: "${totalJobStatus}"`);
+    console.log(`Pinging for job status update. Current status: "${totalJobStatus}"`);
     const job = await octokit.request("GET /repos/{owner}/{repo}/actions/jobs/{job_id}", {
       owner: "rajanphadnis",
       repo: "psp-data-viewer",
@@ -133,7 +133,7 @@ export async function listenForEventCompletion(jobID: number) {
     });
     const jobStatus = job.data.conclusion;
     if (jobStatus != null) {
-      console.log(`Job status updated: ${jobStatus}`);
+      console.debug(`Job status updated: ${jobStatus}`);
       totalJobStatus = jobStatus;
     }
   }
@@ -153,7 +153,7 @@ export async function listenForEventCompletion(jobID: number) {
         "X-GitHub-Api-Version": "2022-11-28",
       },
     });
-    console.log(req.data);
+    console.debug(req.data);
     const lines = (req.data as string).split("\n").filter((val) => val.includes("dv-log:::"));
     let toReturn = {
       firebase: false,

@@ -6,29 +6,51 @@ import { useSearchParams } from "@solidjs/router";
 import { encode } from "../../../state";
 import { formatName } from "../../../misc";
 
-const GetStartedButton: Component<{}> = (props) => {
+const GetStartedButton: Component<{}> = () => {
   const [firstName, setFirstName] = createSignal<string>("");
   const [lastName, setLastName] = createSignal<string>("");
   const [email, setEmail] = createSignal<string>("");
   const [orgName, setOrgName] = createSignal<string>("");
-  const [orgNameShort, setOrgNameShort] = createSignal<string>("");
-  const [slug, setSlug] = createSignal<string>("");
-  const [pageTitle, setPageTitle] = createSignal<string>("");
-  const [themeColors, setThemeColors] = createSignal<{
-    accent: string;
-    background: string;
-    background_light: string;
-    primary: string;
-    primary_dark: string;
-  }>({
-    accent: "#8e6f3e",
-    background: "#1D1D1D",
-    background_light: "#6f727b",
-    primary: "#ddb945",
-    primary_dark: "#daaa00",
-  });
-  const [searchParams, setSearchParams] = useSearchParams();
   const [zipCode, setZipCode] = createSignal<string>("");
+
+  function validateInputs(): (boolean | { first: string, last: string, email: string, org: string, zipCode: string }) {
+    let toReturn = { first: "", last: "", email: "", org: "", zipCode: "" };
+    let failed = false;
+    if (firstName() == "") {
+      toReturn.first = "Missing first name";
+      failed = true;
+    }
+    if (lastName() == "") {
+      toReturn.last = "Missing last name";
+      failed = true;
+    }
+    if (!validateEmail(email())) {
+      toReturn.email = "Email is not formatted properly";
+      failed = true;
+    }
+    if (email() == "") {
+      toReturn.email = "Missing email";
+      failed = true;
+    }
+    if (orgName() == "") {
+      toReturn.org = "Missing organization name";
+      failed = true;
+    }
+    if (zipCode() == "") {
+      toReturn.zipCode = "Missing zip code";
+      failed = true;
+    }
+    if (!validateZipCode(zipCode())) {
+      toReturn.zipCode = "Zip Code not formatted properly";
+      failed = true;
+    }
+    if (failed) {
+      return toReturn;
+    }
+    else {
+      return true;
+    }
+  }
 
   return (
     <Dialog>
@@ -88,12 +110,35 @@ const GetStartedButton: Component<{}> = (props) => {
             <button
               class="rounded-md bg-amber-400 px-3 py-2 text-black cursor-pointer"
               onclick={() => {
-                const b64 = encode(
-                  `${formatName(firstName())}:::${formatName(lastName())}:::${email()}:::${formatName(
-                    orgName()
-                  )}:::${zipCode()}`
-                );
-                window.location.pathname = `/start/${b64}`;
+                const validate = validateInputs();
+                if (validate == true || validate == false) {
+                  const b64 = encode(
+                    `${formatName(firstName())}:::${formatName(lastName())}:::${email()}:::${formatName(
+                      orgName()
+                    )}:::${zipCode()}`
+                  );
+                  window.location.pathname = `/start/${b64}`;
+                }
+                else {
+                  let val = "";
+                  if (validate.first != "") {
+                    val = `${val}\n${validate.first}`;
+                  }
+                  if (validate.last != "") {
+                    val = `${val}\n${validate.last}`;
+                  }
+                  if (validate.email != "") {
+                    val = `${val}\n${validate.email}`;
+                  }
+                  if (validate.zipCode != "") {
+                    val = `${val}\n${validate.zipCode}`;
+                  }
+                  if (validate.org != "") {
+                    val = `${val}\n${validate.org}`;
+                  }
+                  alert(`Correct these errors before continuing:\n${val}`);
+                }
+
               }}
             >
               Next

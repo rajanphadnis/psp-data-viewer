@@ -27,13 +27,38 @@ const StartPage: Component<{}> = (props) => {
   const [stripe, setStripe] = createSignal<Stripe>();
   const [loading, setLoading] = createSignal(false);
 
+  function validateInputs(): (boolean | { orgShort: string, slug: string, title: string }) {
+    let toReturn = { orgShort: "", slug: "", title: "" };
+    let failed = false;
+    if (orgNameShort() == "") {
+      toReturn.orgShort = "Missing Organization Name (Short)";
+      failed = true;
+    }
+    if (orgName().length <= orgNameShort().length) {
+      toReturn.orgShort = "Organization Name (Short) is too long";
+      failed = true;
+    }
+    if (slug() == "") {
+      toReturn.slug = "Missing slug";
+      failed = true;
+    }
+    if (pageTitle() == "") {
+      toReturn.title = "Missing page title";
+      failed = true;
+    }
+    if (failed) {
+      return toReturn;
+    }
+    else {
+      return true;
+    }
+  }
+
   onMount(async () => {
     const stripe = await loadStripe(stripe_pk);
     if (stripe) {
       setStripe(stripe);
       const params = window.location.pathname.slice(7);
-      console.log(params);
-      console.log(decode(params));
       const splitParams = decode(params).split(":::");
       setFirstName(splitParams[0]);
       setLastName(splitParams[1]);
@@ -89,7 +114,7 @@ const StartPage: Component<{}> = (props) => {
           validator={(s) => {
             const len1 = orgName().length;
             const len2 = s.length;
-            console.log(`${len1} vs ${len2}`);
+            console.debug(`${len1} vs ${len2}`);
             return len2 < len1 && validateName(s);
           }}
           inputRestrictor={validateName}
@@ -181,55 +206,71 @@ const StartPage: Component<{}> = (props) => {
             if (loading()) {
               return;
             } else {
-              setLoading(true);
-              const elem = elements()!;
-              const { error: submitError } = await elem.submit();
-              if (submitError) {
-                console.log(submitError);
-                return;
-              }
-              const fetchStripeInfo = httpsCallable(globalThis.functions, "createCustomerIntentAndCustomerSession");
-              fetchStripeInfo({
-                slug: slug(),
-                name: orgName(),
-                zipCode: zipCode(),
-                email: email(),
-              }).then(async (result) => {
-                const data: any = result.data;
-                const client_secret = data.client_secret;
-                const customer_id = data.customer_id;
-                console.log(data);
-                const docRef = await addDoc(collection(globalThis.db, "temp_accounts"), {
-                  firstName: firstName(),
-                  lastName: lastName(),
-                  email: email(),
-                  orgName: orgName(),
-                  orgNameShort: orgNameShort(),
-                  slug: slug(),
-                  pageTitle: pageTitle(),
-                  primaryColor: primaryColor(),
-                  primaryDarkColor: primaryDarkColor(),
-                  accentColor: accentColor(),
-                  backgroundColor: backgroundColor(),
-                  backgroundLightColor: backgroundLightColor(),
-                  zipCode: zipCode(),
-                  customerID: customer_id,
-                });
-                console.log(docRef.id);
-                const newB64 = encode(`${email()}:::${client_secret}:::${docRef.id}`);
-                const newURL = `${window.location.origin}/finish/${newB64}`;
-                const { error } = await stripe()!.confirmSetup({
-                  elements: elem,
-                  clientSecret: client_secret,
-                  confirmParams: {
-                    return_url: newURL,
-                  },
-                });
-                if (error) {
-                  console.error(error);
-                  setLoading(false);
+              const validate = validateInputs();
+              if (validate == true || validate == false) {
+                setLoading(true);
+                const elem = elements()!;
+                const { error: submitError } = await elem.submit();
+                if (submitError) {
+                  console.error(submitError);
+                  return;
                 }
-              });
+                const fetchStripeInfo = httpsCallable(globalThis.functions, "createCustomerIntentAndCustomerSession");
+                fetchStripeInfo({
+                  slug: slug(),
+                  name: orgName(),
+                  zipCode: zipCode(),
+                  email: email(),
+                }).then(async (result) => {
+                  const data: any = result.data;
+                  const client_secret = data.client_secret;
+                  const customer_id = data.customer_id;
+                  console.debug(data);
+                  const docRef = await addDoc(collection(globalThis.db, "temp_accounts"), {
+                    firstName: firstName(),
+                    lastName: lastName(),
+                    email: email(),
+                    orgName: orgName(),
+                    orgNameShort: orgNameShort(),
+                    slug: slug(),
+                    pageTitle: pageTitle(),
+                    primaryColor: primaryColor(),
+                    primaryDarkColor: primaryDarkColor(),
+                    accentColor: accentColor(),
+                    backgroundColor: backgroundColor(),
+                    backgroundLightColor: backgroundLightColor(),
+                    zipCode: zipCode(),
+                    customerID: customer_id,
+                  });
+                  console.debug(docRef.id);
+                  const newB64 = encode(`${email()}:::${client_secret}:::${docRef.id}`);
+                  const newURL = `${window.location.origin}/finish/${newB64}`;
+                  const { error } = await stripe()!.confirmSetup({
+                    elements: elem,
+                    clientSecret: client_secret,
+                    confirmParams: {
+                      return_url: newURL,
+                    },
+                  });
+                  if (error) {
+                    console.error(error);
+                    setLoading(false);
+                  }
+                });
+              }
+              else {
+                let val = "";
+                if (validate.orgShort != "") {
+                  val = `${val}\n${validate.orgShort}`;
+                }
+                if (validate.slug != "") {
+                  val = `${val}\n${validate.slug}`;
+                }
+                if (validate.title != "") {
+                  val = `${val}\n${validate.title}`;
+                }
+                alert(`Correct these errors before continuing:\n${val}`);
+              }
             }
           }}
         >
