@@ -1,3 +1,9 @@
+## v0.8.10
+added name formatting
+
+### Changed
+- bug fixes
+
 ## v0.8.9
 fixed prod deploy key issue
 

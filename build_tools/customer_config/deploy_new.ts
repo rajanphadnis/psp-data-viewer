@@ -36,6 +36,7 @@ async function main(docID: string) {
     const country = "US";
     const zipCode = data["zipCode"];
     const email = data["email"];
+    const customerID = data["customerID"];
     console.log(`dv-log:::Slug: ${slug}`);
     console.log(`dv-log:::name: ${name}`);
     console.log(`dv-log:::short_name: ${short_name}`);
@@ -55,12 +56,13 @@ async function main(docID: string) {
       body: JSON.stringify({ slug: slug, name: name, country: country, zipCode: zipCode, email: email }),
       headers: { "Content-Type": "application/json" },
     });
-    const stripeResult = await stripeResources.json();
-    const customerID = stripeResult["result"]["customer"];
+    console.log(stripeResources)
+    // const stripeResult = await stripeResources.json();
+    // const customerID = stripeResult["result"]["customer"];
     console.log("Stripe Resources:");
     console.log(stripeResources);
-    console.log("Stripe Result:");
-    console.log(stripeResult);
+    // console.log("Stripe Result:");
+    // console.log(stripeResult);
     console.log("Customer ID:");
     console.log(customerID);
     console.log("dv-log:::firebase-complete");

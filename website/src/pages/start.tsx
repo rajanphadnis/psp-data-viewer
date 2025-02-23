@@ -8,6 +8,7 @@ import { loadStripe, Stripe, StripeElements } from "@stripe/stripe-js";
 import { stripe_pk } from "../generated_app_info";
 import Popover from "@corvu/popover";
 import HelpIcon from "../components/icons/help";
+import { formatName } from "../misc";
 
 const StartPage: Component<{}> = (props) => {
   const [firstName, setFirstName] = createSignal<string>("");
@@ -233,9 +234,9 @@ const StartPage: Component<{}> = (props) => {
                     lastName: lastName(),
                     email: email(),
                     orgName: orgName(),
-                    orgNameShort: orgNameShort(),
+                    orgNameShort: formatName(orgNameShort()),
                     slug: slug(),
-                    pageTitle: pageTitle(),
+                    pageTitle: formatName(pageTitle()),
                     primaryColor: primaryColor(),
                     primaryDarkColor: primaryDarkColor(),
                     accentColor: accentColor(),
