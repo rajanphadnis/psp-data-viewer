@@ -25,7 +25,7 @@ jobs:
       - name: Create SA JSON
         run: echo '${{ secrets.GOOGLECLOUDSA_GITHUBACCESS }}' > ./build_tools/GoogleCloudSA_GitHubAccess.json
       - name: Run Script
-        run: bun install && bun run ts ${{ github.event.inputs.docID }}
+        run: bun install && bun run new-customer ${{ github.event.inputs.docID }}
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: New Instance Provisioned
