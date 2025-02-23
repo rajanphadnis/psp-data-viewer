@@ -33,4 +33,4 @@ urls:
   github_url: https://github.com/rajanphadnis/psp-data-viewer
   update_test_metadata_url: https://updatetestmetadata-w547ikcrwa-uc.a.run.app
 stripe:
-  customerID: cus_RpDQXKC0g36655
+  customerID: cus_RpDm48ZBBEbotq
