@@ -57,7 +57,7 @@ def createStripeAndFirebaseResources(req: https_fn.Request) -> https_fn.Response
     subscription = stripe.Subscription.create(
         customer=customerID,
         collection_method="charge_automatically",
-        items=[{"price": "price_1QljEnL6hziDD75cG8eOInvb"}],
+        items=[{"price": "price_1QvVZ7L6hziDD75ckYB4vBpB"}],
         payment_settings={"save_default_payment_method": "on_subscription"},
         automatic_tax={"enabled": True},
     )
@@ -112,10 +112,10 @@ def createAzureResources(req: https_fn.Request) -> https_fn.Response:
         return https_fn.Response(
             json.dumps({"status": "'slug' is a required argument"}), status=400
         )
-    if customerID is None:
-        return https_fn.Response(
-            json.dumps({"status": "'cusid' is a required argument"}), status=400
-        )
+    # if customerID is None:
+    #     return https_fn.Response(
+    #         json.dumps({"status": "'cusid' is a required argument"}), status=400
+    #     )
     if stripeKey is None:
         return https_fn.Response(
             json.dumps({"status": "Stripe API key not set"}), status=400
