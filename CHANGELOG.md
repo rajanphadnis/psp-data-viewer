@@ -1,3 +1,9 @@
+## v0.8.9
+fixed prod deploy key issue
+
+### Changed
+- bug fixes
+
 ## v0.8.8
 ready for first trial with production and live services
 

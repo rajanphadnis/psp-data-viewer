@@ -26,7 +26,7 @@ export function initFirebase() {
   });
 
   globalThis.functions = getFunctions(app);
-  if (appKey != "false") {
+  if (appKey == "false") {
     console.log("in debug mode");
     // connectFunctionsEmulator(functions, "127.0.0.1", 5001);
   }

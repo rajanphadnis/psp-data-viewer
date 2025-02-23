@@ -44,13 +44,13 @@ Formatting: [local secret name]:[dotenv secret name]
 
 - APP_CHECK_KEY:APP_CHECK_KEY
 
-./webapp_v2/.env.dev
+./website/.env.dev
 
 - APP_CHECK_KEY:APP_CHECK_KEY
 - STRIPE_PK:STRIPE_PUBLISHABLE_KEY
 - GITHUB_WORKFLOW_KEY:GITHUB_INIT_WORKFLOW_KEY_WEBSITE
 
-./webapp_v2/.env.prod.publish
+./website/.env.prod.publish
 
 - APP_CHECK_KEY:APP_CHECK_KEY
 - STRIPE_PK:STRIPE_PUBLISHABLE_KEY
