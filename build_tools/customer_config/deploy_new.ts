@@ -45,7 +45,7 @@ async function main(docID: string) {
     console.log(`dv-log:::email: ${email}`);
 
     console.log("Creating database and hosting site...");
-    const dbSetup = await fetch(`https://createnewdatabase-apichvaima-uc.a.run.app/?slug=${slug}`, {
+    const dbSetup = await fetch(`https://createnewdatabase-apichvaima-uc.a.run.app/?slug=${slug}&cusid=${customerID}`, {
       method: "GET",
     });
     console.log("dbSetup:");

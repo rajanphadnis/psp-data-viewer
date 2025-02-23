@@ -105,29 +105,34 @@ def createStripeAndFirebaseResources(req: https_fn.Request) -> https_fn.Response
 )
 def createAzureResources(req: https_fn.Request) -> https_fn.Response:
     slug = req.args["slug"] if "slug" in req.args else None
+    customerID = req.args["cusid"] if "cusid" in req.args else None
     stripeKey = os.environ.get("STRIPE_TEST")
 
     if slug is None:
         return https_fn.Response(
             json.dumps({"status": "'slug' is a required argument"}), status=400
         )
+    if customerID is None:
+        return https_fn.Response(
+            json.dumps({"status": "'cusid' is a required argument"}), status=400
+        )
     if stripeKey is None:
         return https_fn.Response(
             json.dumps({"status": "Stripe API key not set"}), status=400
         )
 
-    db = firestore.client()
-    firestore_query = db.collection("accounts").where(
-        filter=FieldFilter("slug", "==", slug)
-    )
-    docs = firestore_query.stream()
-    for doc in docs:
-        customerID = doc.to_dict()["stripe_customer_id"]
+    # db = firestore.client()
+    # firestore_query = db.collection("accounts").where(
+    #     filter=FieldFilter("slug", "==", slug)
+    # )
+    # docs = firestore_query.stream()
+    # for doc in docs:
+    #     customerID = doc.to_dict()["stripe_customer_id"]
 
-    if customerID is None:
-        return https_fn.Response(
-            json.dumps({"status": "'stripe_customer_id' not set"}), status=400
-        )
+    # if customerID is None:
+    #     return https_fn.Response(
+    #         json.dumps({"status": "'stripe_customer_id' not set"}), status=400
+    #     )
 
     location = "eastus"
     resourceGroup = f"dataviewer-rg-{slug}"
