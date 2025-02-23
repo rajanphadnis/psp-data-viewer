@@ -9,6 +9,9 @@ param slug string
 @maxLength(18)
 @description('Provide the Stripe-generated customer ID to attach the generated resources to')
 param customerID string
+
+@description('Stripe API Key')
+param stripeKey string
 param location string = 'eastus'
 param resourceGroupName string = 'dataviewer-rg-${slug}'
 
@@ -23,5 +26,6 @@ module resources 'resources.bicep' = {
   params: {
     slug: slug
     customerID: customerID
+    stripeKey: stripeKey
   }
 }

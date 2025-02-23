@@ -1,3 +1,9 @@
+## v0.8.11
+updated deploy zip name
+
+### Changed
+- bug fixes
+
 ## v0.8.10
 added name formatting
 

@@ -1,5 +1,6 @@
 param slug string
 param customerID string
+param stripeKey string
 param location string = 'eastus'
 param functionAppName string = 'dataviewer-serverless-function-${slug}'
 param storageSKU string = 'Standard_LRS'
@@ -43,7 +44,6 @@ resource storageaccount 'Microsoft.Storage/storageAccounts@2021-02-01' = {
 }
 
 resource flexFuncPlan 'Microsoft.Web/serverfarms@2024-04-01' = {
-  dependsOn: storageaccount
   name: functionAppName
   location: location
   kind: 'functionapp'
@@ -65,11 +65,23 @@ resource flexFuncApp 'Microsoft.Web/sites@2024-04-01' = {
   }
   properties: {
     serverFarmId: flexFuncPlan.id
+
     siteConfig: {
+      cors: {
+        allowedOrigins: ['*']
+      }
       appSettings: [
         {
           name: 'AzureWebJobsStorage__accountName'
           value: storageaccount.name
+        }
+        {
+          name: 'STRIPE_API_KEY'
+          value: stripeKey
+        }
+        {
+          name: 'STRIPE_CUSTOMER_ID'
+          value: customerID
         }
       ]
     }
@@ -95,13 +107,12 @@ resource flexFuncApp 'Microsoft.Web/sites@2024-04-01' = {
   }
 }
 
-
-resource functionAppName_OneDeploy 'Microsoft.Web/sites/extensions@2022-09-01' = {
+resource fxnOneDeploy 'Microsoft.Web/sites/extensions@2022-09-01' = {
   parent: flexFuncApp
   name: 'onedeploy'
   location: location
   properties: {
-    packageUri: 
-    remoteBuild: false 
+    packageUri: 'https://dataviewer.space/released-package.zip'
+    remoteBuild: false
   }
 }
