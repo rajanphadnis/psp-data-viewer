@@ -38,8 +38,7 @@ const NextInvoice: Component<{}> = (props) => {
     onAuthStateChanged(getAuth(), (user) => {
       if (user) {
         fetch(
-          `https://getstorageusage-apichvaima-uc.a.run.app/?name=${
-            (config as any)[org()!]["azure"]["share_name"] as string
+          `https://getstorageusage-apichvaima-uc.a.run.app/?name=${(config as any)[org()!]["azure"]["share_name"] as string
           }&acct=${(config as any)[org()!]["azure"]["storage_account"] as string}`
         )
           .then(async (response) => {
@@ -53,7 +52,7 @@ const NextInvoice: Component<{}> = (props) => {
             console.log(`Error fetching storage usage: ${e}`);
           });
         const getUsage = httpsCallable(globalThis.functions, "fetchNextInvoice");
-        getUsage().then((result) => {
+        getUsage({ stripe_customer_id: (config as any)[org()!].stripe.customerID }).then((result) => {
           /** @type {any} */
           const data: any = result.data;
           console.log("got next invoice");

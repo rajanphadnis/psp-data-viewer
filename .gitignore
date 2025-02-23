@@ -64,3 +64,4 @@ formatter/dataviewer.exe
 website/src/generated_app_info.ts
 website/.env.**
 build_tools/GoogleCloudSA_GitHubAccess.json
+functions/src/__pycache__/**

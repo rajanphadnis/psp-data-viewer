@@ -5,9 +5,28 @@ import { Component, createEffect, createSignal, onMount, Show } from "solid-js";
 import { BillingData } from "../../types";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import moment from "moment";
+import { config } from "../../generated_app_check_secret";
+import { useState } from "../../state";
 
 const BillingUsagePlot: Component<{}> = (props) => {
   const [data, setData] = createSignal<BillingData[]>();
+
+  const [
+      allKnownTests,
+      setAllKnownTests,
+      loadingState,
+      setLoadingState,
+      defaultTest,
+      setDefaultTest,
+      defaultGSE,
+      setDefaultGSE,
+      defaultTestArticle,
+      setDefaultTestArticle,
+      auth,
+      setAuth,
+      org,
+      setOrg,
+    ] = useState();
   // const [derivativeData, setDerivativeData] = createSignal<BillingData[]>([] as BillingData[]);
   onMount(() => {
     Chart.register(Title, Tooltip, Legend, Colors);
@@ -17,7 +36,7 @@ const BillingUsagePlot: Component<{}> = (props) => {
     onAuthStateChanged(getAuth(), (user) => {
       if (user) {
         const getUsage = httpsCallable(globalThis.functions, "fetchMeterUsage");
-        getUsage().then((result) => {
+        getUsage({ stripe_customer_id: (config as any)[org()!].stripe.customerID }).then((result) => {
           /** @type {any} */
           const data: any = result.data;
           console.log(data);
