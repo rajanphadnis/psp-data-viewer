@@ -53,7 +53,7 @@ async function main(docID: string) {
     console.log("Creating Stripe and other Firebase resources...");
     const stripeResources = await fetch("https://createstripeandfirebaseresources-apichvaima-uc.a.run.app", {
       method: "POST",
-      body: JSON.stringify({ slug: slug, name: name, country: country, zipCode: zipCode, email: email }),
+      body: JSON.stringify({ slug: slug, name: name, customerID: customerID, zipCode: zipCode, email: email }),
       headers: { "Content-Type": "application/json" },
     });
     console.log(stripeResources)
@@ -70,9 +70,9 @@ async function main(docID: string) {
     const azureResources = await fetch(`https://createazureresources-apichvaima-uc.a.run.app?slug=${slug}`, {
       method: "GET",
     });
-    const azureResponse = await azureResources.json();
+    // const azureResponse = await azureResources.json();
     console.log("Azure Response:");
-    console.log(azureResponse);
+    console.log(azureResources);
     // TODO: need to extract api url from here
     console.log("dv-log:::azure-complete");
 
