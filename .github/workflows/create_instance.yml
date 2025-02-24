@@ -50,6 +50,7 @@ jobs:
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         scope: "subscription"
+        region: "eastus"
         template: ./build_tools/customer_config/deploy_bicep/main.bicep
         parameters: 'slug=${{github.event.inputs.slug}} customerID=${{github.event.inputs.cusID}} stripeKey=${{ secrets.STRIPE_SECRET_KEY }}'
         failOnStdErr: false
