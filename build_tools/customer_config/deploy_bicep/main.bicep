@@ -13,7 +13,7 @@ param customerID string
 @description('Stripe API Key')
 param stripeKey string
 param location string = 'eastus'
-param resourceGroupName string = 'dataviewer-rg-${slug}'
+param resourceGroupName string = 'dataviewerrg${slug}'
 
 resource resourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   name: resourceGroupName

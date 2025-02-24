@@ -7,7 +7,7 @@ export const octokit = new Octokit({
   auth: githubKey,
 });
 
-export async function getJobAndURL(docID: string) {
+export async function getJobAndURL(docID: string, slug: string, customerID: string) {
   const randomUID = crypto.randomUUID();
   await octokit.request("POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches", {
     owner: "rajanphadnis",
@@ -17,6 +17,8 @@ export async function getJobAndURL(docID: string) {
     inputs: {
       docID: docID,
       id: randomUID,
+      slug: slug,
+      cusID: customerID,
     },
     headers: {
       "X-GitHub-Api-Version": "2022-11-28",

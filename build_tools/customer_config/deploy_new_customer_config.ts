@@ -37,44 +37,13 @@ async function main(docID: string) {
     const zipCode = data["zipCode"];
     const email = data["email"];
     const customerID = data["customerID"];
-    console.log(`dv-log:::Slug: ${slug}`);
+    console.log(`dv-log:::slug: ${slug}`);
     console.log(`dv-log:::name: ${name}`);
     console.log(`dv-log:::short_name: ${short_name}`);
     console.log(`dv-log:::country: ${country}`);
     console.log(`dv-log:::zipCode: ${zipCode}`);
     console.log(`dv-log:::email: ${email}`);
-
-    console.log("Creating database and hosting site...");
-    const dbSetup = await fetch(`https://createnewdatabase-apichvaima-uc.a.run.app/?slug=${slug}&cusid=${customerID}`, {
-      method: "GET",
-    });
-    console.log("dbSetup:");
-    console.log(await dbSetup.json());
-    console.log("Creating Stripe and other Firebase resources...");
-    const stripeResources = await fetch("https://createstripeandfirebaseresources-apichvaima-uc.a.run.app", {
-      method: "POST",
-      body: JSON.stringify({ slug: slug, name: name, customerID: customerID, zipCode: zipCode, email: email }),
-      headers: { "Content-Type": "application/json" },
-    });
-    console.log(stripeResources)
-    // const stripeResult = await stripeResources.json();
-    // const customerID = stripeResult["result"]["customer"];
-    console.log("Stripe Resources:");
-    console.log(stripeResources);
-    // console.log("Stripe Result:");
-    // console.log(stripeResult);
-    console.log("Customer ID:");
-    console.log(customerID);
-    console.log("dv-log:::firebase-complete");
-    console.log("Creating Azure resources...");
-    const azureResources = await fetch(`https://createazureresources-apichvaima-uc.a.run.app?slug=${slug}`, {
-      method: "GET",
-    });
-    // const azureResponse = await azureResources.json();
-    console.log("Azure Response:");
-    console.log(azureResources);
-    // TODO: need to extract api url from here
-    console.log("dv-log:::azure-complete");
+    console.log(`dv-log:::customer ID: ${customerID}`);
 
     const dataYAML = {
       azure: {
@@ -110,10 +79,10 @@ async function main(docID: string) {
       },
       urls: {
         admin_dashboard_url: "https://admin.dataviewer.space",
-        api_base_url: "https://psp-api.rajanphadnis.com", // to update
+        api_base_url: `https://dataviewer-api-${slug}.azurewebsites.net`,
         docs_url: "https://docs.dataviewer.space",
         github_url: "https://github.com/rajanphadnis/psp-data-viewer",
-        update_test_metadata_url: "https://updatetestmetadata-w547ikcrwa-uc.a.run.app", //need to update?
+        update_test_metadata_url: "https://updatetestmetadata-w547ikcrwa-uc.a.run.app", //TODO: need to update?
       },
       stripe: {
         customerID: customerID,

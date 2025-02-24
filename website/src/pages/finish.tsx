@@ -18,7 +18,8 @@ const FinishPage: Component<{}> = (props) => {
   const [createAzure, setCreateAzure] = createSignal(ProvisioningStatus.PENDING);
   const [createSite, setCreateSite] = createSignal(ProvisioningStatus.PENDING);
   const [complete, setComplete] = createSignal(ProvisioningStatus.PENDING);
-
+  const [slug, setSlug] = createSignal<string>("");
+  const [customerID, setCustomerID] = createSignal<string>("");
   const [startingMessages, setStartingMessages] = createSignal<string[]>([]);
   const [docIDthing, setDocID] = createSignal<string>("");
   const [githubMessages, setGithubMessages] = createSignal<string>("");
@@ -96,6 +97,8 @@ const FinishPage: Component<{}> = (props) => {
         const data = docSnap.data();
         setGitHubJobID(data["github_jobID"]);
         setHtmlURL(data["github_html_url"]);
+        setSlug(data["slug"])
+        setCustomerID(data["customerID"]);
         setCreateAccount(ProvisioningStatus.SUCCEEDED);
         startInstanceDeploy();
       } else {
@@ -113,7 +116,7 @@ const FinishPage: Component<{}> = (props) => {
       setCreateSite(ProvisioningStatus.DEPLOYING);
       if (gitHubJobID() == undefined) {
         addStartingMessage("Starting new runner...");
-        const results = await getJobAndURL(docIDthing());
+        const results = await getJobAndURL(docIDthing(), slug(), customerID());
         if (results != undefined) {
           setGitHubJobID(results.jobID);
           setHtmlURL(results.html_url);

@@ -19,9 +19,9 @@
     "config_check": "cd customer_configs && vitest",
     "domain": "cd customer_configs/domain_connect && bun run index.ts",
     "zip-azure": "bun --env-file=./build_tools/.env ./build_tools/zip_azure.ts",
-    "new-customer": "bun run ./build_tools/customer_config/deploy_new.ts",
-    "formatter": "cd build_tools/ && ./formatter.bat",
-    "ts": "bun run ./build_tools/customer_config/TEST_deploy_new.ts"
+    "new-customer-firebase-stripe": "bun run ./build_tools/customer_config/deploy_new_firebase_stripe.ts",
+    "new-customer-config": "bun run ./build_tools/customer_config/deploy_new_customer_config.ts",
+    "formatter": "cd build_tools/ && ./formatter.bat"
   },
   "devDependencies": {
     "@types/archiver": "^6.0.3",
