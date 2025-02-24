@@ -1,3 +1,9 @@
+## v0.8.12
+re-architected to use bicep for provisioning
+
+### Changed
+- bug fixes
+
 ## v0.8.11
 updated deploy zip name
 

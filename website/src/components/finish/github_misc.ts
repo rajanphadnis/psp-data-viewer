@@ -59,7 +59,7 @@ export async function getJobAndURL(docID: string, slug: string, customerID: stri
           const stepNames = job.steps!.map((step) => step.name);
           if (stepNames.includes(randomUID)) {
             jobID = job.id;
-            html_url = job.html_url!;
+            // html_url = job.html_url!;
             runID = job.run_id;
             return;
           }
@@ -117,7 +117,7 @@ export async function getHtmlURLFromExistingJob(jobID: number) {
 }
 
 export function constructGithubHtmlURL(jobID: number, runID: number) {
-  return `https://github.com/rajanphadnis/psp-data-viewer/actions/runs/${runID}/job/${jobID}`;
+  return `https://github.com/rajanphadnis/psp-data-viewer/actions/runs/${runID}`;
 }
 
 export async function listenForEventCompletion(jobID: number) {
