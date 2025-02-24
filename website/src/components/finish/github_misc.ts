@@ -112,8 +112,7 @@ export async function getHtmlURLFromExistingJob(jobID: number) {
       "X-GitHub-Api-Version": "2022-11-28",
     },
   });
-  return job.data.html_url!;
-  //   setHtmlURL(job.data.html_url!);
+  return constructGithubHtmlURL(job.data.id, job.data.run_id);
 }
 
 export function constructGithubHtmlURL(jobID: number, runID: number) {
