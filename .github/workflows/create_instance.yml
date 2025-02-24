@@ -32,9 +32,6 @@ jobs:
         run: echo '${{ secrets.GOOGLECLOUDSA_GITHUBACCESS }}' > ./build_tools/GoogleCloudSA_GitHubAccess.json
       - name: Run Script
         run: bun install && bun run new-customer-firebase-stripe ${{ github.event.inputs.docID }}
-      - uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: New Instance Provisioned
 
   azure:
     runs-on: ubuntu-latest
@@ -59,11 +56,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: [firebaseAndStripe, azure]
     steps:
+      - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
         with:
           bun-version: latest
-      # - name: Create SA JSON
-      #   run: echo '${{ secrets.GOOGLECLOUDSA_GITHUBACCESS }}' > ./build_tools/GoogleCloudSA_GitHubAccess.json
+      - name: Create SA JSON
+        run: echo '${{ secrets.GOOGLECLOUDSA_GITHUBACCESS }}' > ./build_tools/GoogleCloudSA_GitHubAccess.json
       - name: Run Script
         run: bun install && bun run new-customer-config ${{ github.event.inputs.docID }}
       - uses: stefanzweifel/git-auto-commit-action@v5
