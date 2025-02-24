@@ -154,28 +154,34 @@ export async function listenForEventCompletion(
     const firebaseJob = run.data.jobs.filter((job) => job.name == "firebaseAndStripe")[0];
     const azureJob = run.data.jobs.filter((job) => job.name == "azure")[0];
     const deployJob = run.data.jobs.filter((job) => job.name == "finish")[0];
-    if (firebaseJob.status == "completed" || firebaseJob.status == null) {
-      firebaseExit = true;
-      if (firebaseJob.conclusion == "success") {
-        firebaseCompletion(ProvisioningStatus.SUCCEEDED);
-      } else {
-        firebaseCompletion(ProvisioningStatus.FAILED);
+    if (firebaseJob != undefined) {
+      if (firebaseJob.status == "completed" || firebaseJob.status == null) {
+        firebaseExit = true;
+        if (firebaseJob.conclusion == "success") {
+          firebaseCompletion(ProvisioningStatus.SUCCEEDED);
+        } else {
+          firebaseCompletion(ProvisioningStatus.FAILED);
+        }
       }
     }
-    if (azureJob.status == "completed") {
-      azureExit = true;
-      if (azureJob.conclusion == "success") {
-        azureCompletion(ProvisioningStatus.SUCCEEDED);
-      } else {
-        azureCompletion(ProvisioningStatus.FAILED);
+    if (azureJob != undefined) {
+      if (azureJob.status == "completed") {
+        azureExit = true;
+        if (azureJob.conclusion == "success") {
+          azureCompletion(ProvisioningStatus.SUCCEEDED);
+        } else {
+          azureCompletion(ProvisioningStatus.FAILED);
+        }
       }
     }
-    if (deployJob.status == "completed") {
-      deployExit = true;
-      if (deployJob.conclusion == "success") {
-        deployCompletion(ProvisioningStatus.SUCCEEDED);
-      } else {
-        deployCompletion(ProvisioningStatus.FAILED);
+    if (deployJob != undefined) {
+      if (deployJob.status == "completed") {
+        deployExit = true;
+        if (deployJob.conclusion == "success") {
+          deployCompletion(ProvisioningStatus.SUCCEEDED);
+        } else {
+          deployCompletion(ProvisioningStatus.FAILED);
+        }
       }
     }
     console.log(

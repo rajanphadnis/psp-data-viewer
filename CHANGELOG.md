@@ -1,3 +1,9 @@
+## v0.8.15
+fixed premature loop exiting
+
+### Changed
+- bug fixes
+
 ## v0.8.14
 fixing potential infinite loop
 
