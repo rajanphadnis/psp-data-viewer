@@ -26,6 +26,7 @@ const FinishPage: Component<{}> = (props) => {
   const [gitHubJobID, setGitHubJobID] = createSignal<number>();
   const [endingMessages, setEndingMessages] = createSignal<string[]>([]);
   const [htmlURL, setHtmlURL] = createSignal<string>("");
+  const [canCloseTab, setCanCloseTab] = createSignal(false);
 
   function addStartingMessage(log: string) {
     const current = startingMessages();
@@ -117,6 +118,7 @@ const FinishPage: Component<{}> = (props) => {
       if (gitHubJobID() == undefined) {
         addStartingMessage("Starting new runner...");
         const results = await getJobAndURL(docIDthing(), slug(), customerID());
+        setCanCloseTab(true);
         if (results != undefined) {
           setGitHubJobID(results.jobID);
           setHtmlURL(results.html_url);
@@ -170,7 +172,7 @@ const FinishPage: Component<{}> = (props) => {
       </div>
       <div class="w-full h-full flex flex-col justify-start items-center px-24 pt-24">
         <h1 class="text-xl font-bold mb-4">Deploying and Provisioning Instance:</h1>
-        <Show when={createFirebase() != ProvisioningStatus.PENDING} fallback={<p class="my-6">Do not close or refresh this page</p>}>
+        <Show when={canCloseTab()} fallback={<p class="my-6">Do not close or refresh this page</p>}>
           {/* <div class="flex flex-row justify-center items-center"> */}
           <p class="my-6 w-3/4">You can now close this page without interrupting the provisioning process. Make sure to bookmark this page or save the URL
             <Popover

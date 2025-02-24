@@ -187,6 +187,10 @@ export async function listenForEventCompletion(
       console.log(
         `Pinging for job status update. Current completion status:\nfirebase: ${firebaseJob.status}\nazure: ${azureJob.status}\ndeploy:${deployJob.status}`
       );
+    } else {
+      console.log(
+        `Pinging for job status update. Current completion status:\nfirebase: ${firebaseJob}\nazure: ${azureJob}\ndeploy:${deployJob}`
+      );
     }
   }
   console.debug("exited loop");

@@ -2,7 +2,7 @@
     "name": "mission",
     "module": "src/index.ts",
     "type": "module",
-    "version": "0.8.16",
+    "version": "0.8.17",
     "devDependencies": {
         "@types/bun": "latest"
     },

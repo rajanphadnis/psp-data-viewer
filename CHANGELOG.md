@@ -1,3 +1,9 @@
+## v0.8.17
+added no-check prod deploy post-provisioning
+
+### Changed
+- bug fixes
+
 ## v0.8.16
 removed blocking status call
 

@@ -1,0 +1,179 @@
+name: "[CD:Production] SKIP CHECKS Build and Release"
+on:
+  workflow_run:
+    workflows:
+      - Deploy Instance
+    types:
+      - completed
+
+env:
+  PYTHON_VERSION: "3.11"
+
+permissions:
+  contents: write
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - name: Web App Unit Tests
+        run: cd webapp_v2 && bun install && bun run test
+      - name: Admin App Unit Tests
+        run: cd admin_v2 && bun install && bun run test
+      - name: Customer Config Validity Checks
+        run: bun install && bun run config_check
+
+  generate_matrix:
+    needs: unit-tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get list of YAML files
+        id: list-matrix
+        run: find ./customer_configs/ -type f -name "*.yml" | sed 's/\.\/customer_configs\///' | sed 's/.*/"&"/' | awk '{print}' ORS=', ' | rev | cut -c 3- | rev | sed 's/.*/configs={\"config\":[&]}/' >> $GITHUB_OUTPUT
+    outputs:
+      configs: ${{ steps.list-matrix.outputs.configs }}
+
+  build:
+    runs-on: ubuntu-latest
+    needs: generate_matrix
+    strategy:
+      matrix: ${{ fromJson(needs.generate_matrix.outputs.configs) }}
+    name: Build & Deploy Webapp from ${{ matrix.config }}
+    environment:
+      name: "Production"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read Config File
+        uses: pietrobolcato/action-read-yaml@1.1.0
+        id: get_config
+        with:
+          config: ${{ github.workspace }}/customer_configs/${{ matrix.config }}
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - name: Build Web App
+        working-directory: ./webapp_v2
+        run: bun install && bun run prod ${{ matrix.config }}
+      - name: Release Web App
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DATAVIEWER_SPACE }}
+          channelId: live
+          projectId: dataviewer-space
+          target: webapp
+
+  build-formatter:
+    runs-on: windows-latest
+    needs: [unit-tests]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Ensure WinRAR is installed
+        run: |
+          $winrarPath = "${env:ProgramFiles}\WinRAR\WinRAR.exe"
+          if (-Not (Test-Path $winrarPath)) {
+            Write-Host "WinRAR not found. Downloading and installing..."
+            Invoke-WebRequest -Uri "https://www.win-rar.com/fileadmin/winrar-versions/winrar-x64-701.exe" -OutFile "winrar.exe"
+            Start-Process -FilePath ".\winrar.exe" -ArgumentList "/S" -NoNewWindow -Wait
+          } else {
+            Write-Host "WinRAR is already installed."
+          }
+        shell: pwsh
+
+      - uses: actions-rs/toolchain@v1.0.6
+        with:
+          toolchain: stable
+          profile: minimal
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: "formatter -> target"
+
+      - uses: cargo-bins/cargo-binstall@main
+
+      - name: Install Dioxus
+        run: cargo binstall dioxus-cli --force
+        shell: cmd
+
+      - name: Build App
+        run: cd formatter && dx bundle --platform windows --features bundle
+        shell: cmd
+
+      - name: Create SFX Archive
+        run: cd build_tools/ && formatter.bat
+        shell: cmd
+
+      - name: Upload SFX Archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: sfx-archive
+          path: ./formatter/dataviewer.exe
+          compression-level: 0 # no compression
+          retention-days: 1
+
+  deploy-site:
+    runs-on: ubuntu-latest
+    needs: build-formatter
+    name: Build & Deploy Website
+    environment:
+      name: "Production"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - name: Download EXE
+        uses: actions/download-artifact@v4
+        with:
+          name: sfx-archive
+          path: website/public
+      - name: Make envfile
+        uses: SpicyPizza/create-envfile@v2.0
+        with:
+          envkey_APP_CHECK_KEY: ${{ secrets.APP_CHECK_DEV_KEY }}
+          envkey_STRIPE_PK: ${{ secrets.STRIPE_PK }}
+          envkey_GITHUB_WORKFLOW_KEY: ${{ secrets.WORKFLOW_KEY }}
+          directory: ./website
+          file_name: .env.prod.publish
+          fail_on_empty: false
+          sort_keys: false
+      - name: Build Web App
+        working-directory: ./website
+        run: bun install && bun run prod
+      - name: Release Web App
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DATAVIEWER_SPACE }}
+          channelId: live
+          projectId: dataviewer-space
+          target: website
+
+  deploy-admin:
+    runs-on: ubuntu-latest
+    needs: generate_matrix
+    name: Build & Deploy Admin Console
+    environment:
+      name: "Production"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - name: Build Web App
+        working-directory: ./admin_v2
+        run: bun install && bun run prod
+      - name: Release Web App
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DATAVIEWER_SPACE }}
+          channelId: live
+          projectId: dataviewer-space
+          target: admin
