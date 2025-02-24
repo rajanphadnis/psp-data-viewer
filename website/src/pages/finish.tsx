@@ -135,29 +135,23 @@ const FinishPage: Component<{}> = (props) => {
       // addStartingMessage(`Interactive viewer:`);
       addStartingMessage(`[Stream deploy logs](${htmlURL()})`);
       addStartingMessage("Listening to provisioning runner...")
-      const jobResults = await listenForEventCompletion(gitHubJobID()!);
-      if (jobResults.firebase) {
-        setCreateFirebase(ProvisioningStatus.SUCCEEDED);
+      await listenForEventCompletion(gitHubJobID()!, setCreateFirebase, setCreateAzure, setCreateSite);
+      if (createFirebase() == ProvisioningStatus.SUCCEEDED) {
         addStartingMessage("Database deploy succeeded");
       }
       else {
-        setCreateFirebase(ProvisioningStatus.FAILED);
         addStartingMessage("Database deploy failed");
       }
-      if (jobResults.azure) {
-        setCreateAzure(ProvisioningStatus.SUCCEEDED);
+      if (createAzure() == ProvisioningStatus.SUCCEEDED) {
         addStartingMessage("Azure deploy succeeded");
       }
       else {
-        setCreateAzure(ProvisioningStatus.FAILED);
         addStartingMessage("Azure deploy failed");
       }
-      if (jobResults.deploy) {
-        setCreateSite(ProvisioningStatus.SUCCEEDED);
+      if (createSite() == ProvisioningStatus.SUCCEEDED) {
         addStartingMessage("Site deploy succeeded");
       }
       else {
-        setCreateSite(ProvisioningStatus.FAILED);
         addStartingMessage("Site deploy failed");
       }
     }

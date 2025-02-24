@@ -1,3 +1,9 @@
+## v0.8.13
+updated UI to relfect provisioning run status
+
+### Changed
+- bug fixes
+
 ## v0.8.12
 re-architected to use bicep for provisioning
 
