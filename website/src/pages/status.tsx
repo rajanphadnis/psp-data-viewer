@@ -12,7 +12,7 @@ const Status: Component<{}> = (props) => {
       <NavBar />
       <div class="flex flex-col justify-around items-center w-full mt-5 px-12 max-md:mt-0 max-md:px-5">
         <h1 class="text-4xl font-bold mb-8 w-full">Status</h1>
-        <p class="text-xl mb-12 w-full">Overall platform status</p>
+        <p class="text-xl mb-12 w-full">Each platform operates in a fully isolated environment. Expect the "Experimental Platform" to be offline frequently.</p>
         <StatusList />
         <StatusExplainer />
       </div>

@@ -1,3 +1,9 @@
+## v0.8.20
+updated to live verbiage
+
+### Changed
+- bug fixes
+
 ## v0.8.19
 added firestore rules and workflow dispatch capability
 
