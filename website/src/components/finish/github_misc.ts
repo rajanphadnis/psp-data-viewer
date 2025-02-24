@@ -142,7 +142,6 @@ export async function listenForEventCompletion(
   let deployExit = false;
   while (!(firebaseExit && azureExit && deployExit)) {
     await delay(5000);
-
     const run = await octokit.request("GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs", {
       owner: "rajanphadnis",
       repo: "psp-data-viewer",
@@ -184,9 +183,11 @@ export async function listenForEventCompletion(
         }
       }
     }
-    console.log(
-      `Pinging for job status update. Current completion status:\nfirebase: ${firebaseJob.status}\nazure: ${azureJob.status}\ndeploy:${deployJob.status}`
-    );
+    if (firebaseJob != undefined && azureJob != undefined && deployJob != undefined) {
+      console.log(
+        `Pinging for job status update. Current completion status:\nfirebase: ${firebaseJob.status}\nazure: ${azureJob.status}\ndeploy:${deployJob.status}`
+      );
+    }
   }
   console.debug("exited loop");
   return;

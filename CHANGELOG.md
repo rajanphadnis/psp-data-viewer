@@ -1,3 +1,9 @@
+## v0.8.16
+removed blocking status call
+
+### Changed
+- bug fixes
+
 ## v0.8.15
 fixed premature loop exiting
 
