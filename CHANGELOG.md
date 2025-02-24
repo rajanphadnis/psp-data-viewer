@@ -1,3 +1,9 @@
+## v0.8.18
+whoopsie
+
+### Changed
+- bug fixes
+
 ## v0.8.17
 added no-check prod deploy post-provisioning
 
