@@ -127,7 +127,7 @@ export async function listenForEventCompletion(
   azureCompletion: Setter<ProvisioningStatus>,
   deployCompletion: Setter<ProvisioningStatus>
 ) {
-  var totalJobStatus = "";
+  // var totalJobStatus = "";
   const job = await octokit.request("GET /repos/{owner}/{repo}/actions/jobs/{job_id}", {
     owner: "rajanphadnis",
     repo: "psp-data-viewer",
@@ -142,9 +142,7 @@ export async function listenForEventCompletion(
   let deployExit = false;
   while (!(firebaseExit && azureExit && deployExit)) {
     await delay(5000);
-    console.log(
-      `Pinging for job status update. Current completion status:\nfirebase:"${firebaseExit}"\nazure:"${azureExit}"\ndeploy:"${deployExit}"`
-    );
+
     const run = await octokit.request("GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs", {
       owner: "rajanphadnis",
       repo: "psp-data-viewer",
@@ -156,7 +154,7 @@ export async function listenForEventCompletion(
     const firebaseJob = run.data.jobs.filter((job) => job.name == "firebaseAndStripe")[0];
     const azureJob = run.data.jobs.filter((job) => job.name == "azure")[0];
     const deployJob = run.data.jobs.filter((job) => job.name == "finish")[0];
-    if (firebaseJob.status == "completed") {
+    if (firebaseJob.status == "completed" || firebaseJob.status == null) {
       firebaseExit = true;
       if (firebaseJob.conclusion == "success") {
         firebaseCompletion(ProvisioningStatus.SUCCEEDED);
@@ -180,35 +178,10 @@ export async function listenForEventCompletion(
         deployCompletion(ProvisioningStatus.FAILED);
       }
     }
+    console.log(
+      `Pinging for job status update. Current completion status:\nfirebase: ${firebaseJob.status}\nazure: ${azureJob.status}\ndeploy:${deployJob.status}`
+    );
   }
   console.debug("exited loop");
   return;
-  // if (totalJobStatus == "success") {
-  // } else {
-  //   const req = await octokit.request("GET /repos/{owner}/{repo}/actions/jobs/{job_id}/logs", {
-  //     owner: "rajanphadnis",
-  //     repo: "psp-data-viewer",
-  //     job_id: jobID,
-  //     headers: {
-  //       "X-GitHub-Api-Version": "2022-11-28",
-  //     },
-  //   });
-  //   console.debug(req.data);
-  //   const lines = (req.data as string).split("\n").filter((val) => val.includes("dv-log:::"));
-  //   let toReturn = {
-  //     firebase: false,
-  //     azure: false,
-  //     deploy: false,
-  //   };
-  //   if (lines.includes("dv-log:::firebase-complete")) {
-  //     toReturn.firebase = true;
-  //   }
-  //   if (lines.includes("dv-log:::azure-complete")) {
-  //     toReturn.azure = true;
-  //   }
-  //   if (lines.includes("dv-log:::deploy-complete")) {
-  //     toReturn.deploy = true;
-  //   }
-  //   return toReturn;
-  // }
 }

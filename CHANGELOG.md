@@ -1,3 +1,9 @@
+## v0.8.14
+fixing potential infinite loop
+
+### Changed
+- bug fixes
+
 ## v0.8.13
 updated UI to relfect provisioning run status
 
