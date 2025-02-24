@@ -1,7 +1,7 @@
 {
     "name": "admin",
     "module": "src/index.ts",
-    "version": "0.8.18",
+    "version": "0.8.19",
     "description": "",
     "scripts": {
         "start": "vite",

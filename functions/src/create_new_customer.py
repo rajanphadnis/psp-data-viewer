@@ -384,6 +384,11 @@ def createNewDatabase(req: https_fn.Request) -> https_fn.Response:
         shell=True,
         stdout=subprocess.PIPE,
     ).stdout.read()
+    result15 = subprocess.Popen(
+        "echo 'rules_version = \"2\";service cloud.firestore {match /databases/{database}/documents {match /{document=**} {allow read;allow write: if false;}}}' > firestore.rules",
+        shell=True,
+        stdout=subprocess.PIPE,
+    ).stdout.read()
     result2 = subprocess.Popen(
         f"curl -L https://firebase.tools/bin/linux/latest -o fb_tools && chmod +x ./fb_tools && ./fb_tools firestore:databases:create {dbID} --location=nam5 --token {os.environ['CLI_FIREBASE_TOKEN']}",
         shell=True,
@@ -395,6 +400,7 @@ def createNewDatabase(req: https_fn.Request) -> https_fn.Response:
         stdout=subprocess.PIPE,
     ).stdout.read()
     print(result1)
+    print(result15)
     print(result2)
     print(result3)
     print("done")
