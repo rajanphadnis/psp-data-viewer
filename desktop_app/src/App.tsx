@@ -6,7 +6,7 @@ import { FileGroup, SelectedFile } from "./types";
 import { fileNameFromPath } from "./misc";
 
 function App() {
-  const [greetMsg, setGreetMsg] = createSignal("");
+  const [errorMsg, setErrorMsg] = createSignal("");
   const [files, setFiles] = createStore({ files: [] as SelectedFile[] });
 
   async function fetchChannels(filePath: string) {
@@ -56,7 +56,7 @@ function App() {
       ]);
     })
       .catch((errors) => {
-        setGreetMsg(errors[0]);
+        setErrorMsg(errors[0]);
       })
   }
 
@@ -101,11 +101,10 @@ function App() {
               </div>
             }}
           </For>
-          <p>{greetMsg()}</p>
         </div>
       </div>
       <div class="w-2/3">
-
+        <p>{errorMsg()}</p>
       </div>
 
     </div>
