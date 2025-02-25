@@ -1,9 +1,11 @@
 use dioxus::prelude::*;
+use polars::frame::DataFrame;
+use tokio::sync::mpsc::Sender;
 
 use crate::{components::FileList, FILES};
 
 #[component]
-pub fn SideBar() -> Element {
+pub fn SideBar(data_sender: Sender<DataFrame>) -> Element {
     rsx! {
         div {
             class: "flex flex-col justify-between h-full",

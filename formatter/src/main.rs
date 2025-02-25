@@ -1,12 +1,13 @@
 #![cfg_attr(feature = "bundle", windows_subsystem = "windows")]
+use components::SideBar;
 use dioxus::desktop::muda::Menu;
 use dioxus::desktop::tao::window::Icon;
 use dioxus::desktop::{Config, WindowBuilder};
 use dioxus::prelude::*;
-
-use components::SideBar;
 use image::load_from_memory;
-
+use polars::frame::DataFrame;
+use tokio::sync::mpsc;
+use tokio::sync::mpsc::{Receiver, Sender};
 mod components;
 mod processing;
 
@@ -24,7 +25,8 @@ fn main() {
                 .with_window(WindowBuilder::new().with_resizable(true))
                 .with_icon(load_icon())
                 .with_disable_context_menu(true)
-                .with_menu(Menu::new()).with_background_color((15, 17, 22, 1)),
+                .with_menu(Menu::new())
+                .with_background_color((15, 17, 22, 1)),
         )
         .launch(App)
 }
@@ -33,6 +35,20 @@ static FILES: GlobalSignal<Vec<String>> = Signal::global(|| vec![]);
 
 #[component]
 fn App() -> Element {
+    let (dataSender, mut dataReceiver): (Sender<DataFrame>, Receiver<DataFrame>) =
+        mpsc::channel::<DataFrame>(100);
+
+    let allData = use_signal(|| None::<DataFrame>);
+
+    spawn({
+        let mut allData = allData.clone();
+        async move {
+            while let Some(msg) = dataReceiver.recv().await {
+                allData.set(Some(msg));
+            }
+        }
+    });
+
     rsx! {
         document::Link { rel: "stylesheet", href: TAILWIND_CSS }
         document::Style {

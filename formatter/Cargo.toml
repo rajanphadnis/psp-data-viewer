@@ -10,7 +10,7 @@ edition = "2021"
 dioxus = { version = "0.6.0", features = ["desktop"] }
 tdms = "0.3"
 # plotly = "0.8"
-# ndarray = "0.15"
+ndarray = { version = "0.16.1", features = ["rayon", ]}
 polars = { version = "0.46.0", features = [
     # "asof_join",
     "fmt",

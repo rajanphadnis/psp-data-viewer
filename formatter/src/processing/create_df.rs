@@ -1,14 +1,12 @@
 use dioxus::logger::tracing::info;
-use polars::{
-    frame::DataFrame,
-    prelude::{IntoColumn, NamedFrom},
-    series::Series,
-};
+use polars::frame::DataFrame;
 use rayon::prelude::*;
 use std::sync::atomic::{AtomicUsize, Ordering};
-use std::{path::Path, sync::Mutex, time::SystemTime};
-use tdms::{data_type::TdmsDataType, TDMSFile};
+use std::{path::Path, time::SystemTime};
+use tdms::{segment::Channel, TDMSFile};
 use tokio::{sync::mpsc::Sender, task};
+
+use crate::processing::parse_types::process_channel_data;
 
 pub fn create(path_string: String, tx: Sender<String>) {
     task::spawn(async move {
@@ -34,7 +32,7 @@ pub fn create(path_string: String, tx: Sender<String>) {
                             None => info!("No raw data"),
                         }
                     }
-                };
+                }
                 // info!("number of segments: {}", seg);
                 // info!("metadata: {}", meta.objects.);
                 file
@@ -45,69 +43,34 @@ pub fn create(path_string: String, tx: Sender<String>) {
             }
         };
 
-        let groups = tdms_file.groups();
-        let channels = tdms_file.channels(&groups[0]);
-        let list_of_series = Mutex::new(Vec::with_capacity(channels.len()));
+        let groups = &tdms_file.groups();
+        let channels = &tdms_file.channels(&groups[0]);
+        // let list_of_series = Mutex::new(Vec::with_capacity(channels.len()));
         let now = SystemTime::now();
 
         // Convert channels into a vector for parallel processing
-        let channel_vec: Vec<_> = channels.into_iter().collect();
+        let channel_vec: Vec<(String, &Channel)> = channels.clone().into_iter().collect();
         let num_of_channels = channel_vec.iter().size_hint().0;
         tx.send(format!("Collecting {} Channels...", num_of_channels))
             .await
             .unwrap();
         let current_processing = AtomicUsize::new(0);
 
-        // tx.send(format!("Reading Channels...")).await.unwrap();
+        tx.send(format!("Reading Channels...")).await.unwrap();
 
-        // Process channels in parallel
-        channel_vec.par_iter().for_each(|(channel_name, channel)| {
-            info!("-----{}-----", channel_name);
-            let data = match channel.data_type {
-                TdmsDataType::DoubleFloat(_) => tdms_file.channel_data_double_float(channel),
-                _ => {
-                    panic!("{}", "channel for data type unimplemented")
-                }
-            };
-            // let cdat = data.unwrap().cloned();
-            let count = current_processing.fetch_add(1, Ordering::Relaxed) + 1;
-            tx.blocking_send(format!(
-                "Processing {} of {} channels",
-                count, num_of_channels
-            ))
-            .unwrap();
-
-            if let Ok(channel_data) = data {
-                // let num_of_datapoints = channel_data.size_hint().0;
-                // info!("{} datapoints: {}", channel_name, num_of_datapoints);
-                let mut channel_datapoints: Vec<f64> = Vec::with_capacity(0);
-                // let mut current_percent = 0;
-
-                for (_, value) in channel_data.enumerate() {
-                    // let percent = 100 * (i / num_of_datapoints);
-
-                    // if percent > current_percent + 1 {
-                    //     info!("{}: {}%", channel_name, percent);
-                    //     current_percent = percent;
-                    // }
-
-                    channel_datapoints.push(value);
-                }
-                // let thing: Vec<f64> = channel_data.collect();
-                let s = Series::into_column(Series::new(
-                    String::from(channel_name).into(),
-                    &channel_datapoints,
-                ));
-
-                // Safely append to the shared vector
-                if let Ok(mut series_vec) = list_of_series.lock() {
-                    series_vec.push(s);
-                }
-            } else if let Err(er) = data {
-                info!("error: {}", er);
-            }
-        });
-
+        let series_vec = channel_vec
+            .par_iter()
+            .filter_map(|(_, channel)| {
+                let channel_name = &channel.path;
+                let count = current_processing.fetch_add(1, Ordering::Relaxed) + 1;
+                tx.blocking_send(format!(
+                    "Processing {} of {} channels",
+                    count, num_of_channels
+                ))
+                .unwrap();
+                process_channel_data(&channel_name, channel, &tdms_file).ok()
+            })
+            .collect();
         match now.elapsed() {
             Ok(elapsed) => {
                 info!("Elapsed time: {}", elapsed.as_secs());
@@ -116,12 +79,12 @@ pub fn create(path_string: String, tx: Sender<String>) {
                 info!("Error: {e:?}");
             }
         }
-
         tx.send(String::from("fin")).await.unwrap();
         info!("Creating df");
-        let series_vec = list_of_series.lock().unwrap();
-        let dataframe_process = DataFrame::new(series_vec.to_vec());
-        match dataframe_process {
+        // Create DataFrame from all Series
+        let df: Result<DataFrame, polars::prelude::PolarsError> = DataFrame::new(series_vec);
+        // return df;
+        match df {
             Ok(dataframe) => {
                 info!("{:?}", dataframe);
                 return true;

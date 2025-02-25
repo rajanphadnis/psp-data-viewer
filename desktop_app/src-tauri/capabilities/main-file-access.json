@@ -1,0 +1,12 @@
+{
+  "identifier": "main-file-access",
+  "description": "Main file access",
+  "local": true,
+  "windows": [
+    "main"
+  ],
+  "permissions": [
+    "dialog:allow-open",
+    "dialog:default"
+  ]
+}
