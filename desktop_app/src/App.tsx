@@ -68,6 +68,10 @@ function App() {
             const files = await open({
               multiple: true,
               directory: false,
+              filters: [{
+                name: 'Datafiles',
+                extensions: ['tdms', 'csv']
+              }]
             });
             if (files == null) {
               return;
@@ -75,7 +79,7 @@ function App() {
             files.forEach(async (file) => {
               await fetchChannels(file);
             });
-          }}>Select File</button>
+          }}>Add Files</button>
         </div>
         <div class="w-full h-full max-h-full overflow-auto p-3">
           <For each={files.files}>

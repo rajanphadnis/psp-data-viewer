@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "desktop-app",
+  "productName": "Dataviewer.Space - Desktop Formatter",
   "version": "0.1.0",
   "identifier": "space.dataviewer.desktop-app",
   "build": {
