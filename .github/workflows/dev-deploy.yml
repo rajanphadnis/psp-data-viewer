@@ -108,8 +108,8 @@ jobs:
       #   shell: cmd
       - uses: awalsh128/cache-apt-pkgs-action@latest
         with:
-          packages: libglib2.0-dev
-          version: 0.1.0
+          packages: libglib2.0-dev libgtk-3-dev
+          version: 0.1.1
 
       - name: Build App
         working-directory: ./desktop_app
