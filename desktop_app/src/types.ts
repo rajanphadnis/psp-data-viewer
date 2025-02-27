@@ -25,6 +25,7 @@ export enum LoadingStatus {
 export enum CompilingStatus {
   READY,
   COMPILING,
+  RESIZING,
   SAVING,
   COMPLETE,
 }
