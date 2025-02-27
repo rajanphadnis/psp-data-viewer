@@ -1,3 +1,9 @@
+## v0.8.21
+new desktop app
+
+### Changed
+- bug fixes
+
 ## v0.8.20
 updated to live verbiage
 

@@ -39,7 +39,7 @@ const Footer: Component<{}> = (props) => {
           Admin Console
         </a>
         <a
-          href={`https://github.com/rajanphadnis/psp-data-viewer/releases/download/${appVersion}/dataviewer.exe`}
+          href={`https://github.com/rajanphadnis/psp-data-viewer/releases/download/${appVersion}/desktop-app.exe`}
           target="_blank"
           class="text-neutral-500"
           download

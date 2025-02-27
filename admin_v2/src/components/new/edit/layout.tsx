@@ -97,7 +97,7 @@ const UploadEditLayout: Component<{
               <p>
                 Download{" "}
                 <a
-                  href={`https://github.com/rajanphadnis/psp-data-viewer/releases/download/${appVersion}/dataviewer.exe`}
+                  href={`https://github.com/rajanphadnis/psp-data-viewer/releases/download/${appVersion}/desktop-app.exe`}
                   class="underline underline-offset-auto"
                 >
                   the desktop app
