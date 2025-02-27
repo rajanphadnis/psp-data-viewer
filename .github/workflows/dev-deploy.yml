@@ -106,6 +106,10 @@ jobs:
       # - name: Install Dioxus
       #   run: cargo binstall dioxus-cli --force
       #   shell: cmd
+      - uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: libglib2.0-dev
+          version: 0.1.0
 
       - name: Build App
         working-directory: ./desktop_app
