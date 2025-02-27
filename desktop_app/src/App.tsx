@@ -1,64 +1,16 @@
-import { createSignal, For } from "solid-js";
+import { createSignal, For, Show } from "solid-js";
 import { createStore } from "solid-js/store"
-import { invoke } from "@tauri-apps/api/core";
 import { open } from '@tauri-apps/plugin-dialog';
-import { FileGroup, SelectedFile } from "./types";
+import { SelectedFile } from "./types";
+import { fetchChannels } from "./processing/fetch";
 import { fileNameFromPath } from "./misc";
+import ChannelButton from "./components/channel_button";
+import CompileButton from "./components/compile_button";
 
 function App() {
   const [errorMsg, setErrorMsg] = createSignal("");
   const [files, setFiles] = createStore({ files: [] as SelectedFile[] });
-
-  async function fetchChannels(filePath: string) {
-    const fetchChannels: Promise<string[]> = invoke("get_all_channels", { path_string: filePath });
-    fetchChannels.then((channels) => {
-      let groups: FileGroup[] = [];
-      channels.forEach((chan) => {
-        const splitString = chan.split("/");
-        const group = splitString[1].slice(1, -1);
-        const channelName = splitString[2].slice(1, -1);
-        const existingGroupObject = groups.filter((listedGroup) => listedGroup.groupName == group);
-
-        let newFileGroupObject: FileGroup;
-        if (existingGroupObject.length > 0) {
-          const indexLocation = groups.indexOf(existingGroupObject[0]);
-          groups.splice(indexLocation, 1);
-          const existingChannels = existingGroupObject[0].channels;
-          newFileGroupObject = {
-            groupName: existingGroupObject[0].groupName,
-            channels: [...existingChannels, {
-              channel_name: channelName,
-              data: undefined,
-              offset: undefined,
-              slope: undefined
-            }]
-          }
-        }
-        else {
-          newFileGroupObject = {
-            groupName: group,
-            channels: [{
-              channel_name: channelName,
-              data: undefined,
-              offset: undefined,
-              slope: undefined
-            }]
-          }
-        }
-        groups.push(newFileGroupObject);
-      });
-      setFiles("files", (currentFiles) => [
-        ...currentFiles,
-        {
-          path: filePath,
-          groups: groups
-        } as SelectedFile
-      ]);
-    })
-      .catch((errors) => {
-        setErrorMsg(errors[0]);
-      })
-  }
+  const [csvDelay, setCsvDelay] = createSignal(0);
 
   return (
     <div class="w-full h-full bg-transparent m-0 p-0 flex flex-row overscroll-none">
@@ -77,7 +29,7 @@ function App() {
               return;
             }
             files.forEach(async (file) => {
-              await fetchChannels(file);
+              await fetchChannels(setFiles, setErrorMsg, file);
             });
           }}>Add Files</button>
         </div>
@@ -88,11 +40,11 @@ function App() {
                 <h1 class="font-bold">{fileNameFromPath(file.path)}</h1>
                 <For each={file.groups}>
                   {(group, i) => {
-                    return <div class="ml-3">
+                    return <div class="ml-3 flex flex-col">
                       <h1>{group.groupName}</h1>
                       <For each={group.channels}>
                         {(channel, i) => {
-                          return <p class="ml-3">{channel.channel_name}</p>
+                          return <ChannelButton files={files} setFiles={setFiles} setErrorMsg={setErrorMsg} path={file.path} groupName={group.groupName} channel_name={channel.channel_name} />
                         }}
                       </For>
                     </div>
@@ -103,8 +55,32 @@ function App() {
           </For>
         </div>
       </div>
-      <div class="w-2/3">
+      <div class="w-2/3 text-white h-full flex flex-col justify-center items-center">
+        {/* <For each={files.files}>
+          {(file, i) => {
+            return <div><h1 class="font-bold">{fileNameFromPath(file.path)}</h1>
+              <For each={file.groups}>
+                {(group, i) => {
+                  return <div class="ml-3 flex flex-col">
+                    <h1>{group.groupName}</h1>
+                    <For each={group.channels}>
+                      {(channel, i) => {
+                        return <div class="flex flex-col">
+                          <p>{channel.channel_name}</p>
+                          <p>{channel.data?.length}</p>
+                        </div>
+                      }}
+                    </For>
+                  </div>
+                }}
+              </For>
+            </div>
+          }}
+        </For> */}
         <p>{errorMsg()}</p>
+        <Show when={files.files.length > 0}>
+          <CompileButton setFiles={setFiles} files={files} setErrorMsg={setErrorMsg} />
+        </Show>
       </div>
 
     </div>
