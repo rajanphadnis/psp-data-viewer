@@ -80,52 +80,23 @@ jobs:
       - uses: oven-sh/setup-bun@v1
         with:
           bun-version: latest
-      # - name: Ensure WinRAR is installed
-      #   run: |
-      #     $winrarPath = "${env:ProgramFiles}\WinRAR\WinRAR.exe"
-      #     if (-Not (Test-Path $winrarPath)) {
-      #       Write-Host "WinRAR not found. Downloading and installing..."
-      #       Invoke-WebRequest -Uri "https://www.win-rar.com/fileadmin/winrar-versions/winrar-x64-701.exe" -OutFile "winrar.exe"
-      #       Start-Process -FilePath ".\winrar.exe" -ArgumentList "/S" -NoNewWindow -Wait
-      #     } else {
-      #       Write-Host "WinRAR is already installed."
-      #     }
-      #   shell: pwsh
-
       - uses: actions-rs/toolchain@v1.0.6
         with:
           toolchain: stable
           profile: minimal
-
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: "desktop_app/src-tauri -> target"
-
-      # - uses: cargo-bins/cargo-binstall@main
-
-      # - name: Install Dioxus
-      #   run: cargo binstall dioxus-cli --force
-      #   shell: cmd
-      # - uses: awalsh128/cache-apt-pkgs-action@latest
-      #   with:
-      #     packages: libglib2.0-dev libgtk-3-dev libwebkit2gtk-4.1-dev libsoup3.0-dev
-      #     version: 0.1.2
-
       - name: Build App
         working-directory: ./desktop_app
         run: bun install && bun run tauri build
-
-      # - name: Create SFX Archive
-      #   run: cd build_tools/ && formatter.bat
-      #   shell: cmd
-
       - name: Upload Portable EXE
         uses: actions/upload-artifact@v4
         with:
           name: sfx-archive
           path: ./desktop_app/src-tauri/target/release/desktop-app.exe
           compression-level: 0 # no compression
-          retention-days: 5
+          retention-days: 1
 
   deploy-site:
     runs-on: ubuntu-latest

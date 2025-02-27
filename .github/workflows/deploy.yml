@@ -227,67 +227,36 @@ jobs:
           projectId: dataviewer-space
           target: webapp
 
-  build-formatter:
+  build-desktop-app:
     runs-on: windows-latest
-    needs:
-      [
-        unit-tests,
-        changelog-check,
-        version-check-webapp,
-        version-check-admin,
-        version-check-docs,
-        version-check-mission,
-      ]
+    needs: unit-tests
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Ensure WinRAR is installed
-        run: |
-          $winrarPath = "${env:ProgramFiles}\WinRAR\WinRAR.exe"
-          if (-Not (Test-Path $winrarPath)) {
-            Write-Host "WinRAR not found. Downloading and installing..."
-            Invoke-WebRequest -Uri "https://www.win-rar.com/fileadmin/winrar-versions/winrar-x64-701.exe" -OutFile "winrar.exe"
-            Start-Process -FilePath ".\winrar.exe" -ArgumentList "/S" -NoNewWindow -Wait
-          } else {
-            Write-Host "WinRAR is already installed."
-          }
-        shell: pwsh
-
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
       - uses: actions-rs/toolchain@v1.0.6
         with:
           toolchain: stable
           profile: minimal
-
       - uses: Swatinem/rust-cache@v2
         with:
-          workspaces: "formatter -> target"
-
-      - uses: cargo-bins/cargo-binstall@main
-
-      - name: Install Dioxus
-        run: cargo binstall dioxus-cli --force
-        shell: cmd
-
+          workspaces: "desktop_app/src-tauri -> target"
       - name: Build App
-        run: cd formatter && dx bundle --platform windows --features bundle
-        shell: cmd
-
-      - name: Create SFX Archive
-        run: cd build_tools/ && formatter.bat
-        shell: cmd
-
-      - name: Upload SFX Archive
+        working-directory: ./desktop_app
+        run: bun install && bun run tauri build
+      - name: Upload Portable EXE
         uses: actions/upload-artifact@v4
         with:
           name: sfx-archive
-          path: ./formatter/dataviewer.exe
+          path: ./desktop_app/src-tauri/target/release/desktop-app.exe
           compression-level: 0 # no compression
           retention-days: 1
 
   deploy-site:
     runs-on: ubuntu-latest
-    needs: build-formatter
+    needs: build-desktop-app
     name: Build & Deploy Website
     environment:
       name: "Production"
