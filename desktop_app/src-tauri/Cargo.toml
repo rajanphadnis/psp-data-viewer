@@ -48,3 +48,4 @@ tauri-plugin-fs = "2"
 hdf5 = { version = "0.8.1" }
 hdf5-sys = { version = "0.8.1", features = ["static"] }
 ndarray = "0.16.1"
+tauri-plugin-sql = { version = "2.2.0", features = ["sqlite"] }

@@ -11,6 +11,8 @@
     "dialog:allow-ask",
     "dialog:allow-confirm",
     "dialog:allow-message",
-    "dialog:allow-save"
+    "dialog:allow-save",
+    "sql:default",
+    "sql:allow-execute"
   ]
 }
