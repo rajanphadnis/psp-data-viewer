@@ -1,7 +1,13 @@
+import { readFloat, readString } from "./misc";
 import { FileGroup, LoadingStatus } from "./types";
 
-export function summarizeChannelsIntoGroups(channels: string[]) {
+export function summarizeChannelsIntoGroups(channel_data: {
+  [channel_name: string]: {
+    [prop: string]: string | undefined;
+  };
+}) {
   let groups: FileGroup[] = [];
+  const channels = Object.keys(channel_data);
   channels.forEach((chan) => {
     const splitString = chan.split("/");
     const group = splitString[1].slice(1, -1);
@@ -20,9 +26,18 @@ export function summarizeChannelsIntoGroups(channels: string[]) {
           {
             channel_name: channelName,
             data: undefined,
-            offset: undefined,
-            slope: undefined,
+            offset: readFloat(channel_data[chan]["Offset"]),
+            slope: readFloat(channel_data[chan]["Slope"]),
+            unit: readString(channel_data[chan]["Unit"]),
             state: LoadingStatus.UNLOADED,
+            zeroing_target: readFloat(channel_data[chan]["Zeroing Target"]),
+            zeroing_correction: readFloat(channel_data[chan]["Zeroing Correction"]),
+            minimum: readFloat(channel_data[chan]["Minimum"]),
+            maximum: readFloat(channel_data[chan]["Maximum"]),
+            description: readString(channel_data[chan]["Description"]),
+            channel_type: readString(channel_data[chan]["Channel Type"]),
+            tc_type: readString(channel_data[chan]["TC Type"]),
+            constant_cjc: readFloat(channel_data[chan]["constant CJC"]),
           },
         ],
       };
@@ -33,9 +48,18 @@ export function summarizeChannelsIntoGroups(channels: string[]) {
           {
             channel_name: channelName,
             data: undefined,
-            offset: undefined,
-            slope: undefined,
+            offset: readFloat(channel_data[chan]["Offset"]),
+            slope: readFloat(channel_data[chan]["Slope"]),
+            unit: readString(channel_data[chan]["Unit"]),
             state: LoadingStatus.UNLOADED,
+            zeroing_target: readFloat(channel_data[chan]["Zeroing Target"]),
+            zeroing_correction: readFloat(channel_data[chan]["Zeroing Correction"]),
+            minimum: readFloat(channel_data[chan]["Minimum"]),
+            maximum: readFloat(channel_data[chan]["Maximum"]),
+            description: readString(channel_data[chan]["Description"]),
+            channel_type: readString(channel_data[chan]["Channel Type"]),
+            tc_type: readString(channel_data[chan]["TC Type"]),
+            constant_cjc: readFloat(channel_data[chan]["constant CJC"]),
           },
         ],
       };

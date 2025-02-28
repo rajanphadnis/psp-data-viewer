@@ -6,6 +6,7 @@ import { fetchChannels } from "./processing/fetch";
 import { fileNameFromPath } from "./misc";
 import ChannelButton from "./components/channel_button";
 import CompileButton from "./components/compile_button";
+import DeleteIcon from "./components/icons/delete";
 
 function App() {
   const [errorMsg, setErrorMsg] = createSignal("");
@@ -37,7 +38,14 @@ function App() {
           <For each={files.files}>
             {(file, i) => {
               return <div class="bg-neutral-500 rounded-lg p-3 mb-3">
-                <h1 class="font-bold">{fileNameFromPath(file.path)}</h1>
+                <div class="flex flex-row justify-between items-center">
+                  <h1 class="font-bold">{fileNameFromPath(file.path)}</h1>
+                  <button class="cursor-pointer" onclick={() => {
+                    setFiles("files", (files_inner: SelectedFile[]) => files_inner.filter((filt) => filt.path != file.path));
+                  }}>
+                    <DeleteIcon class="w-4 h-4 fill-white" />
+                  </button>
+                </div>
                 <For each={file.groups}>
                   {(group, i) => {
                     return <div class="ml-3 flex flex-col">
@@ -56,27 +64,6 @@ function App() {
         </div>
       </div>
       <div class="w-2/3 text-white h-full flex flex-col justify-center items-center">
-        {/* <For each={files.files}>
-          {(file, i) => {
-            return <div><h1 class="font-bold">{fileNameFromPath(file.path)}</h1>
-              <For each={file.groups}>
-                {(group, i) => {
-                  return <div class="ml-3 flex flex-col">
-                    <h1>{group.groupName}</h1>
-                    <For each={group.channels}>
-                      {(channel, i) => {
-                        return <div class="flex flex-col">
-                          <p>{channel.channel_name}</p>
-                          <p>{channel.data?.length}</p>
-                        </div>
-                      }}
-                    </For>
-                  </div>
-                }}
-              </For>
-            </div>
-          }}
-        </For> */}
         <p>{errorMsg()}</p>
         <Show when={files.files.length > 0}>
           <CompileButton setFiles={setFiles} files={files} setErrorMsg={setErrorMsg} />

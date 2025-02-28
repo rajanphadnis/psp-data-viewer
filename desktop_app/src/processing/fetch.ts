@@ -1,8 +1,9 @@
 import { invoke } from "@tauri-apps/api/core";
 import { summarizeChannelsIntoGroups } from "../file_list_manipulation";
 import { FileGroup, SelectedFile } from "../types";
-import { reconcile, SetStoreFunction } from "solid-js/store";
+import { SetStoreFunction } from "solid-js/store";
 import { Setter } from "solid-js";
+import { readRawData } from "./read_raw_tdms";
 
 export async function fetchChannels(
   setFiles: SetStoreFunction<{
@@ -13,17 +14,24 @@ export async function fetchChannels(
 ) {
   const isTDMS = filePath.slice(-5) == ".tdms";
   if (isTDMS) {
-    const fetchChannels: Promise<string[]> = invoke("get_all_channels", { path_string: filePath });
+    const fetchChannels: Promise<{
+      [channel_name: string]: {
+        [prop: string]: string;
+      };
+    }> = invoke("get_all_channels", { path_string: filePath });
     fetchChannels
-      .then((channels) => {
-        let groups: FileGroup[] = summarizeChannelsIntoGroups(channels);
-        console.log(filePath.slice(-5) == ".tdms");
+      .then(async (channelData) => {
+        let groups: FileGroup[] = summarizeChannelsIntoGroups(channelData);
+        let meta = await readRawData(filePath);
         setFiles("files", (currentFiles) => [
           ...currentFiles,
           {
             path: filePath,
             groups: groups,
             is_TDMS: isTDMS,
+            TDMS_VERSION: meta.tdms_version,
+            name: meta.name,
+            BITMASK: meta.bit_mask
           } as SelectedFile,
         ]);
       })
@@ -48,10 +56,9 @@ export async function fetchTDMSData(
     channel_name: channelName,
     file_path: filePath,
   });
-  await fetchData
+  return await fetchData
     .then((dat) => {
       const data = dat as number[];
-      console.log(data);
       setFiles(
         "files",
         (file) => file.path == filePath,
@@ -62,9 +69,11 @@ export async function fetchTDMSData(
         "data",
         data
       );
+      return data.length;
     })
     .catch((error) => {
       console.error(error);
       setErrorMsg(error);
+      return 0;
     });
 }
