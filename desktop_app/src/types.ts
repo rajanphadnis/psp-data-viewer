@@ -13,6 +13,7 @@ export type FileGroup = {
   channels: {
     channel_name: string;
     data: number[] | undefined;
+    time: number[] | undefined;
     offset: number | undefined;
     slope: number | undefined;
     unit: string | undefined;

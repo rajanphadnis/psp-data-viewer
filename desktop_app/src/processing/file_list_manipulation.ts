@@ -1,5 +1,5 @@
-import { readFloat, readString } from "./misc";
-import { FileGroup, LoadingStatus } from "./types";
+import { readFloat, readString } from "../misc";
+import { FileGroup, LoadingStatus } from "../types";
 
 export function summarizeChannelsIntoGroups(channel_data: {
   [channel_name: string]: {
@@ -26,6 +26,7 @@ export function summarizeChannelsIntoGroups(channel_data: {
           {
             channel_name: channelName,
             data: undefined,
+            time: undefined,
             offset: readFloat(channel_data[chan]["Offset"]),
             slope: readFloat(channel_data[chan]["Slope"]),
             unit: readString(channel_data[chan]["Unit"]),
@@ -48,6 +49,7 @@ export function summarizeChannelsIntoGroups(channel_data: {
           {
             channel_name: channelName,
             data: undefined,
+            time: undefined,
             offset: readFloat(channel_data[chan]["Offset"]),
             slope: readFloat(channel_data[chan]["Slope"]),
             unit: readString(channel_data[chan]["Unit"]),

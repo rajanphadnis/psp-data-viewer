@@ -1,8 +1,8 @@
 import { Component, createSignal, Match, Setter, Switch } from "solid-js";
 import { CompilingStatus, SelectedFile } from "../types";
-import { writeHDF5 } from "../processing/write";
 import { SetStoreFunction } from "solid-js/store";
 import { readAllTdmsChannels } from "../processing/read_all_tdms_channels";
+import { invoke } from "@tauri-apps/api/core";
 
 const CompileButton: Component<{
     files: {
@@ -21,15 +21,28 @@ const CompileButton: Component<{
             let processingPromises: Promise<void>[] = readAllTdmsChannels(props.files, props.setFiles, props.setErrorMsg);
             Promise.all(processingPromises).then(async () => {
                 const flatMapChannels = props.files.files.flatMap((file_inner) => file_inner.groups.flatMap((group_inner) => group_inner.channels));
-                let toWrite = {};
+                let toResize = {};
                 flatMapChannels.forEach((dat) => {
-                    (toWrite as any)[`${dat.channel_name}`] = dat.data;
+                    (toResize as any)[`${dat.channel_name}`] = dat.data;
+                    (toResize as any)[`${dat.channel_name}_time`] = dat.time;
                 });
-                console.log(toWrite);
+                console.log(toResize);
                 setCompileStatus(CompilingStatus.RESIZING);
-                setCompileStatus(CompilingStatus.SAVING);
-                await writeHDF5(toWrite, props.setErrorMsg);
-                setCompileStatus(CompilingStatus.COMPLETE);
+                const resizeFxn: Promise<{}> = invoke("resize_data", { data: toResize });
+                resizeFxn.then(async (toWrite) => {
+                    setCompileStatus(CompilingStatus.SAVING);
+                    const writeHDF5: Promise<boolean | string> = invoke("create_hdf5", { export_data: toWrite });
+                    writeHDF5
+                        .then(() => {
+                            console.log("complete");
+                            setCompileStatus(CompilingStatus.COMPLETE);
+                        })
+                        .catch((error) => {
+                            props.setErrorMsg(error);
+                        });
+                }).catch((error) => {
+                    props.setErrorMsg(error);
+                });
             }).catch(() => console.log("Error compiling"));
         }
     }}>

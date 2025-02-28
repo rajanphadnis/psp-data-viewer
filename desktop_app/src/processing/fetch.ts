@@ -1,5 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
-import { summarizeChannelsIntoGroups } from "../file_list_manipulation";
+import { summarizeChannelsIntoGroups } from "./file_list_manipulation";
 import { FileGroup, SelectedFile } from "../types";
 import { SetStoreFunction } from "solid-js/store";
 import { Setter } from "solid-js";
@@ -63,11 +63,18 @@ export async function fetchTDMSData(
     file_path: filePath,
   });
   return await fetchData
-    .then((dat) => {
+    .then(async (dat) => {
       const data = dat as number[];
 
       const file = files.files.filter((fil_inner) => fil_inner.path == filePath)[0];
       const data_freq = parseHz(groupName);
+      const step = Math.ceil((1 / data_freq) * 1000);
+      const fetchTimeframe: number[] = await invoke("create_timeframe", {
+        starting_timestamp: file.starting_timestamp_millis,
+        freq: step,
+        length: data.length,
+      });
+      console.log(fetchTimeframe);
       setFiles(
         "files",
         (file) => file.path == filePath,
@@ -77,6 +84,16 @@ export async function fetchTDMSData(
         (channel) => channel.channel_name == channelName,
         "data",
         data
+      );
+      setFiles(
+        "files",
+        (file) => file.path == filePath,
+        "groups",
+        (group) => group.groupName == groupName,
+        "channels",
+        (channel) => channel.channel_name == channelName,
+        "time",
+        fetchTimeframe
       );
       return data.length;
     })
