@@ -1,8 +1,8 @@
 mod create_hdf5;
-mod file_init;
+mod get_all_channels;
 mod process_tdms;
 mod read_data;
-mod read_raw_tdms;
+mod get_tdms_name;
 
 pub use read_data::read_data;
 
@@ -13,10 +13,10 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
         .invoke_handler(tauri::generate_handler![
-            file_init::get_all_channels,
+            get_all_channels::get_all_channels,
             process_tdms::process_channel_data,
             create_hdf5::create_hdf5,
-            read_raw_tdms::get_tdms_name,
+            get_tdms_name::get_tdms_name,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

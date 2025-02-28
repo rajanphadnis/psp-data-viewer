@@ -4,6 +4,7 @@ import { FileGroup, SelectedFile } from "../types";
 import { SetStoreFunction } from "solid-js/store";
 import { Setter } from "solid-js";
 import { readRawData } from "./read_raw_tdms";
+import { parseDate, parseHz } from "../misc";
 
 export async function fetchChannels(
   setFiles: SetStoreFunction<{
@@ -23,6 +24,7 @@ export async function fetchChannels(
       .then(async (channelData) => {
         let groups: FileGroup[] = summarizeChannelsIntoGroups(channelData);
         let meta = await readRawData(filePath);
+        const date_millis = parseDate(meta.name!, filePath);
         setFiles("files", (currentFiles) => [
           ...currentFiles,
           {
@@ -31,7 +33,8 @@ export async function fetchChannels(
             is_TDMS: isTDMS,
             TDMS_VERSION: meta.tdms_version,
             name: meta.name,
-            BITMASK: meta.bit_mask
+            BITMASK: meta.bit_mask,
+            starting_timestamp_millis: date_millis,
           } as SelectedFile,
         ]);
       })
@@ -45,6 +48,9 @@ export async function fetchTDMSData(
   setFiles: SetStoreFunction<{
     files: SelectedFile[];
   }>,
+  files: {
+    files: SelectedFile[];
+  },
   setErrorMsg: Setter<string>,
   filePath: string,
   groupName: string,
@@ -59,6 +65,9 @@ export async function fetchTDMSData(
   return await fetchData
     .then((dat) => {
       const data = dat as number[];
+
+      const file = files.files.filter((fil_inner) => fil_inner.path == filePath)[0];
+      const data_freq = parseHz(groupName);
       setFiles(
         "files",
         (file) => file.path == filePath,

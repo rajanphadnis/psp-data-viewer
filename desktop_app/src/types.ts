@@ -5,6 +5,7 @@ export type SelectedFile = {
   TDMS_VERSION: string;
   BITMASK: string;
   name: string;
+  starting_timestamp_millis: number;
 };
 
 export type FileGroup = {

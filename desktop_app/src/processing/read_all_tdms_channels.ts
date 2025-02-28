@@ -29,6 +29,7 @@ export function readAllTdmsChannels(
           );
           const datalength = await fetchTDMSData(
             setFiles,
+            files,
             setErrorMsg,
             file.path,
             group.groupName,

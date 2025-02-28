@@ -47,7 +47,7 @@ const ChannelButton: Component<{
                     "state",
                     LoadingStatus.LOADING
                 );
-                await fetchTDMSData(props.setFiles, props.setErrorMsg, props.path, props.groupName, props.channel_name);
+                await fetchTDMSData(props.setFiles, props.files, props.setErrorMsg, props.path, props.groupName, props.channel_name);
                 props.setFiles(
                     "files",
                     (file) => file.path == props.path,

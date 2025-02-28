@@ -1,8 +1,7 @@
 import { Component, createSignal, Match, Setter, Switch } from "solid-js";
-import { CompilingStatus, ExportChannel, LoadingStatus, SelectedFile } from "../types";
+import { CompilingStatus, SelectedFile } from "../types";
 import { writeHDF5 } from "../processing/write";
 import { SetStoreFunction } from "solid-js/store";
-import { fetchTDMSData } from "../processing/fetch";
 import { readAllTdmsChannels } from "../processing/read_all_tdms_channels";
 
 const CompileButton: Component<{

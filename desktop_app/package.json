@@ -17,7 +17,9 @@
     "@tauri-apps/plugin-dialog": "^2.2.0",
     "@tauri-apps/plugin-fs": "^2.2.0",
     "@tauri-apps/plugin-opener": "^2",
+    "@types/luxon": "^3.4.2",
     "h5wasm": "^0.7.9",
+    "luxon": "^3.5.0",
     "solid-js": "^1.9.3",
     "tailwindcss": "^4.0.8"
   },
