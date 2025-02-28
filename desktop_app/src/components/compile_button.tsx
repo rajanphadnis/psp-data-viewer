@@ -28,10 +28,10 @@ const CompileButton: Component<{
                 });
                 console.log(toResize);
                 setCompileStatus(CompilingStatus.RESIZING);
-                const resizeFxn: Promise<{}> = invoke("resize_data", { data: toResize });
+                const resizeFxn: Promise<{}> = invoke("resize_data", { data: toResize }); // TODO: replace data passing here with writes to sql
                 resizeFxn.then(async (toWrite) => {
                     setCompileStatus(CompilingStatus.SAVING);
-                    const writeHDF5: Promise<boolean | string> = invoke("create_hdf5", { export_data: toWrite });
+                    const writeHDF5: Promise<boolean | string> = invoke("create_hdf5", { export_data: toWrite }); // TODO: replace data passing here with reads from sql
                     writeHDF5
                         .then(() => {
                             console.log("complete");
