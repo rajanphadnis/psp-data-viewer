@@ -9,9 +9,10 @@ import CompileButton from "./components/compile_button";
 import DeleteIcon from "./components/icons/delete";
 
 function App() {
-  const [errorMsg, setErrorMsg] = createSignal("");
+  const [errorMsg, setErrorMsg] = createSignal(""); // TODO: convert this to a log instead of a single string
   const [files, setFiles] = createStore({ files: [] as SelectedFile[] });
   const [csvDelay, setCsvDelay] = createSignal(0);
+  const [keepRawData, setKeepRawData] = createSignal(false);
 
   return (
     <div class="w-full h-full bg-transparent m-0 p-0 flex flex-row overscroll-none">
@@ -29,9 +30,10 @@ function App() {
             if (files == null) {
               return;
             }
-            files.forEach(async (file) => {
+            for (let f = 0; f < files.length; f++) {
+              const file = files[f];
               await fetchChannels(setFiles, setErrorMsg, file);
-            });
+            }
           }}>Add Files</button>
         </div>
         <div class="w-full h-full max-h-full overflow-auto p-3">
@@ -66,7 +68,7 @@ function App() {
       <div class="w-2/3 text-white h-full flex flex-col justify-center items-center">
         <p>{errorMsg()}</p>
         <Show when={files.files.length > 0}>
-          <CompileButton setFiles={setFiles} files={files} setErrorMsg={setErrorMsg} />
+          <CompileButton setFiles={setFiles} files={files} setErrorMsg={setErrorMsg} keepRawData={keepRawData} />
         </Show>
       </div>
 

@@ -6,6 +6,7 @@ pub async fn resize_data(
     data: HashMap<String, Vec<f64>>,
 ) -> Result<HashMap<String, Vec<f64>>, String> {
     task::spawn_blocking(move || {
+        let keys: Vec<String> = data.keys().cloned().collect();
         println!("Resizing data");
         thread::sleep(Duration::from_millis(3000));
         Ok(data)

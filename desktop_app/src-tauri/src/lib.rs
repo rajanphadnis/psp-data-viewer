@@ -1,10 +1,12 @@
+mod apply_calcs;
 mod create_hdf5;
+mod create_timeframe;
 mod get_all_channels;
+mod get_tdms_name;
 mod process_tdms;
 mod read_data;
-mod get_tdms_name;
-mod create_timeframe;
 mod resize_data;
+mod stack_data;
 
 pub use read_data::read_data;
 
@@ -22,6 +24,8 @@ pub fn run() {
             get_tdms_name::get_tdms_name,
             create_timeframe::create_timeframe,
             resize_data::resize_data,
+            stack_data::stack_data,
+            apply_calcs::apply_calcs,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

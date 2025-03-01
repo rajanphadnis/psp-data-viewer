@@ -1,5 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
-import { summarizeChannelsIntoGroups } from "./file_list_manipulation";
+import { summarizeChannelsIntoGroups } from "./summarize_channels_into_groups";
 import { FileGroup, SelectedFile } from "../types";
 import { SetStoreFunction } from "solid-js/store";
 import { Setter } from "solid-js";
@@ -18,7 +18,7 @@ export async function fetchChannels(
     const fetchChannels: Promise<{
       [channel_name: string]: {
         [prop: string]: string;
-      };
+      }[];
     }> = invoke("get_all_channels", { path_string: filePath });
     fetchChannels
       .then(async (channelData) => {
@@ -74,7 +74,7 @@ export async function fetchTDMSData(
         freq: step,
         length: data.length,
       });
-      console.log(fetchTimeframe);
+      // console.log(fetchTimeframe);
       setFiles(
         "files",
         (file) => file.path == filePath,

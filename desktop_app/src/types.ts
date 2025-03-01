@@ -42,6 +42,8 @@ export enum CompilingStatus {
   RESIZING,
   SAVING,
   COMPLETE,
+  FLATTENING,
+  APPLYING_CALCS,
 }
 
 export type ExportChannel = {
