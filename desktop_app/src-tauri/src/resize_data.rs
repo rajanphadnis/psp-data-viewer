@@ -32,7 +32,7 @@ pub async fn resize_data(
             let df = match if includes_raw {
                 df!(
                     channel => &data[channel],
-                    format!("{}_raw", channel_name) => &data[&format!("{}_raw__raw__", channel_name)],
+                    format!("{}_raw__raw__", channel_name) => &data[&format!("{}_raw__raw__", channel_name)],
                     "time" => &data[&format!("{}_time", channel_name)],
                 )
             } else {
