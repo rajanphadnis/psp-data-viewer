@@ -14,31 +14,33 @@ const CompileButton: Component<{
         files: SelectedFile[];
     }>,
     setErrorMsg: Setter<string>,
-    keepRawData: Accessor<boolean>
+    keepRawData: Accessor<boolean>,
+    compileStatus: Accessor<CompilingStatus>,
+    setCompileStatus: Setter<CompilingStatus>
 }> = (props) => {
-    const [compileStatus, setCompileStatus] = createSignal(CompilingStatus.READY);
+    // const [compileStatus, setCompileStatus] = createSignal(CompilingStatus.READY);
 
-    return <button class={`p-3 rounded-lg font-bold text-black bg-amber-400 ${compileStatus() != CompilingStatus.READY ? "" : "hover:bg-amber-300 cursor-pointer"}`} onclick={async () => {
-        if (compileStatus() == CompilingStatus.READY) {
-            setCompileStatus(CompilingStatus.COMPILING);
+    return <button class={`p-3 rounded-lg font-bold text-black bg-amber-400 ${props.compileStatus() != CompilingStatus.READY ? "" : "hover:bg-amber-300 cursor-pointer"}`} onclick={async () => {
+        if (props.compileStatus() == CompilingStatus.READY) {
+            props.setCompileStatus(CompilingStatus.COMPILING);
             let processingPromises: Promise<void>[] = readAllTdmsChannels(props.files, props.setFiles, props.setErrorMsg);
             Promise.all(processingPromises).then(async () => {
-                setCompileStatus(CompilingStatus.FLATTENING);
+                props.setCompileStatus(CompilingStatus.FLATTENING);
                 const unwrappedFiles = unwrap(props.files);
                 const toApplyCalcs = await stackAndFlatten(unwrappedFiles, props.setErrorMsg);
                 console.log(toApplyCalcs); // This isn't an array for some reason - it's an...object? Proxy(Array) {0: 1.5884974903351614, 1: 1.5960570886907879
-                setCompileStatus(CompilingStatus.APPLYING_CALCS);
+                props.setCompileStatus(CompilingStatus.APPLYING_CALCS);
                 const toResize = await apply_calcs(unwrappedFiles, toApplyCalcs, props.setErrorMsg, props.keepRawData());
                 console.log(toResize);
-                setCompileStatus(CompilingStatus.RESIZING);
+                props.setCompileStatus(CompilingStatus.RESIZING);
                 const resizeFxn: Promise<{}> = invoke("resize_data", { data: toResize });
                 resizeFxn.then(async (toWrite) => {
-                    setCompileStatus(CompilingStatus.SAVING);
+                    props.setCompileStatus(CompilingStatus.SAVING);
                     const writeHDF5: Promise<boolean | string> = invoke("create_hdf5", { export_data: toWrite });
                     writeHDF5
                         .then(() => {
                             console.log("complete");
-                            setCompileStatus(CompilingStatus.COMPLETE);
+                            props.setCompileStatus(CompilingStatus.COMPLETE);
                         })
                         .catch((error) => {
                             props.setErrorMsg(error);
@@ -50,13 +52,13 @@ const CompileButton: Component<{
         }
     }}>
         <Switch>
-            <Match when={compileStatus() == CompilingStatus.COMPILING}>Reading Channels...</Match>
-            <Match when={compileStatus() == CompilingStatus.RESIZING}>Resizing Tables...</Match>
-            <Match when={compileStatus() == CompilingStatus.FLATTENING}>Flattening Channels...</Match>
-            <Match when={compileStatus() == CompilingStatus.APPLYING_CALCS}>Applying Constants to Channels...</Match>
-            <Match when={compileStatus() == CompilingStatus.COMPLETE}>Complete</Match>
-            <Match when={compileStatus() == CompilingStatus.READY}>Compile</Match>
-            <Match when={compileStatus() == CompilingStatus.SAVING}>Saving...</Match>
+            <Match when={props.compileStatus() == CompilingStatus.COMPILING}>Reading Channels...</Match>
+            <Match when={props.compileStatus() == CompilingStatus.RESIZING}>Resizing Tables...</Match>
+            <Match when={props.compileStatus() == CompilingStatus.FLATTENING}>Flattening Channels...</Match>
+            <Match when={props.compileStatus() == CompilingStatus.APPLYING_CALCS}>Applying Constants to Channels...</Match>
+            <Match when={props.compileStatus() == CompilingStatus.COMPLETE}>Complete</Match>
+            <Match when={props.compileStatus() == CompilingStatus.READY}>Compile</Match>
+            <Match when={props.compileStatus() == CompilingStatus.SAVING}>Saving...</Match>
         </Switch>
     </button>;
 };

@@ -33,7 +33,7 @@ export async function apply_calcs(
           toReturn[`${channel.channel_name}__${channel.unit}__`] = calculated_data;
           toReturn[`${channel.channel_name}_time`] = time;
           if (keepRawData) {
-            toReturn[`${channel.channel_name}_raw`] = data;
+            toReturn[`${channel.channel_name}_raw__raw__`] = data;
           }
           res();
         } catch (error: any) {

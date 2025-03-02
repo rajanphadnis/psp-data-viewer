@@ -1,18 +1,19 @@
-import { createSignal, For, Show } from "solid-js";
-import { createStore } from "solid-js/store"
 import { open } from '@tauri-apps/plugin-dialog';
-import { SelectedFile } from "./types";
-import { fetchChannels } from "./processing/fetch";
-import { fileNameFromPath } from "./misc";
+import { createEffect, createSignal, For, Show } from "solid-js";
+import { createStore } from "solid-js/store";
 import ChannelButton from "./components/channel_button";
 import CompileButton from "./components/compile_button";
 import DeleteIcon from "./components/icons/delete";
+import { fileNameFromPath } from "./misc";
+import { fetchChannels } from "./processing/fetch";
+import { CompilingStatus, SelectedFile } from "./types";
 
 function App() {
   const [errorMsg, setErrorMsg] = createSignal(""); // TODO: convert this to a log instead of a single string
   const [files, setFiles] = createStore({ files: [] as SelectedFile[] });
   const [csvDelay, setCsvDelay] = createSignal(0);
-  const [keepRawData, setKeepRawData] = createSignal(false);
+  const [keepRawData, setKeepRawData] = createSignal(true);
+  const [compileStatus, setCompileStatus] = createSignal(CompilingStatus.READY);
 
   return (
     <div class="w-full h-full bg-transparent m-0 p-0 flex flex-row overscroll-none">
@@ -68,7 +69,19 @@ function App() {
       <div class="w-2/3 text-white h-full flex flex-col justify-center items-center">
         <p>{errorMsg()}</p>
         <Show when={files.files.length > 0}>
-          <CompileButton setFiles={setFiles} files={files} setErrorMsg={setErrorMsg} keepRawData={keepRawData} />
+          <CompileButton setFiles={setFiles} files={files} setErrorMsg={setErrorMsg} keepRawData={keepRawData} compileStatus={compileStatus} setCompileStatus={setCompileStatus} />
+          <Show when={compileStatus() == CompilingStatus.READY}>
+            <div class="flex flex-row">
+              <input id='keepRawData' type='checkbox' checked={keepRawData()} onchange={(e) => {
+                setKeepRawData(e.target.checked);
+              }} />
+              <label for='keepRawData'>
+                <span></span>
+                Keep Raw Data
+                <ins><i>Keep Raw Data</i></ins>
+              </label>
+            </div>
+          </Show>
         </Show>
       </div>
 
