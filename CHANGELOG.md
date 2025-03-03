@@ -1,3 +1,9 @@
+## v0.8.22
+added
+
+### Changed
+- bug fixes
+
 ## v0.8.21
 new desktop app
 
