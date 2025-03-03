@@ -24,7 +24,7 @@ export function readAllTdmsChannels(
             "files",
             (file_filter) => file_filter.path == file.path,
             "groups",
-            (group_filter) => group_filter.groupName == group.groupName,
+            (group_filter) => group_filter.group_name == group.group_name,
             "channels",
             (channel_filter) => channel_filter.channel_name == channel.channel_name,
             "state",
@@ -36,7 +36,7 @@ export function readAllTdmsChannels(
               files,
               setErrorMsg,
               file.path,
-              group.groupName,
+              group.group_name,
               channel.channel_name
             );
             console.log(datalength);
@@ -44,7 +44,7 @@ export function readAllTdmsChannels(
               "files",
               (file_filter) => file_filter.path == file.path,
               "groups",
-              (group_filter) => group_filter.groupName == group.groupName,
+              (group_filter) => group_filter.group_name == group.group_name,
               "channels",
               (channel_filter) => channel_filter.channel_name == channel.channel_name,
               "state",

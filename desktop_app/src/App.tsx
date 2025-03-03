@@ -1,5 +1,6 @@
+import { listen } from '@tauri-apps/api/event';
 import { open } from '@tauri-apps/plugin-dialog';
-import { createEffect, createSignal, For, Show } from "solid-js";
+import { createSignal, For, Show } from "solid-js";
 import { createStore } from "solid-js/store";
 import ChannelButton from "./components/channel_button";
 import CompileButton from "./components/compile_button";
@@ -14,6 +15,13 @@ function App() {
   const [csvDelay, setCsvDelay] = createSignal(0);
   const [keepRawData, setKeepRawData] = createSignal(true);
   const [compileStatus, setCompileStatus] = createSignal(CompilingStatus.READY);
+  // const [eventLog, setEventLog] = createSignal<string[]>([]);
+  const [eventLog, setEventLog] = createStore<string[]>([]);
+
+  listen<string>('event-log', (event) => {
+    console.log(event);
+    setEventLog((currentLog) => [...currentLog, event.payload]);
+  });
 
   return (
     <div class="w-full h-full bg-transparent m-0 p-0 flex flex-row overscroll-none">
@@ -39,7 +47,7 @@ function App() {
         </div>
         <div class="w-full h-full max-h-full overflow-auto p-3">
           <For each={files.files}>
-            {(file, i) => {
+            {(file, _i) => {
               return <div class="bg-neutral-500 rounded-lg p-3 mb-3">
                 <div class="flex flex-row justify-between items-center">
                   <h1 class="font-bold">{fileNameFromPath(file.path)}</h1>
@@ -50,12 +58,12 @@ function App() {
                   </button>
                 </div>
                 <For each={file.groups}>
-                  {(group, i) => {
+                  {(group, _i) => {
                     return <div class="ml-3 flex flex-col">
-                      <h1>{group.groupName}</h1>
+                      <h1>{group.group_name}</h1>
                       <For each={group.channels}>
-                        {(channel, i) => {
-                          return <ChannelButton files={files} setFiles={setFiles} setErrorMsg={setErrorMsg} path={file.path} groupName={group.groupName} channel_name={channel.channel_name} />
+                        {(channel, _i) => {
+                          return <ChannelButton files={files} setFiles={setFiles} setErrorMsg={setErrorMsg} path={file.path} groupName={group.group_name} channel_name={channel.channel_name} />
                         }}
                       </For>
                     </div>
@@ -66,8 +74,15 @@ function App() {
           </For>
         </div>
       </div>
-      <div class="w-2/3 text-white h-full flex flex-col justify-center items-center">
+      <div class={`w-2/3 text-white h-full flex flex-col p-5 pb-0 ${compileStatus() == CompilingStatus.READY ? "justify-center" : "justify-end"} items-center`}>
         <p>{errorMsg()}</p>
+        <div class="w-full h-max-3/4 flex flex-col-reverse">
+          <div class="w-full h-full overflow-auto">
+            <For each={eventLog}>
+              {(log, _i) => <p class="text-white">{log}</p>}
+            </For>
+          </div>
+        </div>
         <Show when={files.files.length > 0}>
           <CompileButton setFiles={setFiles} files={files} setErrorMsg={setErrorMsg} keepRawData={keepRawData} compileStatus={compileStatus} setCompileStatus={setCompileStatus} />
           <Show when={compileStatus() == CompilingStatus.READY}>

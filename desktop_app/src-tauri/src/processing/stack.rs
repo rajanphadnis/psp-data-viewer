@@ -3,9 +3,10 @@ use polars::{
     lazy::prelude::concat,
     prelude::{IntoLazy, SortMultipleOptions, UnionArgs},
 };
+use tauri::{AppHandle, Emitter};
 use std::collections::HashMap;
 
-pub fn stack_duplicate_channels(data: Vec<DataFrame>) -> Result<Vec<DataFrame>, String> {
+pub fn stack_duplicate_channels(app: AppHandle, data: Vec<DataFrame>) -> Result<Vec<DataFrame>, String> {
     let mut dataframes = HashMap::<String, DataFrame>::new();
     data.iter()
         .try_for_each(|dataframe| -> Result<(), String> {
@@ -21,6 +22,7 @@ pub fn stack_duplicate_channels(data: Vec<DataFrame>) -> Result<Vec<DataFrame>, 
 
             if dataframes.contains_key(&base_channel_name) {
                 println!("Stacking channel: {}", base_channel_name);
+                app.emit("event-log", format!("stack::start::{}", base_channel_name)).unwrap();
                 let df_vertical_concat = concat(
                     [
                         dataframe.clone().lazy(),
@@ -47,9 +49,11 @@ pub fn stack_duplicate_channels(data: Vec<DataFrame>) -> Result<Vec<DataFrame>, 
                 )
                 .collect()
                 .map_err(|e| format!("failed to collect after stacking: {}", e))?;
+            app.emit("event-log", format!("stack::complete::{}", base_channel_name)).unwrap();
                 dataframes.insert(base_channel_name, df_vertical_concat);
             } else {
                 println!("Skipping channel stacking: {}", base_channel_name);
+                app.emit("event-log", format!("stack::skip::{}", base_channel_name)).unwrap();
                 dataframes.insert(base_channel_name, dataframe.clone());
             }
             Ok(())

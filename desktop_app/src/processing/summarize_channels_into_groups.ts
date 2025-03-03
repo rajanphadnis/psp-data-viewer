@@ -18,7 +18,7 @@ export function summarizeChannelsIntoGroups(channel_dat: {
     const splitString = chan.split("/");
     const group = splitString[1].slice(1, -1);
     const channelName = splitString[2].slice(1, -1);
-    const existingGroupObject = groups.filter((listedGroup) => listedGroup.groupName == group);
+    const existingGroupObject = groups.filter((listedGroup) => listedGroup.group_name == group);
 
     let newFileGroupObject: FileGroup;
     if (existingGroupObject.length > 0) {
@@ -26,7 +26,7 @@ export function summarizeChannelsIntoGroups(channel_dat: {
       groups.splice(indexLocation, 1);
       const existingChannels = existingGroupObject[0].channels;
       newFileGroupObject = {
-        groupName: existingGroupObject[0].groupName,
+        group_name: existingGroupObject[0].group_name,
         channels: [
           ...existingChannels,
           {
@@ -50,7 +50,7 @@ export function summarizeChannelsIntoGroups(channel_dat: {
       };
     } else {
       newFileGroupObject = {
-        groupName: group,
+        group_name: group,
         channels: [
           {
             channel_name: channelName,

@@ -1,9 +1,11 @@
 use std::{path::Path, time::SystemTime};
+use tauri::{AppHandle, Emitter};
 use tdms::{data_type::TdmsDataType, segment::Channel, TDMSFile};
 use tokio::task;
 
 #[tauri::command(rename_all = "snake_case")]
 pub async fn process_channel_data(
+    app: AppHandle,
     group_name: &str,
     channel_name: &str,
     file_path: &str,
@@ -26,7 +28,7 @@ pub async fn process_channel_data(
                 .ok_or_else(|| String::from(format!("Couldn't find channel: {}", channel_name)))?;
 
             // Process channel data
-            read_data(&channel_name, channel.1, &tdms_file)
+            read_data(app, &channel_name, channel.1, &tdms_file)
         })();
         result
     })
@@ -35,6 +37,7 @@ pub async fn process_channel_data(
 }
 
 pub fn read_data(
+    app: AppHandle,
     channel_name: &String,
     data: &Channel,
     tdms_file: &TDMSFile,
@@ -49,6 +52,8 @@ pub fn read_data(
                     let vals: Vec<f64> = v.collect();
                     match now.elapsed() {
                         Ok(elapsed) => {
+                            app.emit("event-log", format!("read::timed::{}::{}", channel_name, elapsed.as_secs()))
+                                .unwrap();
                             println!("Processing time: {}", elapsed.as_secs());
                         }
                         Err(e) => {

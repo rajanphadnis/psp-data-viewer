@@ -11,10 +11,14 @@ use std::{
     path::Path,
     sync::{Arc, Mutex},
 };
+use tauri::{AppHandle, Emitter};
 use tdms::TDMSFile;
 use tokio::task::{self, JoinHandle};
 
-pub async fn flatten(files: Vec<DataFile>) -> Result<(Vec<DataChannel>, Vec<DataFrame>), String> {
+pub async fn flatten(
+    files: Vec<DataFile>,
+    app: AppHandle,
+) -> Result<(Vec<DataChannel>, Vec<DataFrame>), String> {
     let channels_info = Arc::new(Mutex::new(Vec::<DataChannel>::new()));
     let channels_dataframes = Arc::new(Mutex::new(Vec::<DataFrame>::new()));
 
@@ -25,16 +29,18 @@ pub async fn flatten(files: Vec<DataFile>) -> Result<(Vec<DataChannel>, Vec<Data
         let file_path_file = file_clone.path.clone();
         let channels_info_file = Arc::clone(&channels_info);
         let channels_dataframes_file = Arc::clone(&channels_dataframes);
+        let app_file = app.clone();
         for group in file.groups {
             let file_path_group = file_path_file.clone();
-
             let channels_info_group = Arc::clone(&channels_info_file);
             let channels_dataframes_group = Arc::clone(&channels_dataframes_file);
+            let app_group = app_file.clone();
             for channel in group.channels {
+                let app_channel = app_group.clone();
                 let channels_info_channel = Arc::clone(&channels_info_group);
                 let channels_dataframes_channel = Arc::clone(&channels_dataframes_group);
                 let file_path_chan = file_path_group.clone();
-                let group_name = group.groupName.clone(); // Clone group name to avoid moves
+                let group_name = group.group_name.clone(); // Clone group name to avoid moves
                 let to_run = task::spawn_blocking(move || {
                     let result: Result<(), String> = (|| {
                         let tdms_file = TDMSFile::from_path(&Path::new(&file_path_chan)) // Use PathBuf reference here
@@ -45,6 +51,9 @@ pub async fn flatten(files: Vec<DataFile>) -> Result<(Vec<DataChannel>, Vec<Data
                         let file_starting_timestamp = file.starting_timestamp_millis; // Copy timestamp
                         let has_data = channel.data.is_some() && channel.time.is_some();
                         println!("{}: {}", channel_name, has_data);
+                        app_channel
+                            .emit("event-log", format!("read::start::{}", channel_name))
+                            .unwrap();
 
                         // Get fresh `channels` inside the closure using cloned `group_name`
                         let channels = tdms_file_clone.channels(&group_name);
@@ -57,9 +66,11 @@ pub async fn flatten(files: Vec<DataFile>) -> Result<(Vec<DataChannel>, Vec<Data
                         })?;
 
                         let channel_data =
-                            read_data(&channel_name, channel_object.1, &tdms_file_clone)
+                            read_data(app_channel.clone(), &channel_name, channel_object.1, &tdms_file_clone)
                                 .map_err(|e| e)?;
-
+                        app_channel
+                            .emit("event-log", format!("read::loaded::{}", channel_name))
+                            .unwrap();
                         let time_data = create_timeframe(
                             file_starting_timestamp,
                             1.0, // Replace with actual frequency parsing logic
@@ -81,6 +92,9 @@ pub async fn flatten(files: Vec<DataFile>) -> Result<(Vec<DataChannel>, Vec<Data
                         .map_err(|e| format!("Failed to create dataframe: {}", e))?;
 
                         println!("{}", df);
+                        app_channel
+                            .emit("event-log", format!("read::complete::{}", channel_name))
+                            .unwrap();
 
                         channels_dataframes_channel.lock().unwrap().push(df);
                         channels_info_channel.lock().unwrap().push(channel);
@@ -114,5 +128,6 @@ pub async fn flatten(files: Vec<DataFile>) -> Result<(Vec<DataChannel>, Vec<Data
     channels_info.sort_by(|a, b| a.channel_name.cmp(&b.channel_name));
     channels_info.dedup_by_key(|chan| chan.channel_name.clone());
 
+    app.emit("event-log", "flatten::complete::dedup").unwrap();
     Ok((channels_info, channels_dataframes))
 }

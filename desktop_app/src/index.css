@@ -25,6 +25,29 @@ body,
   overscroll-behavior: none;
 }
 
+.loader {
+  border: 7px solid transparent;
+  border-style: solid;
+  border-color: transparent;
+  border-radius: 50%;
+  border-top: 3px solid var(--color-amber-400);
+  border-top-style: solid;
+  border-top-color: var(--color-amber-400);
+  width: 25px;
+  height: 25px;
+  -webkit-animation: spin 0.35s linear infinite;
+  animation: spin 0.35s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 *{ box-sizing: border-box; user-select: none; }
 
 input[type='checkbox']{ height: 0; width: 0; }

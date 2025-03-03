@@ -2,10 +2,12 @@ use polars::{
     frame::DataFrame,
     prelude::{AsofJoinBy, AsofStrategy, Column},
 };
+use tauri::{AppHandle, Emitter};
 
 use crate::{calc_dataset, DataChannel};
 
 pub fn calc_resize_datasets(
+    app: AppHandle,
     dataframes: Vec<DataFrame>,
     channels_info: Vec<DataChannel>,
     save_raw_data: bool,
@@ -15,6 +17,7 @@ pub fn calc_resize_datasets(
         Ok(d) => d,
         Err(e) => return Err(String::from(format!("failed to init dataframe: {}", e))),
     };
+    app.emit("event-log", "calc::start").unwrap();
     for dataframe in dataframes {
         let channel_base_name = dataframe
             .get_column_names_str()
@@ -39,10 +42,22 @@ pub fn calc_resize_datasets(
             "{} channel_info: {}",
             channel_base_name, channel_info.channel_type
         );
+        let df = calc_dataset(
+            app.clone(),
+            dataframe,
+            channel_base_name.clone(),
+            channel_info,
+            save_raw_data,
+        )
+        .map_err(|e| e)?;
+        app.emit(
+            "event-log",
+            format!("calc::complete::{}", channel_base_name),
+        )
+        .unwrap();
 
-        let df = calc_dataset(dataframe, channel_base_name.clone(), channel_info, save_raw_data)
-            .map_err(|e| e)?;
-
+        app.emit("event-log", format!("resize::start::{}", channel_base_name))
+            .unwrap();
         println!("{} final df: {}", channel_base_name, df);
         master_df = match df.join_asof_by(
             &master_df,

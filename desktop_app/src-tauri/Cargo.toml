@@ -31,4 +31,4 @@ tauri-plugin-fs = "2"
 hdf5 = { version = "0.8.1" }
 hdf5-sys = { version = "0.8.1", features = ["static"] }
 ndarray = "0.16.1"
-futures = "0.3"
+# futures = "0.3"

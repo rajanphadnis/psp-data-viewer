@@ -17,7 +17,7 @@ const ChannelButton: Component<{
 }> = (props) => {
 
     const loading_status = createMemo(() => {
-        return props.files.files.filter((file) => file.path == props.path)[0].groups.filter((group) => group.groupName == props.groupName)[0].channels.filter((channel) => channel.channel_name == props.channel_name)[0].state;
+        return props.files.files.filter((file) => file.path == props.path)[0].groups.filter((group) => group.group_name == props.groupName)[0].channels.filter((channel) => channel.channel_name == props.channel_name)[0].state;
 
     });
 
@@ -41,7 +41,7 @@ const ChannelButton: Component<{
                     "files",
                     (file) => file.path == props.path,
                     "groups",
-                    (group) => group.groupName == props.groupName,
+                    (group) => group.group_name == props.groupName,
                     "channels",
                     (channel) => channel.channel_name == props.channel_name,
                     "state",
@@ -52,7 +52,7 @@ const ChannelButton: Component<{
                     "files",
                     (file) => file.path == props.path,
                     "groups",
-                    (group) => group.groupName == props.groupName,
+                    (group) => group.group_name == props.groupName,
                     "channels",
                     (channel) => channel.channel_name == props.channel_name,
                     "state",

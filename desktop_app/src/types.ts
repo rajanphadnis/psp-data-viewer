@@ -9,7 +9,7 @@ export type SelectedFile = {
 };
 
 export type FileGroup = {
-  groupName: string;
+  group_name: string;
   channels: {
     channel_name: string;
     data: number[] | undefined;
@@ -44,7 +44,7 @@ export enum CompilingStatus {
   COMPLETE,
   FLATTENING,
   APPLYING_CALCS,
-  FAILED
+  FAILED,
 }
 
 export type ExportChannel = {
