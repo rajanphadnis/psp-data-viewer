@@ -1,3 +1,9 @@
+## v0.8.23
+added working desktop formatter
+
+### Changed
+- bug fixes
+
 ## v0.8.22
 added
 
