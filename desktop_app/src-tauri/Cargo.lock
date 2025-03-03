@@ -947,10 +947,12 @@ dependencies = [
 name = "desktop-app"
 version = "0.1.0"
 dependencies = [
+ "futures",
  "hdf5",
  "hdf5-sys",
  "ndarray 0.16.1",
  "polars",
+ "rayon",
  "serde",
  "serde_json",
  "tauri",

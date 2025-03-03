@@ -44,6 +44,7 @@ export enum CompilingStatus {
   COMPLETE,
   FLATTENING,
   APPLYING_CALCS,
+  FAILED
 }
 
 export type ExportChannel = {

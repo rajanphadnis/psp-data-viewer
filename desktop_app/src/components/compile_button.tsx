@@ -21,45 +21,18 @@ const CompileButton: Component<{
     return <button class={`p-3 rounded-lg font-bold text-black bg-amber-400 ${props.compileStatus() != CompilingStatus.READY ? "" : "hover:bg-amber-300 cursor-pointer"}`} onclick={async () => {
         if (props.compileStatus() == CompilingStatus.READY) {
             props.setCompileStatus(CompilingStatus.COMPILING);
-            let processingPromises: Promise<void>[] = readAllTdmsChannels(props.files, props.setFiles, props.setErrorMsg);
-            Promise.all(processingPromises).then(async () => {
-                props.setCompileStatus(CompilingStatus.FLATTENING);
-                const unwrappedFiles = unwrap(props.files);
-                const toApplyCalcs = await stackAndFlatten(unwrappedFiles, props.setErrorMsg);
-                console.log(toApplyCalcs);
-
-                const filteredChannels = [...new Set(unwrappedFiles.files.flatMap((file) => file.groups.flatMap((group) => group.channels)).filter((chan) => !chan.channel_name.endsWith("_time")))];
-                const calc_resize_save: Promise<number> = invoke("calc_resize_save", { data: toApplyCalcs, channels_info: filteredChannels });
-                calc_resize_save
-                    .then((res) => {
-                        console.log("complete");
-                        console.log(res);
-                        props.setCompileStatus(CompilingStatus.COMPLETE);
-                    })
-                    .catch((error) => {
-                        props.setErrorMsg(error);
-                    });
-
-                // props.setCompileStatus(CompilingStatus.APPLYING_CALCS);
-                // const toResize = await apply_calcs(unwrappedFiles, toApplyCalcs, props.setErrorMsg, props.keepRawData());
-                // console.log(toResize);
-                // props.setCompileStatus(CompilingStatus.RESIZING);
-                // const resizeFxn: Promise<{}> = invoke("resize_data", { data: toResize });
-                // resizeFxn.then(async (toWrite) => {
-                //     props.setCompileStatus(CompilingStatus.SAVING);
-                //     const writeHDF5: Promise<boolean | string> = invoke("create_hdf5", { export_data: toWrite });
-                //     writeHDF5
-                //         .then(() => {
-                //             console.log("complete");
-                //             props.setCompileStatus(CompilingStatus.COMPLETE);
-                //         })
-                //         .catch((error) => {
-                //             props.setErrorMsg(error);
-                //         });
-                // }).catch((error) => {
-                //     props.setErrorMsg(error);
-                // });
-            }).catch(() => console.log("Error compiling"));
+            const unwrappedFiles = unwrap(props.files);
+            const calc_resize_save: Promise<[number, [number, number]]> = invoke("compile", { files: unwrappedFiles.files, save_raw_data: props.keepRawData() });
+            calc_resize_save
+                .then((res) => {
+                    console.log("complete");
+                    console.log(res);
+                    props.setCompileStatus(CompilingStatus.COMPLETE);
+                })
+                .catch((error) => {
+                    props.setErrorMsg(error);
+                    props.setCompileStatus(CompilingStatus.FAILED);
+                });
         }
     }}>
         <Switch>
@@ -70,6 +43,7 @@ const CompileButton: Component<{
             <Match when={props.compileStatus() == CompilingStatus.COMPLETE}>Complete</Match>
             <Match when={props.compileStatus() == CompilingStatus.READY}>Compile</Match>
             <Match when={props.compileStatus() == CompilingStatus.SAVING}>Saving...</Match>
+            <Match when={props.compileStatus() == CompilingStatus.FAILED}>Failed</Match>
         </Switch>
     </button>;
 };

@@ -1,8 +1,28 @@
+#[derive(Clone)]
+#[derive(serde::Deserialize)]
+pub struct DataFile {
+    pub path: String,
+    pub is_TDMS: bool,
+    pub groups: Vec<DataGroup>,
+    pub TDMS_VERSION: String,
+    pub BITMASK: String,
+    pub name: String,
+    pub starting_timestamp_millis: f64,
+}
+#[derive(Clone)]
+#[derive(serde::Deserialize)]
+pub struct DataGroup {
+    pub groupName: String,
+    pub channels: Vec<DataChannel>,
+}
+
+#[derive(Clone)]
+#[derive(Debug)]
 #[derive(serde::Deserialize)]
 pub struct DataChannel {
     pub channel_name: String,
-    data: Vec<Option<f64>>,
-    time: Vec<Option<f64>>,
+    pub data: Option<Vec<f64>>,
+    pub time: Option<Vec<f64>>,
     pub offset: Option<f64>,
     pub slope: Option<f64>,
     pub unit: String,
