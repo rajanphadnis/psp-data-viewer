@@ -11,7 +11,8 @@ export async function fetchChannels(
     files: SelectedFile[];
   }>,
   setErrorMsg: Setter<string>,
-  filePath: string
+  filePath: string,
+  setEventLog: SetStoreFunction<string[]>
 ) {
   const isTDMS = filePath.slice(-5) == ".tdms";
   if (isTDMS) {
@@ -22,9 +23,10 @@ export async function fetchChannels(
     }> = invoke("get_all_channels", { path_string: filePath });
     fetchChannels
       .then(async (channelData) => {
+        setEventLog((log) => [...log, `Opened File: ${filePath}`]);
         let groups: FileGroup[] = summarizeChannelsIntoGroups(channelData);
         let meta = await readRawData(filePath);
-        const date_millis = parseDate(meta.name!, filePath);
+        const date_millis = parseDate(meta.name!);
         setFiles("files", (currentFiles) => [
           ...currentFiles,
           {
@@ -37,9 +39,17 @@ export async function fetchChannels(
             starting_timestamp_millis: date_millis,
           } as SelectedFile,
         ]);
+        setEventLog((log) => [...log, `Read file table bits as:`]);
+        setEventLog((log) => [...log, `    is_TDMS: ${isTDMS}`]);
+        setEventLog((log) => [...log, `    TDMS version: ${meta.tdms_version}`]);
+        setEventLog((log) => [...log, `    initial file save name: ${meta.name}`]);
+        setEventLog((log) => [...log, `    TDMS feature bitmask: ${meta.bit_mask}`]);
+        setEventLog((log) => [...log, `Parsed filename to initial UNIX timestamp: ${date_millis}`]);
       })
       .catch((errors) => {
-        setErrorMsg(errors[0]);
+        console.log(errors);
+        setEventLog((log) => [...log, `Failed to open TDMS file. TDMS segments may be corrupted or cut short.`]);
+        setErrorMsg(errors);
       });
   }
 }

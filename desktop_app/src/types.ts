@@ -34,6 +34,9 @@ export enum LoadingStatus {
   ERROR,
   LOADING,
   UNLOADED,
+  LOADED,
+  CALC,
+  RESIZE
 }
 
 export enum CompilingStatus {

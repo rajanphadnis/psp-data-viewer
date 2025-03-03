@@ -78,7 +78,11 @@ pub fn calc_resize_datasets(
                 )))
             }
         };
-        println!("Finished resizing channel: {}", channel_base_name);
+        app.emit(
+            "event-log",
+            format!("resize::complete::{}", channel_base_name),
+        )
+        .unwrap();
         println!("{}", master_df);
     }
     Ok(master_df)

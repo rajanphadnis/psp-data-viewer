@@ -84,6 +84,8 @@ pub async fn compile(
 
     app.emit("event-log", "Saving results to HDF5 file")
         .unwrap();
+    app.emit("event-log", "save::start")
+        .unwrap();
     let save_file = task::spawn_blocking(move || save_dataframe(df_to_write, file).map_err(|e| e))
         .await
         .map_err(|e| {

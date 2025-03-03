@@ -7,8 +7,8 @@ const config: Config = {
     mermaid: true,
   },
   themes: ["@docusaurus/theme-mermaid"],
-  title: "PSP Data Viewer | Docs",
-  tagline: "imagine i actually documented it tho",
+  title: "Dataviewer.Space | Docs",
+  tagline: "",
   favicon: "img/favicon.ico",
 
   // Set the production url of your site here
@@ -97,8 +97,8 @@ const config: Config = {
     navbar: {
       // title: 'PSP Data Viewer',
       logo: {
-        alt: "PSP Logo",
-        src: "img/logo.svg",
+        alt: "Dataviewer.Space Logo",
+        src: "img/logo_square.svg",
       },
       items: [
         { to: "/architecture", label: "Architecture", position: "left" },
@@ -118,7 +118,7 @@ const config: Config = {
           type: "docSidebar",
           sidebarId: "backendSidebar",
           position: "left",
-          label: "Backend",
+          label: "Data Format",
         },
         {
           href: "https://github.com/rajanphadnis/psp-data-viewer",
@@ -148,8 +148,8 @@ const config: Config = {
             },
 
             {
-              label: "Backend",
-              to: "/docs/backend/intro",
+              label: "Data Format",
+              to: "/docs/format/intro",
             },
           ],
         },

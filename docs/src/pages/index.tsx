@@ -19,12 +19,12 @@ function HomepageHeader() {
         <div className={styles.buttons}>
           <Link
             className="button button--secondary button--lg"
-            to="https://psp.rajanphadnis.com">
+            to="https://psp.dataviewer.space">
             Data Viewer (GUI) 💻
           </Link>
           <Link
             className="button button--secondary button--lg"
-            to="https://psp-admin.rajanphadnis.com">
+            to="https://admin.dataviewer.space/pspl">
             Admin Dashboard 📊
           </Link>
         </div>

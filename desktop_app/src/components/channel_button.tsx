@@ -1,4 +1,4 @@
-import { Component, createMemo, Setter } from "solid-js";
+import { Component, createMemo, Match, Setter, Switch } from "solid-js";
 import { LoadingStatus, SelectedFile } from "../types";
 import { fetchTDMSData } from "../processing/fetch";
 import { SetStoreFunction } from "solid-js/store";
@@ -23,11 +23,20 @@ const ChannelButton: Component<{
 
     const conditionalCSS = createMemo(() => {
         switch (loading_status()) {
-            case LoadingStatus.FINISHED:
-                return "bg-emerald-700 hover:bg-emerald-600";
-
             case LoadingStatus.LOADING:
+                return "bg-orange-400 hover:bg-orange-300";
+
+            case LoadingStatus.LOADED:
                 return "bg-amber-400 hover:bg-amber-300";
+
+            case LoadingStatus.CALC:
+                return "bg-yellow-400 hover:bg-yellow-300";
+
+            case LoadingStatus.RESIZE:
+                return "bg-lime-400 hover:bg-lime-300";
+
+            case LoadingStatus.FINISHED:
+                return "bg-green-700 hover:bg-green-600";
 
             default:
                 return "cursor-pointer hover:bg-neutral-400";
@@ -59,7 +68,15 @@ const ChannelButton: Component<{
                     LoadingStatus.FINISHED
                 );
             }
-        }}>{props.channel_name}{loading_status() == LoadingStatus.LOADING ? " (Loading...)" : ""}</button>
+        }}>
+            <Switch>
+                <Match when={loading_status() == LoadingStatus.LOADING}>{props.channel_name} (Loading...)</Match>
+                <Match when={loading_status() == LoadingStatus.UNLOADED}>{props.channel_name}</Match>
+                <Match when={loading_status() == LoadingStatus.FINISHED}>{props.channel_name}</Match>
+                <Match when={loading_status() == LoadingStatus.LOADED}>{props.channel_name} (Loaded)</Match>
+                <Match when={loading_status() == LoadingStatus.CALC}>{props.channel_name} (Applying Calcs...)</Match>
+                <Match when={loading_status() == LoadingStatus.RESIZE}>{props.channel_name} (Resizing...)</Match>
+            </Switch></button>
     </div>;
 };
 
