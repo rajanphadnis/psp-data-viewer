@@ -8,14 +8,11 @@ use polars::{
     series::Series,
 };
 use std::{
-    path::{Path, PathBuf},
+    path::Path,
     sync::{Arc, Mutex},
 };
 use tdms::TDMSFile;
 use tokio::task::{self, JoinHandle};
-// use std::sync::{Arc, Mutex};
-// use tokio::task::{self, JoinHandle};
-// use std::path::{Path, PathBuf};
 
 pub async fn flatten(files: Vec<DataFile>) -> Result<(Vec<DataChannel>, Vec<DataFrame>), String> {
     let channels_info = Arc::new(Mutex::new(Vec::<DataChannel>::new()));
