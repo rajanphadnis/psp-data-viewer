@@ -93,7 +93,7 @@ const config: Config = {
       disableSwitch: true,
       respectPrefersColorScheme: false,
     },
-    image: "img/liquids-logo.png",
+    image: "img/logo-big.png",
     navbar: {
       // title: 'PSP Data Viewer',
       logo: {

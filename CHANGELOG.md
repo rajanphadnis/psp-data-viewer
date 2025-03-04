@@ -1,3 +1,9 @@
+## v0.8.26
+updated docs SEO logo
+
+### Changed
+- bug fixes
+
 ## v0.8.25
 added doc auto-deploy
 
