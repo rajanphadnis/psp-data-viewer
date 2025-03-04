@@ -1,3 +1,9 @@
+## v0.8.24
+updated docs and have a working tdms-only desktop app
+
+### Changed
+- bug fixes
+
 ## v0.8.23
 added working desktop formatter
 
