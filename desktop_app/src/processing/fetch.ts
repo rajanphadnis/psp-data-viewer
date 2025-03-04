@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { summarizeChannelsIntoGroups } from "./summarize_channels_into_groups";
-import { FileGroup, SelectedFile } from "../types";
+import { CompilingStatus, FileGroup, SelectedFile } from "../types";
 import { SetStoreFunction } from "solid-js/store";
 import { Setter } from "solid-js";
 import { readRawData } from "./read_raw_tdms";
@@ -12,7 +12,8 @@ export async function fetchChannels(
   }>,
   setErrorMsg: Setter<string>,
   filePath: string,
-  setEventLog: SetStoreFunction<string[]>
+  setEventLog: SetStoreFunction<string[]>,
+  setCompileStatus: Setter<CompilingStatus>
 ) {
   const isTDMS = filePath.slice(-5) == ".tdms";
   if (isTDMS) {
@@ -50,6 +51,7 @@ export async function fetchChannels(
         console.log(errors);
         setEventLog((log) => [...log, `Failed to open TDMS file. TDMS segments may be corrupted or cut short.`]);
         setErrorMsg(errors);
+        setCompileStatus(CompilingStatus.FAILED);
       });
   }
 }

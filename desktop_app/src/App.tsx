@@ -50,7 +50,7 @@ function App() {
               }
               for (let f = 0; f < files.length; f++) {
                 const file = files[f];
-                await fetchChannels(setFiles, setErrorMsg, file, setEventLog);
+                await fetchChannels(setFiles, setErrorMsg, file, setEventLog, setCompileStatus);
               }
             }}>Add Files</button>
           </div>
@@ -94,7 +94,9 @@ function App() {
         </div>
         <p class="text-red-400 font-bold">{errorMsg()}</p>
         <Show when={files.files.length > 0}>
-          <CompileButton setFiles={setFiles} files={files} setErrorMsg={setErrorMsg} keepRawData={keepRawData} compileStatus={compileStatus} setCompileStatus={setCompileStatus} />
+          <Show when={compileStatus() != CompilingStatus.FAILED}>
+            <CompileButton setFiles={setFiles} files={files} setErrorMsg={setErrorMsg} keepRawData={keepRawData} compileStatus={compileStatus} setCompileStatus={setCompileStatus} />
+          </Show>
           <Show when={compileStatus() == CompilingStatus.READY}>
             <div class="flex flex-row">
               <input id='keepRawData' type='checkbox' checked={keepRawData()} onchange={(e) => {
