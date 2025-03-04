@@ -98,7 +98,7 @@ const config: Config = {
       // title: 'PSP Data Viewer',
       logo: {
         alt: "Dataviewer.Space Logo",
-        src: "img/logo_square.svg",
+        src: "img/logo_banner_med.svg",
       },
       items: [
         { to: "/architecture", label: "Architecture", position: "left" },

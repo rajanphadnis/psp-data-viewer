@@ -25,7 +25,7 @@ TDMS channels have the following limitations:
 - Channel names cannot contain the following characters:
   - `\`
   - `/`
-  - `__` (double underscore)
+  - `__` (double underscore) (a single underscore is fine)
   - `::` (double colon)
   - ` ` (whitespace)
 - Each channel must have the `Channel Type` property defined (must be a string)
@@ -56,7 +56,7 @@ Channel name limitations:
 - Channel names cannot contain the following characters:
   - `\`
   - `/`
-  - `__` (double underscore)
+  - `__` (double underscore) (a single underscore is fine)
   - `::` (double colon)
   - ` ` (whitespace)
 
