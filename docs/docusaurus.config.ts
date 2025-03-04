@@ -149,7 +149,7 @@ const config: Config = {
 
             {
               label: "Data Format",
-              to: "/docs/format/intro",
+              to: "/docs/format/api",
             },
           ],
         },
