@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
 import { Setter } from "solid-js";
 import { SetStoreFunction } from "solid-js/store";
-import { CompilingStatus, LoadingStatus, SelectedFile } from "./types";
+import { CompilingStatus, CsvFile, LoadingStatus, SelectedFile } from "./types";
 
 export function fileNameFromPath(path: string) {
   return path.split("\\").pop();
@@ -99,7 +99,8 @@ export function processLogMessage(
     files: SelectedFile[];
   }>,
   message: string,
-  setCompileStatus: Setter<CompilingStatus>
+  setCompileStatus: Setter<CompilingStatus>,
+  setCsv: SetStoreFunction<CsvFile[]>
 ) {
   if (message.startsWith("read::start::")) {
     const channel_name = message.replace("read::start::", "");
@@ -211,5 +212,41 @@ export function processLogMessage(
   }
   if (message.startsWith("save::start")) {
     setCompileStatus(CompilingStatus.SAVING);
+  }
+  if (message.startsWith("csv_gather::start::")) {
+    setCompileStatus(CompilingStatus.FLATTENING);
+    const file_path = message.replace("csv_gather::start::", "");
+    setCsv(
+      (file) => file.file_path == file_path,
+      "state",
+      LoadingStatus.LOADING
+    );
+  }
+  if (message.startsWith("csv_gather::complete::")) {
+    // setCompileStatus(CompilingStatus.RESIZING);
+    const file_path = message.replace("csv_gather::complete::", "");
+    setCsv(
+      (file) => file.file_path == file_path,
+      "state",
+      LoadingStatus.LOADED
+    );
+  }
+  if (message.startsWith("csv_resize::start::")) {
+    setCompileStatus(CompilingStatus.RESIZING);
+    const file_path = message.replace("csv_resize::start::", "");
+    setCsv(
+      (file) => file.file_path == file_path,
+      "state",
+      LoadingStatus.RESIZE
+    );
+  }
+  if (message.startsWith("csv_resize::complete::")) {
+    // setCompileStatus(CompilingStatus.SAVING);
+    const file_path = message.replace("csv_resize::complete::", "");
+    setCsv(
+      (file) => file.file_path == file_path,
+      "state",
+      LoadingStatus.FINISHED
+    );
   }
 }

@@ -1,5 +1,13 @@
+## v0.9.0
+Added desktop formatter and updated docs
+
+### Changed
+- bug fixes
+- Added desktop formatter (TDMS + CSV = HDF5)
+- Update docs to Dataviewer branding and added desktop formatter docs
+
 ## v0.8.28
-added verion check to desktop formatter
+added version check to desktop formatter
 
 ### Changed
 - bug fixes

@@ -62,13 +62,11 @@ export async function fetchChannels(
         setCsv((currentCSV) => {
           let toReturn: {
             channel_name: string;
-            state: LoadingStatus;
           }[] = [];
           for (let i = 0; i < headers.length; i++) {
             const chan = headers[i];
             const toPush = {
               channel_name: chan,
-              state: LoadingStatus.UNLOADED,
             };
             toReturn.push(toPush);
           }
@@ -78,11 +76,18 @@ export async function fetchChannels(
               csv_delay: 0,
               file_path: filePath,
               datasets: toReturn,
+              state: LoadingStatus.UNLOADED
             } as CsvFile,
           ];
         });
       })
-      .catch((error) => {});
+      .catch((error) => {
+        console.log(error);
+        setEventLog((log) => [...log, `Failed to open/read CSV file.`]);
+        setErrorMsg(error);
+        setCompileStatus(CompilingStatus.FAILED);
+        setCsv((file) => file.file_path == filePath, "state", LoadingStatus.ERROR);
+      });
   }
 }
 

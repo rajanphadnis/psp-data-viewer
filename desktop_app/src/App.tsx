@@ -21,7 +21,7 @@ function App() {
 
   listen<string>('event-log', (event) => {
     console.log(event);
-    processLogMessage(files, setFiles, event.payload, setCompileStatus);
+    processLogMessage(files, setFiles, event.payload, setCompileStatus, setCsv);
     setEventLog((currentLog) => [...currentLog, event.payload]);
     const logBox = document.getElementById("logBox") as HTMLDivElement;
     setTimeout(() => {

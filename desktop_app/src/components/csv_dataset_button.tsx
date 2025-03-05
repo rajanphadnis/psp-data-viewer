@@ -1,7 +1,7 @@
 import { Component, createMemo, Match, Setter, Switch } from "solid-js";
-import { CsvFile, LoadingStatus, SelectedFile } from "../types";
-import { fetchCSVData, fetchTDMSData } from "../processing/fetch";
 import { SetStoreFunction } from "solid-js/store";
+import { fetchCSVData } from "../processing/fetch";
+import { CsvFile, LoadingStatus } from "../types";
 
 const CsvDatasetButton: Component<{
     csv: CsvFile[],
@@ -12,7 +12,7 @@ const CsvDatasetButton: Component<{
 }> = (props) => {
 
     const loading_status = createMemo(() => {
-        return props.csv.filter((file) => file.file_path == props.file_path)[0].datasets.filter((dataset) => dataset.channel_name == props.channel_name)[0].state;
+        return props.csv.filter((file) => file.file_path == props.file_path)[0].state;
 
     });
 
@@ -43,8 +43,6 @@ const CsvDatasetButton: Component<{
             if (loading_status() == LoadingStatus.UNLOADED) {
                 props.setCsv(
                     (file) => file.file_path == props.file_path,
-                    "datasets",
-                    (channel) => channel.channel_name == props.channel_name,
                     "state",
                     LoadingStatus.LOADING
                 );
@@ -52,8 +50,6 @@ const CsvDatasetButton: Component<{
                 // await fetchTDMSData(props.setFiles, props.files, props.setErrorMsg, props.path, props.groupName, props.channel_name);
                 props.setCsv(
                     (file) => file.file_path == props.file_path,
-                    "datasets",
-                    (channel) => channel.channel_name == props.channel_name,
                     "state",
                     LoadingStatus.FINISHED
                 );

@@ -58,9 +58,9 @@ export type ExportChannel = {
 export type CsvFile = {
   csv_delay: number;
   file_path: string;
+  state: LoadingStatus;
   datasets: {
     channel_name: string;
-    state: LoadingStatus;
     data: number[] | undefined;
     time: number[] | undefined;
   }[];
