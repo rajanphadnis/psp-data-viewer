@@ -1,3 +1,9 @@
+## v0.9.1
+changed default keepRawData to false
+
+### Changed
+- bug fixes
+
 ## v0.9.0
 Added desktop formatter and updated docs
 

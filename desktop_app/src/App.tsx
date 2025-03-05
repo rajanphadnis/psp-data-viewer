@@ -15,7 +15,7 @@ function App() {
   const [errorMsg, setErrorMsg] = createSignal("");
   const [files, setFiles] = createStore({ files: [] as SelectedFile[] });
   const [csv, setCsv] = createStore<CsvFile[]>([]);
-  const [keepRawData, setKeepRawData] = createSignal(true);
+  const [keepRawData, setKeepRawData] = createSignal(false);
   const [compileStatus, setCompileStatus] = createSignal(CompilingStatus.READY);
   const [eventLog, setEventLog] = createStore<string[]>([`Dataviewer.Space Desktop Formatter: ${appVersion}, built on ${buildDate}`]);
 

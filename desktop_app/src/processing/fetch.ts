@@ -58,6 +58,7 @@ export async function fetchChannels(
     const fetchChannels: Promise<string[]> = invoke("get_csv_info", { file_path: filePath });
     fetchChannels
       .then((headers) => {
+        setEventLog((log) => [...log, `Opened File: ${filePath}`]);
         console.log(headers);
         setCsv((currentCSV) => {
           let toReturn: {
@@ -80,6 +81,11 @@ export async function fetchChannels(
             } as CsvFile,
           ];
         });
+        setEventLog((log) => [...log, `Read CSV table with headers:`]);
+        for (let i = 0; i < headers.length; i++) {
+          const element = headers[i];
+          setEventLog((log) => [...log, `    ${element}`]);
+        }
       })
       .catch((error) => {
         console.log(error);
