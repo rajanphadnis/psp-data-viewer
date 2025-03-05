@@ -1,6 +1,6 @@
 use crate::{
-    create_timeframe::create_timeframe, process_channel_data::read_data, types::DataFile,
-    DataChannel,
+    create_timeframe::create_timeframe, read_individual_channel::process_channel_data::read_data,
+    types::DataFile, DataChannel,
 };
 use polars::{
     frame::DataFrame,
@@ -65,9 +65,13 @@ pub async fn flatten(
                             format!("Couldn't find channel: {}", channel_name)
                         })?;
 
-                        let channel_data =
-                            read_data(app_channel.clone(), &channel_name, channel_object.1, &tdms_file_clone)
-                                .map_err(|e| e)?;
+                        let channel_data = read_data(
+                            app_channel.clone(),
+                            &channel_name,
+                            channel_object.1,
+                            &tdms_file_clone,
+                        )
+                        .map_err(|e| e)?;
                         app_channel
                             .emit("event-log", format!("read::loaded::{}", channel_name))
                             .unwrap();

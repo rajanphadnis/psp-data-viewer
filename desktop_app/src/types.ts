@@ -36,7 +36,7 @@ export enum LoadingStatus {
   UNLOADED,
   LOADED,
   CALC,
-  RESIZE
+  RESIZE,
 }
 
 export enum CompilingStatus {
@@ -53,4 +53,15 @@ export enum CompilingStatus {
 export type ExportChannel = {
   channel_name: string;
   data: number[];
+};
+
+export type CsvFile = {
+  csv_delay: number;
+  file_path: string;
+  datasets: {
+    channel_name: string;
+    state: LoadingStatus;
+    data: number[] | undefined;
+    time: number[] | undefined;
+  }[];
 };

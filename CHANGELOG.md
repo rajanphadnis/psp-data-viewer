@@ -1,3 +1,9 @@
+## v0.8.27
+added csv and null value support to desktop formatter
+
+### Changed
+- bug fixes
+
 ## v0.8.26
 updated docs SEO logo
 

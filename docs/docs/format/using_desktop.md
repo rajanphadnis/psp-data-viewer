@@ -11,7 +11,7 @@ To create an HDF5 file that works with the Dataviewer.Space platform, there are 
 1. The HDF5 file should not have any groups. All datasets should be written to the root of the file
 2. There have to be at least two datasets in an HDF5 file.
    - One of these datasets have to be named `time`, and have to have a type of `f64`, where each value is a UNIX epoch timestamp in milliseconds. This dataset cannot have any `null` values.
-   - All other datasets must be of type `number` (true/false values must be converted to `1`/`0`), but can contain `null` values
+   - All other datasets must be of type `f64` (true/false values must be converted to `1`/`0`), but can contain `null` values (`null` should be written to HDF5 files as `f64:NAN` as defined by [IEEE 754](https://www.wikiwand.com/en/articles/IEEE_754#NaNs))
 
 To format the dataset names, make sure the following conditions are met:
 

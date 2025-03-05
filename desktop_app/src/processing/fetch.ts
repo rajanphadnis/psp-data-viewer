@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { summarizeChannelsIntoGroups } from "./summarize_channels_into_groups";
-import { CompilingStatus, FileGroup, SelectedFile } from "../types";
+import { CompilingStatus, CsvFile, FileGroup, LoadingStatus, SelectedFile } from "../types";
 import { SetStoreFunction } from "solid-js/store";
 import { Setter } from "solid-js";
 import { readRawData } from "./read_raw_tdms";
@@ -13,7 +13,8 @@ export async function fetchChannels(
   setErrorMsg: Setter<string>,
   filePath: string,
   setEventLog: SetStoreFunction<string[]>,
-  setCompileStatus: Setter<CompilingStatus>
+  setCompileStatus: Setter<CompilingStatus>,
+  setCsv: SetStoreFunction<CsvFile[]>
 ) {
   const isTDMS = filePath.slice(-5) == ".tdms";
   if (isTDMS) {
@@ -53,6 +54,35 @@ export async function fetchChannels(
         setErrorMsg(errors);
         setCompileStatus(CompilingStatus.FAILED);
       });
+  } else {
+    const fetchChannels: Promise<string[]> = invoke("get_csv_info", { file_path: filePath });
+    fetchChannels
+      .then((headers) => {
+        console.log(headers);
+        setCsv((currentCSV) => {
+          let toReturn: {
+            channel_name: string;
+            state: LoadingStatus;
+          }[] = [];
+          for (let i = 0; i < headers.length; i++) {
+            const chan = headers[i];
+            const toPush = {
+              channel_name: chan,
+              state: LoadingStatus.UNLOADED,
+            };
+            toReturn.push(toPush);
+          }
+          return [
+            ...currentCSV,
+            {
+              csv_delay: 0,
+              file_path: filePath,
+              datasets: toReturn,
+            } as CsvFile,
+          ];
+        });
+      })
+      .catch((error) => {});
   }
 }
 
@@ -108,6 +138,42 @@ export async function fetchTDMSData(
         fetchTimeframe
       );
       return data.length;
+    })
+    .catch((error) => {
+      console.error(error);
+      setErrorMsg(error);
+      return 0;
+    });
+}
+
+export async function fetchCSVData(
+  path: string,
+  channel_name: string,
+  setCsv: SetStoreFunction<CsvFile[]>,
+  setErrorMsg: Setter<string>
+) {
+  const fetchData: Promise<[number[], number[]]> = invoke("read_channel", {
+    file_path: path,
+    channel_name: channel_name,
+  });
+  return await fetchData
+    .then((csv_data) => {
+      setCsv(
+        (file) => file.file_path == path,
+        "datasets",
+        (channel) => channel.channel_name == channel_name,
+        "data",
+        csv_data[0]
+      );
+      setCsv(
+        (file) => file.file_path == path,
+        "datasets",
+        (channel) => channel.channel_name == channel_name,
+        "time",
+        csv_data[1]
+      );
+      console.log(csv_data);
+      return csv_data[0].length;
     })
     .catch((error) => {
       console.error(error);

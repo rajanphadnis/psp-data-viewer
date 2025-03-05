@@ -4,15 +4,16 @@ import { createSignal, For, Show } from "solid-js";
 import { createStore } from "solid-js/store";
 import ChannelButton from "./components/channel_button";
 import CompileButton from "./components/compile_button";
+import CsvDatasetButton from './components/csv_dataset_button';
 import DeleteIcon from "./components/icons/delete";
 import { fileNameFromPath, processLogMessage } from "./misc";
 import { fetchChannels } from "./processing/fetch";
-import { CompilingStatus, SelectedFile } from "./types";
+import { CompilingStatus, CsvFile, SelectedFile } from "./types";
 
 function App() {
   const [errorMsg, setErrorMsg] = createSignal("");
   const [files, setFiles] = createStore({ files: [] as SelectedFile[] });
-  // const [csvDelay, setCsvDelay] = createSignal(0);
+  const [csv, setCsv] = createStore<CsvFile[]>([]);
   const [keepRawData, setKeepRawData] = createSignal(true);
   const [compileStatus, setCompileStatus] = createSignal(CompilingStatus.READY);
   const [eventLog, setEventLog] = createStore<string[]>([]);
@@ -50,7 +51,7 @@ function App() {
               }
               for (let f = 0; f < files.length; f++) {
                 const file = files[f];
-                await fetchChannels(setFiles, setErrorMsg, file, setEventLog, setCompileStatus);
+                await fetchChannels(setFiles, setErrorMsg, file, setEventLog, setCompileStatus, setCsv);
               }
             }}>Add Files</button>
           </div>
@@ -84,6 +85,28 @@ function App() {
               </div>
             }}
           </For>
+          <For each={csv}>
+            {(file, _) => {
+              return <div class="bg-neutral-500 rounded-lg p-3 mb-3">
+                <div class="flex flex-row justify-between items-center">
+                  <h1 class="font-bold">{fileNameFromPath(file.file_path)}</h1>
+                  <Show when={compileStatus() == CompilingStatus.READY}>
+                    <button class="cursor-pointer" onclick={() => {
+                      // setFiles("files", (files_inner: SelectedFile[]) => files_inner.filter((filt) => filt.path != file.path));
+                    }}>
+                      <DeleteIcon class="w-4 h-4 fill-white" />
+                    </button>
+                  </Show>
+                </div>
+                <p>CSV Delay: {file.csv_delay}</p>
+                <For each={file.datasets}>
+                  {(dataset, _) => {
+                    return <CsvDatasetButton csv={csv} setCsv={setCsv} setErrorMsg={setErrorMsg} channel_name={dataset.channel_name} file_path={file.file_path} />
+                  }}
+                </For>
+              </div>
+            }}
+          </For>
         </div>
       </div>
       <div class={`w-2/3 text-white h-full flex flex-col p-5 pb-0 ${compileStatus() == CompilingStatus.READY ? "justify-center" : "justify-end"} items-center`}>
@@ -93,9 +116,9 @@ function App() {
           </For>
         </div>
         <p class="text-red-400 font-bold">{errorMsg()}</p>
-        <Show when={files.files.length > 0}>
+        <Show when={files.files.length > 0 || csv.length > 0}>
           <Show when={compileStatus() != CompilingStatus.FAILED}>
-            <CompileButton setFiles={setFiles} files={files} setErrorMsg={setErrorMsg} keepRawData={keepRawData} compileStatus={compileStatus} setCompileStatus={setCompileStatus} />
+            <CompileButton files={files} csv={csv} setErrorMsg={setErrorMsg} keepRawData={keepRawData} compileStatus={compileStatus} setCompileStatus={setCompileStatus} />
           </Show>
           <Show when={compileStatus() == CompilingStatus.READY}>
             <div class="flex flex-row">

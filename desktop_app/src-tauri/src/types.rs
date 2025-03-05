@@ -32,3 +32,17 @@ pub struct DataChannel {
     // constant_cjc: Option<f64>,
     // state: i8,
 }
+
+#[derive(Clone, Debug, serde::Deserialize)]
+pub struct CsvFile {
+    // pub csv_delay: i64,
+    pub file_path: String,
+    // datasets: Vec<CsvDataset>,
+}
+
+#[derive(Clone, Debug, serde::Deserialize)]
+pub struct CsvDataset {
+    // channel_name: String,
+    // data: Option<Vec<f64>>,
+    // time: Option<Vec<f64>>,
+}

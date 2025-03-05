@@ -1,9 +1,10 @@
 use crate::{
-    processing::{flatten::flatten, resize::calc_resize_datasets},
+    processing::{flatten::flatten, read_all_csv::read_all_csv, resize::calc_resize_datasets},
     save_dataframe, stack_duplicate_channels,
-    types::DataFile,
+    types::{CsvFile, DataFile},
 };
 use hdf5::File;
+use polars::prelude::{DataFrameJoinOps, JoinArgs, JoinCoalesce, JoinType, SortMultipleOptions};
 use std::time::SystemTime;
 use tauri::Emitter;
 use tauri_plugin_dialog::DialogExt;
@@ -13,6 +14,7 @@ use tokio::task;
 pub async fn compile(
     app: tauri::AppHandle,
     files: Vec<DataFile>,
+    csv_files: Vec<CsvFile>,
     save_raw_data: bool,
 ) -> Result<(u64, (usize, usize)), String> {
     app.clone()
@@ -20,7 +22,8 @@ pub async fn compile(
         .unwrap();
     let now = SystemTime::now();
     let app_handle = app.clone();
-    let get_file_path = task::spawn_blocking(move || {
+    let compilation_csv = read_all_csv(csv_files, app.clone());
+    let get_file_save_path = task::spawn_blocking(move || {
         let f = File::create(
             app_handle
                 .dialog()
@@ -43,7 +46,7 @@ pub async fn compile(
         .map_err(|e| format!("{}", e))?;
 
     let app_handle_compile = app.clone();
-    let compilation = task::spawn_blocking(move || {
+    let compilation_tdms = task::spawn_blocking(move || {
         println!("Creating dataframes");
         app_handle_compile
             .emit("event-log", "stack::start")
@@ -62,8 +65,58 @@ pub async fn compile(
         .map_err(|e| e)
     });
 
+    let tdms_df_to_write = compilation_tdms
+        .await
+        .map_err(|e| {
+            format!(
+                "Failed to start multi-threaded runner for tdms dataframe compilation: {}",
+                e
+            )
+        })?
+        .map_err(|e| e)?;
+    let csv_df_to_write = compilation_csv.await.map_err(|e| {
+        format!(
+            "Failed to start multi-threaded runner for csv dataframe compilation: {}",
+            e
+        )
+    })?;
+    println!("{}", tdms_df_to_write);
+    let df_to_write = task::spawn_blocking(move || {
+        let master_df = match tdms_df_to_write.join(
+            &csv_df_to_write,
+            ["time"],
+            ["time"],
+            JoinArgs::new(JoinType::Full).with_coalesce(JoinCoalesce::CoalesceColumns),
+            None,
+        ) {
+            Ok(d) => d
+                .sort(
+                    ["time"],
+                    SortMultipleOptions::new().with_order_descending(false),
+                )
+                .map_err(|e| format!("Failed to sort final dataframe by 'time' column: {}", e))?,
+            Err(e) => {
+                return Err(String::from(format!(
+                    "failed to combine CSV and TDMS-generated dataframes: {}",
+                    e
+                )))
+            }
+        };
+        println!("master_df: {}", master_df);
+        Ok(master_df)
+    })
+    .await
+    .map_err(|e| {
+        format!(
+            "Failed to start multi-threaded runner for file saving dialog: {}",
+            e
+        )
+    })?
+    .map_err(|e| e)?;
+
+    println!("master_df: {}", df_to_write);
     app.emit("event-log", "Awaiting file save...").unwrap();
-    let file = get_file_path
+    let file = get_file_save_path
         .await
         .map_err(|e| {
             format!(
@@ -72,20 +125,10 @@ pub async fn compile(
             )
         })?
         .map_err(|e| e)?;
-    let df_to_write = compilation
-        .await
-        .map_err(|e| {
-            format!(
-                "Failed to start multi-threaded runner for dataframe compilation: {}",
-                e
-            )
-        })?
-        .map_err(|e| e)?;
 
     app.emit("event-log", "Saving results to HDF5 file")
         .unwrap();
-    app.emit("event-log", "save::start")
-        .unwrap();
+    app.emit("event-log", "save::start").unwrap();
     let save_file = task::spawn_blocking(move || save_dataframe(df_to_write, file).map_err(|e| e))
         .await
         .map_err(|e| {

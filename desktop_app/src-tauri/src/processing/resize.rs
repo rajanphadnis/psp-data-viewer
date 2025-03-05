@@ -1,10 +1,9 @@
+use crate::{calc_dataset, DataChannel};
 use polars::{
     frame::DataFrame,
-    prelude::{AsofJoinBy, AsofStrategy, Column},
+    prelude::{Column, DataFrameJoinOps, JoinArgs, JoinCoalesce, JoinType},
 };
 use tauri::{AppHandle, Emitter};
-
-use crate::{calc_dataset, DataChannel};
 
 pub fn calc_resize_datasets(
     app: AppHandle,
@@ -29,6 +28,7 @@ pub fn calc_resize_datasets(
                 dataframe
             ))?
             .to_string();
+
         let channel_info = channels_info
             .iter()
             .filter(|i| i.channel_name == channel_base_name)
@@ -59,16 +59,12 @@ pub fn calc_resize_datasets(
         app.emit("event-log", format!("resize::start::{}", channel_base_name))
             .unwrap();
         println!("{} final df: {}", channel_base_name, df);
-        master_df = match df.join_asof_by(
+        master_df = match df.join(
             &master_df,
-            "time",
-            "time",
             ["time"],
             ["time"],
-            AsofStrategy::Nearest,
+            JoinArgs::new(JoinType::Full).with_coalesce(JoinCoalesce::CoalesceColumns),
             None,
-            true,
-            true,
         ) {
             Ok(d) => d,
             Err(e) => {
@@ -87,3 +83,5 @@ pub fn calc_resize_datasets(
     }
     Ok(master_df)
 }
+
+// 1_777_030 + 8_140_750 = 9_917_780

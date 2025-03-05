@@ -12,4 +12,4 @@ Timestamps can be easily converted by most programming languages (API reference 
 
 ## Data
 
-Data is stored in HDF5 files as type `f64`. Null values are supported by the webapp and API, but as of early March, 2025, null values are not generated within the desktop formatter
+Data is stored in HDF5 files as type `f64`. Null values are supported as `f64::NAN` values as defined by [IEEE 754](https://www.wikiwand.com/en/articles/IEEE_754#NaNs)
