@@ -76,7 +76,29 @@ def createStripeAndFirebaseResources(req: https_fn.Request) -> https_fn.Response
         {f"{email}": firestore.ArrayUnion([f"{slug}:manage:permissions"])}, merge=True
     )
     customerDB.collection("general").document("tests").set(
-        {"default": "", "visible": []}
+        {
+            "default": "sample",
+            "visible": [
+                {
+                    "gse_article": "N/A",
+                    "id": "sample",
+                    "name": "Sample Test",
+                    "starting_timestamp": 1708900564402,
+                    "test_article": "N/A",
+                }
+            ],
+        }
+    )
+    customerDB.collection("sample").document("general").set(
+        {
+            "id": "sample",
+            "name": "Sample Test",
+            "gse_article": "N/A",
+            "test_article": "N/A",
+            "azure_datasets": ["straight_line__raw__", "sensor_1__lbf__"],
+            "starting_timestamp": 1708900564402,
+            "ending_timestamp": 1708900564413,
+        }
     )
     # Still need to create a new database and set the "general>tests>default" field to an emtpy string and the "general>tests>visible" field to an empty array
     return https_fn.Response(

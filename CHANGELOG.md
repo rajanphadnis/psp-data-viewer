@@ -1,3 +1,9 @@
+## v0.9.2
+added sample test deployment during provisioning
+
+### Changed
+- bug fixes
+
 ## v0.9.1
 changed default keepRawData to false
 

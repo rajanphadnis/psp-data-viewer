@@ -198,3 +198,29 @@ resource storageRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-
     principalType: 'ServicePrincipal'
   }
 }
+
+resource deploymentScript 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
+  name: 'deployscript-upload-file-${slug}'
+  location: location
+  kind: 'AzureCLI'
+  properties: {
+    azCliVersion: '2.26.1'
+    timeout: 'PT5M'
+    retentionInterval: 'PT1H'
+    environmentVariables: [
+      {
+        name: 'AZURE_STORAGE_ACCOUNT'
+        value: storageAccount.name
+      }
+      {
+        name: 'AZURE_STORAGE_KEY'
+        secureValue: storageAccount.listKeys().keys[0].value
+      }
+      {
+        name: 'CONTENT'
+        value: loadFileAsBase64('sample.hdf5')
+      }
+    ]
+    scriptContent: 'echo "$CONTENT" > sample.hdf5 && az storage file upload --path hdf5_data/sample.hdf5 --source sample.hdf5 -s ${storageAccount::storageAccountFileService::storageAccountFileShare.name}'
+  }
+}
