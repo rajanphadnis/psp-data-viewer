@@ -174,6 +174,38 @@ jobs:
         with:
           script: |
             core.setFailed('mission/package.json not updated to new version ${{ env.GHA_NEW_TAG_NAME_MISSION }}!')
+  version-check-desktop:
+    runs-on: ubuntu-latest
+    outputs:
+      version-code: ${{ steps.version-code-gen.outputs.GHA_VERSION_CODE }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up new test tag
+        run: |
+          TAGNAME=${{ github.ref_name }}
+          NEW_NAME="${TAGNAME//v/}"
+          echo GHA_NEW_TAG_NAME_DESKTOP=$NEW_NAME >> "$GITHUB_ENV"
+      - name: Tag/Release search
+        run: echo "GHA_V_COUNTER_DESKTOP=$(grep '${{ format('"version"{0}', ':') }} "${{ env.GHA_NEW_TAG_NAME_DESKTOP }}"' desktop_app/package.json | wc -l)" >> "$GITHUB_ENV"
+        shell: bash
+      - name: Tag Output
+        run: |
+          echo "env.GHA_V_COUNTER_DESKTOP = ${{ env.GHA_V_COUNTER_DESKTOP }}"
+          echo "env.GHA_NEW_TAG_NAME_DESKTOP = ${{ env.GHA_NEW_TAG_NAME_DESKTOP }}"
+        shell: bash
+      - name: "If pubspec isn't updated, delete the release and tag"
+        uses: dev-drprasad/delete-tag-and-release@v1.0
+        if: env.GHA_V_COUNTER_DESKTOP == '0'
+        with:
+          tag_name: ${{ github.ref_name }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          delete_release: true
+      - name: Find '${{ github.ref_name }}' in package.json
+        if: env.GHA_V_COUNTER_DESKTOP == '0'
+        uses: actions/github-script@v2.1.0
+        with:
+          script: |
+            core.setFailed('desktop_app/package.json not updated to new version ${{ env.GHA_NEW_TAG_NAME_DESKTOP }}!')
 
   generate_matrix:
     needs:
@@ -184,6 +216,7 @@ jobs:
         version-check-admin,
         version-check-docs,
         version-check-mission,
+        version-check-desktop,
       ]
     runs-on: ubuntu-latest
     steps:
@@ -245,7 +278,7 @@ jobs:
           workspaces: "desktop_app/src-tauri -> target"
       - name: Build App
         working-directory: ./desktop_app
-        run: bun install && bun run tauri build
+        run: bun install && bun run prod && bun run tauri build
       - name: Upload Portable EXE
         uses: actions/upload-artifact@v4
         with:

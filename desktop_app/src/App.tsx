@@ -9,6 +9,7 @@ import DeleteIcon from "./components/icons/delete";
 import { fileNameFromPath, processLogMessage } from "./misc";
 import { fetchChannels } from "./processing/fetch";
 import { CompilingStatus, CsvFile, SelectedFile } from "./types";
+import { appVersion, buildDate } from './build_info';
 
 function App() {
   const [errorMsg, setErrorMsg] = createSignal("");
@@ -16,7 +17,7 @@ function App() {
   const [csv, setCsv] = createStore<CsvFile[]>([]);
   const [keepRawData, setKeepRawData] = createSignal(true);
   const [compileStatus, setCompileStatus] = createSignal(CompilingStatus.READY);
-  const [eventLog, setEventLog] = createStore<string[]>([]);
+  const [eventLog, setEventLog] = createStore<string[]>([`Dataviewer.Space Desktop Formatter: ${appVersion}, built on ${buildDate}`]);
 
   listen<string>('event-log', (event) => {
     console.log(event);
