@@ -1,3 +1,9 @@
+## v0.9.4
+fixed auto deployment
+
+### Changed
+- bug fixes
+
 ## v0.9.3
 added sample hdf5 to public site
 

@@ -93,7 +93,7 @@ resource deploymentScript 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
         secureValue: storageAccountKey
       }
     ]
-    scriptContent: 'Invoke-RestMethod -Uri "https://dataviewer.space/sample.hdf5" -OutFile "sample.hdf5" && az storage directory create --name hdf5_data --share-name ${share} && az storage file upload --path "hdf5_data/sample.hdf5" --source sample.hdf5 -s ${share}'
+    scriptContent: 'curl -O "https://dataviewer.space/sample.hdf5" && az storage directory create --name hdf5_data --share-name ${share} && az storage file upload --path "hdf5_data/sample.hdf5" --source sample.hdf5 -s ${share}'
   }
   dependsOn: [
     roleAssignment
