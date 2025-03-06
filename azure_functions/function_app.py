@@ -9,6 +9,7 @@ import sys
 import requests
 import stripe
 import os
+import simplejson
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
@@ -79,7 +80,6 @@ def get_data(req: func.HttpRequest) -> func.HttpResponse:
     channels_to_fetch.append("time")
 
     with h5py.File(f"/hdf5data/hdf5_data/{testID}.hdf5", "r") as f:
-        # with h5py.File(f"./{testID}.hdf5", "r") as f:
         for dataset in channels_to_fetch:
             df[dataset] = f[dataset]
 
@@ -116,12 +116,10 @@ def get_data(req: func.HttpRequest) -> func.HttpResponse:
         totalEndTime - totalPackageTime
     ) * 1000
     dictToReturn["entries_per_dataset_returned"] = downsampledLength
-    jsonToReturn = json.dumps(dictToReturn)
+    jsonToReturn = simplejson.dumps(
+        dictToReturn, ignore_nan=True, separators=(",", ":")
+    )
 
-    # print(f"Fetched all data in {(fetchEndTime - totalStartTime)*1000} ms")
-    # print(f"downsampled and filtered in {(totalPackageTime - fetchEndTime)*1000} ms")
-    # print(f"packaged in {(totalEndTime - totalPackageTime)*1000} ms")
-    # print(filteredDF)
     print(f"return object size in kb: {sys.getsizeof(jsonToReturn) / 1024}")
     return func.HttpResponse(
         body=jsonToReturn,

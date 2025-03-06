@@ -163,22 +163,6 @@ resource functions 'Microsoft.Web/sites@2024-04-01' = {
     }
     publicNetworkAccess: 'Enabled'
   }
-  // resource functionAppName_OneDeploy 'extensions@2024-04-01' = {
-  //   name: 'onedeploy'
-  //   dependsOn: [
-  //     storageAccount::storageAccountBlobService
-  //     storageAccount::storageAccountFileService
-  //     storageAccount::storageAccountBlobService::storageAccountBlobContainer
-  //     storageAccount::storageAccountFileService::storageAccountFileShare
-  //     hostingPlan
-  //     functions::functionConfig
-  //     storageRoleAssignment
-  //   ]
-  //   properties: {
-  //     packageUri: 'https://dataviewer.space/released-package.zip'
-  //     remoteBuild: true
-  //   }
-  // }
   resource functionConfig 'config@2024-04-01' = {
     name: 'web'
     properties: {
@@ -219,62 +203,6 @@ resource storageRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-
     principalType: 'ServicePrincipal'
   }
 }
-
-// resource userAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2018-11-30' = {
-//   name: userAssignedIdentityName
-//   location: resourceGroup().location
-// }
-
-// resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
-//   name: roleAssignmentName
-//   properties: {
-//     roleDefinitionId: contributorRoleDefinitionId
-//     principalId: userAssignedIdentity.properties.principalId
-//     principalType: 'ServicePrincipal'
-//   }
-// }
-
-// resource deploymentScript 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
-//   name: 'deployscript-upload-file-${slug}'
-//   location: location
-//   kind: 'AzureCLI'
-//   dependsOn: [
-//     functions::functionAppName_OneDeploy
-//     storageRoleAssignment
-//     // roleAssignment
-//   ]
-//   // identity: {
-//   //   type: 'UserAssigned'
-//   //   userAssignedIdentities: {
-//   //     '${userAssignedIdentity.id}': {}
-//   //   }
-//   // }
-//   properties: {
-//     cleanupPreference: 'Always'
-//     storageAccountSettings: {
-//       storageAccountKey: storageAccount.listKeys().keys[0].value
-//       storageAccountName: storageAccount.name
-//     }
-//     azCliVersion: '2.26.1'
-//     timeout: 'PT10M'
-//     retentionInterval: 'PT1H'
-//     environmentVariables: [
-//       {
-//         name: 'AZURE_STORAGE_ACCOUNT'
-//         value: storageAccount.name
-//       }
-//       {
-//         name: 'AZURE_STORAGE_KEY'
-//         secureValue: storageAccount.listKeys().keys[0].value
-//       }
-//       {
-//         name: 'CONTENT'
-//         value: loadFileAsBase64('sample.hdf5')
-//       }
-//     ]
-//     scriptContent: 'echo "$CONTENT" > sample.hdf5 && az storage file upload --path hdf5_data/sample.hdf5 --source sample.hdf5 -s ${storageAccount::storageAccountFileService::storageAccountFileShare.name}'
-//   }
-// }
 
 output storageAccountKey string = storageAccount.listKeys().keys[0].value
 output functionAppName string = functionAppName

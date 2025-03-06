@@ -40,20 +40,6 @@ def createStripeAndFirebaseResources(req: https_fn.Request) -> https_fn.Response
             json.dumps({"status": "'email' is a required argument"}), status=400
         )
     stripe.api_key = os.environ.get("STRIPE_TEST")
-    # customer = stripe.Customer.create(
-    #     name=name,
-    #     email=email,
-    #     tax={"validate_location": "immediately"},
-    #     address={
-    #         "country": country,
-    #         "postal_code": customerID,
-    #     },
-    #     shipping={
-    #         "address": {"country": country, "postal_code": customerID},
-    #         "name": name,
-    #     },
-    #     metadata={"slug": slug},
-    # )
     subscription = stripe.Subscription.create(
         customer=customerID,
         collection_method="charge_automatically",
@@ -80,21 +66,27 @@ def createStripeAndFirebaseResources(req: https_fn.Request) -> https_fn.Response
             "default": "sample",
             "visible": [
                 {
-                    "gse_article": "N/A",
+                    "gse_article": "GSE",
                     "id": "sample",
                     "name": "Sample Test",
                     "starting_timestamp": 1708900564402,
-                    "test_article": "N/A",
+                    "test_article": "VEHICLE",
                 }
             ],
+        }
+    )
+    customerDB.collection("general").document("articles").set(
+        {
+            "default_gse": "GSE",
+            "default_test": "sample",
         }
     )
     customerDB.collection("sample").document("general").set(
         {
             "id": "sample",
             "name": "Sample Test",
-            "gse_article": "N/A",
-            "test_article": "N/A",
+            "gse_article": "GSE",
+            "test_article": "VEHICLE",
             "azure_datasets": ["straight_line__raw__", "sensor_1__lbf__"],
             "starting_timestamp": 1708900564402,
             "ending_timestamp": 1708900564413,
