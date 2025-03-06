@@ -38,7 +38,7 @@ export default function Home(): JSX.Element {
   return (
     <Layout
       title={`Docs`}
-      description="Documentation for all things PSP Data Viewer-esque">
+      description="Documentation for Dataviewer.Space">
       <HomepageHeader />
       <main>
         <HomepageFeatures />

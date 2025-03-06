@@ -12,7 +12,6 @@ from azure.cli.core import get_default_cli
     memory=options.MemoryOption.MB_512,
 )
 def updateAPIInstances(req: https_fn.Request) -> https_fn.Response:
-    # Comments
     instances = req.args["instances"] if "instances" in req.args else None
     if instances is None:
         return https_fn.Response(

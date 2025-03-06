@@ -68,7 +68,6 @@ const StartPage: Component<{}> = (props) => {
       setOrgName(splitParams[3]);
       setZipCode(splitParams[4]);
 
-      // TODO: see if zip code and country can be prefilled
       const elements = stripe.elements({
         mode: "setup",
         currency: "usd",

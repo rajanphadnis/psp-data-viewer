@@ -63,7 +63,7 @@
   /* background-color: red; */
   /* take entire space */
   position: absolute;
-  inset: 0; /* TODO change top: if you have content in nested grid */
+  inset: 0;
 }
 
 .grid-stack-item-removing {

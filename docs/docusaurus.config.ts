@@ -95,7 +95,6 @@ const config: Config = {
     },
     image: "img/logo-big.png",
     navbar: {
-      // title: 'PSP Data Viewer',
       logo: {
         alt: "Dataviewer.Space Logo",
         src: "img/logo_banner_med.svg",
@@ -173,10 +172,14 @@ const config: Config = {
               label: "GitHub",
               href: "https://github.com/rajanphadnis/psp-data-viewer",
             },
+            {
+              label: "Feature Roadmap",
+              href: "https://github.com/users/rajanphadnis/projects/3/views/4"
+            }
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Rajan Phadnis.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Dataviewer.Space`,
     },
     prism: {
       theme: prismThemes.github,
