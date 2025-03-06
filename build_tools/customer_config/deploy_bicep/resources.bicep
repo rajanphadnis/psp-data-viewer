@@ -10,6 +10,12 @@ param mountPath string = '/hdf5data'
 param storageAccountName string = 'dataviewerstor${slug}'
 param deploymentStorageContainerName string = 'dataviewercont${slug}'
 param storageRoleDefinitionId string = 'b7e6dc6d-f1e8-4753-8033-0f276bb0955b'
+var userAssignedIdentityName = 'configDeployer${slug}'
+var roleAssignmentName = guid(resourceGroup().id, 'contributor')
+var contributorRoleDefinitionId = resourceId(
+  'Microsoft.Authorization/roleDefinitions',
+  'b24988ac-6180-42a0-ab88-20f7382dd24c'
+)
 
 resource hostingPlan 'Microsoft.Web/serverfarms@2024-04-01' = {
   name: functionAppName
@@ -36,11 +42,17 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2023-05-01' = {
   kind: 'StorageV2'
   properties: {
     defaultToOAuthAuthentication: true
-    allowCrossTenantReplication: false
+    allowCrossTenantReplication: true
     minimumTlsVersion: 'TLS1_2'
-    allowBlobPublicAccess: false
+    allowBlobPublicAccess: true
     supportsHttpsTrafficOnly: true
     accessTier: 'Cool'
+    allowSharedKeyAccess: true
+    azureFilesIdentityBasedAuthentication: {
+      defaultSharePermission: 'StorageFileDataSmbShareContributor'
+      directoryServiceOptions: 'None'
+    }
+    publicNetworkAccess: 'Enabled'
   }
   resource storageAccountBlobService 'blobServices@2023-05-01' = {
     name: 'default'
@@ -127,7 +139,7 @@ resource functions 'Microsoft.Web/sites@2024-04-01' = {
       deployment: {
         storage: {
           type: 'blobcontainer'
-          value: '${storageAccount.properties.primaryEndpoints.blob}${deploymentStorageContainerName}'
+          value: '${storageAccount.properties.primaryEndpoints.blob}${storageAccount::storageAccountBlobService::storageAccountBlobContainer.name}'
           authentication: {
             type: 'SystemAssignedIdentity'
           }
@@ -151,13 +163,22 @@ resource functions 'Microsoft.Web/sites@2024-04-01' = {
     }
     publicNetworkAccess: 'Enabled'
   }
-  resource functionAppName_OneDeploy 'extensions@2024-04-01' = {
-    name: 'onedeploy'
-    properties: {
-      packageUri: 'https://dataviewer.space/released-package.zip'
-      remoteBuild: true
-    }
-  }
+  // resource functionAppName_OneDeploy 'extensions@2024-04-01' = {
+  //   name: 'onedeploy'
+  //   dependsOn: [
+  //     storageAccount::storageAccountBlobService
+  //     storageAccount::storageAccountFileService
+  //     storageAccount::storageAccountBlobService::storageAccountBlobContainer
+  //     storageAccount::storageAccountFileService::storageAccountFileShare
+  //     hostingPlan
+  //     functions::functionConfig
+  //     storageRoleAssignment
+  //   ]
+  //   properties: {
+  //     packageUri: 'https://dataviewer.space/released-package.zip'
+  //     remoteBuild: true
+  //   }
+  // }
   resource functionConfig 'config@2024-04-01' = {
     name: 'web'
     properties: {
@@ -199,28 +220,61 @@ resource storageRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-
   }
 }
 
-resource deploymentScript 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
-  name: 'deployscript-upload-file-${slug}'
-  location: location
-  kind: 'AzureCLI'
-  properties: {
-    azCliVersion: '2.26.1'
-    timeout: 'PT5M'
-    retentionInterval: 'PT1H'
-    environmentVariables: [
-      {
-        name: 'AZURE_STORAGE_ACCOUNT'
-        value: storageAccount.name
-      }
-      {
-        name: 'AZURE_STORAGE_KEY'
-        secureValue: storageAccount.listKeys().keys[0].value
-      }
-      {
-        name: 'CONTENT'
-        value: loadFileAsBase64('sample.hdf5')
-      }
-    ]
-    scriptContent: 'echo "$CONTENT" > sample.hdf5 && az storage file upload --path hdf5_data/sample.hdf5 --source sample.hdf5 -s ${storageAccount::storageAccountFileService::storageAccountFileShare.name}'
-  }
-}
+// resource userAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2018-11-30' = {
+//   name: userAssignedIdentityName
+//   location: resourceGroup().location
+// }
+
+// resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
+//   name: roleAssignmentName
+//   properties: {
+//     roleDefinitionId: contributorRoleDefinitionId
+//     principalId: userAssignedIdentity.properties.principalId
+//     principalType: 'ServicePrincipal'
+//   }
+// }
+
+// resource deploymentScript 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
+//   name: 'deployscript-upload-file-${slug}'
+//   location: location
+//   kind: 'AzureCLI'
+//   dependsOn: [
+//     functions::functionAppName_OneDeploy
+//     storageRoleAssignment
+//     // roleAssignment
+//   ]
+//   // identity: {
+//   //   type: 'UserAssigned'
+//   //   userAssignedIdentities: {
+//   //     '${userAssignedIdentity.id}': {}
+//   //   }
+//   // }
+//   properties: {
+//     cleanupPreference: 'Always'
+//     storageAccountSettings: {
+//       storageAccountKey: storageAccount.listKeys().keys[0].value
+//       storageAccountName: storageAccount.name
+//     }
+//     azCliVersion: '2.26.1'
+//     timeout: 'PT10M'
+//     retentionInterval: 'PT1H'
+//     environmentVariables: [
+//       {
+//         name: 'AZURE_STORAGE_ACCOUNT'
+//         value: storageAccount.name
+//       }
+//       {
+//         name: 'AZURE_STORAGE_KEY'
+//         secureValue: storageAccount.listKeys().keys[0].value
+//       }
+//       {
+//         name: 'CONTENT'
+//         value: loadFileAsBase64('sample.hdf5')
+//       }
+//     ]
+//     scriptContent: 'echo "$CONTENT" > sample.hdf5 && az storage file upload --path hdf5_data/sample.hdf5 --source sample.hdf5 -s ${storageAccount::storageAccountFileService::storageAccountFileShare.name}'
+//   }
+// }
+
+output storageAccountKey string = storageAccount.listKeys().keys[0].value
+output functionAppName string = functionAppName

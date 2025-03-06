@@ -29,3 +29,20 @@ module resources 'resources.bicep' = {
     stripeKey: stripeKey
   }
 }
+
+module codeDeploy './codeDeploy.bicep' = {
+  name: 'codeDeploy'
+  scope: resourceGroup
+  params: {
+    functionAppName: resources.outputs.functionAppName
+  }
+}
+
+module sampleDeploy './sample_test.bicep' = {
+  name: 'sample_test'
+  scope: resourceGroup
+  params: {
+    slug: slug
+    storageAccountKey: resources.outputs.storageAccountKey
+  }
+}

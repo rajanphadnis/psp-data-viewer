@@ -69,3 +69,4 @@ desktop_app/**.tdms
 desktop_app/**.tdms_index
 desktop_app/**.csv
 desktop_app/**.hdf5
+functions/src/__pycache__/
