@@ -1,3 +1,9 @@
+## v0.9.6
+updated docs
+
+### Changed
+- bug fixes
+
 ## v0.9.5
 fixed null value parsing in API
 
