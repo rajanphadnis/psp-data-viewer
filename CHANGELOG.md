@@ -1,3 +1,9 @@
+## v0.9.7
+cleaned dead code and moved to dynamic HDF5 upload process (direct from client to Azure)
+
+### Changed
+- bug fixes
+
 ## v0.9.6
 updated docs
 
