@@ -1,20 +1,15 @@
-import { Accessor, Setter } from "solid-js";
-import { AccessControlDoc, PermissionType, TestBasics, TestData } from "../types";
 import {
-  doc,
-  getDocFromCache,
-  getDoc,
-  DocumentSnapshot,
   DocumentData,
-  query,
-  updateDoc,
-  FieldValue,
+  DocumentSnapshot,
   arrayRemove,
-  setDoc,
   arrayUnion,
   deleteField,
+  doc,
+  getDoc,
+  setDoc
 } from "firebase/firestore";
-import { decode, encode } from "./firebase-encode";
+import { Setter } from "solid-js";
+import { AccessControlDoc, PermissionType, TestBasics, TestData } from "../types";
 
 /**
  * Contacts the Firestore database and gets the document specific to the currently selected test.
@@ -56,18 +51,8 @@ export async function getTestInfo(test_ID: string, setTestBasics: Setter<TestDat
     datasets: datasets.sort((a, b) => a.localeCompare(b)),
   };
   setTestBasics(toReturn);
-
-  // setAllDatasets(datasets.sort((a, b) => a.localeCompare(b)));
-
-  // const initial_timestamp: number = docData["initial_timestamp"];
-  // const starting_timestamp: number = parseInt(docData["starting_timestamp"]);
-  // const ending_timestamp: number = parseInt(docData["ending_timestamp"]);
-
-  // setPlotRange({ start: starting_timestamp, end: ending_timestamp });
-
   console.log("got test-specific data");
 
-  // return
   return toReturn;
 }
 

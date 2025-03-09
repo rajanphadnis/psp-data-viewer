@@ -1,9 +1,8 @@
-import { Accessor, Component, createEffect, createSignal, For, onMount, Show } from "solid-js";
+import { Accessor, Component, createEffect, createSignal, onMount, Show } from "solid-js";
+import { new_upload } from "../../../db/new";
 import { useState } from "../../../state";
-import styles from "./finalize.module.css";
-import { new_upload_hdf5, new_upload_tdsm_csv } from "../../../db/new";
-import { doc, onSnapshot } from "firebase/firestore";
 import CheckIcon from "../../icons/check";
+import styles from "./finalize.module.css";
 
 const UploadFinalizeLayout: Component<{
   name: Accessor<string>;
@@ -32,43 +31,31 @@ const UploadFinalizeLayout: Component<{
   ] = useState();
 
   const [status, setStatus] = createSignal<string[]>(["Something Went Wrong", "Something Went Wrong", "0", "0"]);
-  const [uploadPercent, setUploadPercent] = createSignal<number[]>(new Array<number>());
+  const [uploadPercent, setUploadPercent] = createSignal<number>(0);
   onMount(async () => {
     console.log("mounted");
     setLoadingState({ isLoading: true, statusMessage: "Creating Test..." });
-    if (props.isHDF5()) {
-      await new_upload_hdf5(
-        setStatus,
-        props.filePaths(),
-        props.id(),
-        setUploadPercent,
-        props.name(),
-        props.gseArticle(),
-        props.testArticle()
-      );
-    } else {
-      await new_upload_tdsm_csv(
-        setStatus,
-        props.filePaths(),
-        props.id(),
-        setUploadPercent,
-        props.name(),
-        props.gseArticle(),
-        props.testArticle(),
-        props.tdmsDelay()
-      );
-    }
-    const unsubscribe = onSnapshot(doc(globalThis.db, `/${props.id()}/test_creation`), (doc) => {
-      console.log("Current data: ", doc);
-      if (doc.data() != undefined) {
-        setStatus([
-          doc.data()!["creation_status"],
-          doc.data()!["creation_status_next_step"],
-          doc.data()!["creation_status_current"].toString(),
-          doc.data()!["creation_status_max_steps"].toString(),
-        ]);
-      }
-    });
+    await new_upload(
+      setStatus,
+      props.filePaths()[0],
+      props.id(),
+      setUploadPercent,
+      props.name(),
+      props.gseArticle(),
+      props.testArticle(),
+      org()!
+    );
+    // const unsubscribe = onSnapshot(doc(globalThis.db, `/${props.id()}/test_creation`), (doc) => {
+    //   console.log("Current data: ", doc);
+    //   if (doc.data() != undefined) {
+    //     setStatus([
+    //       doc.data()!["creation_status"],
+    //       doc.data()!["creation_status_next_step"],
+    //       doc.data()!["creation_status_current"].toString(),
+    //       doc.data()!["creation_status_max_steps"].toString(),
+    //     ]);
+    //   }
+    // });
   });
 
   createEffect(() => {
@@ -100,19 +87,13 @@ const UploadFinalizeLayout: Component<{
             <p>TDMS Delay: {props.tdmsDelay()}s</p>
           </Show>
         </div>
-        <Show when={!(uploadPercent().every((item) => item === uploadPercent()[0]) && uploadPercent()[0] == 1)}>
+        <Show when={uploadPercent() != 1}>
           <div class={styles.splitDiv} style={{ "align-items": "center", overflow: "auto", height: "100%" }}>
-            <For each={uploadPercent()}>
-              {(item, index) => {
-                return (
-                  <div class={styles.fileProgressDiv}>
-                    <p>File {index() + 1}</p>
-                    <progress value={item} />
-                    <p>{(item * 100).toFixed(2)}%</p>
-                  </div>
-                );
-              }}
-            </For>
+            <div class={styles.fileProgressDiv}>
+              <p>File Upload:</p>
+              <progress value={uploadPercent()} />
+              <p>{(uploadPercent() * 100).toFixed(2)}%</p>
+            </div>
           </div>
         </Show>
         <div class={styles.splitDiv} style={{ "align-items": "center" }}>

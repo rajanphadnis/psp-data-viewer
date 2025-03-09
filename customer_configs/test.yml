@@ -2,7 +2,7 @@
 azure:
   function_app_name: dataviewer-serverless-function-test
   resource_group: dataviewer-rg-test
-  storage_account: dataviewerstoragetest
+  storage_account: dataviewerstortest
   share_name: dataviewer-fileshare-test
 colors:
   accent: '#8e6f3e'

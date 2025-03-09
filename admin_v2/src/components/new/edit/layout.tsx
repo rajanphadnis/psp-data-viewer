@@ -1,14 +1,13 @@
-import { Accessor, Component, createEffect, createMemo, createSignal, For, Setter, Show } from "solid-js";
-import { useState } from "../../../state";
-import styles from "./edit.module.css";
 import Resizable from "@corvu/resizable";
+import { createFileUploader } from "@solid-primitives/upload";
+import { Accessor, Component, createEffect, createMemo, For, Setter, Show } from "solid-js";
+import { appVersion } from "../../../generated_app_check_secret";
+import { useState } from "../../../state";
 import { EditorEntry } from "../../manage_tests/editor/editor_entry";
 import SectionTitle from "../../title";
 import UploadCreateButton from "./add_file_button";
+import styles from "./edit.module.css";
 import NewUploadComponent from "./upload_component";
-import { createFileUploader } from "@solid-primitives/upload";
-import { new_upload_hdf5, new_upload_tdsm_csv } from "../../../db/new";
-import { appVersion } from "../../../generated_app_check_secret";
 
 const UploadEditLayout: Component<{
   name: Accessor<string>;

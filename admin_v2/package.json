@@ -33,7 +33,7 @@
         "vitest": "^2.1.5"
     },
     "dependencies": {
-        "@azure/storage-file-share": "^12.24.0",
+        "@azure/storage-file-share": "^12.26.0",
         "@solid-primitives/storage": "^4.2.1",
         "@solid-primitives/upload": "^0.0.117",
         "@solidjs/meta": "^0.29.4",
