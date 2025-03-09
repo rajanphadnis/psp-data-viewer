@@ -79,7 +79,7 @@ const MainLayout: Component<{}> = (props) => {
           path="/:org/new"
           component={() => (
             <PanelLayout>
-              <Show when={permissions()!} fallback={<LogInComponent />}>
+              <Show when={permissions()! && permissions()!.includes(`${org()}:manage:tests`)} fallback={<LogInComponent />}>
                 <NewTest />
               </Show>
             </PanelLayout>
@@ -201,7 +201,7 @@ const PanelLayout: Component<{ children?: any }> = (props) => {
             <Show when={org()}>
               <NavBarItem name={permissions() ? "Manage Tests" : "Tests"} route={`/${params.org}/tests`} />
             </Show>
-            <Show when={permissions()!}>
+            <Show when={permissions()! && permissions()!.includes(`${org()}:manage:tests`)}>
               <NavBarItem name="New Test" route={`/${params.org}/new`} />
             </Show>
             <Show when={permissions()!}>

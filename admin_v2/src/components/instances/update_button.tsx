@@ -1,7 +1,6 @@
 import { Accessor, Component, createSignal, Show } from "solid-js";
-import styles from "./instances.module.css";
-import { useState } from "../../state";
 import { runRequest } from "../../db/azure_interaction";
+import { useState } from "../../state";
 
 const InstanceUpdateButton: Component<{ instanceCount: Accessor<number> }> = (props) => {
   const [
@@ -25,7 +24,9 @@ const InstanceUpdateButton: Component<{ instanceCount: Accessor<number> }> = (pr
   return (
     <button
       title="Set Instance Count"
-      class={styles.configButton}
+      // class={styles.configButton}
+      class="m-3 p-5 w-full text-black font-bold cursor-pointer flex flex-row justify-center items-center text-center bg-rush hover:bg-rush-light disabled:bg-lime-400"
+
       on:click={async () => {
         setLoadingState({ isLoading: true, statusMessage: "Setting..." });
         setloading(true);
@@ -38,7 +39,7 @@ const InstanceUpdateButton: Component<{ instanceCount: Accessor<number> }> = (pr
       }}
       disabled={isUpdateComplete()}
     >
-      <Show when={!loading()} fallback={<div class={styles.buttonLoader}></div>}>
+      <Show when={!loading()} fallback={<div class="loader animate-spin-xtrafast w-4 h-4 border-t-2 border-2 border-t-black border-transparent"></div>}>
         <Show when={!isUpdateComplete()} fallback={"Instance Count Updated"}>
           Finalize
         </Show>

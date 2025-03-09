@@ -66,7 +66,7 @@ const PermissionsSection: Component<{}> = (props) => {
               {(email, index) => (
                 <div class="flex flex-row border-b border-white">
                   <button
-                    class={`hover:bg-neutral-400 p-3 w-max flex-grow text-start ${
+                    class={`hover:bg-neutral-400 p-3 w-max grow text-start ${
                       selectedEmail() == email ? "bg-neutral-500" : "bg-transparent"
                     }`}
                     onclick={() => {
@@ -101,7 +101,7 @@ const PermissionsSection: Component<{}> = (props) => {
               <For each={orgPermissions()![selectedEmail()!]}>
                 {(perm, index) => (
                   <div class="flex flex-row border-b border-white">
-                    <button class="hover:bg-neutral-400 p-3 flex-grow text-start">{perm}</button>
+                    <button class="hover:bg-neutral-400 p-3 grow text-start">{perm}</button>
                     <button
                       class="hover:bg-red-500 p-3 w-fit"
                       onclick={async () => {

@@ -1,42 +1,64 @@
-:root {
-  --night-sky: #252526;
-  --rush: #daaa00;
-  --moondust: #f2efe9;
-  --bm-gold: #cfb991;
-  --aged: #8e6f3e;
-  --field: #ddb945;
-  --dust: #ebd99f;
-  --steel: #555960;
-  --cool-gray: #6f727b;
-  --background-color: rgb(29, 29, 29);
+@import "tailwindcss";
+
+@theme {
+  --animate-spin-fast: spin 0.5s linear infinite;
+  --animate-spin-xtrafast: spin 0.35s linear infinite;
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-html,
-body {
-  margin: 0;
-  padding: 0;
-  background-color: var(--background-color);
-  font-family: "IBM Plex Mono", monospace;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: white;
-  height: 100%;
-  min-height: 100%;
-  max-height: 100%;
+@theme inline {
+  --color-rush: var(--rush);
+  --color-aged: var(--aged);
+  --color-bg: var(--background-color);
+  --color-rush-light: var(--field);
 }
 
-#root {
-  height: 100%;
-  min-height: 100%;
-  max-height: 100%;
-  display: flex;
-  flex-direction: column;
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
 }
 
-.material-symbols-outlined {
-  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 40;
+@layer base {
+  :root {
+    --night-sky: #252526;
+    --rush: #daaa00;
+    --moondust: #f2efe9;
+    --bm-gold: #cfb991;
+    --aged: #8e6f3e;
+    --field: #ddb945;
+    --dust: #ebd99f;
+    --steel: #555960;
+    --cool-gray: #6f727b;
+    --background-color: rgb(29, 29, 29);
+  }
+}
+
+@layer utilities {
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    font-family: "IBM Plex Mono", monospace;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: white;
+    height: 100%;
+    min-height: 100%;
+    max-height: 100%;
+  }
+
+  .material-symbols-outlined {
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 40;
+  }
+
+  .loader {
+    border-style: solid;
+    border-radius: 50%;
+    border-top-style: solid;
+  }
 }
