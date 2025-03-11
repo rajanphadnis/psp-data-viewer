@@ -2,134 +2,148 @@ import os
 from firebase_functions import options, https_fn
 import json
 from azure.cli.core import get_default_cli
+from firebase_admin import firestore
+from google.cloud.firestore_v1.base_query import FieldFilter
 
 
-@https_fn.on_request(
-    cors=options.CorsOptions(
-        cors_origins="*",
-        cors_methods=["get", "post"],
-    ),
-    memory=options.MemoryOption.MB_512,
-)
-def updateAPIInstances(req: https_fn.Request) -> https_fn.Response:
-    instances = req.args["instances"] if "instances" in req.args else None
-    if instances is None:
-        return https_fn.Response(
-            json.dumps({"status": "'instances' is required"}), status=400
-        )
-    try:
-        numToSet = int(float(instances))
-    except ValueError:
-        return https_fn.Response(
-            json.dumps({"status": "Could not parse int from argument 'instances'"}),
-            status=400,
-        )
+# class optionsThing:
+#     cors_origins = [
+#         # "https://admin.dataviewer.space"
+#         "*"
+#     ]
 
-    appId = os.environ.get("AZURE_APP_ID")
-    password = os.environ.get("AZURE_PASSWORD_STRING")
-    tenant = os.environ.get("AZURE_TENANT_STRING")
 
-    print(appId)
-    print(password)
-    print(tenant)
+@https_fn.on_call(memory=options.MemoryOption.MB_512)
+def update_api_instance_count(req: https_fn.CallableRequest):
+    perms = req.auth.token["permissions"]
+    slug = req.data["slug"]
+    instances = int(float(req.data["instances"]))
 
-    try:
-        thing = get_default_cli().invoke(
-            [
-                "login",
-                "--service-principal",
-                "-u",
-                appId,
-                "-p",
-                password,
-                "--tenant",
-                tenant,
-            ]
-        )
-        # thing = get_default_cli().invoke(["webapp", "config", "storage-account", "list", "--resource-group", "pspdataviewer", "--name", "psp-data-viewer-api"])
-        thing = get_default_cli().invoke(
-            [
-                "functionapp",
-                "scale",
-                "config",
-                "always-ready",
-                "set",
-                "--resource-group",
-                "pspdataviewer",
-                "--name",
-                "psp-data-viewer-api",
-                "--settings",
-                f"http={numToSet}",
-            ]
+    if f"{slug}:manage:instance" in perms:
+        db = firestore.client()
+        accts = (
+            db.collection("accounts")
+            .where(filter=FieldFilter("slug", "==", slug))
+            .limit(1)
+            .stream()
         )
 
-    except Exception as e:
-        return https_fn.Response(json.dumps({"status": f"error: {e}"}), status=500)
-    if thing == 0:
-        return https_fn.Response(json.dumps({"status": "Success"}), status=200)
+        for acct in accts:
+            acct_data = acct.to_dict()
+            RESOURCE_GROUP = acct_data["azure_rg"]
+            FXN_APP_NAME = acct_data["azure_fxn_app_name"]
+            appId = os.environ.get("AZURE_APP_ID")
+            password = os.environ.get("AZURE_PASSWORD_STRING")
+            tenant = os.environ.get("AZURE_TENANT_STRING")
+            try:
+                thing = get_default_cli().invoke(
+                    [
+                        "login",
+                        "--service-principal",
+                        "-u",
+                        appId,
+                        "-p",
+                        password,
+                        "--tenant",
+                        tenant,
+                    ]
+                )
+                thing = get_default_cli().invoke(
+                    [
+                        "functionapp",
+                        "scale",
+                        "config",
+                        "always-ready",
+                        "set",
+                        "--resource-group",
+                        RESOURCE_GROUP,
+                        "--name",
+                        FXN_APP_NAME,
+                        "--settings",
+                        f"http={instances}",
+                    ]
+                )
+
+            except Exception as e:
+                raise https_fn.HttpsError(
+                    code=https_fn.FunctionsErrorCode.INTERNAL,
+                    message=(e),
+                )
+            if thing == 0:
+                return {"status": "Success"}
+            else:
+                raise https_fn.HttpsError(
+                    code=https_fn.FunctionsErrorCode.INTERNAL,
+                    message=(thing),
+                )
+
     else:
-        return https_fn.Response(
-            json.dumps({"status": f"Failed, exit code: {thing}"}), status=500
+        raise https_fn.HttpsError(
+            code=https_fn.FunctionsErrorCode.PERMISSION_DENIED,
+            message=("User does not have permission to update API instance count"),
         )
 
 
-@https_fn.on_request(
-    cors=options.CorsOptions(
-        cors_origins="*",
-        cors_methods=["get", "post"],
-    ),
-    memory=options.MemoryOption.MB_512,
-)
-def getAPIConfig(req: https_fn.Request) -> https_fn.Response:
-    appId = os.environ.get("AZURE_APP_ID")
-    password = os.environ.get("AZURE_PASSWORD_STRING")
-    tenant = os.environ.get("AZURE_TENANT_STRING")
+@https_fn.on_call(memory=options.MemoryOption.MB_512)
+def get_api_instance_count(req: https_fn.CallableRequest):
+    slug = req.data["slug"]
 
-    print(appId)
-    print(password)
-    print(tenant)
+    db = firestore.client()
+    accts = (
+        db.collection("accounts")
+        .where(filter=FieldFilter("slug", "==", slug))
+        .limit(1)
+        .stream()
+    )
+    for acct in accts:
+        acct_data = acct.to_dict()
+        RESOURCE_GROUP = acct_data["azure_rg"]
+        FXN_APP_NAME = acct_data["azure_fxn_app_name"]
 
-    try:
-        cli = get_default_cli()
-        thing = cli.invoke(
-            [
-                "login",
-                "--service-principal",
-                "-u",
-                appId,
-                "-p",
-                password,
-                "--tenant",
-                tenant,
-            ]
-        )
-        # thing = get_default_cli().invoke(["webapp", "config", "storage-account", "list", "--resource-group", "pspdataviewer", "--name", "psp-data-viewer-api"])
-        thing = cli.invoke(
-            [
-                "functionapp",
-                "scale",
-                "config",
-                "show",
-                "--resource-group",
-                "pspdataviewer",
-                "--name",
-                "psp-data-viewer-api",
-            ]
-        )
+        appId = os.environ.get("AZURE_APP_ID")
+        password = os.environ.get("AZURE_PASSWORD_STRING")
+        tenant = os.environ.get("AZURE_TENANT_STRING")
 
-    except Exception as e:
-        return https_fn.Response(json.dumps({"status": f"error: {e}"}), status=500)
-    if thing == 0:
-        return https_fn.Response(
-            json.dumps({"status": "Success", "result": cli.result.result}), status=200
-        )
-    else:
-        return https_fn.Response(
-            json.dumps(
-                {"status": f"Failed, exit code: {thing}", "result": cli.result.error}
-            ),
-            status=500,
-        )
+        try:
+            cli = get_default_cli()
+            thing = cli.invoke(
+                [
+                    "login",
+                    "--service-principal",
+                    "-u",
+                    appId,
+                    "-p",
+                    password,
+                    "--tenant",
+                    tenant,
+                ]
+            )
+            thing = cli.invoke(
+                [
+                    "functionapp",
+                    "scale",
+                    "config",
+                    "show",
+                    "--resource-group",
+                    RESOURCE_GROUP,
+                    "--name",
+                    FXN_APP_NAME,
+                ]
+            )
+
+        except Exception as e:
+            raise https_fn.HttpsError(
+                code=https_fn.FunctionsErrorCode.INTERNAL,
+                message=(e),
+            )
+        if thing == 0:
+            return {"result": cli.result.result}
+        else:
+            print(thing)
+            raise https_fn.HttpsError(
+                code=https_fn.FunctionsErrorCode.INTERNAL,
+                message=(cli.result.error),
+            )
 
 
 @https_fn.on_request(

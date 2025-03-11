@@ -53,7 +53,9 @@ def createStripeAndFirebaseResources(req: https_fn.Request) -> https_fn.Response
         "slug": slug,
         "stripe_customer_id": customerID,
         "azure_share_name": f"dataviewer-fileshare-{slug}",
-        "azure_storage_account": f"dataviewerstorage{slug}",
+        "azure_storage_account": f"dataviewerstor{slug}",
+        "azure_fxn_app_name": f"dataviewer-api-{slug}",
+        "azure_rg": f"dataviewerrg{slug}",
     }
     db = firestore.client()
     customerDB = firestore.client(database_id=f"{slug}-firestore")

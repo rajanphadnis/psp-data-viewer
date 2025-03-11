@@ -40,7 +40,6 @@ def beforeUserCreateClaims(
 def beforeSignInClaims(
     event: identity_fn.AuthBlockingEvent,
 ) -> identity_fn.BeforeSignInResponse | None:
-    print("runninngnngngngngn")
     db = firestore.client()
     doc = db.collection("access_control").document("users").get()
     if doc.exists:

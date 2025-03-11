@@ -3,6 +3,8 @@ import styles from "./editor.module.css";
 import { useState } from "../../../state";
 import { TestData } from "../../../types";
 import { getGeneralTestInfo } from "../../../db/db_interaction";
+import { httpsCallable } from "firebase/functions";
+import { config } from "../../../generated_app_check_secret";
 
 const EditorSaveButton: Component<{
   testData: Accessor<TestData>;
@@ -33,19 +35,24 @@ const EditorSaveButton: Component<{
       class={styles.inputSave}
       on:click={async () => {
         props.setloading(true);
-        (
-          await fetch(
-            `https://updatetestmetadata-w547ikcrwa-uc.a.run.app/?id=${
-              props.testData().id
-            }&name=${props.name()}&article=${props.testArticle()}&gse=${props.gseArticle()}`
-          )
-        )
-          .json()
-          .then(async (re) => {
-            console.log("completed doc update");
-            console.log(re);
-            await getGeneralTestInfo(setAllKnownTests, setDefaultTest);
-          });
+
+        const update_metadata = httpsCallable(globalThis.functions, "update_test_metadata");
+        update_metadata({
+          id: props.testData().id,
+          name: props.name(),
+          article: props.testArticle(),
+          gse: props.gseArticle(),
+          db_id: (config as any)[org()!].firebase.databaseID,
+          slug: org()!,
+        }).then(async (result) => {
+          console.log("completed doc update");
+          console.log(result);
+          await getGeneralTestInfo(setAllKnownTests, setDefaultTest);
+        }).catch((err) => {
+          console.error(err);
+          props.setloading(false);
+        });
+
       }}
     >
       Save Changes

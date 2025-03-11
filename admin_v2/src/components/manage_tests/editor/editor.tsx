@@ -80,7 +80,7 @@ const HomeEditor: Component<{ testBasics: Accessor<TestBasics> }> = (props) => {
             <div class={styles.inputTitleDiv}>
               <SectionTitle title="Edit Test:" />
               <Show when={permissions()! && permissions()!.includes(`${org()}:delete:tests`)}>
-                <EditorDeleteButton id={testData().id} />
+                <EditorDeleteButton id={testData().id} slug={org()!} />
               </Show>
             </div>
             <EditorEntry testData={testData().id} name="Test ID" input={false} />

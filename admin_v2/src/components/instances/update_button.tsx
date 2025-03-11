@@ -30,7 +30,7 @@ const InstanceUpdateButton: Component<{ instanceCount: Accessor<number> }> = (pr
       on:click={async () => {
         setLoadingState({ isLoading: true, statusMessage: "Setting..." });
         setloading(true);
-        const result = await runRequest(false, props.instanceCount());
+        const result = await runRequest(false, props.instanceCount(), org()!);
         console.log(result);
         setisUpdateComplete(true);
         setloading(false);

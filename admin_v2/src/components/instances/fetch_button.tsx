@@ -31,7 +31,7 @@ const InstancesFetchButton: Component<{ setCurrentConfig: Setter<string> }> = (p
         props.setCurrentConfig("");
         setLoadingState({ isLoading: true, statusMessage: "Fetching..." });
         setloading(true);
-        const newConfig = await runRequest(true);
+        const newConfig = await runRequest(true, undefined, org()!);
         props.setCurrentConfig(newConfig);
         setloading(false);
         setLoadingState({ isLoading: false, statusMessage: "" });
