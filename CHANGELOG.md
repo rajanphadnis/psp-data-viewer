@@ -1,3 +1,18 @@
+## v0.10.0
+migrated production pspl to dataviewer.space
+
+### Changed
+- bug fixes
+- Added more robust customer deployment scripts
+- Started Admin Console conversion to Tailwind
+- Redesigned test creation process to utilize desktop formatter and direct Azure upload
+- Made internal functions calls rely on onCall() instead of onRequest()
+- Added permissions checks to necessary fxn calls
+- Added null support to API
+- Rebranded to Dataviewer.Space
+- Stabilized existing platform (now ready for new feature development)
+- Added sample test on customer provisioning
+
 ## v0.9.10
 updated deployment config to match resource names
 
