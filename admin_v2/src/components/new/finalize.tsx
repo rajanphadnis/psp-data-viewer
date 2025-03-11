@@ -7,10 +7,8 @@ const UploadFinalizeLayout: Component<{
   name: Accessor<string>;
   testArticle: Accessor<string>;
   gseArticle: Accessor<string>;
-  filePaths: Accessor<File[]>;
-  isHDF5: Accessor<boolean>;
+  filePath: Accessor<File | undefined>;
   id: Accessor<string>;
-  tdmsDelay: Accessor<number>;
 }> = (props) => {
   const [
     allKnownTests,
@@ -36,7 +34,7 @@ const UploadFinalizeLayout: Component<{
     setLoadingState({ isLoading: true, statusMessage: "Creating Test..." });
     await new_upload(
       setStatus,
-      props.filePaths()[0],
+      props.filePath()!,
       props.id(),
       setUploadPercent,
       props.name(),
@@ -87,19 +85,7 @@ const UploadFinalizeLayout: Component<{
           <p>ID: {props.id()}</p>
           <p>Test Article: {props.testArticle()}</p>
           <p>GSE Article: {props.gseArticle()}</p>
-          <Show when={!props.isHDF5()}>
-            <p>TDMS Delay: {props.tdmsDelay()}s</p>
-          </Show>
         </div>
-        {/* <Show when={uploadPercent() != 1}>
-          <div class="flex flex-col justify-center items-center overflow-auto h-full">
-            <div class="flex flex-row justify-evenly items-center">
-              <p>File Upload:</p>
-              <progress value={uploadPercent()} />
-              <p>{(uploadPercent() * 100).toFixed(2)}%</p>
-            </div>
-          </div>
-        </Show> */}
 
       </div>
     </div>

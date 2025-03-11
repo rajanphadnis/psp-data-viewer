@@ -26,7 +26,7 @@ const SelectOrg: Component<{}> = (props) => {
   return (
     <div class="flex flex-col w-full h-[calc(100%-4rem)] justify-center items-center">
       <h1 class="font-bold text-xl mb-3">Select Org:</h1>
-      <For each={Object.keys(config)}>
+      <For each={Object.keys(config).filter((elem) => elem != "dev")}>
         {(slug, index) => {
           const name = (config as any)[slug]["naming"]["name_long"] as string;
           return <A href={`/${slug}/`} class="p-3 border border-white rounded-lg my-3 hover:bg-neutral-600" onclick={() => {

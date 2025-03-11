@@ -1,8 +1,8 @@
-import { Component, createEffect, createMemo, createSignal, Show } from "solid-js";
-import UploadEditLayout from "./edit/layout";
-import UploadFinalizeLayout from "./finalize";
+import { Component, createEffect, createSignal, Show } from "solid-js";
 import { genId } from "../../browser_interactions";
 import { useState } from "../../state";
+import UploadEditLayout from "./edit/layout";
+import UploadFinalizeLayout from "./finalize";
 
 const NewTest: Component<{}> = (props) => {
   const [
@@ -26,16 +26,8 @@ const NewTest: Component<{}> = (props) => {
   const [name, setName] = createSignal<string>("");
   const [testArticle, setTestArticle] = createSignal<string>("");
   const [gseArticle, setGseArticle] = createSignal<string>("");
-  const [filePaths, setFilePaths] = createSignal<File[]>(new Array<File>());
-  const [isHDF5, setIsHDF5] = createSignal<boolean>(true);
-  const [tdmsDelayStr, setTdmsDelay] = createSignal<string>("0");
+  const [filePath, setFilePath] = createSignal<File>();
 
-  const tdmsDelay = createMemo(() => {
-    if (tdmsDelayStr() == "") {
-      return 0;
-    }
-    return parseInt(tdmsDelayStr());
-  });
 
   createEffect(() => {
     setGseArticle(defaultGSE());
@@ -50,16 +42,12 @@ const NewTest: Component<{}> = (props) => {
           name={name}
           testArticle={testArticle}
           gseArticle={gseArticle}
-          filePaths={filePaths}
-          isHDF5={isHDF5}
+          filePath={filePath}
           setisFinalizing={setisFinalizing}
           setName={setName}
           setTestArticle={setTestArticle}
           setGseArticle={setGseArticle}
-          setFilePaths={setFilePaths}
-          setIsHDF5={setIsHDF5}
-          tdmsDelay={tdmsDelay}
-          setTdmsDelay={setTdmsDelay}
+          setFilePath={setFilePath}
         />
       }
     >
@@ -67,10 +55,8 @@ const NewTest: Component<{}> = (props) => {
         name={name}
         testArticle={testArticle}
         gseArticle={gseArticle}
-        filePaths={filePaths}
-        isHDF5={isHDF5}
+        filePath={filePath}
         id={id}
-        tdmsDelay={tdmsDelay}
       />
     </Show>
   );

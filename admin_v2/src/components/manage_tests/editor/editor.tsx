@@ -6,7 +6,6 @@ import { useState } from "../../../state";
 import { TestBasics, TestData } from "../../../types";
 import loaderStyles from "../../header/header.module.css";
 import SectionTitle from "../../title";
-import styles from "./editor.module.css";
 import { EditorDatasetButton, EditorDeleteButton, EditorEntry } from "./editor_entry";
 import EditorSaveButton from "./editor_save";
 
@@ -74,8 +73,8 @@ const HomeEditor: Component<{ testBasics: Accessor<TestBasics> }> = (props) => {
     <div style={{ "padding-left": "10px", "padding-right": "10px", height: "100%" }}>
       <Show when={!loading()} fallback={<div class={loaderStyles.loader}></div>}>
         <Resizable sizes={sizes()} onSizesChange={setSizes} orientation="vertical">
-          <Resizable.Panel initialSize={0.55} minSize={0.55} class={`${styles.panel} ${styles.panelPadding}`}>
-            <div class={styles.inputTitleDiv}>
+          <Resizable.Panel initialSize={0.55} minSize={0.55} class="panel panelPadding">
+            <div class="flex flex-row justify-between items-center">
               <SectionTitle title="Edit Test:" />
               <Show when={permissions()! && permissions()!.includes(`${org()}:delete:tests`)}>
                 <EditorDeleteButton id={testData().id} slug={org()!} />
@@ -119,7 +118,7 @@ const HomeEditor: Component<{ testBasics: Accessor<TestBasics> }> = (props) => {
             minSize={0.2}
             collapsedSize={0}
             collapsible={true}
-            class={styles.panel}
+            class="panel"
             style={{ overflow: "auto", "scrollbar-color": "white transparent" }}
           >
             <SectionTitle title={`Test Datasets (x${testData().datasets.length}):`} />

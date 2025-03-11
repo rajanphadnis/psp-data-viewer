@@ -1,8 +1,7 @@
 import { Component, For } from "solid-js";
-import styles from "./switcher.module.css";
-import FilterButton from "./filter_button";
 import { useState } from "../../../state";
 import { TestBasics } from "../../../types";
+import FilterButton from "./filter_button";
 
 const TestSwitcherFilter: Component<{
   setFilters: (newFilters: string[]) => void;
@@ -26,7 +25,7 @@ const TestSwitcherFilter: Component<{
   ] = useState();
 
   return (
-    <div class={styles.filterDiv}>
+    <div class="flex flex-row justify-start p-2.5">
       <p>Filter: </p>
       <For
         each={[

@@ -1,12 +1,11 @@
+import { A } from "@solidjs/router";
 import { Component } from "solid-js";
-import styles from "./resizeable.module.css";
 import RightChevronIcon from "./icons/right_chevron";
-import { A, useNavigate } from "@solidjs/router";
 
 const NavBarItem: Component<{ name: string; route: string }> = (props) => {
   return (
     <A href={props.route} style={{ "text-decoration": "none" }}>
-      <button class={styles.navbarItem}>
+      <button class="w-full m-0 p-2.5 flex flex-row justify-between items-center bg-transparent border-0 text-white text-xl font-bold cursor-pointer py-5 text-start hover:bg-cool-grey hover:text-white">
         {props.name}
         <RightChevronIcon />
       </button>

@@ -3,10 +3,8 @@ import { makePersisted } from "@solid-primitives/storage";
 import { Component, createMemo, createSignal, For } from "solid-js";
 import { useState } from "../../state";
 import { TestBasics } from "../../types";
-import styles from "../resizeable.module.css";
 import SectionTitle from "../title";
 import HomeEditor from "./editor/editor";
-import home from "./home.module.css";
 import HomeNavbarItem from "./navbar_item";
 import TestSwitcherFilter from "./switcher_filter/switcher_filter";
 
@@ -81,8 +79,8 @@ const ManageTests: Component<{}> = (props) => {
 
   return (
     <Resizable>
-      <Resizable.Panel initialSize={0.4} minSize={0.2} class={`${styles.panel} ${styles.panelPadding}`}>
-        <div class={home.homeNavBar}>
+      <Resizable.Panel initialSize={0.4} minSize={0.2} class="panel panelPadding">
+        <div class="h-full overflow-auto">
           <SectionTitle title="Select Test:" />
           <TestSwitcherFilter setFilters={setFilters} filters={filters} />
           <For each={sortedTests()}>
@@ -95,7 +93,7 @@ const ManageTests: Component<{}> = (props) => {
       <Resizable.Handle aria-label="Resize Handle" class="bg-transparent border-none px-2 py-2">
         <div class="w-[2px] bg-white h-full" />
       </Resizable.Handle>
-      <Resizable.Panel initialSize={0.6} minSize={0.2} class={`${styles.panel} ${styles.panelPadding}`}>
+      <Resizable.Panel initialSize={0.6} minSize={0.2} class="panel panelPadding">
         <HomeEditor testBasics={currentlySelectedTest} />
       </Resizable.Panel>
     </Resizable>

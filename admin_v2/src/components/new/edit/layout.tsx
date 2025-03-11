@@ -1,28 +1,22 @@
-import Resizable from "@corvu/resizable";
 import { createFileUploader } from "@solid-primitives/upload";
-import { Accessor, Component, createEffect, createMemo, For, Setter, Show } from "solid-js";
+import { Accessor, Component, createEffect, Setter, Show } from "solid-js";
 import { appVersion } from "../../../generated_app_check_secret";
 import { useState } from "../../../state";
 import { EditorEntry } from "../../manage_tests/editor/editor_entry";
 import SectionTitle from "../../title";
 import UploadCreateButton from "./add_file_button";
-import styles from "./edit.module.css";
-import NewUploadComponent from "./upload_component";
+import ListedFileComponent from "./upload_component";
 
 const UploadEditLayout: Component<{
   name: Accessor<string>;
   testArticle: Accessor<string>;
   gseArticle: Accessor<string>;
-  filePaths: Accessor<File[]>;
-  setFilePaths: Setter<File[]>;
-  isHDF5: Accessor<boolean>;
+  filePath: Accessor<File | undefined>;
+  setFilePath: Setter<File | undefined>;
   setisFinalizing: Setter<boolean>;
   setName: Setter<string>;
   setTestArticle: Setter<string>;
   setGseArticle: Setter<string>;
-  setIsHDF5: Setter<boolean>;
-  tdmsDelay: Accessor<number>;
-  setTdmsDelay: Setter<string>;
 }> = (props) => {
   const [
     allKnownTests,
@@ -40,97 +34,67 @@ const UploadEditLayout: Component<{
     org,
     setOrg,
   ] = useState();
-  // const [files, setFiles] = createSignal<UploadFile[]>([]);
   const {
-    files: tdmsFiles,
-    selectFiles: selectTDMSFiles,
-    removeFile: removeTDMSFile,
-  } = createFileUploader({
-    multiple: true,
-    accept: ".csv,.tdms",
-  });
-
-  const {
-    files: hdf5Files,
+    files: files,
     selectFiles: selectHDF5Files,
     removeFile: removeHDF5File,
   } = createFileUploader({
-    multiple: true,
+    multiple: false,
     accept: ".hdf5",
   });
 
-  const files = createMemo(() => {
-    if (props.isHDF5()) {
-      return hdf5Files();
-    } else {
-      return tdmsFiles();
-    }
-  });
-
   createEffect(() => {
-    const toReturnTDMS = tdmsFiles().map((val) => val.file);
-    const toReturnHDF5 = hdf5Files().map((val) => val.file);
-    if (props.isHDF5()) {
-      props.setFilePaths(toReturnHDF5);
-    } else {
-      props.setFilePaths(toReturnTDMS);
-    }
+    const toReturnHDF5 = files().map((val) => val.file).pop();
+    props.setFilePath(() => toReturnHDF5);
   });
 
   return (
-    <Resizable>
-      <Resizable.Panel initialSize={0.5} minSize={0.4} class={`${styles.panel} ${styles.panelPadding}`}>
-        <div class={styles.editDiv}>
-          <div style={{ width: "100%" }}>
-            <SectionTitle title="Create Test:" />
-            <EditorEntry testData={props.name()} name="Test Name" input={true} setter={props.setName} />
-            <EditorEntry
-              testData={props.testArticle()}
-              name="Test Article"
-              input={true}
-              setter={props.setTestArticle}
-            />
-            <EditorEntry testData={props.gseArticle()} name="GSE Article" input={true} setter={props.setGseArticle} />
-            <div class="mr-3">
-              <h3 class="text-xl font-bold mt-4 mb-2">Looking for TDMS and CSV file upload?</h3>
-              <p>
-                Download{" "}
-                <a
-                  href={`https://github.com/rajanphadnis/psp-data-viewer/releases/download/${appVersion}/desktop-app.exe`}
-                  class="underline underline-offset-auto"
-                >
-                  the desktop app
-                </a>{" "}
-                to combine your TDMS and CSV files, then come back here and upload your new HDF5 file
-              </p>
-            </div>
+    <div class="w-full h-full flex flex-col justify-between items-center">
+      <div class="w-full">
+        <SectionTitle title="Create Test:" />
+        <EditorEntry testData={props.name()} name="Test Name" input={true} setter={props.setName} />
+        <EditorEntry
+          testData={props.testArticle()}
+          name="Test Article"
+          input={true}
+          setter={props.setTestArticle}
+        />
+        <EditorEntry testData={props.gseArticle()} name="GSE Article" input={true} setter={props.setGseArticle} />
+        <Show when={props.filePath() == undefined} fallback={<ListedFileComponent setFilePath={props.setFilePath} filePath={props.filePath} />}>
+          <div class="mr-3">
+            <h3 class="text-xl font-bold mt-4 mb-2">Looking for TDMS and CSV file upload?</h3>
+            <p>
+              Download{" "}
+              <a
+                href={`https://github.com/rajanphadnis/psp-data-viewer/releases/download/${appVersion}/desktop-app.exe`}
+                class="underline underline-offset-auto"
+              >
+                the desktop app
+              </a>{" "}
+              to combine your TDMS and CSV files, then come back here and upload your new HDF5 file
+            </p>
           </div>
-
-          <Show when={props.filePaths().length > 0}>
-            <button
-              on:click={async () => {
-                props.setisFinalizing(true);
-              }}
-              class={styles.finalizeButton}
-            >
-              Create Test with {props.filePaths().length} {props.filePaths().length > 1 ? "files" : "file"}
-            </button>
-          </Show>
-        </div>
-      </Resizable.Panel>
-      <Resizable.Handle aria-label="Resize Handle" class="bg-transparent border-none px-2 py-2">
-        <div class="w-[2px] bg-white h-full" />
-      </Resizable.Handle>
-      <Resizable.Panel initialSize={0.5} minSize={0.4} class={styles.panel}>
-        <div class={styles.inputTitleDiv}>
-          <SectionTitle title="Select Files:" />
-          <UploadCreateButton selectFiles={props.isHDF5() ? selectHDF5Files : selectTDMSFiles} />
-        </div>
-        <For each={files()}>
-          {(item) => <NewUploadComponent removeFile={props.isHDF5() ? removeHDF5File : removeTDMSFile} file={item} />}
-        </For>
-      </Resizable.Panel>
-    </Resizable>
+        </Show>
+      </div>
+      <Show when={props.filePath() == undefined}>
+        <UploadCreateButton selectFiles={selectHDF5Files} setFilePath={props.setFilePath} />
+      </Show>
+      <Show when={props.filePath()}>
+        <button
+          on:click={async () => {
+            if (props.name() != "" && props.gseArticle() != "" && props.testArticle() != "") {
+              props.setisFinalizing(true);
+            }
+            else {
+              alert("Please make sure you've filled out all fields before creating the test");
+            }
+          }}
+          class="w-3/4 border-0 m-2.5 text-black font-bold bg-rush cursor-pointer p-5 flex flex-row text-center justify-center items-center hover:bg-rush-light"
+        >
+          Create Test
+        </button>
+      </Show>
+    </div>
   );
 };
 

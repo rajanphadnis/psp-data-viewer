@@ -10,6 +10,7 @@
   --color-aged: var(--aged);
   --color-bg: var(--background-color);
   --color-rush-light: var(--field);
+  --color-cool-grey: var(--cool-gray);
 }
 
 @layer base {
@@ -60,5 +61,24 @@
     border-style: solid;
     border-radius: 50%;
     border-top-style: solid;
+  }
+  
+  [data-corvu-resizable-root] {
+    width: 100%;
+    height: 100%;
+  }
+
+  .panel {
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+  }
+
+  .panelPadding {
+    padding-top: 10px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
   }
 }

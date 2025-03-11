@@ -1,10 +1,9 @@
+import { httpsCallable } from "firebase/functions";
 import { Accessor, Component, Setter } from "solid-js";
-import styles from "./editor.module.css";
+import { getGeneralTestInfo } from "../../../db/db_interaction";
+import { config } from "../../../generated_app_check_secret";
 import { useState } from "../../../state";
 import { TestData } from "../../../types";
-import { getGeneralTestInfo } from "../../../db/db_interaction";
-import { httpsCallable } from "firebase/functions";
-import { config } from "../../../generated_app_check_secret";
 
 const EditorSaveButton: Component<{
   testData: Accessor<TestData>;
@@ -32,7 +31,7 @@ const EditorSaveButton: Component<{
 
   return (
     <button
-      class={styles.inputSave}
+      class="m-0 p-5 bg-rush text-black font-bold border-0 cursor-pointer relative bottom-0 w-full mt-2.5 hover:bg-rush-light"
       on:click={async () => {
         props.setloading(true);
 

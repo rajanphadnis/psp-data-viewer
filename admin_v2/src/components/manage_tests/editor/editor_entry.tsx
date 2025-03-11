@@ -1,9 +1,6 @@
-import { Accessor, Component, createSignal, Setter, Show } from "solid-js";
-import styles from "./editor.module.css";
-import { TestData } from "../../../types";
-import { DateTimePicker } from "date-time-picker-solid";
-import { copyTextToClipboard, delay } from "../../../browser_interactions";
 import { httpsCallable } from "firebase/functions";
+import { Component, createSignal, Setter, Show } from "solid-js";
+import { copyTextToClipboard, delay } from "../../../browser_interactions";
 import { config } from "../../../generated_app_check_secret";
 
 export const EditorEntry: Component<{ testData: any; name: string; input: boolean; setter?: Setter<string> }> = (props) => {
@@ -11,7 +8,7 @@ export const EditorEntry: Component<{ testData: any; name: string; input: boolea
 
   return (
     <div
-      class={styles.inputDiv}
+      class="flex flex-row justify-between items-center py-1.5 border-b-white border-b"
       on:click={async () => {
         copyTextToClipboard(props.testData);
         setDone(true);
@@ -19,13 +16,13 @@ export const EditorEntry: Component<{ testData: any; name: string; input: boolea
         setDone(false);
       }}
     >
-      <label style={{ "margin-right": "10px" }}>
+      <label class="mr-2.5">
         <p>{props.name}:</p>
       </label>
       <Show
         when={props.input}
         fallback={
-          <p style={{ "margin-right": "10px" }}>
+          <p class="mr-2.5">
             <Show when={!showDone()} fallback={"Copied!"}>
               {props.testData}
             </Show>
@@ -34,12 +31,11 @@ export const EditorEntry: Component<{ testData: any; name: string; input: boolea
       >
         <input
           value={props.testData}
-          class={styles.inputText}
+          class="bg-bg border-2 border-rush-light p-2.5 w-80 text-white focus:border-aged focus:outline-0 disabled:border-0 disabled:bg-transparent"
           on:input={(e) => {
             props.setter!(e.target.value.trim());
           }}
         ></input>
-        {/* {props.children} */}
       </Show>
     </div>
   );
@@ -71,7 +67,7 @@ export const EditorDeleteButton: Component<{ id: string, slug: string }> = (prop
           });
         }
       }}
-      class={styles.deleteButton}
+      class="p-2.5 bg-rush text-black font-bold border-0 cursor-pointer hover:bg-rush-light"
     >
       <Show when={showDone()} fallback={"Deleting..."}>
         Delete Test
@@ -85,7 +81,7 @@ export const EditorDatasetButton: Component<{ dataset: string }> = (props) => {
 
   return (
     <button
-      class={styles.datasetButton}
+      class="bg-transparent border-0 w-full cursor-pointer text-white p-2.5 text-start hover:bg-cool-grey"
       on:click={async () => {
         copyTextToClipboard(props.dataset);
         setDone(true);
