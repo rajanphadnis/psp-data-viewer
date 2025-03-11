@@ -1,3 +1,9 @@
+## v0.9.9
+updated new test admin page
+
+### Changed
+- bug fixes
+
 ## v0.9.8
 made fxns private and started new test page patch wor
 
