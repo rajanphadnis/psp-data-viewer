@@ -1,3 +1,9 @@
+## v0.9.10
+updated deployment config to match resource names
+
+### Changed
+- bug fixes
+
 ## v0.9.9
 updated new test admin page
 

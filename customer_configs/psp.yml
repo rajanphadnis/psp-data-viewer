@@ -27,7 +27,7 @@ naming:
   page_title: PSP Data Viewer
   slug: pspl
 urls:
-  admin_dashboard_url: https://admin.dataviewer.space
+  admin_dashboard_url: https://admin.dataviewer.space/pspl
   api_base_url: https://psp-api.rajanphadnis.com
   docs_url: https://docs.dataviewer.space
   github_url: https://github.com/rajanphadnis/psp-data-viewer

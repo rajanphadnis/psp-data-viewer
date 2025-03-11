@@ -1,6 +1,6 @@
 ---
 azure:
-  function_app_name: dataviewer-serverless-function-test
+  function_app_name: dataviewer-api-test
   resource_group: dataviewer-rg-test
   storage_account: dataviewerstortest
   share_name: dataviewer-fileshare-test
@@ -27,7 +27,7 @@ naming:
   page_title: Test
   slug: test
 urls:
-  admin_dashboard_url: https://admin.dataviewer.space
+  admin_dashboard_url: https://admin.dataviewer.space/test
   api_base_url: https://dataviewer-api-test.azurewebsites.net
   docs_url: https://docs.dataviewer.space
   github_url: https://github.com/rajanphadnis/psp-data-viewer

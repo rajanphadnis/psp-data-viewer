@@ -47,9 +47,9 @@ async function main(docID: string) {
 
     const dataYAML = {
       azure: {
-        function_app_name: `dataviewer-serverless-function-${slug}`,
-        resource_group: `dataviewer-rg-${slug}`,
-        storage_account: `dataviewerstorage${slug}`,
+        function_app_name: `dataviewer-api-${slug}`,
+        resource_group: `dataviewerrg${slug}`,
+        storage_account: `dataviewerstor${slug}`,
         share_name: `dataviewer-fileshare-${slug}`,
       },
       colors: {
@@ -78,11 +78,10 @@ async function main(docID: string) {
         slug: slug,
       },
       urls: {
-        admin_dashboard_url: "https://admin.dataviewer.space",
+        admin_dashboard_url: `https://admin.dataviewer.space/${slug}`,
         api_base_url: `https://dataviewer-api-${slug}.azurewebsites.net`,
         docs_url: "https://docs.dataviewer.space",
         github_url: "https://github.com/rajanphadnis/psp-data-viewer",
-        update_test_metadata_url: "https://updatetestmetadata-w547ikcrwa-uc.a.run.app", //TODO: need to update?
       },
       stripe: {
         customerID: customerID,

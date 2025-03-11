@@ -24,7 +24,6 @@ export const structure = {
   },
   urls: {
     api_base_url: "string",
-    update_test_metadata_url: "string",
     admin_dashboard_url: "string",
     docs_url: "string",
     github_url: "string"
