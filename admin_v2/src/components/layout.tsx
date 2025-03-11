@@ -1,23 +1,22 @@
-import { Component, createMemo, createSignal, onMount, Show } from "solid-js";
 import Resizable from "@corvu/resizable";
 import { makePersisted } from "@solid-primitives/storage";
-import { Router, Route, useParams, useNavigate } from "@solidjs/router";
-import ManageTests from "./manage_tests/home";
-import Instances from "./instances/instances";
+import { Route, Router, useNavigate, useParams } from "@solidjs/router";
+import { Component, createMemo, createSignal, onMount, Show } from "solid-js";
 import { getDefaultArticles, getGeneralTestInfo } from "../db/db_interaction";
+import { config } from "../generated_app_check_secret";
 import { useState } from "../state";
-import NavBarItem from "./navbar_item";
+import AccountPage from "./account/account";
 import Analytics from "./analytics/analytics";
-import NewTest from "./new/new";
-import DefaultPage from "./defaults/default";
 import { LogInComponent } from "./auth/auth";
 import Logout from "./auth/logout";
 import Billing from "./billing/billing";
-import SelectOrg from "./select_org/select_org";
-import { config } from "../generated_app_check_secret";
-import { initFirebase } from "../db/firebase_init";
+import DefaultPage from "./defaults/default";
 import Header from "./header/header";
-import AccountPage from "./account/account";
+import Instances from "./instances/instances";
+import ManageTests from "./manage_tests/home";
+import NavBarItem from "./navbar_item";
+import NewTest from "./new/new";
+import SelectOrg from "./select_org/select_org";
 
 const MainLayout: Component<{}> = (props) => {
   const [
@@ -167,9 +166,6 @@ const PanelLayout: Component<{ children?: any }> = (props) => {
     org,
     setOrg,
   ] = useState();
-  // onMount(async () => {
-
-  // });
   const params = useParams();
   const permissions = createMemo(() => auth());
   const navigate = useNavigate();

@@ -1,14 +1,14 @@
-import { Component, createMemo, createSignal, For } from "solid-js";
 import Resizable from "@corvu/resizable";
-import styles from "../resizeable.module.css";
-import home from "./home.module.css";
-import { useState } from "../../state";
-import HomeNavbarItem from "./navbar_item";
-import { TestBasics } from "../../types";
 import { makePersisted } from "@solid-primitives/storage";
-import TestSwitcherFilter from "./switcher_filter/switcher_filter";
-import HomeEditor from "./editor/editor";
+import { Component, createMemo, createSignal, For } from "solid-js";
+import { useState } from "../../state";
+import { TestBasics } from "../../types";
+import styles from "../resizeable.module.css";
 import SectionTitle from "../title";
+import HomeEditor from "./editor/editor";
+import home from "./home.module.css";
+import HomeNavbarItem from "./navbar_item";
+import TestSwitcherFilter from "./switcher_filter/switcher_filter";
 
 const ManageTests: Component<{}> = (props) => {
   const [

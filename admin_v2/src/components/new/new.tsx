@@ -1,6 +1,6 @@
 import { Component, createEffect, createMemo, createSignal, Show } from "solid-js";
 import UploadEditLayout from "./edit/layout";
-import UploadFinalizeLayout from "./finalize/layout";
+import UploadFinalizeLayout from "./finalize";
 import { genId } from "../../browser_interactions";
 import { useState } from "../../state";
 

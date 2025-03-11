@@ -17,7 +17,7 @@ export async function new_upload(
   if (!checks) {
     throw new Error("Input checks failed");
   }
-  setStatus(["Authenticating Upload...", "Uploading HDF5 File", "0", "6"]);
+  setStatus(["Authenticating Upload...", "Uploading HDF5 File", "0", "3"]);
   const genSAS = httpsCallable(globalThis.functions, "generate_sas_token");
   let sas: string | undefined = undefined;
   try {
@@ -31,7 +31,7 @@ export async function new_upload(
   if (sas) {
     const url = `https://${(config as any)[slug].azure.storage_account}.file.core.windows.net?${sas}`;
     const serviceClientWithSAS = new ShareServiceClient(url);
-    setStatus(["Starting file upload...", "Uploading HDF5 File", "1", "3"]);
+    setStatus(["Uploading file...", "Uploading HDF5 File", "1", "3"]);
     const directoryClient = serviceClientWithSAS
       .getShareClient((config as any)[slug].azure.share_name)
       .getDirectoryClient("hdf5_data");

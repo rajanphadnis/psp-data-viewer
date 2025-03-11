@@ -1,16 +1,14 @@
-import { Accessor, Component, createEffect, createMemo, createSignal, For, onMount, Show } from "solid-js";
-import { TestBasics, TestData } from "../../../types";
-import { getTestInfo } from "../../../db/db_interaction";
-import loaderStyles from "../../header/header.module.css";
-import { EditorEntry, EditorDeleteButton, EditorDatasetButton } from "./editor_entry";
-import SectionTitle from "../../title";
-import { DateTimePicker } from "date-time-picker-solid";
-import styles from "./editor.module.css";
-import { useNavigate } from "@solidjs/router";
-import EditorSaveButton from "./editor_save";
 import Resizable from "@corvu/resizable";
 import { makePersisted } from "@solid-primitives/storage";
+import { Accessor, Component, createEffect, createMemo, createSignal, For, Show } from "solid-js";
+import { getTestInfo } from "../../../db/db_interaction";
 import { useState } from "../../../state";
+import { TestBasics, TestData } from "../../../types";
+import loaderStyles from "../../header/header.module.css";
+import SectionTitle from "../../title";
+import styles from "./editor.module.css";
+import { EditorDatasetButton, EditorDeleteButton, EditorEntry } from "./editor_entry";
+import EditorSaveButton from "./editor_save";
 
 const HomeEditor: Component<{ testBasics: Accessor<TestBasics> }> = (props) => {
   const [
