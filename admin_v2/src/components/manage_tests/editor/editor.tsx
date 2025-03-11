@@ -88,19 +88,19 @@ const HomeEditor: Component<{ testBasics: Accessor<TestBasics> }> = (props) => {
             <EditorEntry
               testData={testData().name}
               name="Test Name"
-              input={permissions() ? true : false}
+              input={(permissions()! && permissions()!.includes(`${org()}:manage:tests`)) ? true : false}
               setter={setName}
             />
             <EditorEntry
               testData={testData().test_article}
               name="Test Article"
-              input={permissions() ? true : false}
+              input={(permissions()! && permissions()!.includes(`${org()}:manage:tests`)) ? true : false}
               setter={setTestArticle}
             />
             <EditorEntry
               testData={testData().gse_article}
               name="GSE Article"
-              input={permissions() ? true : false}
+              input={(permissions()! && permissions()!.includes(`${org()}:manage:tests`)) ? true : false}
               setter={setGseArticle}
             />
             <Show when={isChanged()}>
