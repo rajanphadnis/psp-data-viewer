@@ -71,7 +71,13 @@ const UploadEditLayout: Component<{
               >
                 the desktop app
               </a>{" "}
-              to combine your TDMS and CSV files, then come back here and upload your new HDF5 file
+              to combine your TDMS and CSV files, then come back here and upload the generated file.<br /><br />View the latest desktop app release <a
+                href={`https://github.com/rajanphadnis/psp-data-viewer/releases/tag/${appVersion}`}
+                target="_blank"
+                class="underline underline-offset-auto"
+              >
+                here
+              </a>.
             </p>
           </div>
         </Show>

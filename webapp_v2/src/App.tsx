@@ -1,15 +1,15 @@
+import { MetaProvider, Title } from "@solidjs/meta";
+import { useParams } from "@solidjs/router";
 import { createEffect, onMount, Show, type Component } from "solid-js";
 import styles from "./App.module.css";
-import NavBar from "./components/navbar/navbar";
-import { getGeneralTestInfo, getTestInfo } from "./db/db_interaction";
-import { useParams } from "@solidjs/router";
-import { MetaProvider, Title } from "@solidjs/meta";
-import Plot from "./components/plot/plot";
-import ControlColumn from "./components/control_column/control_column";
 import { loadFromShareLink } from "./browser/sharelink";
-import { useState } from "./state";
-import { eventLoop } from "./plotting/event_loop";
+import ControlColumn from "./components/control_column/control_column";
+import NavBar from "./components/navbar/navbar";
+import Plot from "./components/plot/plot";
+import { getGeneralTestInfo, getTestInfo } from "./db/db_interaction";
 import { config } from "./generated_app_info";
+import { eventLoop } from "./plotting/event_loop";
+import { StateType, useState } from "./state";
 
 const App: Component = (params) => {
   const [
@@ -35,8 +35,15 @@ const App: Component = (params) => {
     setLoadingDatasets,
     measuring,
     setMeasuring,
-    { addDataset, updateDataset, removeDataset, updateColor },
-  ]: any = useState();
+    annotations,
+    setAnnotations,
+    {
+      addDataset,
+      updateDataset,
+      removeDataset,
+      updateColor,
+    },
+  ] = useState() as StateType;
 
   onMount(async () => {
     const s = document.createElement("script");

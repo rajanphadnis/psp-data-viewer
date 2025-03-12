@@ -1,18 +1,18 @@
-import { Component } from "solid-js";
-import { useState } from "../../../state";
 import Dialog from "@corvu/dialog";
-import styles from "../modal.module.css";
+import { Component } from "solid-js";
+import { StateType, useState } from "../../../state";
 import {
-  IconSpock,
-  IconJedi,
-  IconOldRepublic,
-  IconJediOrder,
-  IconGalacticSenate,
   IconGalacticRepublic,
+  IconGalacticSenate,
+  IconJedi,
+  IconJediOrder,
+  IconOldRepublic,
+  IconSpock,
 } from "../../icons/easter";
+import styles from "../modal.module.css";
+import PlottingOptionsModal from "../settings/plotting_options";
 import EasterAudioButton from "./audio_button";
 import EasterClickButton from "./click_button";
-import PlottingOptionsModal from "../settings/plotting_options";
 
 const EasterEggModal: Component<{}> = (props) => {
   const [
@@ -38,8 +38,15 @@ const EasterEggModal: Component<{}> = (props) => {
     setLoadingDatasets,
     measuring,
     setMeasuring,
-    { addDataset, updateDataset, removeDataset, updateColor },
-  ]: any = useState();
+    annotations,
+    setAnnotations,
+    {
+      addDataset,
+      updateDataset,
+      removeDataset,
+      updateColor,
+    },
+  ] = useState() as StateType;
 
   return (
     <Dialog.Portal>
@@ -57,13 +64,13 @@ const EasterEggModal: Component<{}> = (props) => {
             <PlottingOptionsModal name="Jedi Order">
               <IconJediOrder />
             </PlottingOptionsModal>
-            <EasterButton name="Galactic Senate" onclick={() => {}}>
+            <EasterButton name="Galactic Senate" onclick={() => { }}>
               <IconGalacticSenate />
             </EasterButton>
-            <EasterButton name="Old Republic" onclick={() => {}}>
+            <EasterButton name="Old Republic" onclick={() => { }}>
               <IconOldRepublic />
             </EasterButton>
-            <EasterButton name="Galactic Republic" onclick={() => {}}>
+            <EasterButton name="Galactic Republic" onclick={() => { }}>
               <IconGalacticRepublic />
             </EasterButton>
           </div>

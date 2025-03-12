@@ -1,4 +1,4 @@
-import uPlot, { type AlignedData, type Options } from "uplot";
+import uPlot, { Series, type AlignedData, type Options } from "uplot";
 import { DateTime } from "luxon";
 import { DatasetAxis, MeasureData, PlotRange, TestBasics } from "../types";
 import { Accessor, Setter } from "solid-js";
@@ -17,17 +17,7 @@ export function legendRound(val: any, suffix: string, precision: number = 2) {
 
 export function plot(
   toPlot: AlignedData,
-  series: (
-    | {}
-    | {
-        label: string;
-        value: (self: any, rawValue: number) => string;
-        stroke: string;
-        width: number;
-        scale: string;
-        spanGaps: boolean;
-      }
-  )[],
+  series: ({} | Series)[],
   axes_sets: number,
   setPlotRange: Setter<PlotRange>,
   testBasics: Accessor<TestBasics>,
@@ -38,7 +28,8 @@ export function plot(
   datasetsLegendSide: number[]
 ) {
   const axes = generateAllAxes(axes_sets);
-  let opts = {
+  let seriestt: (HTMLDivElement | undefined)[];
+  let opts: Options = {
     ...getSize(),
     series: series,
     axes: axes,
@@ -50,9 +41,57 @@ export function plot(
             console.log("Fetching data for full range");
             setPlotRange({ start: testBasics().starting_timestamp!, end: testBasics().ending_timestamp! });
           };
+          uplot.over.onclick = (e) => {
+            if (e.ctrlKey) {
+              if (measuring().x1) {
+                // if (measuring().x2) {
+                //   if ()
+                // } else {
+                setPoint2(activeDatasets(), measuring, setMeasuring, datasetsLegendSide);
+                // }
+              } else {
+                setPoint1(activeDatasets(), measuring, setMeasuring, datasetsLegendSide);
+              }
+            }
+            if (e.altKey) {
+            }
+            if (e.shiftKey) {
+            }
+          };
+          seriestt = opts.series.map((s, i) => {
+            // console.log(s);
+            if (s.scale != "annotation") return;
+
+            console.log("added tt");
+            let tt = document.createElement("div");
+            tt.className = "plotTooltip";
+            tt.textContent = "";
+            tt.style.pointerEvents = "none";
+            // tt.style.position = "absolute";
+            // tt.style.background = "white";
+            // tt.style.display = "none";
+            // tt.style.color = "black";
+            uplot.over.appendChild(tt);
+            return tt;
+          });
+          function hideTips() {
+            seriestt.forEach((tt, i) => {
+              if (tt == undefined) return;
+              tt.style.display = "none";
+            });
+          }
+
+          uplot.over.addEventListener("mouseleave", () => {
+            if (!u.cursor.lock) {
+              hideTips();
+            }
+          });
+
+          if (uplot.cursor.left! < 0) {
+            hideTips();
+          }
         },
       ],
-
       draw: [
         (uplot: uPlot) => {
           if (measuring().x1 != undefined || measuring().x2 != undefined) {
@@ -118,11 +157,55 @@ export function plot(
           }
         },
       ],
+      setCursor: [
+        (u: uPlot) => {
+          const { left, top, idx } = u.cursor;
+
+          // can optimize further by not applying styles if idx did not change
+          seriestt.forEach((tt, i) => {
+            if (tt == undefined) return;
+            console.log(tt);
+
+            let s = u.series[i];
+
+            if (s.show) {
+              // this is here to handle if initial cursor position is set
+              // not great (can be optimized by doing more enter/leave state transition tracking)
+              //	if (left > 0)
+              //		tt.style.display = null;
+
+              let xVal = u.data[0][idx!];
+              let yVal = u.data[i][idx!];
+
+              if (yVal! > 0.5) {
+                tt.textContent = "(" + xVal + ", " + yVal + ")";
+                tt.style.left = Math.round(u.valToPos(xVal, "x")) + 10 + "px";
+                tt.style.top = "0px";
+                (tt.style.display as any) = null;
+              } else {
+                (tt.style.display as any) = "none";
+              }
+            }
+          });
+        },
+      ],
     },
     scales: {
       x: {
         time: true,
       },
+      annotation: {
+        auto: false,
+        range: [0.1, 0.9],
+        time: false,
+      },
+    },
+    legend: {
+      show: true,
+      markers: {
+        show: false,
+      },
+      isolate: false,
     },
   };
   const plotDiv = document.getElementById("plot")! as HTMLDivElement;
@@ -161,7 +244,7 @@ export function generateAllAxes(totalAxes: number) {
   for (let i = 1; i < totalAxes + 1; i++) {
     axesToReturn = [...axesToReturn, ...generateAxes(i)];
   }
-  return [
+  const mainAxes = [
     {
       stroke: "#fff",
       grid: {
@@ -173,7 +256,19 @@ export function generateAllAxes(totalAxes: number) {
       },
     },
     ...axesToReturn,
+    {
+      show: false,
+      // size: 0,
+      // labelSize: 0,
+      scale: `annotation`,
+      // values: (u: any, vals: any[], space: any) => vals.map((v) => `${v} t`),
+      // stroke: "#fff",
+      grid: { show: false },
+      // side: isOdd ? 3 : 1,
+      ticks: { show: false },
+    },
   ];
+  return mainAxes;
 }
 
 export function generateAxes(axesSide: number): DatasetAxis[] {

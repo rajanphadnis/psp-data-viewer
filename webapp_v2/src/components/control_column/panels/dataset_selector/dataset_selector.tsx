@@ -1,9 +1,9 @@
-import { Component, createSignal } from "solid-js";
+import { Component } from "solid-js";
+import { StateType, useState } from "../../../../state";
+import XMark from "../../../icons/x_mark";
+import ColorPicker from "./color_picker";
 import styles from "./dataset.selector.module.css";
 import DatasetSelectorLegendIndicator from "./legend_indicator";
-import ColorPicker from "./color_picker";
-import { useState } from "../../../../state";
-import XMark from "../../../icons/x_mark";
 
 const DatasetSelector: Component<{ dataset_id: string }> = (props) => {
   const [
@@ -29,9 +29,16 @@ const DatasetSelector: Component<{ dataset_id: string }> = (props) => {
     setLoadingDatasets,
     measuring,
     setMeasuring,
-    { addDataset, updateDataset, removeDataset, updateColor },
-  ]: any = useState();
-  
+    annotations,
+    setAnnotations,
+    {
+      addDataset,
+      updateDataset,
+      removeDataset,
+      updateColor,
+    },
+  ] = useState() as StateType;
+
 
   return (
     <div class={styles.datasetDiv}>

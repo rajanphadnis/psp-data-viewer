@@ -1,11 +1,11 @@
 import { Component, createSignal, Show } from "solid-js";
-import styles from "./tools.module.css";
-import IconButton from "./icon_button";
 import { downloadCSV } from "../../../../browser/csv";
 import { delay } from "../../../../browser/util";
-import { useState } from "../../../../state";
+import { StateType, useState } from "../../../../state";
 import CheckIcon from "../../../icons/check";
 import IconCSV from "../../../icons/csv";
+import IconButton from "./icon_button";
+import styles from "./tools.module.css";
 
 const ToolDownloadCSV: Component<{}> = (props) => {
   const [showDone, setDone] = createSignal<boolean>(false);
@@ -32,8 +32,15 @@ const ToolDownloadCSV: Component<{}> = (props) => {
     setLoadingDatasets,
     measuring,
     setMeasuring,
-    { addDataset, updateDataset, removeDataset, updateColor },
-  ]: any = useState();
+    annotations,
+    setAnnotations,
+    {
+      addDataset,
+      updateDataset,
+      removeDataset,
+      updateColor,
+    },
+  ] = useState() as StateType;
   return (
     <button
       class={styles.button}

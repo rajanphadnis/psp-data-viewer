@@ -1,8 +1,8 @@
 import { Component, createSignal, Show } from "solid-js";
-import styles from "./navbar.module.css";
-import { useState } from "../../state";
 import { getSharelink } from "../../browser/sharelink";
 import { copyTextToClipboard, delay } from "../../browser/util";
+import { StateType, useState } from "../../state";
+import styles from "./navbar.module.css";
 
 const SharelinkButton: Component<{}> = (props) => {
   const [
@@ -28,8 +28,15 @@ const SharelinkButton: Component<{}> = (props) => {
     setLoadingDatasets,
     measuring,
     setMeasuring,
-    { addDataset, updateDataset, removeDataset, updateColor },
-  ]: any = useState();
+    annotations,
+    setAnnotations,
+    {
+      addDataset,
+      updateDataset,
+      removeDataset,
+      updateColor,
+    },
+  ] = useState() as StateType;
   const [showDone, setDone] = createSignal<boolean>(false);
 
   return (

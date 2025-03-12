@@ -1,19 +1,18 @@
-import { Component } from "solid-js";
 import Dialog from "@corvu/dialog";
-import { useState } from "../../../state";
+import { Component } from "solid-js";
+import { getSharelink } from "../../../browser/sharelink";
+import { config } from "../../../generated_app_info";
+import { StateType, useState } from "../../../state";
+import IconAdmin from "../../icons/admin";
+import IconCloudDownload from "../../icons/cloud_download";
+import IconFile from "../../icons/file";
+import IconListCheck from "../../icons/list_check";
+import IconRefresh from "../../icons/refresh";
+import SettingsIcon from "../../icons/settings";
 import styles from "../modal.module.css";
 import AppInfo from "./app_info";
-import SettingsButton from "./settings_button";
-import IconRefresh from "../../icons/refresh";
-import IconCloudDownload from "../../icons/cloud_download";
-import IconEyeDrop from "../../icons/eye_drop";
-import IconFile from "../../icons/file";
-import IconAdmin from "../../icons/admin";
-import IconListCheck from "../../icons/list_check";
-import { getSharelink } from "../../../browser/sharelink";
-import SettingsIcon from "../../icons/settings";
 import PlottingOptionsModal from "./plotting_options";
-import { config } from "../../../generated_app_info";
+import SettingsButton from "./settings_button";
 
 const SettingsModal: Component<{}> = (props) => {
   const [
@@ -39,8 +38,15 @@ const SettingsModal: Component<{}> = (props) => {
     setLoadingDatasets,
     measuring,
     setMeasuring,
-    { addDataset, updateDataset, removeDataset, updateColor },
-  ]: any = useState();
+    annotations,
+    setAnnotations,
+    {
+      addDataset,
+      updateDataset,
+      removeDataset,
+      updateColor,
+    },
+  ] = useState() as StateType;
 
   return (
     <Dialog.Portal>

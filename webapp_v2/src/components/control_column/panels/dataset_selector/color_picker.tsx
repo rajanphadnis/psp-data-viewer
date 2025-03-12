@@ -2,7 +2,7 @@ import { Component, createSignal, Show } from "solid-js";
 import { HexColorPicker } from "solid-colorful";
 import styles from "./color_picker.module.css";
 import useClickOutside from "../../../../browser/click_outside";
-import { useState } from "../../../../state";
+import { StateType, useState } from "../../../../state";
 
 const ColorPicker: Component<{ dataset_id: string }> = (props) => {
   const [
@@ -28,8 +28,15 @@ const ColorPicker: Component<{ dataset_id: string }> = (props) => {
     setLoadingDatasets,
     measuring,
     setMeasuring,
-    { addDataset, updateDataset, removeDataset, updateColor },
-  ]: any = useState();
+    annotations,
+    setAnnotations,
+    {
+      addDataset,
+      updateDataset,
+      removeDataset,
+      updateColor,
+    },
+  ] = useState() as StateType;
   const [isOpen, toggle] = createSignal<boolean>(false);
   const [color, setColor] = createSignal<string>(plotPalletteColors()[activeDatasets().indexOf(props.dataset_id) % plotPalletteColors().length]);
   const [target, setTarget] = createSignal<HTMLElement | undefined>();

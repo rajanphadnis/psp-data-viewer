@@ -1,6 +1,7 @@
 import { legendRound } from "./plotting_helpers";
 import { getDatasetPlottingColor } from "../theming";
 import type { DatasetSeries } from "../types";
+import { Series } from "uplot";
 
 /**
  * Generates a plot series entry based on provided vals
@@ -29,7 +30,7 @@ export function generateAxisAndSeries(
   dataset_index: number,
   plotColors: string[],
   axis_side: number
-): DatasetSeries {
+): Series {
   // Create a string that will group units on the same axis together
   const scaleToUse: string = `${scale}_${axis_side}`;
 

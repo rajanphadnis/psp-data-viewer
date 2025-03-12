@@ -2,7 +2,7 @@ import Resizable from "corvu/resizable";
 import { Component, For, Show } from "solid-js";
 import styles from "../column.module.css";
 import NoDatasetsMessage from "../no_datasets";
-import { useState } from "../../../state";
+import { StateType, useState } from "../../../state";
 import DatasetSelector from "./dataset_selector/dataset_selector";
 
 const PanelActiveDatasets: Component<{}> = (props) => {
@@ -29,8 +29,15 @@ const PanelActiveDatasets: Component<{}> = (props) => {
     setLoadingDatasets,
     measuring,
     setMeasuring,
-    { addDataset, updateDataset, removeDataset, updateColor },
-  ]: any = useState();
+    annotations,
+    setAnnotations,
+    {
+      addDataset,
+      updateDataset,
+      removeDataset,
+      updateColor,
+    },
+  ] = useState() as StateType;
 
   return (
     <Resizable.Panel class={styles.panel} minSize={0.1} collapsedSize={0.025} collapsible={false}>

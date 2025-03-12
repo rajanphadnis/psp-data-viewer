@@ -1,9 +1,9 @@
-import { Component, createSignal, Show } from "solid-js";
-import styles from "../modal.module.css";
 import Dialog from "@corvu/dialog";
-import { useState } from "../../../state";
+import { Component, createSignal, Show } from "solid-js";
+import { StateType, useState } from "../../../state";
 import { MeasureData, Preferences } from "../../../types";
 import SettingsColorPicker from "../easter/color_picker";
+import styles from "../modal.module.css";
 
 const PlottingOptionsModal: Component<{
   children?: any;
@@ -32,8 +32,15 @@ const PlottingOptionsModal: Component<{
     setLoadingDatasets,
     measuring,
     setMeasuring,
-    { addDataset, updateDataset, removeDataset, updateColor },
-  ]: any = useState();
+    annotations,
+    setAnnotations,
+    {
+      addDataset,
+      updateDataset,
+      removeDataset,
+      updateColor,
+    },
+  ] = useState() as StateType;
 
   const [axesSets, setaxesSets] = createSignal<number>((sitePreferences() as Preferences).axesSets / 2);
   const [plotPoints, setplotPoints] = createSignal<number>((sitePreferences() as Preferences).displayedSamples);

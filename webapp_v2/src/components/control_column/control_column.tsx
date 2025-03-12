@@ -1,6 +1,6 @@
 import { Component, createSignal } from "solid-js";
 import styles from "./column.module.css";
-import { useState } from "../../state";
+import { StateType, useState } from "../../state";
 import Resizable from "corvu/resizable";
 import { makePersisted } from "@solid-primitives/storage";
 import ZoomButtons from "./zoom_buttons";
@@ -32,8 +32,15 @@ const ControlColumn: Component<{}> = (props) => {
     setLoadingDatasets,
     measuring,
     setMeasuring,
-    { addDataset, updateDataset, removeDataset, updateColor },
-  ]: any = useState();
+    annotations,
+    setAnnotations,
+    {
+      addDataset,
+      updateDataset,
+      removeDataset,
+      updateColor,
+    },
+  ] = useState() as StateType;
   const [sizes, setSizes] = makePersisted(createSignal<number[]>([]), {
     name: "resizable-sizes",
   });

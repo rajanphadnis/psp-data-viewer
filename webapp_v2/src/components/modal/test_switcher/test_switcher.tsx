@@ -1,13 +1,13 @@
-import { Component, createMemo, createSignal, For, Show } from "solid-js";
 import Dialog from "@corvu/dialog";
-import { useState } from "../../../state";
+import { makePersisted } from "@solid-primitives/storage";
+import { Component, createMemo, createSignal, For, Show } from "solid-js";
+import { getDateLabel } from "../../../browser/util";
+import { StateType, useState } from "../../../state";
 import { TestBasics } from "../../../types";
-import TestEntry from "./test_button";
 import styles from "../modal.module.css";
 import RefreshListButton from "./refresh_list_button";
-import { makePersisted } from "@solid-primitives/storage";
 import TestSwitcherFilter from "./switcher_filter/switcher_filter";
-import { getDateLabel } from "../../../browser/util";
+import TestEntry from "./test_button";
 
 const TestSwitcherModal: Component<{}> = (props) => {
   const [
@@ -33,8 +33,15 @@ const TestSwitcherModal: Component<{}> = (props) => {
     setLoadingDatasets,
     measuring,
     setMeasuring,
-    { addDataset, updateDataset, removeDataset, updateColor },
-  ]: any = useState();
+    annotations,
+    setAnnotations,
+    {
+      addDataset,
+      updateDataset,
+      removeDataset,
+      updateColor,
+    },
+  ] = useState() as StateType;
 
   const [filters, setFilters] = makePersisted(createSignal<string[]>([]), {
     name: "test-filters",

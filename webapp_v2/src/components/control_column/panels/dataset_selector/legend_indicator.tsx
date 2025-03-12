@@ -1,7 +1,7 @@
-import { Component, Show } from "solid-js";
-import styles from "./dataset.selector.module.css";
-import { useState } from "../../../../state";
+import { Component } from "solid-js";
+import { StateType, useState } from "../../../../state";
 import { IconChevronLeft, IconChevronRight } from "../../../icons/chevron";
+import styles from "./dataset.selector.module.css";
 
 const DatasetSelectorLegendIndicator: Component<{ dataset_id: string }> = (props) => {
   const [
@@ -27,8 +27,15 @@ const DatasetSelectorLegendIndicator: Component<{ dataset_id: string }> = (props
     setLoadingDatasets,
     measuring,
     setMeasuring,
-    { addDataset, updateDataset, removeDataset, updateColor },
-  ]: any = useState();
+    annotations,
+    setAnnotations,
+    {
+      addDataset,
+      updateDataset,
+      removeDataset,
+      updateColor,
+    },
+  ] = useState() as StateType;
 
   return (
     <button

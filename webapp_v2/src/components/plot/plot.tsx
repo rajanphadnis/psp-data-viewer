@@ -1,7 +1,7 @@
-import { Component, createEffect, Show } from "solid-js";
+import { Component, Show } from "solid-js";
+import { StateType, useState } from "../../state";
 import styles from "./plot.module.css";
 import PlotOverlay from "./plot_overlay";
-import { useState } from "../../state";
 
 const Plot: Component<{}> = (props) => {
   const [
@@ -27,8 +27,15 @@ const Plot: Component<{}> = (props) => {
     setLoadingDatasets,
     measuring,
     setMeasuring,
-    { addDataset, updateDataset, removeDataset, updateColor },
-  ]: any = useState();
+    annotations,
+    setAnnotations,
+    {
+      addDataset,
+      updateDataset,
+      removeDataset,
+      updateColor,
+    },
+  ] = useState() as StateType;
   return (
     <div class={styles.plot} id="plot">
       <Show when={activeDatasets().length == 0}>

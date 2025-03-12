@@ -1,7 +1,7 @@
-import { Component, createEffect, Show } from "solid-js";
-import styles from "./navbar.module.css";
+import { Component, Show } from "solid-js";
+import { StateType, useState } from "../../state";
 import CheckIcon from "../icons/check";
-import { useState } from "../../state";
+import styles from "./navbar.module.css";
 
 const Status: Component<{}> = (props) => {
   const [
@@ -27,8 +27,15 @@ const Status: Component<{}> = (props) => {
     setLoadingDatasets,
     measuring,
     setMeasuring,
-    { addDataset, updateDataset, removeDataset, updateColor },
-  ]: any = useState();
+    annotations,
+    setAnnotations,
+    {
+      addDataset,
+      updateDataset,
+      removeDataset,
+      updateColor,
+    },
+  ] = useState() as StateType;
 
   return (
     <div class={styles.status}>

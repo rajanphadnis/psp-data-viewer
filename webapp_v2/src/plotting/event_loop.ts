@@ -1,9 +1,10 @@
-import { AlignedData } from "uplot";
+import { Accessor, Setter } from "solid-js";
+import { Series } from "uplot";
 import { storeActiveDatasets } from "../browser/caching";
-import { DatasetSeries, LoadingStateType, MeasureData, PlotRange, TestBasics } from "../types";
+import { LoadingStateType, MeasureData, PlotRange, TestBasics } from "../types";
 import { generatePlottedDatasets } from "./dataset_generation";
+import { annotateData, annotateSeries } from "./generate_annotations";
 import { plot } from "./plotting_helpers";
-import { Accessor, createEffect, Setter } from "solid-js";
 
 export async function eventLoop(
   startTimestamp: number,
@@ -35,13 +36,13 @@ export async function eventLoop(
   );
   storeActiveDatasets(generated_toPlot, datasets, startTimestamp, endTimestamp, legend_sides);
   const displayedAxes = generated_series.slice(1).map((s, i) => {
-    const thing = s as DatasetSeries;
-    return thing.scale;
+    const thing = s as Series;
+    return thing.scale!;
   });
   if (!prefetch) {
     plot(
-      generated_toPlot as AlignedData,
-      generated_series,
+      annotateData(generated_toPlot),
+      annotateSeries(generated_series),
       axesSets,
       setPlotRange,
       testBasics,

@@ -6,7 +6,7 @@ import ToolCopyImage from "./tools/copy_image";
 import ToolDownloadCSV from "./tools/download_csv";
 import ToolDownloadImage from "./tools/download_image";
 import ToolMeasure from "./tools/measure";
-import { useState } from "../../../state";
+import { StateType, useState } from "../../../state";
 import ToolCalcChannel from "./tools/calc_channels";
 import ToolEasterEgg from "./tools/easter";
 
@@ -34,8 +34,15 @@ const PanelTools: Component<{}> = (props) => {
     setLoadingDatasets,
     measuring,
     setMeasuring,
-    { addDataset, updateDataset, removeDataset, updateColor },
-  ]: any = useState();
+    annotations,
+    setAnnotations,
+    {
+      addDataset,
+      updateDataset,
+      removeDataset,
+      updateColor,
+    },
+  ] = useState() as StateType;
 
   return (
     <Resizable.Panel class={styles.panel} minSize={0.15} collapsedSize={0.025} collapsible={true}>

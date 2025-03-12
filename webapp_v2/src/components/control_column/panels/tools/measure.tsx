@@ -1,12 +1,12 @@
-import { Component, createMemo, For, Show } from "solid-js";
-import styles from "./tools.module.css";
-import IconButton from "./icon_button";
 import Popover from "@corvu/popover";
+import { Component, createMemo, For, Show } from "solid-js";
 import { formatTimeDelta } from "../../../../browser/measure";
-import { useState } from "../../../../state";
+import { StateType, useState } from "../../../../state";
 import { SingleMeasurement } from "../../../../types";
-import IconMeasure from "../../../icons/measure";
 import { IconOneKey, IconTwoKey } from "../../../icons/keys";
+import IconMeasure from "../../../icons/measure";
+import IconButton from "./icon_button";
+import styles from "./tools.module.css";
 
 const ToolMeasure: Component<{}> = (props) => {
   const [
@@ -32,8 +32,15 @@ const ToolMeasure: Component<{}> = (props) => {
     setLoadingDatasets,
     measuring,
     setMeasuring,
-    { addDataset, updateDataset, removeDataset, updateColor },
-  ]: any = useState();
+    annotations,
+    setAnnotations,
+    {
+      addDataset,
+      updateDataset,
+      removeDataset,
+      updateColor,
+    },
+  ] = useState() as StateType;
 
   const calculated_measurements = createMemo<SingleMeasurement[]>(() => {
     let toReturn: SingleMeasurement[] = [];
@@ -100,7 +107,7 @@ const ToolMeasure: Component<{}> = (props) => {
                   );
                 }}
               </For>
-              <p>Δtime={formatTimeDelta((measuring().x2 - measuring().x1) * 1000)}</p>
+              <p>Δtime={formatTimeDelta((measuring().x2! - measuring().x1!) * 1000)}</p>
             </Show>
           </Popover.Description>
         </Popover.Content>

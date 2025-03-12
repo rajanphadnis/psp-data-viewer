@@ -1,10 +1,10 @@
 import { Component } from "solid-js";
-import styles from "./navbar.module.css";
 import layout from "../../layout.module.css";
-import NavBarTitle from "./title";
-import Status from "./status";
+import { StateType, useState } from "../../state";
+import styles from "./navbar.module.css";
 import SharelinkButton from "./sharelink_button";
-import { useState } from "../../state";
+import Status from "./status";
+import NavBarTitle from "./title";
 
 const NavBar: Component<{}> = () => {
   const [
@@ -30,8 +30,15 @@ const NavBar: Component<{}> = () => {
     setLoadingDatasets,
     measuring,
     setMeasuring,
-    { addDataset, updateDataset, removeDataset, updateColor },
-  ]: any = useState();
+    annotations,
+    setAnnotations,
+    {
+      addDataset,
+      updateDataset,
+      removeDataset,
+      updateColor,
+    },
+  ] = useState() as StateType;
   return (
     <div class={styles.navBar}>
       <NavBarTitle

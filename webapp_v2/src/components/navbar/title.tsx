@@ -1,14 +1,14 @@
-import { Component, Show } from "solid-js";
-import styles from "./navbar.module.css";
-import layout from "../../layout.module.css";
-import { useState } from "../../state";
 import Dialog from "@corvu/dialog";
-import TestSwitcherModal from "../modal/test_switcher/test_switcher";
-import SwapIcon from "../icons/swap";
-import SettingsIcon from "../icons/settings";
-import SettingsModal from "../modal/settings/settings_panel";
+import { Component, Show } from "solid-js";
 import { getDateLabel } from "../../browser/util";
 import { config } from "../../generated_app_info";
+import layout from "../../layout.module.css";
+import { StateType, useState } from "../../state";
+import SettingsIcon from "../icons/settings";
+import SwapIcon from "../icons/swap";
+import SettingsModal from "../modal/settings/settings_panel";
+import TestSwitcherModal from "../modal/test_switcher/test_switcher";
+import styles from "./navbar.module.css";
 
 const NavBarTitle: Component<{ id: string; name: string; test_article: string; gse_article: string }> = (props) => {
   const [
@@ -34,8 +34,15 @@ const NavBarTitle: Component<{ id: string; name: string; test_article: string; g
     setLoadingDatasets,
     measuring,
     setMeasuring,
-    { addDataset, updateDataset, removeDataset, updateColor },
-  ]: any = useState();
+    annotations,
+    setAnnotations,
+    {
+      addDataset,
+      updateDataset,
+      removeDataset,
+      updateColor,
+    },
+  ] = useState() as StateType;
   return (
     <div class={layout.flexRowStart} style="justify-content: start;">
       <Show

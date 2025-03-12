@@ -1,6 +1,6 @@
 import { Accessor, createContext, createSignal, Setter, Signal, useContext } from "solid-js";
 import { defaultPlottingColors } from "./theming";
-import { LoadingStateType, TestBasics, Preferences, PlotRange, MeasureData } from "./types";
+import { LoadingStateType, TestBasics, Preferences, PlotRange, MeasureData, Annotation } from "./types";
 import { clearDatums } from "./browser/measure";
 import { makePersisted } from "@solid-primitives/storage";
 
@@ -42,6 +42,7 @@ export function AppStateProvider(props: any) {
   const [sitePreferences, setSitePreferences] = makePersisted(createSignal<Preferences>(init_Preferences), {
     name: "preference-storage",
   });
+  const [annotations, setAnnotations] = createSignal(new Array<Annotation>());
 
   const datasetsThing = [
     activeDatasets,
@@ -66,6 +67,8 @@ export function AppStateProvider(props: any) {
     setLoadingDatasets,
     measuring,
     setMeasuring,
+    annotations,
+    setAnnotations,
     {
       addDataset(dataset: string) {
         setLoadingState({ isLoading: true, statusMessage: "Adding..." });
@@ -130,3 +133,37 @@ export function AppStateProvider(props: any) {
 export function useState() {
   return useContext(AppStateContext);
 }
+
+export type StateType = [
+  activeDatasets: Accessor<string[]>,
+  setActiveDatasets: Setter<string[]>,
+  appReadyState: Accessor<boolean>,
+  setAppReadyState: Setter<boolean>,
+  loadingState: Accessor<LoadingStateType>,
+  setLoadingState: Setter<LoadingStateType>,
+  testBasics: Accessor<TestBasics>,
+  setTestBasics: Setter<TestBasics>,
+  allKnownTests: Accessor<TestBasics[]>,
+  setAllKnownTests: Setter<TestBasics[]>,
+  datasetsLegendSide: Accessor<number[]>,
+  setDatasetsLegendSide: Setter<number[]>,
+  plotRange: Accessor<PlotRange>,
+  setPlotRange: Setter<PlotRange>,
+  plotPalletteColors: Accessor<string[]>,
+  setPlotPalletteColors: Setter<string[]>,
+  sitePreferences: Accessor<Preferences>,
+  setSitePreferences: Setter<Preferences>,
+  loadingDatasets: Accessor<string[]>,
+  setLoadingDatasets: Setter<string[]>,
+  measuring: Accessor<MeasureData>,
+  setMeasuring: Setter<MeasureData>,
+  annotations: Accessor<Annotation[]>,
+  setAnnotations: Setter<Annotation[]>,
+  {
+    addDataset: (dataset: string) => void,
+    updateDataset: (dataset: string) => void,
+    removeDataset: (dataset: string) => void,
+    updateColor: (dataset: string, color: string) => void,
+  }
+];
+

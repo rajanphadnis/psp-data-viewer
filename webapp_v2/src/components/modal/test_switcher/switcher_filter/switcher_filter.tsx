@@ -1,8 +1,8 @@
 import { Component, For } from "solid-js";
-import styles from "./switcher.module.css";
-import FilterButton from "./filter_button";
-import { useState } from "../../../../state";
+import { StateType, useState } from "../../../../state";
 import { TestBasics } from "../../../../types";
+import FilterButton from "./filter_button";
+import styles from "./switcher.module.css";
 
 const TestSwitcherFilter: Component<{
   setFilters: (newFilters: string[]) => void;
@@ -31,8 +31,15 @@ const TestSwitcherFilter: Component<{
     setLoadingDatasets,
     measuring,
     setMeasuring,
-    { addDataset, updateDataset, removeDataset, updateColor },
-  ]: any = useState();
+    annotations,
+    setAnnotations,
+    {
+      addDataset,
+      updateDataset,
+      removeDataset,
+      updateColor,
+    },
+  ] = useState() as StateType;
 
   return (
     <div class={styles.filterDiv}>

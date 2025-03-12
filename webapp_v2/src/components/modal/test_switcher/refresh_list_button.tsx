@@ -1,8 +1,8 @@
 import { Component } from "solid-js";
-import styles from "../../navbar/navbar.module.css";
-import IconRefresh from "../../icons/refresh";
-import { useState } from "../../../state";
 import { getSharelink } from "../../../browser/sharelink";
+import { StateType, useState } from "../../../state";
+import IconRefresh from "../../icons/refresh";
+import styles from "../../navbar/navbar.module.css";
 
 const RefreshListButton: Component<{}> = (props) => {
   const [
@@ -28,8 +28,15 @@ const RefreshListButton: Component<{}> = (props) => {
     setLoadingDatasets,
     measuring,
     setMeasuring,
-    { addDataset, updateDataset, removeDataset, updateColor },
-  ]: any = useState();
+    annotations,
+    setAnnotations,
+    {
+      addDataset,
+      updateDataset,
+      removeDataset,
+      updateColor,
+    },
+  ] = useState() as StateType;
 
   return (
     <button

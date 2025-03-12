@@ -2,7 +2,7 @@ export type SingleMeasurement = {
   name: string;
   units: string;
   measurement: string;
-}
+};
 
 export type MeasureData = {
   x1: number | undefined;
@@ -10,7 +10,7 @@ export type MeasureData = {
   y1: number[];
   y2: number[];
   toolColor: string;
-}
+};
 
 export type TestBasics = {
   id: string;
@@ -73,6 +73,11 @@ export type Preferences = {
 
 declare global {
   interface Window {
-      dataLayer:any;
+    dataLayer: any;
   }
 }
+
+export type Annotation = {
+  timestamp_ms: number;
+  label: string;
+};

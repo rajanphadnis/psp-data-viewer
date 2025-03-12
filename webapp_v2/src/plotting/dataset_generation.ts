@@ -1,10 +1,9 @@
 import { getSensorData } from "../db/db_interaction";
 import { generateAxisAndSeries } from "./axes_series_generation";
 import type { DatasetSeries, LoadingStateType } from "../types";
-// import { cacheFetchedData } from "../caching";
-// import { setLoadingState, testBasics } from "..";
 import { cacheFetchedData } from "../browser/caching";
 import { Setter } from "solid-js";
+import { Series } from "uplot";
 
 export async function generatePlottedDatasets(
   datasets: string[],
@@ -16,7 +15,7 @@ export async function generatePlottedDatasets(
   displayedSamples: number,
   setLoadingState: Setter<LoadingStateType>,
   prefetch: boolean
-): Promise<[number[][], ({} | DatasetSeries)[]]> {
+): Promise<[number[][], ({} | Series)[]]> {
   let channelsToFetch: Map<string, number> = new Map();
   let toPlot: number[][] = new Array(datasets.length).fill([]);
   let series: ({} | DatasetSeries)[] = new Array(datasets.length).fill({});
@@ -83,5 +82,6 @@ export async function generatePlottedDatasets(
     datasets,
     dataset_legend_side
   );
+  console.log(toPlot_fetched);
   return [toPlot_toReturn, series_toReturn];
 }
