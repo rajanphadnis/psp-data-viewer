@@ -1,8 +1,9 @@
 import uPlot, { Series, type AlignedData, type Options } from "uplot";
 import { DateTime } from "luxon";
-import { DatasetAxis, MeasureData, PlotRange, TestBasics } from "../types";
+import { Annotation, DatasetAxis, MeasureData, PlotRange, TestBasics } from "../types";
 import { Accessor, Setter } from "solid-js";
 import { clearDatums, setPoint1, setPoint2 } from "../browser/measure";
+import { get_annotation_name } from "./generate_annotations";
 
 export function legendRound(val: any, suffix: string, precision: number = 2) {
   if (val == null || val == undefined || val == "null") {
@@ -25,7 +26,9 @@ export function plot(
   measuring: Accessor<MeasureData>,
   displayedAxes: string[],
   setMeasuring: Setter<MeasureData>,
-  datasetsLegendSide: number[]
+  datasetsLegendSide: number[],
+  annotations: Accessor<Annotation[]>,
+  setAnnotations: Setter<Annotation[]>
 ) {
   const axes = generateAllAxes(axes_sets);
   let seriestt: (HTMLDivElement | undefined)[];
@@ -59,18 +62,11 @@ export function plot(
             }
           };
           seriestt = opts.series.map((s, i) => {
-            // console.log(s);
             if (s.scale != "annotation") return;
-
-            console.log("added tt");
             let tt = document.createElement("div");
             tt.className = "plotTooltip";
             tt.textContent = "";
             tt.style.pointerEvents = "none";
-            // tt.style.position = "absolute";
-            // tt.style.background = "white";
-            // tt.style.display = "none";
-            // tt.style.color = "black";
             uplot.over.appendChild(tt);
             return tt;
           });
@@ -80,13 +76,11 @@ export function plot(
               tt.style.display = "none";
             });
           }
-
           uplot.over.addEventListener("mouseleave", () => {
             if (!u.cursor.lock) {
               hideTips();
             }
           });
-
           if (uplot.cursor.left! < 0) {
             hideTips();
           }
@@ -164,21 +158,12 @@ export function plot(
           // can optimize further by not applying styles if idx did not change
           seriestt.forEach((tt, i) => {
             if (tt == undefined) return;
-            console.log(tt);
-
             let s = u.series[i];
-
             if (s.show) {
-              // this is here to handle if initial cursor position is set
-              // not great (can be optimized by doing more enter/leave state transition tracking)
-              //	if (left > 0)
-              //		tt.style.display = null;
-
               let xVal = u.data[0][idx!];
               let yVal = u.data[i][idx!];
-
               if (yVal! > 0.5) {
-                tt.textContent = "(" + xVal + ", " + yVal + ")";
+                tt.textContent = get_annotation_name(xVal, annotations());
                 tt.style.left = Math.round(u.valToPos(xVal, "x")) + 10 + "px";
                 tt.style.top = "0px";
                 (tt.style.display as any) = null;

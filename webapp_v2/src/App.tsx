@@ -90,7 +90,9 @@ const App: Component = (params) => {
         testBasics,
         activeDatasets,
         measuring,
-        setMeasuring
+        setMeasuring,
+        annotations,
+        setAnnotations
       );
       setLoadingState({ isLoading: false, statusMessage: "" });
     } else {

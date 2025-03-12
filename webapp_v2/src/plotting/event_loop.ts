@@ -1,7 +1,7 @@
 import { Accessor, Setter } from "solid-js";
 import { Series } from "uplot";
 import { storeActiveDatasets } from "../browser/caching";
-import { LoadingStateType, MeasureData, PlotRange, TestBasics } from "../types";
+import { Annotation, LoadingStateType, MeasureData, PlotRange, TestBasics } from "../types";
 import { generatePlottedDatasets } from "./dataset_generation";
 import { annotateData, annotateSeries } from "./generate_annotations";
 import { plot } from "./plotting_helpers";
@@ -21,6 +21,8 @@ export async function eventLoop(
   activeDatasets: Accessor<string[]>,
   measuring: Accessor<MeasureData>,
   setMeasurement: Setter<MeasureData>,
+  annotations: Accessor<Annotation[]>,
+  setAnnotations: Setter<Annotation[]>,
   prefetch: boolean = false
 ) {
   const [generated_toPlot, generated_series] = await generatePlottedDatasets(
@@ -41,7 +43,7 @@ export async function eventLoop(
   });
   if (!prefetch) {
     plot(
-      annotateData(generated_toPlot),
+      annotateData(generated_toPlot, annotations(), 10),
       annotateSeries(generated_series),
       axesSets,
       setPlotRange,
@@ -50,7 +52,9 @@ export async function eventLoop(
       measuring,
       displayedAxes,
       setMeasurement,
-      legend_sides
+      legend_sides,
+      annotations,
+      setAnnotations
     );
   }
 }

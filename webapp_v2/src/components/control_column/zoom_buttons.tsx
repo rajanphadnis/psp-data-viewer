@@ -1,10 +1,9 @@
 import { Component, createMemo, createSignal, Show } from "solid-js";
-import styles from "./column.module.css";
-import { IconZoomIn, IconZoomOut } from "../icons/zoom";
+import { eventLoop } from "../../plotting/event_loop";
 import { StateType, useState } from "../../state";
 import { PlotRange, TestBasics } from "../../types";
-import { DateTime } from "luxon";
-import { eventLoop } from "../../plotting/event_loop";
+import { IconZoomIn, IconZoomOut } from "../icons/zoom";
+import styles from "./column.module.css";
 
 const ZoomButtons: Component<{}> = (props) => {
   const [
@@ -85,6 +84,8 @@ const ZoomButtons: Component<{}> = (props) => {
               activeDatasets,
               measuring,
               setMeasuring,
+              annotations,
+              setAnnotations,
               true
             );
             setIsLoadingOut(false);
@@ -128,6 +129,8 @@ const ZoomButtons: Component<{}> = (props) => {
               activeDatasets,
               measuring,
               setMeasuring,
+              annotations,
+              setAnnotations,
               true
             );
             setIsLoadingIn(false);
