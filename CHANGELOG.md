@@ -1,3 +1,9 @@
+## v0.10.1
+added critical azure values and org slug check during signup
+
+### Changed
+- bug fixes
+
 ## v0.10.0
 migrated production pspl to dataviewer.space
 
