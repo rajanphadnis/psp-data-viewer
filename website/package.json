@@ -1,6 +1,6 @@
 {
     "name": "vite-template-solid",
-    "version": "0.10.1",
+    "version": "0.10.2",
     "description": "",
     "type": "module",
     "scripts": {
@@ -36,6 +36,7 @@
         "octokit": "^4.1.2",
         "solid-js": "^1.9.3",
         "tailwindcss": "^4.0.6",
-        "vite-plugin-static-copy": "^2.2.0"
+        "vite-plugin-static-copy": "^2.2.0",
+        "js-yaml": "^4.1.0"
     }
 }
