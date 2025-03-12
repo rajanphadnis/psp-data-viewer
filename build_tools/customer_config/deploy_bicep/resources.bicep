@@ -79,7 +79,24 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2023-05-01' = {
         smb: {}
       }
       cors: {
-        corsRules: []
+        corsRules: [
+          {
+            allowedOrigins: [
+              '*'
+            ]
+            allowedMethods: [
+              'PUT'
+              'GET'
+            ]
+            maxAgeInSeconds: 0
+            exposedHeaders: [
+              '*'
+            ]
+            allowedHeaders: [
+              '*'
+            ]
+          }
+        ]
       }
       shareDeleteRetentionPolicy: {
         enabled: false

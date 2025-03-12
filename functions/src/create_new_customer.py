@@ -111,273 +111,80 @@ def createStripeAndFirebaseResources(req: https_fn.Request) -> https_fn.Response
     )
 
 
-@https_fn.on_request(
-    cors=options.CorsOptions(
-        cors_origins="*",
-        cors_methods=["get", "post"],
-    ),
-    memory=options.MemoryOption.MB_512,
-    timeout_sec=600,
-)
-def createAzureResources(req: https_fn.Request) -> https_fn.Response:
-    slug = req.args["slug"] if "slug" in req.args else None
-    customerID = req.args["cusid"] if "cusid" in req.args else None
-    stripeKey = os.environ.get("STRIPE_TEST")
+@https_fn.on_call(memory=options.MemoryOption.MB_512)
+def update_azure_key(req: https_fn.CallableRequest):
+    slug = req.data["slug"]
 
-    if slug is None:
-        return https_fn.Response(
-            json.dumps({"status": "'slug' is a required argument"}), status=400
-        )
-    # if customerID is None:
-    #     return https_fn.Response(
-    #         json.dumps({"status": "'cusid' is a required argument"}), status=400
-    #     )
-    if stripeKey is None:
-        return https_fn.Response(
-            json.dumps({"status": "Stripe API key not set"}), status=400
-        )
+    db = firestore.client()
+    accts = (
+        db.collection("accounts")
+        .where(filter=FieldFilter("slug", "==", slug))
+        .limit(1)
+        .stream()
+    )
 
-    # db = firestore.client()
-    # firestore_query = db.collection("accounts").where(
-    #     filter=FieldFilter("slug", "==", slug)
-    # )
-    # docs = firestore_query.stream()
-    # for doc in docs:
-    #     customerID = doc.to_dict()["stripe_customer_id"]
+    for acct in accts:
+        acct_data = acct.to_dict()
+        RESOURCE_GROUP = acct_data["azure_rg"]
+        STORAGE_ACCT_NAME = acct_data["azure_storage_account"]
+        appId = os.environ.get("AZURE_APP_ID")
+        password = os.environ.get("AZURE_PASSWORD_STRING")
+        tenant = os.environ.get("AZURE_TENANT_STRING")
 
-    # if customerID is None:
-    #     return https_fn.Response(
-    #         json.dumps({"status": "'stripe_customer_id' not set"}), status=400
-    #     )
-
-    location = "eastus"
-    resourceGroup = f"dataviewer-rg-{slug}"
-    functionApp = f"dataviewer-serverless-function-{slug}"
-    skuStorage = "Standard_LRS"
-    pythonVersion = "3.11"
-    directory = "hdf5_data"
-    share = f"dataviewer-fileshare-{slug}"
-    shareId = f"dataviewer-share-{slug}"
-    mountPath = "/hdf5data"
-    AZURE_STORAGE_ACCOUNT = f"dataviewerstorage{slug}"
-
-    appId = os.environ.get("AZURE_APP_ID")
-    password = os.environ.get("AZURE_PASSWORD_STRING")
-    tenant = os.environ.get("AZURE_TENANT_STRING")
-
-    print(appId)
-    print(password)
-    print(tenant)
-
-    try:
-        cli = get_default_cli()
-        thing = cli.invoke(
-            [
-                "login",
-                "--service-principal",
-                "-u",
-                appId,
-                "-p",
-                password,
-                "--tenant",
-                tenant,
-            ]
-        )
-        thing = cli.invoke(
-            ["group", "create", "--name", resourceGroup, "--location", location]
-        )
-        thing = cli.invoke(
-            [
-                "storage",
-                "account",
-                "create",
-                "--name",
-                AZURE_STORAGE_ACCOUNT,
-                "--location",
-                location,
-                "--resource-group",
-                resourceGroup,
-                "--sku",
-                skuStorage,
-            ]
-        )
-        cli.invoke(
-            [
-                "storage",
-                "account",
-                "keys",
-                "list",
-                "-g",
-                resourceGroup,
-                "-n",
-                AZURE_STORAGE_ACCOUNT,
-                "--query",
-                "[0].value",
-                "-o",
-                "tsv",
-            ]
-        )
-        AZURE_STORAGE_KEY = cli.result.result
-        print(AZURE_STORAGE_KEY)
-        thing = cli.invoke(
-            [
-                "functionapp",
-                "create",
-                "--name",
-                functionApp,
-                "--storage-account",
-                AZURE_STORAGE_ACCOUNT,
-                "--flexconsumption-location",
-                location,
-                "--resource-group",
-                resourceGroup,
-                "--runtime",
-                "python",
-                "--runtime-version",
-                pythonVersion,
-                "--instance-memory",
-                "2048",
-            ]
-        )
-        thing = cli.invoke(
-            [
-                "storage",
-                "share-rm",
-                "create",
-                "--name",
-                share,
-                "--storage-account",
-                AZURE_STORAGE_ACCOUNT,
-                "--access-tier",
-                "Hot",
-                "--resource-group",
-                resourceGroup,
-            ]
-        )
-        thing = cli.invoke(
-            [
-                "storage",
-                "directory",
-                "create",
-                "--share-name",
-                share,
-                "--name",
-                directory,
-                "--account-name",
-                AZURE_STORAGE_ACCOUNT,
-            ]
-        )
-        thing = cli.invoke(
-            [
-                "webapp",
-                "config",
-                "storage-account",
-                "add",
-                "--resource-group",
-                resourceGroup,
-                "--name",
-                functionApp,
-                "--custom-id",
-                shareId,
-                "--storage-type",
-                "AzureFiles",
-                "--share-name",
-                share,
-                "--account-name",
-                AZURE_STORAGE_ACCOUNT,
-                "--mount-path",
-                mountPath,
-                "--access-key",
-                AZURE_STORAGE_KEY,
-            ]
-        )
-        thing = cli.invoke(
-            [
-                "functionapp",
-                "config",
-                "appsettings",
-                "set",
-                "--name",
-                functionApp,
-                "--resource-group",
-                resourceGroup,
-                "--settings",
-                f"STRIPE_API_KEY={stripeKey}",
-                f"STRIPE_CUSTOMER_ID={customerID}",
-            ]
-        )
-        thing = cli.invoke(
-            [
-                "functionapp",
-                "cors",
-                "add",
-                "-g",
-                resourceGroup,
-                "-n",
-                functionApp,
-                "--allowed-origins",
-                "*",
-            ]
-        )
-        print("downloading zip file")
-        result_rm1 = subprocess.run(
-            ["rm", "-rf", "./main.py"], capture_output=True, text=True
-        )
-        print(result_rm1.stdout)
-        result_rm2 = subprocess.run(
-            ["rm", "-rf", "./__pycache__/"], capture_output=True, text=True
-        )
-        print(result_rm2.stdout)
-        result_rm3 = subprocess.run(
-            ["rm", "-rf", "requirements.txt"], capture_output=True, text=True
-        )
-        print(result_rm3.stdout)
-        result_rm4 = subprocess.run(
-            ["rm", "-rf", "./src/"], capture_output=True, text=True
-        )
-        print(result_rm4.stdout)
-        result1 = subprocess.run(["ls", "-l"], capture_output=True, text=True)
-        print(result1.stdout)
-        os.system("curl https://dataviewer.space/azcompiled.zip -o ./azcompiled.zip")
-        destination_file_name = "./azcompiled.zip"
-        # bucket = storage.bucket()
-        # blob = bucket.blob("az-compiled.zip")
-        # blob.download_to_filename(destination_file_name, raw_download=True)
-        print(f"downloaded to: {destination_file_name}")
-        result2 = subprocess.run(["ls", "-l"], capture_output=True, text=True)
-        print(result2.stdout)
-        thing = cli.invoke(
-            [
-                "functionapp",
-                "deployment",
-                "source",
-                "config-zip",
-                "-g",
-                resourceGroup,
-                "-n",
-                functionApp,
-                "--src",
-                destination_file_name,
-            ]
-        )
-
-    except Exception as e:
-        return https_fn.Response(json.dumps({"status": f"error: {e}"}), status=500)
-    if thing == 0:
-        return https_fn.Response(
-            json.dumps(
-                {
-                    "status": "Success",
-                    "result": {"raw": cli.result.result, "acct": AZURE_STORAGE_KEY},
-                }
-            ),
-            status=200,
-        )
-    else:
-        return https_fn.Response(
-            json.dumps({"status": "Failed with exit code", "result": cli.result.error}),
-            status=500,
-        )
+        try:
+            cli = get_default_cli()
+            thing = cli.invoke(
+                [
+                    "login",
+                    "--service-principal",
+                    "-u",
+                    appId,
+                    "-p",
+                    password,
+                    "--tenant",
+                    tenant,
+                ]
+            )
+            thing = cli.invoke(
+                [
+                    "storage",
+                    "account",
+                    "keys",
+                    "list",
+                    "--account-name",
+                    STORAGE_ACCT_NAME,
+                    "--resource-group",
+                    RESOURCE_GROUP,
+                ]
+            )
+        except Exception as e:
+            raise https_fn.HttpsError(
+                code=https_fn.FunctionsErrorCode.INTERNAL,
+                message=(e),
+            )
+        if thing == 0:
+            try:
+                key = cli.result.result[0]["value"]
+            except Exception as e:
+                raise https_fn.HttpsError(
+                    code=https_fn.FunctionsErrorCode.DATA_LOSS,
+                    message=(e),
+                )
+            try:
+                db.collection("api_access").document("acct_keys").update(
+                    {f"{slug}": key}
+                )
+            except Exception as e:
+                raise https_fn.HttpsError(
+                    code=https_fn.FunctionsErrorCode.UNKNOWN,
+                    message=(e),
+                )
+            return {"result": "complete"}
+        else:
+            raise https_fn.HttpsError(
+                code=https_fn.FunctionsErrorCode.INTERNAL,
+                message=(thing),
+            )
 
 
 @https_fn.on_request(

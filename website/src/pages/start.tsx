@@ -5,7 +5,7 @@ import ColorPicker from "../components/start/color_picker";
 import { httpsCallable } from "firebase/functions";
 import { addDoc, collection } from "firebase/firestore";
 import { loadStripe, Stripe, StripeElements } from "@stripe/stripe-js";
-import { stripe_pk } from "../generated_app_info";
+import { reservedSlugs, stripe_pk } from "../generated_app_info";
 import Popover from "@corvu/popover";
 import HelpIcon from "../components/icons/help";
 import { formatName } from "../misc";
@@ -43,7 +43,10 @@ const StartPage: Component<{}> = (props) => {
       toReturn.slug = "Missing slug";
       failed = true;
     }
-    // TODO: add check against known/current slugs here
+    if ([...reservedSlugs, "tamu", "staging"].includes(slug())) {
+      toReturn.slug = "This slug is reserved or already in use"
+      failed = true;
+    }
     if (pageTitle() == "") {
       toReturn.title = "Missing page title";
       failed = true;
