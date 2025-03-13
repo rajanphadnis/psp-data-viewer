@@ -133,6 +133,12 @@ test("generate all axes: 1", () => {
       side: 3,
       ticks: { show: true, stroke: "#80808080" },
     },
+    {
+      "show": false,
+      "scale": "annotation",
+      "grid": { "show": false },
+      "ticks": { "show": false }
+    }
   ]);
 
   expect(JSON.stringify(generateAllAxes(1))).toEqual(expected);
@@ -246,6 +252,12 @@ test("generate all axes: 3", () => {
       side: 3,
       ticks: { show: true, stroke: "#80808080" },
     },
+    {
+      "show": false,
+      "scale": "annotation",
+      "grid": { "show": false },
+      "ticks": { "show": false }
+    }
   ]);
 
   expect(JSON.stringify(generateAllAxes(3))).toEqual(expected);

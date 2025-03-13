@@ -6,7 +6,7 @@ import { loadFromShareLink } from "./browser/sharelink";
 import ControlColumn from "./components/control_column/control_column";
 import NavBar from "./components/navbar/navbar";
 import Plot from "./components/plot/plot";
-import { getGeneralTestInfo, getTestInfo } from "./db/db_interaction";
+import { getGeneralTestInfo, getTestInfo, startAnnotationListener } from "./db/db_interaction";
 import { config } from "./generated_app_info";
 import { eventLoop } from "./plotting/event_loop";
 import { StateType, useState } from "./state";
@@ -60,6 +60,7 @@ const App: Component = (params) => {
     await getGeneralTestInfo(useParams().testID, setAllKnownTests, setTestBasics, testBasics);
     await getTestInfo(testBasics().id, setTestBasics, setPlotRange);
     loadFromShareLink(testBasics, setPlotRange, setDatasetsLegendSide, setActiveDatasets);
+    const unsub = startAnnotationListener(testBasics().id, setAnnotations, setLoadingState);
     setLoadingState({ isLoading: false, statusMessage: "" });
     setAppReadyState(true);
   });
@@ -75,6 +76,7 @@ const App: Component = (params) => {
       const displayed_samples = sitePreferences().displayedSamples;
       const axesSets = sitePreferences().axesSets;
       const measureData = measuring();
+      const annotations_actual = annotations();
       setLoadingState({ isLoading: true, statusMessage: "Generating..." });
       await eventLoop(
         start,
@@ -91,7 +93,7 @@ const App: Component = (params) => {
         activeDatasets,
         measuring,
         setMeasuring,
-        annotations,
+        annotations_actual,
         setAnnotations
       );
       setLoadingState({ isLoading: false, statusMessage: "" });

@@ -3,7 +3,7 @@ import { Series } from "uplot";
 import { storeActiveDatasets } from "../browser/caching";
 import { Annotation, LoadingStateType, MeasureData, PlotRange, TestBasics } from "../types";
 import { generatePlottedDatasets } from "./dataset_generation";
-import { annotateData, annotateSeries } from "./generate_annotations";
+import { annotateData, annotateSeries, calcAnnotationWidth } from "./generate_annotations";
 import { plot } from "./plotting_helpers";
 
 export async function eventLoop(
@@ -21,7 +21,7 @@ export async function eventLoop(
   activeDatasets: Accessor<string[]>,
   measuring: Accessor<MeasureData>,
   setMeasurement: Setter<MeasureData>,
-  annotations: Accessor<Annotation[]>,
+  annotations: Annotation[],
   setAnnotations: Setter<Annotation[]>,
   prefetch: boolean = false
 ) {
@@ -43,7 +43,7 @@ export async function eventLoop(
   });
   if (!prefetch) {
     plot(
-      annotateData(generated_toPlot, annotations(), 10),
+      annotateData(generated_toPlot, annotations, calcAnnotationWidth(generated_toPlot[0])),
       annotateSeries(generated_series),
       axesSets,
       setPlotRange,
@@ -54,7 +54,8 @@ export async function eventLoop(
       setMeasurement,
       legend_sides,
       annotations,
-      setAnnotations
+      setAnnotations,
+      setLoadingState
     );
   }
 }

@@ -6,7 +6,7 @@
     "dataviewer-space": {
       "hosting": {
         "webapp": [
-          "dataviewer-staging-1"
+          "dataviewer-psp"
         ],
         "admin": [
           "dataviewer-admin"

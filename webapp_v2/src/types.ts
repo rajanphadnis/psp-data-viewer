@@ -80,4 +80,5 @@ declare global {
 export type Annotation = {
   timestamp_ms: number;
   label: string;
+  notes: string;
 };

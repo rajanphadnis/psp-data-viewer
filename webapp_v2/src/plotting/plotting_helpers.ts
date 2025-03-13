@@ -1,9 +1,9 @@
 import uPlot, { Series, type AlignedData, type Options } from "uplot";
 import { DateTime } from "luxon";
-import { Annotation, DatasetAxis, MeasureData, PlotRange, TestBasics } from "../types";
+import { Annotation, DatasetAxis, LoadingStateType, MeasureData, PlotRange, TestBasics } from "../types";
 import { Accessor, Setter } from "solid-js";
 import { clearDatums, setPoint1, setPoint2 } from "../browser/measure";
-import { get_annotation_name } from "./generate_annotations";
+import { create_annotation, get_annotation_name } from "./generate_annotations";
 
 export function legendRound(val: any, suffix: string, precision: number = 2) {
   if (val == null || val == undefined || val == "null") {
@@ -27,8 +27,9 @@ export function plot(
   displayedAxes: string[],
   setMeasuring: Setter<MeasureData>,
   datasetsLegendSide: number[],
-  annotations: Accessor<Annotation[]>,
-  setAnnotations: Setter<Annotation[]>
+  annotations: Annotation[],
+  setAnnotations: Setter<Annotation[]>,
+  setLoadingState: Setter<LoadingStateType>
 ) {
   const axes = generateAllAxes(axes_sets);
   let seriestt: (HTMLDivElement | undefined)[];
@@ -44,7 +45,7 @@ export function plot(
             console.log("Fetching data for full range");
             setPlotRange({ start: testBasics().starting_timestamp!, end: testBasics().ending_timestamp! });
           };
-          uplot.over.onclick = (e) => {
+          uplot.over.onclick = async (e) => {
             if (e.ctrlKey) {
               if (measuring().x1) {
                 // if (measuring().x2) {
@@ -59,6 +60,7 @@ export function plot(
             if (e.altKey) {
             }
             if (e.shiftKey) {
+              await create_annotation(uplot, testBasics().id, setLoadingState);
             }
           };
           seriestt = opts.series.map((s, i) => {
@@ -163,7 +165,7 @@ export function plot(
               let xVal = u.data[0][idx!];
               let yVal = u.data[i][idx!];
               if (yVal! > 0.5) {
-                tt.textContent = get_annotation_name(xVal, annotations());
+                tt.textContent = get_annotation_name(xVal, annotations);
                 tt.style.left = Math.round(u.valToPos(xVal, "x")) + 10 + "px";
                 tt.style.top = "0px";
                 (tt.style.display as any) = null;

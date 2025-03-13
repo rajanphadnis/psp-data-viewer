@@ -1,5 +1,13 @@
-import { DocumentSnapshot, doc, getDoc, getDocFromCache, type DocumentData } from "firebase/firestore";
-import type { DatasetAxis, DatasetSeries, PlotRange, TestBasics } from "../types";
+import {
+  DocumentSnapshot,
+  doc,
+  getDoc,
+  getDocFromCache,
+  onSnapshot,
+  setDoc,
+  type DocumentData,
+} from "firebase/firestore";
+import type { Annotation, DatasetAxis, DatasetSeries, LoadingStateType, PlotRange, TestBasics } from "../types";
 import { generateAxisAndSeries } from "../plotting/axes_series_generation";
 import { Accessor, Setter } from "solid-js";
 import { config } from "../generated_app_info";
@@ -24,7 +32,7 @@ export async function getSensorData(
   test_id: string,
   displayed_samples: number,
   plotColors: string[],
-  legendSidesToFetch: number[],
+  legendSidesToFetch: number[]
   // indexOfDatasetList: number,
 ): Promise<[number[][], ({} | DatasetSeries)[]]> {
   // Init empty variables
@@ -62,7 +70,7 @@ export async function getSensorData(
         nameOnly,
         channelsToFetch.get(dataset)!,
         plotColors,
-        legendSidesToFetch[i],
+        legendSidesToFetch[i]
       );
 
       // Add plot series and data to main lists to return
@@ -87,7 +95,11 @@ export async function getSensorData(
  * `starting_timestamp`, `ending_timestamp`
  *
  */
-export async function getTestInfo(test_ID: string, setTestBasics: Setter<TestBasics>, setPlotRange: Setter<PlotRange>): Promise<void> {
+export async function getTestInfo(
+  test_ID: string,
+  setTestBasics: Setter<TestBasics>,
+  setPlotRange: Setter<PlotRange>
+): Promise<void> {
   // Use the global (app state) database reference and currently selected test ID
   const docRef = doc(globalThis.db, test_ID, "general");
   let docSnap;
@@ -196,4 +208,66 @@ export async function getGeneralTestInfo(
 
   // return
   return;
+}
+
+/**
+ * Contacts the Firestore database and sets up a listener on the document `${testID}/annotations`.
+ * If the document exists, onchange events trigger an update to the "annotations" state
+ * within the app.
+ *
+ * @returns `Unsubscribe` type object that stops the annotation listener
+ *
+ */
+export function startAnnotationListener(
+  testID: string,
+  setAnnotations: Setter<Annotation[]>,
+  setLoadingState: Setter<LoadingStateType>
+) {
+  setLoadingState({ isLoading: true, statusMessage: "Fetching Annotations" });
+  const docRef = doc(globalThis.db, testID, "annotations");
+  const unsub = onSnapshot(
+    docRef,
+    (doc) => {
+      console.log("Current data: ", doc.data());
+      if (doc.exists()) {
+        const data = doc.data();
+        const timestamps_ms = Object.keys(data);
+        let toSet = new Array<Annotation>();
+        for (let a = 0; a < timestamps_ms.length; a++) {
+          const timestamp_ms = timestamps_ms[a];
+          const title = data[timestamp_ms]["title"] ?? "";
+          const notes = data[timestamp_ms]["notes"] ?? "";
+          const toAdd: Annotation = {
+            timestamp_ms: parseFloat(timestamp_ms),
+            label: title,
+            notes: notes,
+          };
+          toSet.push(toAdd);
+        }
+        console.log(toSet);
+        setAnnotations(toSet);
+      }
+    },
+    (error) => {
+      console.error(error);
+      setLoadingState({ isLoading: false, statusMessage: "Failed: Annotation Listener" });
+    }
+  );
+  return unsub;
+}
+
+export async function set_annotation(
+  newAnnotation: Annotation,
+  testID: string,
+  setLoadingState: Setter<LoadingStateType>
+) {
+  setLoadingState({ isLoading: true, statusMessage: "Creating Annotation" });
+  const docRef = doc(globalThis.db, testID, "annotations");
+  let toSetObj: any = {};
+  toSetObj[`${newAnnotation.timestamp_ms}`] = {
+    title: newAnnotation.label ?? "",
+    notes: newAnnotation.notes ?? "",
+  };
+  await setDoc(docRef, toSetObj, { merge: true });
+  setLoadingState({ isLoading: false, statusMessage: "" });
 }
