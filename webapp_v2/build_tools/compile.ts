@@ -73,7 +73,7 @@ syncWriteFile(
   --field: ${doc.colors.primary};
   --cool-gray: ${doc.colors.background_light};
   --background-color: ${doc.colors.background};
-}\n\n${indexCSS}`
+}\n\n${indexCSS.substring(indexCSS.indexOf("html,"), indexCSS.length)}`
 );
 syncWriteFile(
   "../../.firebaserc",
