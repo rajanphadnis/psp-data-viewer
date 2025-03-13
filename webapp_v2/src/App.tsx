@@ -10,8 +10,10 @@ import { getGeneralTestInfo, getTestInfo, startAnnotationListener } from "./db/d
 import { config } from "./generated_app_info";
 import { eventLoop } from "./plotting/event_loop";
 import { StateType, useState } from "./state";
+import AnnotationModal from "./components/modal/annotation/modal";
 
 const App: Component = (params) => {
+  let annotationModalButton: HTMLButtonElement | undefined;
   const [
     activeDatasets,
     setActiveDatasets,
@@ -63,10 +65,14 @@ const App: Component = (params) => {
     const unsub = startAnnotationListener(testBasics().id, setAnnotations, setLoadingState);
     setLoadingState({ isLoading: false, statusMessage: "" });
     setAppReadyState(true);
+    // console.log(annotationModalButton);
+    annotationModalButton?.click();
   });
 
   createEffect(async () => {
     if (appReadyState()) {
+      console.log(annotationModalButton);
+
       const start = plotRange().start;
       const end = plotRange().end;
       const datasets = activeDatasets();
@@ -110,6 +116,7 @@ const App: Component = (params) => {
         </Show>
       </MetaProvider>
       <NavBar />
+      <AnnotationModal ref={annotationModalButton} />
       <div id="main">
         <Plot />
         <ControlColumn />

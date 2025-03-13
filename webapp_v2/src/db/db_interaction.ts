@@ -1,5 +1,6 @@
 import {
   DocumentSnapshot,
+  deleteField,
   doc,
   getDoc,
   getDocFromCache,
@@ -268,6 +269,19 @@ export async function set_annotation(
     title: newAnnotation.label ?? "",
     notes: newAnnotation.notes ?? "",
   };
+  await setDoc(docRef, toSetObj, { merge: true });
+  setLoadingState({ isLoading: false, statusMessage: "" });
+}
+
+export async function delete_annotation_db(
+  timestamp_ms: number,
+  testID: string,
+  setLoadingState: Setter<LoadingStateType>
+) {
+  setLoadingState({ isLoading: true, statusMessage: "Creating Annotation" });
+  const docRef = doc(globalThis.db, testID, "annotations");
+  let toSetObj: any = {};
+  toSetObj[`${timestamp_ms}`] = deleteField();
   await setDoc(docRef, toSetObj, { merge: true });
   setLoadingState({ isLoading: false, statusMessage: "" });
 }

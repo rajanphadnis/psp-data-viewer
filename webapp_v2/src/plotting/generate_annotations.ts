@@ -1,7 +1,7 @@
-import uPlot, { AlignedData, Series } from "uplot";
-import { Annotation, type LoadingStateType } from "../types";
-import { set_annotation } from "../db/db_interaction";
 import { Setter } from "solid-js";
+import uPlot, { AlignedData, Series } from "uplot";
+import { delete_annotation_db, set_annotation } from "../db/db_interaction";
+import { Annotation, type LoadingStateType } from "../types";
 
 export function annotateData(actual_data: number[][], annotations: Annotation[], annotation_width: number = 6) {
   if (actual_data.length > 0) {
@@ -11,7 +11,6 @@ export function annotateData(actual_data: number[][], annotations: Annotation[],
       const annotation = annotations[a];
       const index_to_enter_at = actual_data[0].findIndex((val, i) => val > annotation.timestamp_ms / 1000);
       if (index_to_enter_at > 0) {
-        // console.log(`${index_to_enter_at} of ${annotation_data_length}`);
         const zeroes_start = index_to_enter_at - Math.floor(annotation_width / 2);
         const annotation_w_actual = annotation_width;
         const zeroes_end = annotation_data_length - annotation_w_actual - zeroes_start;
@@ -43,7 +42,6 @@ export function annotateSeries(series: ({} | Series)[]) {
       fill: "green",
       scale: "annotation",
       label: " ",
-      // value: undefined,
       class: "hiddenLegendItem",
     },
   ];
@@ -51,7 +49,6 @@ export function annotateSeries(series: ({} | Series)[]) {
 }
 
 export function get_annotation_name(timestamp_s: number, annotations: Annotation[]) {
-  //   console.log(annotations)
   const target_ms = timestamp_s * 1000;
   const label = annotations.reduce((closest, event) =>
     Math.abs(event.timestamp_ms - target_ms) < Math.abs(closest.timestamp_ms - target_ms) ? event : closest
@@ -73,11 +70,25 @@ export async function create_annotation(uplot: uPlot, testID: string, setLoading
   );
 }
 
+export async function delete_annotation(
+  uplot: uPlot,
+  testID: string,
+  setLoadingState: Setter<LoadingStateType>,
+  annotations: Annotation[]
+) {
+  const { left, top, idx } = uplot.cursor;
+  let xVal = uplot.data[0][idx!];
+  const target_ms = xVal * 1000;
+  const label = annotations.reduce((closest, event) =>
+    Math.abs(event.timestamp_ms - target_ms) < Math.abs(closest.timestamp_ms - target_ms) ? event : closest
+  );
+  await delete_annotation_db(label.timestamp_ms, testID, setLoadingState);
+}
+
 export function calcAnnotationWidth(time: number[]): number {
   if (time) {
     console.log(time);
     const num_of_data_points = time.length;
-    // TODO: validate formula that returns a thickness based on num_of_data_points
     const size = Math.ceil(num_of_data_points / 300);
     console.log(`${num_of_data_points} -> ${size}`);
     return size;

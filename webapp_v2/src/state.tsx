@@ -44,15 +44,7 @@ export function AppStateProvider(props: any) {
   });
   const [annotations, setAnnotations] = createSignal<Annotation[]>(new Array<Annotation>());
 
-  // [{
-  //   timestamp_ms: 1728329398090.0002,
-  //   label: "autosequence_start",
-  //   notes: ""
-  // }, {
-  //   timestamp_ms: 1728329398090.0002 - 300000,
-  //   label: "other",
-  //   notes: ""
-  // }]
+  let annotationModalTriggerRef: HTMLButtonElement | undefined;
 
   const datasetsThing = [
     activeDatasets,

@@ -1,9 +1,9 @@
-import uPlot, { Series, type AlignedData, type Options } from "uplot";
 import { DateTime } from "luxon";
-import { Annotation, DatasetAxis, LoadingStateType, MeasureData, PlotRange, TestBasics } from "../types";
 import { Accessor, Setter } from "solid-js";
+import uPlot, { Series, type AlignedData, type Options } from "uplot";
 import { clearDatums, setPoint1, setPoint2 } from "../browser/measure";
-import { create_annotation, get_annotation_name } from "./generate_annotations";
+import { Annotation, DatasetAxis, LoadingStateType, MeasureData, PlotRange, TestBasics } from "../types";
+import { create_annotation, delete_annotation, get_annotation_name } from "./generate_annotations";
 
 export function legendRound(val: any, suffix: string, precision: number = 2) {
   if (val == null || val == undefined || val == "null") {
@@ -48,19 +48,23 @@ export function plot(
           uplot.over.onclick = async (e) => {
             if (e.ctrlKey) {
               if (measuring().x1) {
-                // if (measuring().x2) {
-                //   if ()
-                // } else {
-                setPoint2(activeDatasets(), measuring, setMeasuring, datasetsLegendSide);
-                // }
+                if (measuring().x2) {
+                  clearDatums(measuring, setMeasuring);
+                } else {
+                  setPoint2(activeDatasets(), measuring, setMeasuring, datasetsLegendSide);
+                }
               } else {
                 setPoint1(activeDatasets(), measuring, setMeasuring, datasetsLegendSide);
               }
             }
-            if (e.altKey) {
-            }
             if (e.shiftKey) {
               await create_annotation(uplot, testBasics().id, setLoadingState);
+            }
+          };
+          uplot.over.oncontextmenu = async (e) => {
+            e.preventDefault();
+            if (e.shiftKey) {
+              delete_annotation(uplot, testBasics().id, setLoadingState, annotations);
             }
           };
           seriestt = opts.series.map((s, i) => {
@@ -156,7 +160,6 @@ export function plot(
       setCursor: [
         (u: uPlot) => {
           const { left, top, idx } = u.cursor;
-
           // can optimize further by not applying styles if idx did not change
           seriestt.forEach((tt, i) => {
             if (tt == undefined) return;
@@ -216,6 +219,12 @@ export function plot(
     if (e && e.key == "Escape") {
       clearDatums(measuring, setMeasuring);
     }
+    // if (e && (e.key == "Backspace" || e.key == "Delete")) {
+    //   delete_annotation(u, testBasics().id, setLoadingState, annotations);
+    // }
+  });
+  window.addEventListener("contextmenu", (e) => {
+    e.preventDefault();
   });
 }
 
