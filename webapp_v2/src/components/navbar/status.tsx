@@ -29,19 +29,16 @@ const Status: Component<{}> = (props) => {
     setMeasuring,
     annotations,
     setAnnotations,
-    {
-      addDataset,
-      updateDataset,
-      removeDataset,
-      updateColor,
-    },
+    { addDataset, updateDataset, removeDataset, updateColor },
   ] = useState() as StateType;
 
   return (
-    <div class={styles.status}>
-      <p class={styles.statusMessage}>{loadingState().isLoading ? loadingState().statusMessage : "Ready"}</p>
+    <div class="flex flex-row items-center justify-end pr-5 text-center">
+      <p class="m-auto pr-2.5">
+        {loadingState().isLoading ? loadingState().statusMessage : "Ready"}
+      </p>
       <Show when={loadingState().isLoading} fallback={<CheckIcon />}>
-        <div class={styles.loader}></div>
+        <div class="loader"></div>
       </Show>
     </div>
   );

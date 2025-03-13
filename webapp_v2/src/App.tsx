@@ -1,16 +1,15 @@
 import { MetaProvider, Title } from "@solidjs/meta";
 import { useParams } from "@solidjs/router";
 import { createEffect, onMount, Show, type Component } from "solid-js";
-import styles from "./App.module.css";
 import { loadFromShareLink } from "./browser/sharelink";
 import ControlColumn from "./components/control_column/control_column";
+import AnnotationModal from "./components/modal/annotation/modal";
 import NavBar from "./components/navbar/navbar";
 import Plot from "./components/plot/plot";
 import { getGeneralTestInfo, getTestInfo, startAnnotationListener } from "./db/db_interaction";
 import { config } from "./generated_app_info";
 import { eventLoop } from "./plotting/event_loop";
 import { StateType, useState } from "./state";
-import AnnotationModal from "./components/modal/annotation/modal";
 
 const App: Component = (params) => {
   let annotationModalButton: HTMLButtonElement | undefined;
@@ -66,7 +65,7 @@ const App: Component = (params) => {
     setLoadingState({ isLoading: false, statusMessage: "" });
     setAppReadyState(true);
     // console.log(annotationModalButton);
-    annotationModalButton?.click();
+    // annotationModalButton?.click();
   });
 
   createEffect(async () => {
@@ -109,7 +108,7 @@ const App: Component = (params) => {
   });
 
   return (
-    <div class={styles.App}>
+    <div class="text-center">
       <MetaProvider>
         <Show when={testBasics() != undefined ? testBasics().id != "" : false} fallback={<Title>Loading...</Title>}>
           <Title>{testBasics().name}</Title>
@@ -117,7 +116,7 @@ const App: Component = (params) => {
       </MetaProvider>
       <NavBar />
       <AnnotationModal ref={annotationModalButton} />
-      <div id="main">
+      <div class="flex flex-row">
         <Plot />
         <ControlColumn />
       </div>

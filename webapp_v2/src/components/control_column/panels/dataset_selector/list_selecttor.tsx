@@ -1,6 +1,5 @@
 import { Component } from "solid-js";
 import { StateType, useState } from "../../../../state";
-import styles from "./dataset.selector.module.css";
 
 const DatasetListSelector: Component<{ dataset_id: string }> = (props) => {
   const [
@@ -28,16 +27,11 @@ const DatasetListSelector: Component<{ dataset_id: string }> = (props) => {
     setMeasuring,
     annotations,
     setAnnotations,
-    {
-      addDataset,
-      updateDataset,
-      removeDataset,
-      updateColor,
-    },
+    { addDataset, updateDataset, removeDataset, updateColor },
   ] = useState() as StateType;
   return (
     <button
-      class={styles.datasetButton}
+      class="hover:bg-cool-grey bg-bg flex w-full cursor-pointer flex-row items-center justify-start border-none p-1.25 py-2 text-start text-neutral-400 hover:text-white"
       type="button"
       onClick={() => {
         addDataset(props.dataset_id);

@@ -1,6 +1,5 @@
-import { Component, createSignal, Show } from "solid-js";
 import { HexColorPicker } from "solid-colorful";
-import styles from "./color_picker.module.css";
+import { Component, createSignal, Show } from "solid-js";
 import useClickOutside from "../../../../browser/click_outside";
 import { StateType, useState } from "../../../../state";
 
@@ -30,15 +29,14 @@ const ColorPicker: Component<{ dataset_id: string }> = (props) => {
     setMeasuring,
     annotations,
     setAnnotations,
-    {
-      addDataset,
-      updateDataset,
-      removeDataset,
-      updateColor,
-    },
+    { addDataset, updateDataset, removeDataset, updateColor },
   ] = useState() as StateType;
   const [isOpen, toggle] = createSignal<boolean>(false);
-  const [color, setColor] = createSignal<string>(plotPalletteColors()[activeDatasets().indexOf(props.dataset_id) % plotPalletteColors().length]);
+  const [color, setColor] = createSignal<string>(
+    plotPalletteColors()[
+      activeDatasets().indexOf(props.dataset_id) % plotPalletteColors().length
+    ],
+  );
   const [target, setTarget] = createSignal<HTMLElement | undefined>();
 
   useClickOutside(target, () => {
@@ -52,9 +50,9 @@ const ColorPicker: Component<{ dataset_id: string }> = (props) => {
   });
 
   return (
-    <div class={styles.picker} ref={setTarget}>
+    <div ref={setTarget}>
       <div
-        class={styles.swatch}
+        class="mr-1.5 h-6 w-6 cursor-pointer border-none"
         style={{ "background-color": color() }}
         onClick={() =>
           toggle((b) => {
@@ -64,7 +62,7 @@ const ColorPicker: Component<{ dataset_id: string }> = (props) => {
         }
       />
       <Show when={isOpen()}>
-        <div class={styles.popover}>
+        <div class="absolute z-99 rounded-lg shadow-lg">
           <HexColorPicker color={color()} onChange={setColor} />
         </div>
       </Show>

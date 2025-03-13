@@ -1,7 +1,5 @@
 import { Component } from "solid-js";
-import layout from "../../layout.module.css";
 import { StateType, useState } from "../../state";
-import styles from "./navbar.module.css";
 import SharelinkButton from "./sharelink_button";
 import Status from "./status";
 import NavBarTitle from "./title";
@@ -40,14 +38,14 @@ const NavBar: Component<{}> = () => {
     },
   ] = useState() as StateType;
   return (
-    <div class={styles.navBar}>
+    <div class="px-4 pt-2 pb-0 flex flex-row items-center justify-between">
       <NavBarTitle
         name={testBasics().name}
         test_article={testBasics().test_article}
         id={testBasics().id}
         gse_article={testBasics().gse_article}
       />
-      <div class={layout.flexRowEnd} style="justify-content: end;">
+      <div class="flex flex-row items-center justify-end">
         <Status />
         <SharelinkButton />
       </div>

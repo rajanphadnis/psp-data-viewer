@@ -2,7 +2,6 @@ import { Component } from "solid-js";
 import { StateType, useState } from "../../../../state";
 import XMark from "../../../icons/x_mark";
 import ColorPicker from "./color_picker";
-import styles from "./dataset.selector.module.css";
 import DatasetSelectorLegendIndicator from "./legend_indicator";
 
 const DatasetSelector: Component<{ dataset_id: string }> = (props) => {
@@ -31,35 +30,29 @@ const DatasetSelector: Component<{ dataset_id: string }> = (props) => {
     setMeasuring,
     annotations,
     setAnnotations,
-    {
-      addDataset,
-      updateDataset,
-      removeDataset,
-      updateColor,
-    },
+    { addDataset, updateDataset, removeDataset, updateColor },
   ] = useState() as StateType;
 
-
   return (
-    <div class={styles.datasetDiv}>
-      <div class={styles.datasetLabelDiv}>
+    <div class="flex w-full flex-row items-center justify-between p-0 py-1.5 text-white">
+      <div class="flex flex-row items-center justify-start">
         <ColorPicker dataset_id={props.dataset_id} />
         {/* <div
           class={styles.colorPicker}
           style={{ "background-color": plotPalletteColors()[activeDatasets().indexOf(props.dataset_id)] }}
         ></div> */}
         <DatasetSelectorLegendIndicator dataset_id={props.dataset_id} />
-        <p class={styles.label}>
+        <p class="m-0 ml-1.5 text-sm font-stretch-condensed">
           {props.dataset_id.split("__")[0]} ({props.dataset_id.split("__")[1]})
         </p>
       </div>
       <button
-        class={styles.removeButton}
+        class="bg-rush hover:bg-aged mr-2 h-fit cursor-pointer border-none p-0"
         onclick={() => {
           removeDataset(props.dataset_id);
         }}
       >
-        <XMark />
+        <XMark class="h-6 w-6 fill-white p-0.5" />
       </button>
     </div>
   );

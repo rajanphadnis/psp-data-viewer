@@ -2,7 +2,6 @@ import { Component } from "solid-js";
 import { getSharelink } from "../../../browser/sharelink";
 import { StateType, useState } from "../../../state";
 import IconRefresh from "../../icons/refresh";
-import styles from "../../navbar/navbar.module.css";
 
 const RefreshListButton: Component<{}> = (props) => {
   const [
@@ -30,24 +29,24 @@ const RefreshListButton: Component<{}> = (props) => {
     setMeasuring,
     annotations,
     setAnnotations,
-    {
-      addDataset,
-      updateDataset,
-      removeDataset,
-      updateColor,
-    },
+    { addDataset, updateDataset, removeDataset, updateColor },
   ] = useState() as StateType;
 
   return (
     <button
-      class={styles.navbarButtons}
+      class="ml-5 cursor-pointer border-0 pt-1 font-bold text-black text-center text-md bg-rush hover:bg-rush-light"
       onclick={async () => {
         setLoadingState({ isLoading: true, statusMessage: "Refreshing..." });
         const dbs = await window.indexedDB.databases();
         dbs.forEach(async (db) => {
           await window.indexedDB.deleteDatabase(db.name!);
         });
-        const [link, b64] = getSharelink(activeDatasets(), plotRange().start, plotRange().end, datasetsLegendSide());
+        const [link, b64] = getSharelink(
+          activeDatasets(),
+          plotRange().start,
+          plotRange().end,
+          datasetsLegendSide(),
+        );
         window.location.href = link;
       }}
     >

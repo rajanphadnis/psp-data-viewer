@@ -5,7 +5,6 @@ import { StateType, useState } from "../../../../state";
 import CheckIcon from "../../../icons/check";
 import IconCSV from "../../../icons/csv";
 import IconButton from "./icon_button";
-import styles from "./tools.module.css";
 
 const ToolDownloadCSV: Component<{}> = (props) => {
   const [showDone, setDone] = createSignal<boolean>(false);
@@ -34,16 +33,11 @@ const ToolDownloadCSV: Component<{}> = (props) => {
     setMeasuring,
     annotations,
     setAnnotations,
-    {
-      addDataset,
-      updateDataset,
-      removeDataset,
-      updateColor,
-    },
+    { addDataset, updateDataset, removeDataset, updateColor },
   ] = useState() as StateType;
   return (
     <button
-      class={styles.button}
+      class="hover:bg-rush-light bg-rush mb-1.25 flex w-full cursor-pointer flex-row items-center justify-start border-none p-1.25"
       onclick={async () => {
         downloadCSV(activeDatasets(), plotRange().start, plotRange().end);
         setDone(true);
@@ -56,7 +50,7 @@ const ToolDownloadCSV: Component<{}> = (props) => {
           <IconCSV />
         </Show>
       </IconButton>
-      <p class={styles.buttonTitle}>
+      <p class="m-0 font-bold text-black text-xs">
         <Show when={!showDone()} fallback={"Downloaded!"}>
           Download Data as CSV
         </Show>

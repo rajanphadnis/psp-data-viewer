@@ -30,19 +30,14 @@ const SharelinkButton: Component<{}> = (props) => {
     setMeasuring,
     annotations,
     setAnnotations,
-    {
-      addDataset,
-      updateDataset,
-      removeDataset,
-      updateColor,
-    },
+    { addDataset, updateDataset, removeDataset, updateColor },
   ] = useState() as StateType;
   const [showDone, setDone] = createSignal<boolean>(false);
 
   return (
     <button
       title="Copy link that points to the current plot config"
-      class={styles.sharelinkButton}
+      class="bg-rush hover:bg-rush-light block cursor-pointer border-0 p-2 font-bold text-black"
       // disabled={activeDatasets().length == 0}
       style={{ opacity: activeDatasets().length == 0 ? 0 : 1 }}
       onClick={async () => {
@@ -50,7 +45,7 @@ const SharelinkButton: Component<{}> = (props) => {
           activeDatasets(),
           plotRange().start,
           plotRange().end,
-          datasetsLegendSide()
+          datasetsLegendSide(),
         );
         copyTextToClipboard(sharelink);
         console.log(sharelink);

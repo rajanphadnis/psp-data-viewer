@@ -1,10 +1,10 @@
-import { Component, createSignal, Show } from "solid-js";
 import { HexColorPicker } from "solid-colorful";
-import styles from "../../control_column/panels/dataset_selector/color_picker.module.css";
-import { useState } from "../../../state";
+import { Component, createSignal, Show } from "solid-js";
 import useClickOutside from "../../../browser/click_outside";
 
-const SettingsColorPicker: Component<{ color: any; setColor: any }> = (props) => {
+const SettingsColorPicker: Component<{ color: any; setColor: any }> = (
+  props,
+) => {
   const [isOpen, toggle] = createSignal<boolean>(false);
   //   const [color, setColor] = createSignal<string>(plotPalletteColors()[activeDatasets().indexOf(props.dataset_id) % plotPalletteColors().length]);
   const [target, setTarget] = createSignal<HTMLElement | undefined>();
@@ -20,9 +20,9 @@ const SettingsColorPicker: Component<{ color: any; setColor: any }> = (props) =>
   });
 
   return (
-    <div class={styles.picker} ref={setTarget}>
+    <div ref={setTarget}>
       <div
-        class={styles.swatch}
+        class="mr-1.5 h-6 w-6 cursor-pointer border-none"
         style={{ "background-color": props.color() }}
         onClick={() =>
           toggle((b) => {
@@ -32,7 +32,7 @@ const SettingsColorPicker: Component<{ color: any; setColor: any }> = (props) =>
         }
       />
       <Show when={isOpen()}>
-        <div class={styles.popover}>
+        <div class="absolute z-99 rounded-lg shadow-lg">
           <HexColorPicker color={props.color()} onChange={props.setColor} />
         </div>
       </Show>

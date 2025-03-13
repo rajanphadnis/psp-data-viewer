@@ -4,7 +4,8 @@ import { Component } from "solid-js";
 const AnnotationModal: Component<{ ref: any }> = (props) => {
 
     return <Dialog>
-        <Dialog.Trigger ref={props.ref} class="">
+        <Dialog.Trigger ref={props.ref} class="hidden">
+            test
         </Dialog.Trigger>
         <Dialog.Portal>
             <Dialog.Overlay class="fixed inset-0 z-50 bg-black/50 data-open:animate-in data-open:fade-in-0% data-closed:animate-out data-closed:fade-out-0%" />

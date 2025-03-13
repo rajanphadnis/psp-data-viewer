@@ -2,15 +2,18 @@ import Dialog from "@corvu/dialog";
 import { Component, Show } from "solid-js";
 import { getDateLabel } from "../../browser/util";
 import { config } from "../../generated_app_info";
-import layout from "../../layout.module.css";
 import { StateType, useState } from "../../state";
 import SettingsIcon from "../icons/settings";
 import SwapIcon from "../icons/swap";
 import SettingsModal from "../modal/settings/settings_panel";
 import TestSwitcherModal from "../modal/test_switcher/test_switcher";
-import styles from "./navbar.module.css";
 
-const NavBarTitle: Component<{ id: string; name: string; test_article: string; gse_article: string }> = (props) => {
+const NavBarTitle: Component<{
+  id: string;
+  name: string;
+  test_article: string;
+  gse_article: string;
+}> = (props) => {
   const [
     activeDatasets,
     setActiveDatasets,
@@ -36,35 +39,41 @@ const NavBarTitle: Component<{ id: string; name: string; test_article: string; g
     setMeasuring,
     annotations,
     setAnnotations,
-    {
-      addDataset,
-      updateDataset,
-      removeDataset,
-      updateColor,
-    },
+    { addDataset, updateDataset, removeDataset, updateColor },
   ] = useState() as StateType;
   return (
-    <div class={layout.flexRowStart} style="justify-content: start;">
+    <div class="flex flex-row items-center justify-start">
       <Show
         when={testBasics() != undefined ? testBasics().id != "" : false}
-        fallback={<div class={styles.title}>Loading...</div>}
+        fallback={
+          <div class="cursor-pointer border-none bg-transparent text-xl font-bold text-white">
+            Loading...
+          </div>
+        }
       >
         <Dialog>
-          <Dialog.Trigger class={styles.title}>
-            {config.naming.page_title}:{testBasics().test_article}:{testBasics().gse_article}:
+          <Dialog.Trigger class="cursor-pointer border-none bg-transparent text-xl font-bold text-white">
+            {config.naming.page_title}:{testBasics().test_article}:
+            {testBasics().gse_article}:
             {`${getDateLabel(testBasics().starting_timestamp!)}:${testBasics().name}`}
           </Dialog.Trigger>
           <TestSwitcherModal />
         </Dialog>
         <Dialog>
-          <Dialog.Trigger title="Change Active Test" class={styles.navbarButtons}>
-            <SwapIcon />
+          <Dialog.Trigger
+            title="Change Active Test"
+            class="bg-rush hover:bg-rush-light ml-5 cursor-pointer border-0 pt-0 text-center text-lg font-bold text-black"
+          >
+            <SwapIcon class="w-7 fill-black p-2" />
           </Dialog.Trigger>
           <TestSwitcherModal />
         </Dialog>
         <Dialog>
-          <Dialog.Trigger title="Site Settings" class={styles.navbarButtons}>
-            <SettingsIcon />
+          <Dialog.Trigger
+            title="Site Settings"
+            class="text-md bg-rush hover:bg-rush-light ml-5 cursor-pointer border-0 text-center font-bold text-black"
+          >
+            <SettingsIcon class="w-7 fill-black p-2" />
           </Dialog.Trigger>
           <SettingsModal />
         </Dialog>

@@ -1,15 +1,14 @@
 import { Component } from "solid-js";
 import IconSum from "../../../icons/sum";
-import styles from "./tools.module.css";
 import IconButton from "./icon_button";
 
 const ToolCalcChannel: Component<{}> = (props) => {
   return (
-    <button class={styles.button}>
+    <button class="hover:bg-rush-light bg-rush mb-1.25 flex w-full cursor-pointer flex-row items-center justify-start border-none p-1.25">
       <IconButton>
         <IconSum />
       </IconButton>
-      <p class={styles.buttonTitle}>Calc Channels</p>
+      <p class="m-0 font-bold text-black">Calc Channels</p>
     </button>
   );
 };

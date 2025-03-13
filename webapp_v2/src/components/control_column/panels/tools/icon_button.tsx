@@ -1,8 +1,7 @@
 import { Component, JSX } from "solid-js";
-import styles from "./tools.module.css";
 
 const IconButton: Component<{ children?: JSX.Element }> = (props) => {
-  return <div class={styles.icon}>{props.children}</div>;
+  return <div class="mr-1.25 p-1.25 pb-0.5">{props.children}</div>;
 };
 
 export default IconButton;

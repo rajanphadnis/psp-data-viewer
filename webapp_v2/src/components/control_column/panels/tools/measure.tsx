@@ -6,7 +6,6 @@ import { SingleMeasurement } from "../../../../types";
 import { IconOneKey, IconTwoKey } from "../../../icons/keys";
 import IconMeasure from "../../../icons/measure";
 import IconButton from "./icon_button";
-import styles from "./tools.module.css";
 
 const ToolMeasure: Component<{}> = (props) => {
   const [
@@ -34,12 +33,7 @@ const ToolMeasure: Component<{}> = (props) => {
     setMeasuring,
     annotations,
     setAnnotations,
-    {
-      addDataset,
-      updateDataset,
-      removeDataset,
-      updateColor,
-    },
+    { addDataset, updateDataset, removeDataset, updateColor },
   ] = useState() as StateType;
 
   const calculated_measurements = createMemo<SingleMeasurement[]>(() => {
@@ -72,16 +66,16 @@ const ToolMeasure: Component<{}> = (props) => {
       }}
     >
       <Popover.Anchor>
-        <Popover.Trigger class={styles.button}>
+        <Popover.Trigger class="hover:bg-rush-light bg-rush mb-1.25 flex w-full cursor-pointer flex-row items-center justify-start border-none p-1.25">
           <IconButton>
             <IconMeasure />
           </IconButton>
-          <p class={styles.buttonTitle}>Measure</p>
+          <p class="m-0 font-bold text-black text-xs">Measure</p>
         </Popover.Trigger>
       </Popover.Anchor>
       <Popover.Portal>
         {/* <Popover.Overlay /> */}
-        <Popover.Content class={styles.popoverContent}>
+        <Popover.Content class="border border-white bg-black px-2.5 text-white">
           <Popover.Arrow />
           <Popover.Description>
             <Show
@@ -107,7 +101,10 @@ const ToolMeasure: Component<{}> = (props) => {
                   );
                 }}
               </For>
-              <p>Δtime={formatTimeDelta((measuring().x2! - measuring().x1!) * 1000)}</p>
+              <p>
+                Δtime=
+                {formatTimeDelta((measuring().x2! - measuring().x1!) * 1000)}
+              </p>
             </Show>
           </Popover.Description>
         </Popover.Content>

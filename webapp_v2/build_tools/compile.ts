@@ -67,7 +67,7 @@ syncWriteFile(
 );
 syncWriteFile(
   "../src/index.css",
-  `:root {
+  `@import "tailwindcss";\n\n:root {
   --rush: ${doc.colors.primary_dark};
   --aged: ${doc.colors.accent};
   --field: ${doc.colors.primary};

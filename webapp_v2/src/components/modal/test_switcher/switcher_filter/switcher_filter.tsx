@@ -2,7 +2,6 @@ import { Component, For } from "solid-js";
 import { StateType, useState } from "../../../../state";
 import { TestBasics } from "../../../../types";
 import FilterButton from "./filter_button";
-import styles from "./switcher.module.css";
 
 const TestSwitcherFilter: Component<{
   setFilters: (newFilters: string[]) => void;
@@ -33,21 +32,20 @@ const TestSwitcherFilter: Component<{
     setMeasuring,
     annotations,
     setAnnotations,
-    {
-      addDataset,
-      updateDataset,
-      removeDataset,
-      updateColor,
-    },
+    { addDataset, updateDataset, removeDataset, updateColor },
   ] = useState() as StateType;
 
   return (
-    <div class={styles.filterDiv}>
+    <div class="flex flex-row justify-start p-2.5">
       <p>Filter: </p>
       <For
         each={[
-          ...new Set<string>(allKnownTests().map((test: TestBasics) => test.gse_article)),
-          ...new Set<string>(allKnownTests().map((test: TestBasics) => test.test_article)),
+          ...new Set<string>(
+            allKnownTests().map((test: TestBasics) => test.gse_article),
+          ),
+          ...new Set<string>(
+            allKnownTests().map((test: TestBasics) => test.test_article),
+          ),
         ]}
       >
         {(item, index) => (
