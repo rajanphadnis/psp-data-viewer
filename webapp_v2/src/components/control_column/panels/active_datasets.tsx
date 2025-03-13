@@ -1,8 +1,7 @@
 import Resizable from "corvu/resizable";
 import { Component, For, Show } from "solid-js";
-import styles from "../column.module.css";
-import NoDatasetsMessage from "../no_datasets";
 import { StateType, useState } from "../../../state";
+import NoDatasetsMessage from "../no_datasets";
 import DatasetSelector from "./dataset_selector/dataset_selector";
 
 const PanelActiveDatasets: Component<{}> = (props) => {
@@ -31,21 +30,32 @@ const PanelActiveDatasets: Component<{}> = (props) => {
     setMeasuring,
     annotations,
     setAnnotations,
-    {
-      addDataset,
-      updateDataset,
-      removeDataset,
-      updateColor,
-    },
+    { addDataset, updateDataset, removeDataset, updateColor },
   ] = useState() as StateType;
 
   return (
-    <Resizable.Panel class={styles.panel} minSize={0.1} collapsedSize={0.025} collapsible={false}>
-      <div class={styles.titleDiv}>
-        <h3 class={styles.title}>Active Datasets:</h3>
+    <Resizable.Panel
+      class="overflow-auto"
+      minSize={0.1}
+      collapsedSize={0.025}
+      collapsible={false}
+    >
+      <div class="flex w-full flex-row items-center justify-start pb-1.25">
+        <h3 class="m-0 font-bold">Active Datasets:</h3>
       </div>
-      <Show when={activeDatasets().length > 0} fallback={<NoDatasetsMessage><p>No Datasets Selected</p></NoDatasetsMessage>}>
-        <For each={activeDatasets()}>{(item, index) => <DatasetSelector dataset_id={item}></DatasetSelector>}</For>
+      <Show
+        when={activeDatasets().length > 0}
+        fallback={
+          <NoDatasetsMessage>
+            <p class="m-0 px-2.5">No Datasets Selected</p>
+          </NoDatasetsMessage>
+        }
+      >
+        <For each={activeDatasets()}>
+          {(item, index) => (
+            <DatasetSelector dataset_id={item}></DatasetSelector>
+          )}
+        </For>
       </Show>
     </Resizable.Panel>
   );

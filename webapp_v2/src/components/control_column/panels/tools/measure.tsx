@@ -68,9 +68,9 @@ const ToolMeasure: Component<{}> = (props) => {
       <Popover.Anchor>
         <Popover.Trigger class="hover:bg-rush-light bg-rush mb-1.25 flex w-full cursor-pointer flex-row items-center justify-start border-none p-1.25">
           <IconButton>
-            <IconMeasure />
+            <IconMeasure class="w-3.75 fill-black" />
           </IconButton>
-          <p class="m-0 font-bold text-black text-xs">Measure</p>
+          <p class="m-0 text-xs font-bold text-black">Measure</p>
         </Popover.Trigger>
       </Popover.Anchor>
       <Popover.Portal>
@@ -82,7 +82,8 @@ const ToolMeasure: Component<{}> = (props) => {
               when={measuring().x2 != undefined}
               fallback={
                 <div style={{ "text-align": "center" }}>
-                  Use the <IconOneKey /> and <IconTwoKey /> keys
+                  Use the <IconOneKey class="w-4.5 fill-white" /> and{" "}
+                  <IconTwoKey class="w-4.5 fill-white" /> keys
                   <br />
                   on your keyboard to place points
                 </div>

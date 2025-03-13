@@ -1,12 +1,11 @@
 import { Component } from "solid-js";
-import styles from "./icons.module.css";
 
-const CheckIcon: Component<{}> = (props) => {
+const CheckIcon: Component<{ class: string }> = (props) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 448 512"
-      class={styles.check}
+      class={props.class}
     >
       <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
     </svg>

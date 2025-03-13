@@ -31,7 +31,7 @@ const DatasetListSelector: Component<{ dataset_id: string }> = (props) => {
   ] = useState() as StateType;
   return (
     <button
-      class="hover:bg-cool-grey bg-bg flex w-full cursor-pointer flex-row items-center justify-start border-none p-1.25 py-2 text-start text-neutral-400 hover:text-white"
+      class="hover:bg-cool-grey bg-bg text-xs flex w-full cursor-pointer flex-row items-center justify-start border-none p-1.25 py-2 text-start text-neutral-400 hover:text-white"
       type="button"
       onClick={() => {
         addDataset(props.dataset_id);

@@ -168,7 +168,7 @@ export function plot(
               let xVal = u.data[0][idx!];
               let yVal = u.data[i][idx!];
               if (yVal! > 0.5) {
-                tt.textContent = get_annotation_name(xVal, annotations);
+                tt.innerHTML = get_annotation_name(xVal, annotations);
                 tt.style.left = Math.round(u.valToPos(xVal, "x")) + 10 + "px";
                 tt.style.top = "0px";
                 (tt.style.display as any) = null;

@@ -37,10 +37,6 @@ const DatasetSelector: Component<{ dataset_id: string }> = (props) => {
     <div class="flex w-full flex-row items-center justify-between p-0 py-1.5 text-white">
       <div class="flex flex-row items-center justify-start">
         <ColorPicker dataset_id={props.dataset_id} />
-        {/* <div
-          class={styles.colorPicker}
-          style={{ "background-color": plotPalletteColors()[activeDatasets().indexOf(props.dataset_id)] }}
-        ></div> */}
         <DatasetSelectorLegendIndicator dataset_id={props.dataset_id} />
         <p class="m-0 ml-1.5 text-sm font-stretch-condensed">
           {props.dataset_id.split("__")[0]} ({props.dataset_id.split("__")[1]})

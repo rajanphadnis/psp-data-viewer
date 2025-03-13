@@ -35,7 +35,7 @@ const DatasetSelectorLegendIndicator: Component<{ dataset_id: string }> = (
 
   return (
     <button
-      class="m-0 flex cursor-pointer flex-row items-center justify-center rounded-lg border border-white bg-transparent p-0.75 text-white"
+      class="m-0 flex cursor-pointer flex-row items-center justify-center rounded-lg border border-white bg-transparent px-0.75 text-white"
       onclick={() => {
         updateDataset(props.dataset_id);
       }}
@@ -50,7 +50,7 @@ const DatasetSelectorLegendIndicator: Component<{ dataset_id: string }> = (
             : "opacity: 0"
         }
       >
-        <IconChevronLeft />
+        <IconChevronLeft class="w-1.75 fill-white" />
       </div>
 
       {Math.ceil(
@@ -66,7 +66,7 @@ const DatasetSelectorLegendIndicator: Component<{ dataset_id: string }> = (
             : "opacity: 0"
         }
       >
-        <IconChevronRight />
+        <IconChevronRight class="w-1.75 fill-white" />
       </div>
     </button>
   );

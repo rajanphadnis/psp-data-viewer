@@ -1,7 +1,6 @@
 import { Component, Show } from "solid-js";
 import { StateType, useState } from "../../state";
 import CheckIcon from "../icons/check";
-import styles from "./navbar.module.css";
 
 const Status: Component<{}> = (props) => {
   const [
@@ -37,7 +36,10 @@ const Status: Component<{}> = (props) => {
       <p class="m-auto pr-2.5">
         {loadingState().isLoading ? loadingState().statusMessage : "Ready"}
       </p>
-      <Show when={loadingState().isLoading} fallback={<CheckIcon />}>
+      <Show
+        when={loadingState().isLoading}
+        fallback={<CheckIcon class="w-5 fill-lime-400" />}
+      >
         <div class="loader"></div>
       </Show>
     </div>

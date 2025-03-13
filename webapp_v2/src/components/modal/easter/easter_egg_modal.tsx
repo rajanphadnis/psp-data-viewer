@@ -9,7 +9,6 @@ import {
   IconOldRepublic,
   IconSpock,
 } from "../../icons/easter";
-import styles from "../modal.module.css";
 import PlottingOptionsModal from "../settings/plotting_options";
 import EasterAudioButton from "./audio_button";
 import EasterClickButton from "./click_button";
@@ -40,38 +39,33 @@ const EasterEggModal: Component<{}> = (props) => {
     setMeasuring,
     annotations,
     setAnnotations,
-    {
-      addDataset,
-      updateDataset,
-      removeDataset,
-      updateColor,
-    },
+    { addDataset, updateDataset, removeDataset, updateColor },
   ] = useState() as StateType;
 
   return (
     <Dialog.Portal>
       <Dialog.Overlay />
-      <Dialog.Content class={styles.settingsModal}>
+      <Dialog.Content class="h-1/2">
         <Dialog.Label>Join an Order</Dialog.Label>
-        <div class={styles.settingsModalDescription}>
-          <div class={styles.settingsContentDiv}>
+        <div class="scrollbar-white m-0 flex h-[calc(100%-4.25rem)] flex-col items-start justify-between overflow-auto">
+          <div class="flex w-full flex-row flex-wrap items-center justify-evenly">
             <EasterClickButton name="Star Trek">
-              <IconSpock />
+              <IconSpock class="w-3.75 fill-black" />
             </EasterClickButton>
             <EasterAudioButton name="Jedi">
-              <IconJedi />
+              <IconJedi class="w-3.75 fill-black" />
             </EasterAudioButton>
             <PlottingOptionsModal name="Jedi Order">
-              <IconJediOrder />
+              <IconJediOrder class="w-3.75 fill-black" />
             </PlottingOptionsModal>
-            <EasterButton name="Galactic Senate" onclick={() => { }}>
-              <IconGalacticSenate />
+            <EasterButton name="Galactic Senate" onclick={() => {}}>
+              <IconGalacticSenate class="w-3.75 fill-black" />
             </EasterButton>
-            <EasterButton name="Old Republic" onclick={() => { }}>
-              <IconOldRepublic />
+            <EasterButton name="Old Republic" onclick={() => {}}>
+              <IconOldRepublic class="w-3.75 fill-black" />
             </EasterButton>
-            <EasterButton name="Galactic Republic" onclick={() => { }}>
-              <IconGalacticRepublic />
+            <EasterButton name="Galactic Republic" onclick={() => {}}>
+              <IconGalacticRepublic class="w-3.75 fill-black" />
             </EasterButton>
           </div>
         </div>
@@ -89,12 +83,12 @@ const EasterButton: Component<{
 }> = (props) => {
   return (
     <button
-      class={`${styles.settingsButtonEaster} ${styles.settingsButton}`}
+      class="bg-rush hover:bg-rush-light m-5 flex h-26 w-40 cursor-pointer flex-col items-center justify-evenly border-none text-center text-black"
       onclick={() => {
         props.onclick();
       }}
     >
-      <p class={styles.settingsButtonName}>{props.name}</p>
+      <p class="mt-0 font-bold">{props.name}</p>
       {props.children}
     </button>
   );

@@ -1,14 +1,12 @@
-import { Component, Show } from "solid-js";
-import styles from "../column.module.css";
 import Resizable from "corvu/resizable";
+import { Component, Show } from "solid-js";
+import { StateType, useState } from "../../../state";
 import NoDatasetsMessage from "../no_datasets";
 import ToolCopyImage from "./tools/copy_image";
 import ToolDownloadCSV from "./tools/download_csv";
 import ToolDownloadImage from "./tools/download_image";
-import ToolMeasure from "./tools/measure";
-import { StateType, useState } from "../../../state";
-import ToolCalcChannel from "./tools/calc_channels";
 import ToolEasterEgg from "./tools/easter";
+import ToolMeasure from "./tools/measure";
 
 const PanelTools: Component<{}> = (props) => {
   const [
@@ -36,24 +34,24 @@ const PanelTools: Component<{}> = (props) => {
     setMeasuring,
     annotations,
     setAnnotations,
-    {
-      addDataset,
-      updateDataset,
-      removeDataset,
-      updateColor,
-    },
+    { addDataset, updateDataset, removeDataset, updateColor },
   ] = useState() as StateType;
 
   return (
-    <Resizable.Panel class={styles.panel} minSize={0.15} collapsedSize={0.025} collapsible={true}>
-      <div class={styles.titleDiv}>
-        <h3 class={styles.title}>Tools:</h3>
+    <Resizable.Panel
+      class="overflow-auto"
+      minSize={0.15}
+      collapsedSize={0.025}
+      collapsible={true}
+    >
+      <div class="flex w-full flex-row items-center justify-start pb-1.25">
+        <h3 class="m-0 font-bold">Tools:</h3>
       </div>
       <Show
         when={activeDatasets().length > 0}
         fallback={
           <NoDatasetsMessage>
-            <p>No Datasets Selected</p>
+            <p class="m-0 px-2.5">No Datasets Selected</p>
           </NoDatasetsMessage>
         }
       >

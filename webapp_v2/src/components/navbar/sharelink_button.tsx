@@ -2,7 +2,6 @@ import { Component, createSignal, Show } from "solid-js";
 import { getSharelink } from "../../browser/sharelink";
 import { copyTextToClipboard, delay } from "../../browser/util";
 import { StateType, useState } from "../../state";
-import styles from "./navbar.module.css";
 
 const SharelinkButton: Component<{}> = (props) => {
   const [

@@ -3,7 +3,6 @@ import { eventLoop } from "../../plotting/event_loop";
 import { StateType, useState } from "../../state";
 import { PlotRange, TestBasics } from "../../types";
 import { IconZoomIn, IconZoomOut } from "../icons/zoom";
-import styles from "./column.module.css";
 
 const ZoomButtons: Component<{}> = (props) => {
   const [
@@ -31,12 +30,7 @@ const ZoomButtons: Component<{}> = (props) => {
     setMeasuring,
     annotations,
     setAnnotations,
-    {
-      addDataset,
-      updateDataset,
-      removeDataset,
-      updateColor,
-    },
+    { addDataset, updateDataset, removeDataset, updateColor },
   ] = useState() as StateType;
 
   const zoomRanges = createMemo<number[]>(() => {
@@ -50,9 +44,9 @@ const ZoomButtons: Component<{}> = (props) => {
 
   return (
     <Show when={activeDatasets().length > 0}>
-      <div class={styles.zoomButtonDiv}>
+      <div class="flex h-12.5 w-full flex-row items-center justify-around">
         <button
-          class={styles.zoomButton}
+          class="bg-rush hover:bg-rush-light flex h-3/4 w-45/100 cursor-pointer flex-row items-center justify-center border-none"
           onclick={() => {
             console.log("zoom out click");
             setPlotRange({
@@ -84,20 +78,20 @@ const ZoomButtons: Component<{}> = (props) => {
               activeDatasets,
               measuring,
               setMeasuring,
-              annotations,
+              annotations(),
               setAnnotations,
-              true
+              true,
             );
             setIsLoadingOut(false);
           }}
         >
-          <IconZoomOut />
+          <IconZoomOut class="w-3.75 fill-black" />
           <Show when={isLoadingOut()}>
-            <div class={styles.loader}></div>
+            <div class="loader"></div>
           </Show>
         </button>
         <button
-          class={styles.zoomButton}
+          class="bg-rush hover:bg-rush-light flex h-3/4 w-45/100 cursor-pointer flex-row items-center justify-center border-none"
           onclick={() => {
             console.log("zoom in click");
             setPlotRange({
@@ -129,16 +123,16 @@ const ZoomButtons: Component<{}> = (props) => {
               activeDatasets,
               measuring,
               setMeasuring,
-              annotations,
+              annotations(),
               setAnnotations,
-              true
+              true,
             );
             setIsLoadingIn(false);
           }}
         >
-          <IconZoomIn />
+          <IconZoomIn class="w-3.75 fill-black" />
           <Show when={isLoadingIn()}>
-            <div class={styles.loader}></div>
+            <div class="loader"></div>
           </Show>
         </button>
       </div>
@@ -148,13 +142,21 @@ const ZoomButtons: Component<{}> = (props) => {
 
 export default ZoomButtons;
 
-function genZoomBounds(zoomFactor: number, currentRange: PlotRange, testdata: TestBasics): number[] {
+function genZoomBounds(
+  zoomFactor: number,
+  currentRange: PlotRange,
+  testdata: TestBasics,
+): number[] {
   const center = (currentRange.start + currentRange.end) / 2;
   const range = currentRange.end! - currentRange.start;
   const delta = (range * zoomFactor) / 2;
   const start = center - delta;
   const end = center + delta;
-  const start_toReturn = Math.round(start < testdata.starting_timestamp! ? testdata.starting_timestamp! : start);
-  const end_toReturn = Math.round(end > testdata.ending_timestamp! ? testdata.ending_timestamp! : end);
+  const start_toReturn = Math.round(
+    start < testdata.starting_timestamp! ? testdata.starting_timestamp! : start,
+  );
+  const end_toReturn = Math.round(
+    end > testdata.ending_timestamp! ? testdata.ending_timestamp! : end,
+  );
   return [start_toReturn, end_toReturn];
 }

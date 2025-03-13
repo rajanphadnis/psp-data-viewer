@@ -1,9 +1,8 @@
 import Resizable from "corvu/resizable";
 import { Component, For, Show } from "solid-js";
-import DatasetListSelector from "./dataset_selector/list_selecttor";
 import { StateType, useState } from "../../../state";
-import styles from "../column.module.css";
 import NoDatasetsMessage from "../no_datasets";
+import DatasetListSelector from "./dataset_selector/list_selecttor";
 
 const PanelDatasetSelector: Component<{}> = (props) => {
   const [
@@ -31,31 +30,39 @@ const PanelDatasetSelector: Component<{}> = (props) => {
     setMeasuring,
     annotations,
     setAnnotations,
-    {
-      addDataset,
-      updateDataset,
-      removeDataset,
-      updateColor,
-    },
+    { addDataset, updateDataset, removeDataset, updateColor },
   ] = useState() as StateType;
 
   return (
-    <Resizable.Panel class={styles.panel} minSize={0.25} collapsedSize={0.025} collapsible={false}>
-      <div class={styles.titleDiv}>
-        <h3 class={styles.title}>Available Datasets:</h3>
+    <Resizable.Panel
+      class="overflow-auto"
+      minSize={0.25}
+      collapsedSize={0.025}
+      collapsible={false}
+    >
+      <div class="flex w-full flex-row items-center justify-start pb-1.25">
+        <h3 class="m-0 font-bold">Available Datasets:</h3>
       </div>
       <Show
-        when={testBasics() != undefined ? testBasics().datasets != undefined ? activeDatasets().length != testBasics().datasets!.length : false : false}
+        when={
+          testBasics() != undefined
+            ? testBasics().datasets != undefined
+              ? activeDatasets().length != testBasics().datasets!.length
+              : false
+            : false
+        }
         fallback={
           <NoDatasetsMessage>
-            <p>None</p>
+            <p class="m-0 px-2.5">None</p>
           </NoDatasetsMessage>
         }
       >
         <For
           each={
             testBasics().datasets != undefined
-              ? testBasics().datasets!.filter((element) => !activeDatasets().includes(element))
+              ? testBasics().datasets!.filter(
+                  (element) => !activeDatasets().includes(element),
+                )
               : []
           }
         >

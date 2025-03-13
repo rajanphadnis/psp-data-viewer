@@ -18,11 +18,14 @@ const ToolCopyImage: Component<{}> = (props) => {
       }}
     >
       <IconButton>
-        <Show when={!showDone()} fallback={<CheckIcon />}>
-          <IconCopy />
+        <Show
+          when={!showDone()}
+          fallback={<CheckIcon class="w-5 fill-lime-400" />}
+        >
+          <IconCopy class="w-3.75 fill-black" />
         </Show>
       </IconButton>
-      <p class="m-0 font-bold text-black text-xs">
+      <p class="m-0 text-xs font-bold text-black">
         <Show when={!showDone()} fallback={"Copied!"}>
           Copy Plot as Image
         </Show>

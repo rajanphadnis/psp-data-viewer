@@ -1,10 +1,11 @@
 @import "tailwindcss";
+
 :root {
   --rush: #daaa00;
   --aged: #8e6f3e;
   --field: #ddb945;
   --cool-gray: #6f727b;
-  --background-color: #1d1d1d;
+  --background-color: #1D1D1D;
 }
 
 html,
@@ -106,7 +107,8 @@ body {
           var(--tw-enter-scale, 1),
           var(--tw-enter-scale, 1),
           var(--tw-enter-scale, 1)
-        );
+        )
+        rotate(var(--tw-enter-rotate, 0));
     }
   }
 
@@ -122,7 +124,8 @@ body {
           var(--tw-exit-scale, 1),
           var(--tw-exit-scale, 1),
           var(--tw-exit-scale, 1)
-        );
+        )
+        rotate(var(--tw-exit-rotate, 0));
     }
   }
 }
@@ -180,4 +183,73 @@ body {
   100% {
     transform: rotate(360deg);
   }
+}
+
+@utility scrollbar-white {
+  scrollbar-color: white transparent;
+}
+
+[data-corvu-dialog-overlay] {
+  position: fixed;
+  inset: 0px;
+  z-index: 50;
+  background-color: rgb(0 0 0 / 0.5);
+}
+
+[data-corvu-dialog-content] {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 50;
+  min-width: 320px;
+  transform: translate(-50%, -50%);
+  animation-duration: 200ms;
+  width: 60%;
+  border: 3px solid var(--rush);
+  background-color: var(--background-color);
+}
+
+[data-corvu-dialog-content][data-open] {
+  animation-name: enter;
+  animation-duration: 150ms;
+  --tw-enter-opacity: initial;
+  --tw-enter-scale: initial;
+  --tw-enter-rotate: initial;
+  --tw-enter-translate-x: initial;
+  --tw-enter-translate-y: initial;
+  --tw-enter-opacity: 0;
+  --tw-enter-scale: 0.95;
+  --tw-enter-translate-x: -50%;
+  --tw-enter-translate-y: -60%;
+}
+
+[data-corvu-dialog-content][data-closed] {
+  animation-name: exit;
+  animation-duration: 150ms;
+  --tw-exit-opacity: initial;
+  --tw-exit-scale: initial;
+  --tw-exit-rotate: initial;
+  --tw-exit-translate-x: initial;
+  --tw-exit-translate-y: initial;
+  --tw-exit-opacity: 0;
+  --tw-exit-scale: 0.95;
+  --tw-exit-translate-x: -50%;
+  --tw-exit-translate-y: -60%;
+}
+
+[data-corvu-dialog-label] {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  font-weight: 700;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+  background-color: var(--rush);
+  margin: 0px;
+  color: black;
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
 }

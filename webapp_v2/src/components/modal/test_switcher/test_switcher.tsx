@@ -4,7 +4,6 @@ import { Component, createMemo, createSignal, For, Show } from "solid-js";
 import { getDateLabel } from "../../../browser/util";
 import { StateType, useState } from "../../../state";
 import { TestBasics } from "../../../types";
-import styles from "../modal.module.css";
 import RefreshListButton from "./refresh_list_button";
 import TestSwitcherFilter from "./switcher_filter/switcher_filter";
 import TestEntry from "./test_button";
@@ -35,12 +34,7 @@ const TestSwitcherModal: Component<{}> = (props) => {
     setMeasuring,
     annotations,
     setAnnotations,
-    {
-      addDataset,
-      updateDataset,
-      removeDataset,
-      updateColor,
-    },
+    { addDataset, updateDataset, removeDataset, updateColor },
   ] = useState() as StateType;
 
   const [filters, setFilters] = makePersisted(createSignal<string[]>([]), {
@@ -50,9 +44,12 @@ const TestSwitcherModal: Component<{}> = (props) => {
   const filteredTestEntries = createMemo<TestBasics[]>(() => {
     const tests_filtered = (allKnownTests() as TestBasics[]).filter(
       (obj) =>
-        filters().includes(obj.gse_article) || filters().includes(obj.test_article) || filters().includes(obj.name)
+        filters().includes(obj.gse_article) ||
+        filters().includes(obj.test_article) ||
+        filters().includes(obj.name),
     );
-    const tests_unsorted: TestBasics[] = tests_filtered.length == 0 ? allKnownTests() : tests_filtered;
+    const tests_unsorted: TestBasics[] =
+      tests_filtered.length == 0 ? allKnownTests() : tests_filtered;
     const tests = tests_unsorted.sort(function (a, b) {
       if (a.test_article === b.test_article) {
         if (a.gse_article === b.gse_article) {
@@ -81,16 +78,17 @@ const TestSwitcherModal: Component<{}> = (props) => {
   return (
     <Dialog.Portal>
       <Dialog.Overlay />
-      <Dialog.Content class={styles.switcherModal}>
+      <Dialog.Content class="h-3/5">
         <Dialog.Label>
           Select Test <RefreshListButton />
         </Dialog.Label>
-        <div class={styles.switcherModalDescription}>
+        <div class="scrollbar-white m-0 flex h-[calc(100%-4.25rem)] flex-col items-start justify-start overflow-auto">
           <TestSwitcherFilter setFilters={setFilters} filters={filters} />
           <For each={filteredTestEntries()}>
             {(item, index) => (
               <TestEntry test_id={item.id}>
-                {item.test_article}:{item.gse_article}:{getDateLabel(item.starting_timestamp!)}:{item.name}
+                {item.test_article}:{item.gse_article}:
+                {getDateLabel(item.starting_timestamp!)}:{item.name}
                 <Show when={item.id == globalThis.default_id}>(Default)</Show>
               </TestEntry>
             )}

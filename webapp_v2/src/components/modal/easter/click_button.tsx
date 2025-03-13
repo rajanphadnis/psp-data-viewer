@@ -1,5 +1,4 @@
 import { Component, createSignal } from "solid-js";
-import styles from "../modal.module.css";
 
 const EasterClickButton: Component<{
   children?: any;
@@ -9,7 +8,7 @@ const EasterClickButton: Component<{
 
   return (
     <button
-      class={`${styles.settingsButtonEaster} ${styles.settingsButton}`}
+      class="bg-rush hover:bg-rush-light m-5 flex h-26 w-40 cursor-pointer flex-col items-center justify-evenly border-none text-center text-black"
       onclick={() => {
         if (count() > 3) {
           alert(`Set count: ${count()}`);
@@ -19,7 +18,7 @@ const EasterClickButton: Component<{
         }
       }}
     >
-      <p class={styles.settingsButtonName}>{props.name}</p>
+      <p class="mt-0 font-bold">{props.name}</p>
       {props.children}
     </button>
   );
