@@ -1,3 +1,4 @@
+import { makePersisted } from "@solid-primitives/storage";
 import {
   Accessor,
   createContext,
@@ -6,17 +7,16 @@ import {
   Signal,
   useContext,
 } from "solid-js";
+import { clearDatums } from "./browser/measure";
 import { defaultPlottingColors } from "./theming";
 import {
-  LoadingStateType,
-  TestBasics,
-  Preferences,
-  PlotRange,
-  MeasureData,
   Annotation,
+  LoadingStateType,
+  MeasureData,
+  PlotRange,
+  Preferences,
+  TestBasics,
 } from "./types";
-import { clearDatums } from "./browser/measure";
-import { makePersisted } from "@solid-primitives/storage";
 
 const init_loadingState: LoadingStateType = {
   isLoading: true,
@@ -34,6 +34,8 @@ const init_testData: TestBasics = {
 const init_Preferences: Preferences = {
   displayedSamples: 3000,
   axesSets: 6,
+  annotationColor: "#ffffff",
+  annotationWidth: 2,
 };
 const init_measuringTool: MeasureData = {
   x1: undefined,

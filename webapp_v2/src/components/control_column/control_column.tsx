@@ -7,7 +7,9 @@ import PanelDatasetSelector from "./panels/dataset_selector";
 import PanelTools from "./panels/tools";
 import ZoomButtons from "./zoom_buttons";
 
-const ControlColumn: Component<{}> = (props) => {
+const ControlColumn: Component<{
+  annotationRef: HTMLButtonElement | undefined;
+}> = (props) => {
   const [
     activeDatasets,
     setActiveDatasets,
@@ -60,7 +62,7 @@ const ControlColumn: Component<{}> = (props) => {
         </Resizable.Handle>
         <PanelTools />
       </Resizable>
-      <ZoomButtons />
+      <ZoomButtons annotationRef={props.annotationRef} />
     </div>
   );
 };

@@ -39,13 +39,19 @@ const PlottingOptionsModal: Component<{
   ] = useState() as StateType;
 
   const [axesSets, setaxesSets] = createSignal<number>(
-    (sitePreferences() as Preferences).axesSets / 2,
+    sitePreferences().axesSets / 2,
   );
   const [plotPoints, setplotPoints] = createSignal<number>(
-    (sitePreferences() as Preferences).displayedSamples,
+    sitePreferences().displayedSamples,
   );
   const [pointColor, setpointColor] = createSignal<string>(
-    (measuring() as MeasureData).toolColor,
+    measuring().toolColor,
+  );
+  const [annotationWidth, setAnnotationWidth] = createSignal(
+    sitePreferences().annotationWidth,
+  );
+  const [annotationColor, setAnnotationColor] = createSignal(
+    sitePreferences().annotationColor,
   );
 
   return (
@@ -75,8 +81,8 @@ const PlottingOptionsModal: Component<{
                 }}
               />
               <p class="mx-2.5">
-                {(sitePreferences() as Preferences).axesSets / 2 != axesSets()
-                  ? `${(sitePreferences() as Preferences).axesSets / 2} --> `
+                {sitePreferences().axesSets / 2 != axesSets()
+                  ? `${sitePreferences().axesSets / 2} --> `
                   : ""}
                 {axesSets()}
               </p>
@@ -94,9 +100,8 @@ const PlottingOptionsModal: Component<{
                 }}
               />
               <p class="mx-2.5">
-                {(sitePreferences() as Preferences).displayedSamples !=
-                plotPoints()
-                  ? `${(sitePreferences() as Preferences).displayedSamples} --> `
+                {sitePreferences().displayedSamples != plotPoints()
+                  ? `${sitePreferences().displayedSamples} --> `
                   : ""}
                 {plotPoints()}
               </p>
@@ -108,18 +113,51 @@ const PlottingOptionsModal: Component<{
                 setColor={setpointColor}
               />
               <p class="mx-2.5">
-                {(measuring() as MeasureData).toolColor != pointColor()
-                  ? `${(measuring() as MeasureData).toolColor} --> `
+                {measuring().toolColor != pointColor()
+                  ? `${measuring().toolColor} --> `
                   : ""}
                 {pointColor()}
               </p>
             </div>
+            <div class="flex flex-row items-center justify-start">
+              <p class="mx-2.5">Annotation Width:</p>
+              <input
+                type="range"
+                min="0"
+                max="5"
+                value={annotationWidth()}
+                step="1"
+                on:input={(e) => {
+                  setAnnotationWidth(parseInt(e.target.value));
+                }}
+              />
+              <p class="mx-2.5">
+                {sitePreferences().annotationWidth != annotationWidth()
+                  ? `${sitePreferences().annotationWidth} --> `
+                  : ""}
+                {annotationWidth()}
+              </p>
+            </div>
+            <div class="flex flex-row items-center justify-start">
+              <p class="mx-2.5">Annotation Color:</p>
+              <SettingsColorPicker
+                color={annotationColor}
+                setColor={setAnnotationColor}
+              />
+              <p class="mx-2.5">
+                {sitePreferences().annotationColor != annotationColor()
+                  ? `${sitePreferences().annotationColor} --> `
+                  : ""}
+                {annotationColor()}
+              </p>
+            </div>
             <Show
               when={
-                (sitePreferences() as Preferences).axesSets / 2 != axesSets() ||
-                (sitePreferences() as Preferences).displayedSamples !=
-                  plotPoints() ||
-                (measuring() as MeasureData).toolColor != pointColor()
+                sitePreferences().axesSets / 2 != axesSets() ||
+                sitePreferences().displayedSamples != plotPoints() ||
+                (measuring() as MeasureData).toolColor != pointColor() ||
+                sitePreferences().annotationColor != annotationColor() ||
+                sitePreferences().annotationWidth != annotationWidth()
               }
             >
               <button
@@ -129,6 +167,8 @@ const PlottingOptionsModal: Component<{
                   const new_pref: Preferences = {
                     displayedSamples: plotPoints(),
                     axesSets: parseInt((axesSets() * 2).toString()),
+                    annotationWidth: annotationWidth(),
+                    annotationColor: annotationColor(),
                   };
                   const new_measuring: MeasureData = {
                     x1: (measuring() as MeasureData).x1,

@@ -69,6 +69,8 @@ export interface CalcChannel {
 export type Preferences = {
   displayedSamples: number;
   axesSets: number;
+  annotationWidth: number;
+  annotationColor: string;
 };
 
 declare global {

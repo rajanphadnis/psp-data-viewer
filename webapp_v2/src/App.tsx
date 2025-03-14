@@ -82,12 +82,9 @@ const App: Component = (params) => {
     );
     setLoadingState({ isLoading: false, statusMessage: "" });
     setAppReadyState(true);
-    // console.log(annotationModalButton);
-    // annotationModalButton?.click();
   });
 
   createEffect(async () => {
-    // console.log(testBasics());
     if (appReadyState()) {
       const start = plotRange().start;
       const end = plotRange().end;
@@ -97,6 +94,8 @@ const App: Component = (params) => {
       const plotColors = plotPalletteColors();
       const displayed_samples = sitePreferences().displayedSamples;
       const axesSets = sitePreferences().axesSets;
+      const annotationWidth = sitePreferences().annotationWidth;
+      const annotationColor = sitePreferences().annotationColor;
       const measureData = measuring();
       const annotations_actual = annotations();
       setLoadingState({ isLoading: true, statusMessage: "Generating..." });
@@ -120,6 +119,8 @@ const App: Component = (params) => {
         undefined,
         annotationModalButton!,
         setCurrentAnnotation,
+        annotationColor,
+        annotationWidth,
       );
       setLoadingState({ isLoading: false, statusMessage: "" });
     } else {
@@ -141,7 +142,7 @@ const App: Component = (params) => {
       <AnnotationModal ref={annotationModalButton} />
       <div class="flex flex-row">
         <Plot />
-        <ControlColumn />
+        <ControlColumn annotationRef={annotationModalButton} />
       </div>
     </div>
   );

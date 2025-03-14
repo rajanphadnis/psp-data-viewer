@@ -4,7 +4,9 @@ import { StateType, useState } from "../../state";
 import { PlotRange, TestBasics } from "../../types";
 import { IconZoomIn, IconZoomOut } from "../icons/zoom";
 
-const ZoomButtons: Component<{}> = (props) => {
+const ZoomButtons: Component<{
+  annotationRef: HTMLButtonElement | undefined;
+}> = (props) => {
   const [
     activeDatasets,
     setActiveDatasets,
@@ -65,6 +67,8 @@ const ZoomButtons: Component<{}> = (props) => {
             const plotColors = plotPalletteColors();
             const displayed_samples = sitePreferences().displayedSamples;
             const axesSets = sitePreferences().axesSets;
+            const annotationWidth = sitePreferences().annotationWidth;
+            const annotationColor = sitePreferences().annotationColor;
             await eventLoop(
               zoomRanges()[2],
               zoomRanges()[3],
@@ -83,6 +87,10 @@ const ZoomButtons: Component<{}> = (props) => {
               annotations(),
               setAnnotations,
               true,
+              props.annotationRef!,
+              setCurrentAnnotation,
+              annotationColor,
+              annotationWidth,
             );
             setIsLoadingOut(false);
           }}
@@ -110,6 +118,8 @@ const ZoomButtons: Component<{}> = (props) => {
             const plotColors = plotPalletteColors();
             const displayed_samples = sitePreferences().displayedSamples;
             const axesSets = sitePreferences().axesSets;
+            const annotationWidth = sitePreferences().annotationWidth;
+            const annotationColor = sitePreferences().annotationColor;
             await eventLoop(
               zoomRanges()[0],
               zoomRanges()[1],
@@ -128,6 +138,10 @@ const ZoomButtons: Component<{}> = (props) => {
               annotations(),
               setAnnotations,
               true,
+              props.annotationRef!,
+              setCurrentAnnotation,
+              annotationColor,
+              annotationWidth,
             );
             setIsLoadingIn(false);
           }}

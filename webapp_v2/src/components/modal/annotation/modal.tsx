@@ -1,11 +1,11 @@
 import Dialog from "@corvu/dialog";
-import { Component, createEffect, createSignal, onMount, Show } from "solid-js";
-import { useState, StateType } from "../../../state";
-import { Annotation } from "../../../types";
+import { Component, createEffect, createSignal, Show } from "solid-js";
 import {
   delete_annotation_db,
   set_annotation,
 } from "../../../db/db_interaction";
+import { StateType, useState } from "../../../state";
+import { Annotation } from "../../../types";
 
 const AnnotationModal: Component<{ ref: any }> = (props) => {
   const [
@@ -109,7 +109,6 @@ const AnnotationModal: Component<{ ref: any }> = (props) => {
                 Cancel
               </Dialog.Close>
               <div class="flex flex-row">
-                {/* <Show when={!loading()} fallback={<div class="loader"></div>}> */}
                 <Show
                   when={
                     currentAnnotation() != undefined
@@ -152,116 +151,12 @@ const AnnotationModal: Component<{ ref: any }> = (props) => {
                 >
                   Save
                 </button>
-                {/* </Show> */}
               </div>
             </div>
           </div>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog>
-    // <Dialog
-    //   onOpenChange={(e) => {
-    //     console.log(e);
-    //   }}
-    // >
-    //   <Dialog.Trigger ref={props.ref} class="hidden"></Dialog.Trigger>
-    //   <Dialog.Portal>
-    //     <Dialog.Overlay />
-    //     <Dialog.Content>
-    //       <Dialog.Label>
-    //         <Show
-    //           when={
-    //             // currentAnnotation() != undefined
-    //             //   ?
-    //             currentAnnotation()?.label != ""
-    //             //   : false
-    //             // false
-    //           }
-    //           fallback={"Edit Annotation"}
-    //         >
-    //           Create New Annotation
-    //         </Show>
-    //       </Dialog.Label>
-    //       <div class="p-5">
-    //         <p>Timestamp: {timestamp_ms()}</p>
-    //         <div class="flex flex-row">
-    //           <p>Label:</p>
-    //           <input
-    //             type="text"
-    //             value={label()}
-    //             oninput={(e) => {
-    //               setLabel(e.target.value);
-    //             }}
-    //           />
-    //         </div>
-    //         <div class="flex flex-row">
-    //           <p>Note:</p>
-    //           <input
-    //             type="text"
-    //             value={notes()}
-    //             oninput={(e) => {
-    //               setNotes(e.target.value);
-    //             }}
-    //           />
-    //         </div>
-    //         <div class="mt-3 flex justify-between">
-    //           <Dialog.Close
-    //             // ref={closeRef!}
-    //             class="cursor-pointer rounded-md bg-amber-400 px-3 py-2 font-bold text-black hover:bg-amber-200"
-    //           >
-    //             Cancel
-    //           </Dialog.Close>
-    //           <div class="flex flex-row">
-    //             {/* <Show when={!loading()} fallback={<div class="loader"></div>}> */}
-    //               {/* <Show
-    //                 when={
-    //                   currentAnnotation() != undefined
-    //                     ? currentAnnotation()!.label != ""
-    //                     : false
-    //                 }
-    //               >
-    //                 <button
-    //                   class="mr-2 cursor-pointer rounded-md bg-red-600 px-3 py-2 font-bold hover:bg-red-400"
-    //                   onclick={async (e) => {
-    //                     // setLoading(true);
-    //                     await delete_annotation_db(
-    //                       timestamp_ms(),
-    //                       testBasics().id,
-    //                       setLoadingState,
-    //                     );
-    //                     closeRef!.click();
-    //                     // setLoading(false);
-    //                   }}
-    //                 >
-    //                   Delete
-    //                 </button>
-    //               </Show> */}
-    //               <button
-    //                 class="cursor-pointer rounded-md bg-amber-400 px-3 py-2 font-bold text-black hover:bg-amber-200"
-    //                 onclick={async (e) => {
-    //                 //   setLoading(true);
-    //                   await set_annotation(
-    //                     {
-    //                       label: label(),
-    //                       notes: notes(),
-    //                       timestamp_ms: timestamp_ms(),
-    //                     } as Annotation,
-    //                     testBasics().id,
-    //                     setLoadingState,
-    //                   );
-    //                   closeRef!.click();
-    //                 //   setLoading(false);
-    //                 }}
-    //               >
-    //                 Save
-    //               </button>
-    //             {/* </Show> */}
-    //           </div>
-    //         </div>
-    //       </div>
-    //     </Dialog.Content>
-    //   </Dialog.Portal>
-    // </Dialog>
   );
 };
 

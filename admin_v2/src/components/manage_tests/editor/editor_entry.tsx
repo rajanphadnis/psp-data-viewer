@@ -3,7 +3,9 @@ import { Component, createSignal, Setter, Show } from "solid-js";
 import { copyTextToClipboard, delay } from "../../../browser_interactions";
 import { config } from "../../../generated_app_check_secret";
 
-export const EditorEntry: Component<{ testData: any; name: string; input: boolean; setter?: Setter<string> }> = (props) => {
+export const EditorEntry: Component<{ testData: any; name: string; input: boolean; setter?: Setter<string> }> = (
+  props
+) => {
   const [showDone, setDone] = createSignal<boolean>(false);
 
   return (
@@ -41,7 +43,7 @@ export const EditorEntry: Component<{ testData: any; name: string; input: boolea
   );
 };
 
-export const EditorDeleteButton: Component<{ id: string, slug: string }> = (props) => {
+export const EditorDeleteButton: Component<{ id: string; slug: string }> = (props) => {
   const [showDone, setDone] = createSignal<boolean>(true);
 
   return (
@@ -57,14 +59,16 @@ export const EditorDeleteButton: Component<{ id: string, slug: string }> = (prop
             slug: props.slug,
             share_name: (config as any)[props.slug].azure.share_name,
             storage_acct_name: (config as any)[props.slug].azure.storage_account,
-          }).then((result) => {
-            console.log(result);
-            setDone(true);
-            window.location.reload();
-          }).catch((err) => {
-            console.error(err);
-            setDone(true);
-          });
+          })
+            .then((result) => {
+              console.log(result);
+              setDone(true);
+              window.location.reload();
+            })
+            .catch((err) => {
+              console.error(err);
+              setDone(true);
+            });
         }
       }}
       class="p-2.5 bg-rush text-black font-bold border-0 cursor-pointer hover:bg-rush-light"

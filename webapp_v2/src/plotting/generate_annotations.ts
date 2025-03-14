@@ -1,7 +1,6 @@
 import { Setter } from "solid-js";
 import uPlot, { AlignedData, Series } from "uplot";
-import { delete_annotation_db, set_annotation } from "../db/db_interaction";
-import { Annotation, type LoadingStateType } from "../types";
+import { Annotation } from "../types";
 
 export function annotateData(
   actual_data: number[][],
@@ -40,7 +39,10 @@ export function annotateData(
   }
 }
 
-export function annotateSeries(series: ({} | Series)[]) {
+export function annotateSeries(
+  series: ({} | Series)[],
+  annotationColor: string,
+) {
   const annotated_series: Series[] = [
     ...series,
     {
@@ -48,8 +50,8 @@ export function annotateSeries(series: ({} | Series)[]) {
         size: [0.01, Infinity, 1],
         gap: 0,
       }),
-      stroke: "green",
-      fill: "green",
+      stroke: annotationColor,
+      fill: annotationColor,
       scale: "annotation",
       label: " ",
       class: "hiddenLegendItem",
@@ -90,15 +92,6 @@ export function create_annotation(
     timestamp_ms: xVal * 1000,
   } as Annotation);
   annotation_ref.click();
-  // await set_annotation(
-  //   {
-  //     label: "test",
-  //     notes: "",
-  //     timestamp_ms: xVal * 1000,
-  //   } as Annotation,
-  //   testID,
-  //   setLoadingState,
-  // );
 }
 
 export function delete_annotation(
@@ -120,15 +113,15 @@ export function delete_annotation(
     setCurrentAnnotation(annotation);
     annotation_ref.click();
   }
-  // await delete_annotation_db(label.timestamp_ms, testID, setLoadingState);
 }
 
-export function calcAnnotationWidth(time: number[]): number {
+export function calcAnnotationWidth(
+  time: number[],
+  annotationWidth: number,
+): number {
   if (time) {
-    // console.log(time);
     const num_of_data_points = time.length;
-    const size = Math.ceil(num_of_data_points / 300);
-    // console.log(`${num_of_data_points} -> ${size}`);
+    const size = Math.ceil(num_of_data_points / 500) * annotationWidth;
     return size;
   } else {
     return 0;
