@@ -85,3 +85,10 @@ export type Annotation = {
   label: string;
   notes: string;
 };
+
+export enum LoadingState {
+  READY,
+  LOADING,
+  ERROR,
+  COMPLETE
+}

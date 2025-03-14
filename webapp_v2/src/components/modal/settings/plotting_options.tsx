@@ -1,9 +1,9 @@
 import Dialog from "@corvu/dialog";
 import { Component, createSignal, Show } from "solid-js";
+import { getSharelink } from "../../../browser/sharelink";
 import { StateType, useState } from "../../../state";
 import { MeasureData, Preferences } from "../../../types";
 import SettingsColorPicker from "../easter/color_picker";
-import { getSharelink } from "../../../browser/sharelink";
 
 const PlottingOptionsModal: Component<{
   children?: any;
@@ -72,7 +72,7 @@ const PlottingOptionsModal: Component<{
         <Dialog.Content class="h-2/5">
           <Dialog.Label>Plotting Options</Dialog.Label>
           <div class="scrollbar-white m-0 flex h-[calc(100%-4.25rem)] flex-col items-start justify-start overflow-auto">
-            <div class="flex flex-row items-center justify-start">
+            <div class="my-3 flex flex-row items-center justify-start">
               <p class="mx-2.5">Axes Sets:</p>
               <input
                 type="range"
@@ -91,7 +91,7 @@ const PlottingOptionsModal: Component<{
                 {axesSets()}
               </p>
             </div>
-            <div class="flex flex-row items-center justify-start">
+            <div class="mb-3 flex flex-row items-center justify-start">
               <p class="mx-2.5">Displayed Samples:</p>
               <input
                 type="range"
@@ -110,7 +110,7 @@ const PlottingOptionsModal: Component<{
                 {plotPoints()}
               </p>
             </div>
-            <div class="flex flex-row items-center justify-start">
+            <div class="mb-3 flex flex-row items-center justify-start">
               <p class="mx-2.5">Measuring Tool Color:</p>
               <SettingsColorPicker
                 color={pointColor}
@@ -123,8 +123,10 @@ const PlottingOptionsModal: Component<{
                 {pointColor()}
               </p>
             </div>
-            <div class="flex flex-row items-center justify-start">
-              <p class="mx-2.5">Annotation Width:</p>
+            <div class="mb-3 flex flex-row items-center justify-start">
+              <p class="mx-2.5">
+                Annotation Width (set to zero to turn off annotations):
+              </p>
               <input
                 type="range"
                 min="0"
@@ -142,7 +144,7 @@ const PlottingOptionsModal: Component<{
                 {annotationWidth()}
               </p>
             </div>
-            <div class="flex flex-row items-center justify-start">
+            <div class="mb-3 flex flex-row items-center justify-start">
               <p class="mx-2.5">Annotation Color:</p>
               <SettingsColorPicker
                 color={annotationColor}
@@ -155,7 +157,7 @@ const PlottingOptionsModal: Component<{
                 {annotationColor()}
               </p>
             </div>
-            <div class="flex flex-row items-center justify-start">
+            <div class="mb-3 flex flex-row items-center justify-start">
               <p class="mx-2.5">Annotation Position above plot:</p>
               <input
                 type="range"

@@ -2,9 +2,7 @@ import Resizable from "corvu/resizable";
 import { Component, Show } from "solid-js";
 import { StateType, useState } from "../../../state";
 import NoDatasetsMessage from "../no_datasets";
-import ToolCopyImage from "./tools/copy_image";
-import ToolDownloadCSV from "./tools/download_csv";
-import ToolDownloadImage from "./tools/download_image";
+import DataExportButton from "./tools/data_export_button";
 import ToolEasterEgg from "./tools/easter";
 import ToolMeasure from "./tools/measure";
 
@@ -57,12 +55,13 @@ const PanelTools: Component<{}> = (props) => {
           </NoDatasetsMessage>
         }
       >
-        <ToolCopyImage />
+        <DataExportButton />
+        {/* <ToolCopyImage />
         <ToolDownloadImage />
-        <ToolDownloadCSV />
+        <ToolDownloadCSV /> */}
         <ToolMeasure />
         {/* <ToolCalcChannel /> */}
-        <Show when={activeDatasets().length > 2}>
+        <Show when={activeDatasets().length > 3}>
           <ToolEasterEgg />
         </Show>
       </Show>

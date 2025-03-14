@@ -76,19 +76,20 @@ const ToolMeasure: Component<{}> = (props) => {
         </Popover.Trigger>
       </Popover.Anchor>
       <Popover.Portal>
-        {/* <Popover.Overlay /> */}
         <Popover.Content class="border border-white bg-black px-2.5 text-white">
           <Popover.Arrow />
           <Popover.Description>
             <Show
               when={measuring().x2 != undefined}
               fallback={
-                <div style={{ "text-align": "center" }}>
-                  Use the <IconOneKey class="w-4.5 fill-white" /> and{" "}
-                  <IconTwoKey class="w-4.5 fill-white" /> keys
-                  <br />
+                <p class="text-center">
+                  Use the{" "}
+                  <IconOneKey class="relative inline-block w-4.5 fill-white align-middle" />{" "}
+                  and{" "}
+                  <IconTwoKey class="relative inline-block w-4.5 fill-white align-middle" />{" "}
+                  keys <br />
                   on your keyboard to place points
-                </div>
+                </p>
               }
             >
               <For each={calculated_measurements()}>
