@@ -1,9 +1,19 @@
 import { Accessor, Setter } from "solid-js";
 import { Series } from "uplot";
 import { storeActiveDatasets } from "../browser/caching";
-import { Annotation, LoadingStateType, MeasureData, PlotRange, TestBasics } from "../types";
+import {
+  Annotation,
+  LoadingStateType,
+  MeasureData,
+  PlotRange,
+  TestBasics,
+} from "../types";
 import { generatePlottedDatasets } from "./dataset_generation";
-import { annotateData, annotateSeries, calcAnnotationWidth } from "./generate_annotations";
+import {
+  annotateData,
+  annotateSeries,
+  calcAnnotationWidth,
+} from "./generate_annotations";
 import { plot } from "./plotting_helpers";
 
 export async function eventLoop(
@@ -23,7 +33,9 @@ export async function eventLoop(
   setMeasurement: Setter<MeasureData>,
   annotations: Annotation[],
   setAnnotations: Setter<Annotation[]>,
-  prefetch: boolean = false
+  prefetch: boolean = false,
+  annotation_ref: HTMLButtonElement,
+  setCurrentAnnotation: Setter<Annotation | undefined>,
 ) {
   const [generated_toPlot, generated_series] = await generatePlottedDatasets(
     datasets,
@@ -34,16 +46,26 @@ export async function eventLoop(
     plotColors,
     displayed_samples,
     setLoadingState,
-    prefetch
+    prefetch,
   );
-  storeActiveDatasets(generated_toPlot, datasets, startTimestamp, endTimestamp, legend_sides);
+  storeActiveDatasets(
+    generated_toPlot,
+    datasets,
+    startTimestamp,
+    endTimestamp,
+    legend_sides,
+  );
   const displayedAxes = generated_series.slice(1).map((s, i) => {
     const thing = s as Series;
     return thing.scale!;
   });
   if (!prefetch) {
     plot(
-      annotateData(generated_toPlot, annotations, calcAnnotationWidth(generated_toPlot[0])),
+      annotateData(
+        generated_toPlot,
+        annotations,
+        calcAnnotationWidth(generated_toPlot[0]),
+      ),
       annotateSeries(generated_series),
       axesSets,
       setPlotRange,
@@ -55,7 +77,9 @@ export async function eventLoop(
       legend_sides,
       annotations,
       setAnnotations,
-      setLoadingState
+      setLoadingState,
+      annotation_ref,
+      setCurrentAnnotation,
     );
   }
 }

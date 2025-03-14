@@ -33,6 +33,8 @@ const ControlColumn: Component<{}> = (props) => {
     setMeasuring,
     annotations,
     setAnnotations,
+    currentAnnotation,
+    setCurrentAnnotation,
     { addDataset, updateDataset, removeDataset, updateColor },
   ] = useState() as StateType;
   const [sizes, setSizes] = makePersisted(createSignal<number[]>([]), {

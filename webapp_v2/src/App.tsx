@@ -6,7 +6,11 @@ import ControlColumn from "./components/control_column/control_column";
 import AnnotationModal from "./components/modal/annotation/modal";
 import NavBar from "./components/navbar/navbar";
 import Plot from "./components/plot/plot";
-import { getGeneralTestInfo, getTestInfo, startAnnotationListener } from "./db/db_interaction";
+import {
+  getGeneralTestInfo,
+  getTestInfo,
+  startAnnotationListener,
+} from "./db/db_interaction";
 import { config } from "./generated_app_info";
 import { eventLoop } from "./plotting/event_loop";
 import { StateType, useState } from "./state";
@@ -38,17 +42,17 @@ const App: Component = (params) => {
     setMeasuring,
     annotations,
     setAnnotations,
-    {
-      addDataset,
-      updateDataset,
-      removeDataset,
-      updateColor,
-    },
+    currentAnnotation,
+    setCurrentAnnotation,
+    { addDataset, updateDataset, removeDataset, updateColor },
   ] = useState() as StateType;
 
   onMount(async () => {
     const s = document.createElement("script");
-    s.setAttribute("src", `https://www.googletagmanager.com/gtag/js?id=${config.firebase.measurementId}`);
+    s.setAttribute(
+      "src",
+      `https://www.googletagmanager.com/gtag/js?id=${config.firebase.measurementId}`,
+    );
     s.async = true;
     document.head.appendChild(s);
     const dataLayer = (window.dataLayer = window.dataLayer || []);
@@ -58,10 +62,24 @@ const App: Component = (params) => {
     gtag("js", new Date());
     gtag("config", config.firebase.measurementId);
     // Contact the Firestore database and get the default test data
-    await getGeneralTestInfo(useParams().testID, setAllKnownTests, setTestBasics, testBasics);
+    await getGeneralTestInfo(
+      useParams().testID,
+      setAllKnownTests,
+      setTestBasics,
+      testBasics,
+    );
     await getTestInfo(testBasics().id, setTestBasics, setPlotRange);
-    loadFromShareLink(testBasics, setPlotRange, setDatasetsLegendSide, setActiveDatasets);
-    const unsub = startAnnotationListener(testBasics().id, setAnnotations, setLoadingState);
+    loadFromShareLink(
+      testBasics,
+      setPlotRange,
+      setDatasetsLegendSide,
+      setActiveDatasets,
+    );
+    const unsub = startAnnotationListener(
+      testBasics().id,
+      setAnnotations,
+      setLoadingState,
+    );
     setLoadingState({ isLoading: false, statusMessage: "" });
     setAppReadyState(true);
     // console.log(annotationModalButton);
@@ -70,8 +88,6 @@ const App: Component = (params) => {
 
   createEffect(async () => {
     if (appReadyState()) {
-      console.log(annotationModalButton);
-
       const start = plotRange().start;
       const end = plotRange().end;
       const datasets = activeDatasets();
@@ -99,7 +115,10 @@ const App: Component = (params) => {
         measuring,
         setMeasuring,
         annotations_actual,
-        setAnnotations
+        setAnnotations,
+        undefined,
+        annotationModalButton!,
+        setCurrentAnnotation,
       );
       setLoadingState({ isLoading: false, statusMessage: "" });
     } else {
@@ -110,7 +129,10 @@ const App: Component = (params) => {
   return (
     <div class="text-center">
       <MetaProvider>
-        <Show when={testBasics() != undefined ? testBasics().id != "" : false} fallback={<Title>Loading...</Title>}>
+        <Show
+          when={testBasics() != undefined ? testBasics().id != "" : false}
+          fallback={<Title>Loading...</Title>}
+        >
           <Title>{testBasics().name}</Title>
         </Show>
       </MetaProvider>

@@ -2,8 +2,19 @@ import { DateTime } from "luxon";
 import { Accessor, Setter } from "solid-js";
 import uPlot, { Series, type AlignedData, type Options } from "uplot";
 import { clearDatums, setPoint1, setPoint2 } from "../browser/measure";
-import { Annotation, DatasetAxis, LoadingStateType, MeasureData, PlotRange, TestBasics } from "../types";
-import { create_annotation, delete_annotation, get_annotation_name } from "./generate_annotations";
+import {
+  Annotation,
+  DatasetAxis,
+  LoadingStateType,
+  MeasureData,
+  PlotRange,
+  TestBasics,
+} from "../types";
+import {
+  create_annotation,
+  delete_annotation,
+  get_annotation_label,
+} from "./generate_annotations";
 
 export function legendRound(val: any, suffix: string, precision: number = 2) {
   if (val == null || val == undefined || val == "null") {
@@ -29,7 +40,9 @@ export function plot(
   datasetsLegendSide: number[],
   annotations: Annotation[],
   setAnnotations: Setter<Annotation[]>,
-  setLoadingState: Setter<LoadingStateType>
+  setLoadingState: Setter<LoadingStateType>,
+  annotation_ref: HTMLButtonElement,
+  setCurrentAnnotation: Setter<Annotation | undefined>,
 ) {
   const axes = generateAllAxes(axes_sets);
   let seriestt: (HTMLDivElement | undefined)[];
@@ -43,7 +56,10 @@ export function plot(
         (uplot: uPlot) => {
           uplot.over.ondblclick = (e) => {
             console.log("Fetching data for full range");
-            setPlotRange({ start: testBasics().starting_timestamp!, end: testBasics().ending_timestamp! });
+            setPlotRange({
+              start: testBasics().starting_timestamp!,
+              end: testBasics().ending_timestamp!,
+            });
           };
           uplot.over.onclick = async (e) => {
             if (e.ctrlKey) {
@@ -51,20 +67,37 @@ export function plot(
                 if (measuring().x2) {
                   clearDatums(measuring, setMeasuring);
                 } else {
-                  setPoint2(activeDatasets(), measuring, setMeasuring, datasetsLegendSide);
+                  setPoint2(
+                    activeDatasets(),
+                    measuring,
+                    setMeasuring,
+                    datasetsLegendSide,
+                  );
                 }
               } else {
-                setPoint1(activeDatasets(), measuring, setMeasuring, datasetsLegendSide);
+                setPoint1(
+                  activeDatasets(),
+                  measuring,
+                  setMeasuring,
+                  datasetsLegendSide,
+                );
               }
             }
             if (e.shiftKey) {
-              await create_annotation(uplot, testBasics().id, setLoadingState);
+              create_annotation(uplot, annotation_ref, setCurrentAnnotation);
             }
           };
           uplot.over.oncontextmenu = async (e) => {
             e.preventDefault();
             if (e.shiftKey) {
-              delete_annotation(uplot, testBasics().id, setLoadingState, annotations);
+              delete_annotation(
+                uplot,
+                annotations,
+                annotation_ref,
+                setCurrentAnnotation,
+              );
+            } else {
+              create_annotation(uplot, annotation_ref, setCurrentAnnotation);
             }
           };
           seriestt = opts.series.map((s, i) => {
@@ -99,7 +132,11 @@ export function plot(
             uplot.ctx.lineWidth = 2;
             if (measuring().x1 != undefined) {
               let cx = uplot.valToPos(measuring().x1!, "x", true);
-              let cy = uplot.valToPos(measuring().y1[0], displayedAxes[0], true);
+              let cy = uplot.valToPos(
+                measuring().y1[0],
+                displayedAxes[0],
+                true,
+              );
               let rad = 10;
 
               uplot.ctx.strokeStyle = measuring().toolColor;
@@ -116,7 +153,11 @@ export function plot(
             }
             if (measuring().x2 != undefined) {
               let cx = uplot.valToPos(measuring().x2!, "x", true);
-              let cy = uplot.valToPos(measuring().y2[0], displayedAxes[0], true);
+              let cy = uplot.valToPos(
+                measuring().y2[0],
+                displayedAxes[0],
+                true,
+              );
               let rad = 10;
 
               uplot.ctx.strokeStyle = measuring().toolColor;
@@ -139,15 +180,29 @@ export function plot(
       setSelect: [
         (uplot: uPlot) => {
           if (uplot.select.width > 0) {
-            let min = parseInt((uplot.posToVal(uplot.select.left, "x") * 1000).toString());
-            let max = parseInt((uplot.posToVal(uplot.select.left + uplot.select.width, "x") * 1000).toString());
+            let min = parseInt(
+              (uplot.posToVal(uplot.select.left, "x") * 1000).toString(),
+            );
+            let max = parseInt(
+              (
+                uplot.posToVal(uplot.select.left + uplot.select.width, "x") *
+                1000
+              ).toString(),
+            );
 
             console.log("Fetching data for range...", { min, max });
-            const min_converted = DateTime.fromMillis(min).setZone("utc", { keepLocalTime: false }).toMillis();
-            const max_converted = DateTime.fromMillis(max).setZone("utc", { keepLocalTime: false }).toMillis();
+            const min_converted = DateTime.fromMillis(min)
+              .setZone("utc", { keepLocalTime: false })
+              .toMillis();
+            const max_converted = DateTime.fromMillis(max)
+              .setZone("utc", { keepLocalTime: false })
+              .toMillis();
 
             console.log("update goes here");
-            setPlotRange({ start: Math.round(Number(min_converted)), end: Math.round(Number(max_converted)) });
+            setPlotRange({
+              start: Math.round(Number(min_converted)),
+              end: Math.round(Number(max_converted)),
+            });
 
             // zoom to selection
             uplot.setScale("x", { min, max });
@@ -168,7 +223,7 @@ export function plot(
               let xVal = u.data[0][idx!];
               let yVal = u.data[i][idx!];
               if (yVal! > 0.5) {
-                tt.innerHTML = get_annotation_name(xVal, annotations);
+                tt.innerHTML = get_annotation_label(xVal, annotations);
                 tt.style.left = Math.round(u.valToPos(xVal, "x")) + 10 + "px";
                 tt.style.top = "0px";
                 (tt.style.display as any) = null;
@@ -273,7 +328,8 @@ export function generateAxes(axesSide: number): DatasetAxis[] {
   axesToReturn.push(
     {
       scale: `lbf_${axesSide}`,
-      values: (u: any, vals: any[], space: any) => vals.map((v) => +v.toFixed(1) + "lbf"),
+      values: (u: any, vals: any[], space: any) =>
+        vals.map((v) => +v.toFixed(1) + "lbf"),
       stroke: "#fff",
       grid: {
         stroke: "#ffffff20",
@@ -286,7 +342,8 @@ export function generateAxes(axesSide: number): DatasetAxis[] {
     },
     {
       scale: `psi_${axesSide}`,
-      values: (u: any, vals: any[], space: any) => vals.map((v) => +v.toFixed(1) + "psi"),
+      values: (u: any, vals: any[], space: any) =>
+        vals.map((v) => +v.toFixed(1) + "psi"),
       stroke: "#fff",
       grid: {
         stroke: "#ffffff20",
@@ -299,7 +356,8 @@ export function generateAxes(axesSide: number): DatasetAxis[] {
     },
     {
       scale: `V_${axesSide}`,
-      values: (u: any, vals: any[], space: any) => vals.map((v) => +v.toFixed(1) + "V"),
+      values: (u: any, vals: any[], space: any) =>
+        vals.map((v) => +v.toFixed(1) + "V"),
       stroke: "#fff",
       grid: {
         stroke: "#ffffff20",
@@ -312,7 +370,8 @@ export function generateAxes(axesSide: number): DatasetAxis[] {
     },
     {
       scale: `bin_${axesSide}`,
-      values: (u: any, vals: any[], space: any) => vals.map((v) => +v.toFixed(1) + ""),
+      values: (u: any, vals: any[], space: any) =>
+        vals.map((v) => +v.toFixed(1) + ""),
       stroke: "#fff",
       grid: {
         stroke: "#ffffff20",
@@ -325,7 +384,8 @@ export function generateAxes(axesSide: number): DatasetAxis[] {
     },
     {
       scale: `deg_${axesSide}`,
-      values: (u: any, vals: any[], space: any) => vals.map((v) => +v.toFixed(1) + "deg"),
+      values: (u: any, vals: any[], space: any) =>
+        vals.map((v) => +v.toFixed(1) + "deg"),
       stroke: "#fff",
       grid: {
         stroke: "#ffffff20",
@@ -335,7 +395,7 @@ export function generateAxes(axesSide: number): DatasetAxis[] {
         show: true,
         stroke: "#80808080",
       },
-    }
+    },
   );
   return axesToReturn;
 }

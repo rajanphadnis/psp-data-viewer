@@ -39,6 +39,8 @@ const SettingsModal: Component<{}> = (props) => {
     setMeasuring,
     annotations,
     setAnnotations,
+    currentAnnotation,
+    setCurrentAnnotation,
     { addDataset, updateDataset, removeDataset, updateColor },
   ] = useState() as StateType;
 

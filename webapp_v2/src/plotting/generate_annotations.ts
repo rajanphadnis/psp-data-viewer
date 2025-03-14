@@ -58,62 +58,75 @@ export function annotateSeries(series: ({} | Series)[]) {
   return annotated_series;
 }
 
-export function get_annotation_name(
-  timestamp_s: number,
-  annotations: Annotation[],
-) {
+export function get_annotation(timestamp_s: number, annotations: Annotation[]) {
   const target_ms = timestamp_s * 1000;
-  const label = annotations.reduce((closest, event) =>
+  const annotation = annotations.reduce((closest, event) =>
     Math.abs(event.timestamp_ms - target_ms) <
     Math.abs(closest.timestamp_ms - target_ms)
       ? event
       : closest,
   );
-  return `<div class="p-1 flex flex-col justify-start items-start"><p class="font-bold">${label.label}<p/><p>${label.notes}<p/></div>`;
+  return annotation;
 }
 
-export async function create_annotation(
+export function get_annotation_label(
+  timestamp_s: number,
+  annotations: Annotation[],
+) {
+  const annotation = get_annotation(timestamp_s, annotations);
+  return `<div class="p-1 flex flex-col justify-start items-start"><p class="font-bold">${annotation.label}<p/><p>${annotation.notes}<p/></div>`;
+}
+
+export function create_annotation(
   uplot: uPlot,
-  testID: string,
-  setLoadingState: Setter<LoadingStateType>,
+  annotation_ref: HTMLButtonElement,
+  setCurrentAnnotation: Setter<Annotation | undefined>,
 ) {
   const { left, top, idx } = uplot.cursor;
   let xVal = uplot.data[0][idx!];
-  await set_annotation(
-    {
-      label: "test",
-      notes: "",
-      timestamp_ms: xVal * 1000,
-    } as Annotation,
-    testID,
-    setLoadingState,
-  );
+  setCurrentAnnotation({
+    label: "",
+    notes: "",
+    timestamp_ms: xVal * 1000,
+  } as Annotation);
+  annotation_ref.click();
+  // await set_annotation(
+  //   {
+  //     label: "test",
+  //     notes: "",
+  //     timestamp_ms: xVal * 1000,
+  //   } as Annotation,
+  //   testID,
+  //   setLoadingState,
+  // );
 }
 
-export async function delete_annotation(
+export function delete_annotation(
   uplot: uPlot,
-  testID: string,
-  setLoadingState: Setter<LoadingStateType>,
   annotations: Annotation[],
+  annotation_ref: HTMLButtonElement,
+  setCurrentAnnotation: Setter<Annotation | undefined>,
 ) {
   const { left, top, idx } = uplot.cursor;
   let xVal = uplot.data[0][idx!];
   const target_ms = xVal * 1000;
-  const label = annotations.reduce((closest, event) =>
+  const annotation = annotations.reduce((closest, event) =>
     Math.abs(event.timestamp_ms - target_ms) <
     Math.abs(closest.timestamp_ms - target_ms)
       ? event
       : closest,
   );
-  await delete_annotation_db(label.timestamp_ms, testID, setLoadingState);
+  setCurrentAnnotation(annotation);
+  annotation_ref.click();
+  // await delete_annotation_db(label.timestamp_ms, testID, setLoadingState);
 }
 
 export function calcAnnotationWidth(time: number[]): number {
   if (time) {
-    console.log(time);
+    // console.log(time);
     const num_of_data_points = time.length;
     const size = Math.ceil(num_of_data_points / 300);
-    console.log(`${num_of_data_points} -> ${size}`);
+    // console.log(`${num_of_data_points} -> ${size}`);
     return size;
   } else {
     return 0;

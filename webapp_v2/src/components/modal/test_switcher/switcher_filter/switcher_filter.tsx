@@ -32,6 +32,8 @@ const TestSwitcherFilter: Component<{
     setMeasuring,
     annotations,
     setAnnotations,
+    currentAnnotation,
+    setCurrentAnnotation,
     { addDataset, updateDataset, removeDataset, updateColor },
   ] = useState() as StateType;
 

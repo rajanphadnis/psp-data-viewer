@@ -1,10 +1,27 @@
-import { Accessor, createContext, createSignal, Setter, Signal, useContext } from "solid-js";
+import {
+  Accessor,
+  createContext,
+  createSignal,
+  Setter,
+  Signal,
+  useContext,
+} from "solid-js";
 import { defaultPlottingColors } from "./theming";
-import { LoadingStateType, TestBasics, Preferences, PlotRange, MeasureData, Annotation } from "./types";
+import {
+  LoadingStateType,
+  TestBasics,
+  Preferences,
+  PlotRange,
+  MeasureData,
+  Annotation,
+} from "./types";
 import { clearDatums } from "./browser/measure";
 import { makePersisted } from "@solid-primitives/storage";
 
-const init_loadingState: LoadingStateType = { isLoading: true, statusMessage: "Loading..." };
+const init_loadingState: LoadingStateType = {
+  isLoading: true,
+  statusMessage: "Loading...",
+};
 const init_testData: TestBasics = {
   name: "Loading...",
   gse_article: "",
@@ -18,33 +35,63 @@ const init_Preferences: Preferences = {
   displayedSamples: 3000,
   axesSets: 6,
 };
-const init_measuringTool: MeasureData = { x1: undefined, x2: undefined, y1: [], y2: [], toolColor: "#ffa500" };
+const init_measuringTool: MeasureData = {
+  x1: undefined,
+  x2: undefined,
+  y1: [],
+  y2: [],
+  toolColor: "#ffa500",
+};
 
 const AppStateContext = createContext();
 
 export function AppStateProvider(props: any) {
-  const [activeDatasets, setActiveDatasets]: Signal<string[]> = createSignal(new Array<string>());
-  const [appReadyState, setAppReadyState]: Signal<boolean> = createSignal(false);
-  const [loadingState, setLoadingState]: Signal<LoadingStateType> = createSignal(init_loadingState);
+  const [activeDatasets, setActiveDatasets]: Signal<string[]> = createSignal(
+    new Array<string>(),
+  );
+  const [appReadyState, setAppReadyState]: Signal<boolean> =
+    createSignal(false);
+  const [loadingState, setLoadingState]: Signal<LoadingStateType> =
+    createSignal(init_loadingState);
 
-  const [testBasics, setTestBasics]: Signal<TestBasics> = createSignal(init_testData);
-  const [allKnownTests, setAllKnownTests]: Signal<TestBasics[]> = createSignal(new Array<TestBasics>());
+  const [testBasics, setTestBasics]: Signal<TestBasics> =
+    createSignal(init_testData);
+  const [allKnownTests, setAllKnownTests]: Signal<TestBasics[]> = createSignal(
+    new Array<TestBasics>(),
+  );
 
-  const [loadingDatasets, setLoadingDatasets]: Signal<string[]> = createSignal(new Array<string>());
-  const [measuring, setMeasuring] = makePersisted(createSignal<MeasureData>(init_measuringTool), {
-    name: "measuring-storage",
+  const [loadingDatasets, setLoadingDatasets]: Signal<string[]> = createSignal(
+    new Array<string>(),
+  );
+  const [measuring, setMeasuring] = makePersisted(
+    createSignal<MeasureData>(init_measuringTool),
+    {
+      name: "measuring-storage",
+    },
+  );
+  const [datasetsLegendSide, setDatasetsLegendSide]: Signal<number[]> =
+    createSignal(new Array<number>());
+
+  const [plotRange, setPlotRange]: Signal<PlotRange> = createSignal({
+    start: 0,
+    end: 0,
   });
-  const [datasetsLegendSide, setDatasetsLegendSide]: Signal<number[]> = createSignal(new Array<number>());
+  const [plotPalletteColors, setPlotPalletteColors]: Signal<string[]> =
+    createSignal(defaultPlottingColors);
 
-  const [plotRange, setPlotRange]: Signal<PlotRange> = createSignal({ start: 0, end: 0 });
-  const [plotPalletteColors, setPlotPalletteColors]: Signal<string[]> = createSignal(defaultPlottingColors);
+  const [sitePreferences, setSitePreferences] = makePersisted(
+    createSignal<Preferences>(init_Preferences),
+    {
+      name: "preference-storage",
+    },
+  );
+  const [annotations, setAnnotations] = createSignal<Annotation[]>(
+    new Array<Annotation>(),
+  );
 
-  const [sitePreferences, setSitePreferences] = makePersisted(createSignal<Preferences>(init_Preferences), {
-    name: "preference-storage",
-  });
-  const [annotations, setAnnotations] = createSignal<Annotation[]>(new Array<Annotation>());
-
-  let annotationModalTriggerRef: HTMLButtonElement | undefined;
+  const [currentAnnotation, setCurrentAnnotation] = createSignal<
+    Annotation | undefined
+  >(undefined);
 
   const datasetsThing = [
     activeDatasets,
@@ -71,6 +118,8 @@ export function AppStateProvider(props: any) {
     setMeasuring,
     annotations,
     setAnnotations,
+    currentAnnotation,
+    setCurrentAnnotation,
     {
       addDataset(dataset: string) {
         setLoadingState({ isLoading: true, statusMessage: "Adding..." });
@@ -129,7 +178,11 @@ export function AppStateProvider(props: any) {
     },
   ];
 
-  return <AppStateContext.Provider value={datasetsThing}>{props.children}</AppStateContext.Provider>;
+  return (
+    <AppStateContext.Provider value={datasetsThing}>
+      {props.children}
+    </AppStateContext.Provider>
+  );
 }
 
 export function useState() {
@@ -161,11 +214,12 @@ export type StateType = [
   setMeasuring: Setter<MeasureData>,
   annotations: Accessor<Annotation[]>,
   setAnnotations: Setter<Annotation[]>,
+  currentAnnotation: Accessor<Annotation | undefined>,
+  setCurrentAnnotation: Setter<Annotation | undefined>,
   {
-    addDataset: (dataset: string) => void,
-    updateDataset: (dataset: string) => void,
-    removeDataset: (dataset: string) => void,
-    updateColor: (dataset: string, color: string) => void,
-  }
+    addDataset: (dataset: string) => void;
+    updateDataset: (dataset: string) => void;
+    removeDataset: (dataset: string) => void;
+    updateColor: (dataset: string, color: string) => void;
+  },
 ];
-

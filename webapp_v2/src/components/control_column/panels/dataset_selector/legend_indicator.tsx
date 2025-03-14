@@ -30,6 +30,8 @@ const DatasetSelectorLegendIndicator: Component<{ dataset_id: string }> = (
     setMeasuring,
     annotations,
     setAnnotations,
+    currentAnnotation,
+    setCurrentAnnotation,
     { addDataset, updateDataset, removeDataset, updateColor },
   ] = useState() as StateType;
 

@@ -8,7 +8,14 @@ import {
   setDoc,
   type DocumentData,
 } from "firebase/firestore";
-import type { Annotation, DatasetAxis, DatasetSeries, LoadingStateType, PlotRange, TestBasics } from "../types";
+import type {
+  Annotation,
+  DatasetAxis,
+  DatasetSeries,
+  LoadingStateType,
+  PlotRange,
+  TestBasics,
+} from "../types";
 import { generateAxisAndSeries } from "../plotting/axes_series_generation";
 import { Accessor, Setter } from "solid-js";
 import { config } from "../generated_app_info";
@@ -33,7 +40,7 @@ export async function getSensorData(
   test_id: string,
   displayed_samples: number,
   plotColors: string[],
-  legendSidesToFetch: number[]
+  legendSidesToFetch: number[],
   // indexOfDatasetList: number,
 ): Promise<[number[][], ({} | DatasetSeries)[]]> {
   // Init empty variables
@@ -71,7 +78,7 @@ export async function getSensorData(
         nameOnly,
         channelsToFetch.get(dataset)!,
         plotColors,
-        legendSidesToFetch[i]
+        legendSidesToFetch[i],
       );
 
       // Add plot series and data to main lists to return
@@ -99,7 +106,7 @@ export async function getSensorData(
 export async function getTestInfo(
   test_ID: string,
   setTestBasics: Setter<TestBasics>,
-  setPlotRange: Setter<PlotRange>
+  setPlotRange: Setter<PlotRange>,
 ): Promise<void> {
   // Use the global (app state) database reference and currently selected test ID
   const docRef = doc(globalThis.db, test_ID, "general");
@@ -157,7 +164,7 @@ export async function getGeneralTestInfo(
   page_testID: string,
   setAllKnownTests: Setter<TestBasics[]>,
   setTestBasics: Setter<TestBasics>,
-  testBasics: Accessor<TestBasics>
+  testBasics: Accessor<TestBasics>,
 ): Promise<void> {
   const docRef = doc(globalThis.db, "general", "tests");
   let docSnap: DocumentSnapshot<DocumentData, DocumentData>;
@@ -205,7 +212,11 @@ export async function getGeneralTestInfo(
   const default_test = tests.find((p) => p.id == default_id)!;
   setTestBasics(default_test);
   console.log(default_test.name);
-  window.history.pushState(null, default_test.name, `/${default_id}${window.location.search}`);
+  window.history.pushState(
+    null,
+    default_test.name,
+    `/${default_id}${window.location.search}`,
+  );
 
   // return
   return;
@@ -222,14 +233,13 @@ export async function getGeneralTestInfo(
 export function startAnnotationListener(
   testID: string,
   setAnnotations: Setter<Annotation[]>,
-  setLoadingState: Setter<LoadingStateType>
+  setLoadingState: Setter<LoadingStateType>,
 ) {
   setLoadingState({ isLoading: true, statusMessage: "Fetching Annotations" });
   const docRef = doc(globalThis.db, testID, "annotations");
   const unsub = onSnapshot(
     docRef,
     (doc) => {
-      console.log("Current data: ", doc.data());
       if (doc.exists()) {
         const data = doc.data();
         const timestamps_ms = Object.keys(data);
@@ -245,14 +255,16 @@ export function startAnnotationListener(
           };
           toSet.push(toAdd);
         }
-        console.log(toSet);
         setAnnotations(toSet);
       }
     },
     (error) => {
       console.error(error);
-      setLoadingState({ isLoading: false, statusMessage: "Failed: Annotation Listener" });
-    }
+      setLoadingState({
+        isLoading: false,
+        statusMessage: "Failed: Annotation Listener",
+      });
+    },
   );
   return unsub;
 }
@@ -260,7 +272,7 @@ export function startAnnotationListener(
 export async function set_annotation(
   newAnnotation: Annotation,
   testID: string,
-  setLoadingState: Setter<LoadingStateType>
+  setLoadingState: Setter<LoadingStateType>,
 ) {
   setLoadingState({ isLoading: true, statusMessage: "Creating Annotation" });
   const docRef = doc(globalThis.db, testID, "annotations");
@@ -276,7 +288,7 @@ export async function set_annotation(
 export async function delete_annotation_db(
   timestamp_ms: number,
   testID: string,
-  setLoadingState: Setter<LoadingStateType>
+  setLoadingState: Setter<LoadingStateType>,
 ) {
   setLoadingState({ isLoading: true, statusMessage: "Creating Annotation" });
   const docRef = doc(globalThis.db, testID, "annotations");

@@ -30,6 +30,8 @@ const NavBar: Component<{}> = () => {
     setMeasuring,
     annotations,
     setAnnotations,
+    currentAnnotation,
+    setCurrentAnnotation,
     {
       addDataset,
       updateDataset,

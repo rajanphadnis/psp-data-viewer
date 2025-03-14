@@ -29,6 +29,8 @@ const ColorPicker: Component<{ dataset_id: string }> = (props) => {
     setMeasuring,
     annotations,
     setAnnotations,
+    currentAnnotation,
+    setCurrentAnnotation,
     { addDataset, updateDataset, removeDataset, updateColor },
   ] = useState() as StateType;
   const [isOpen, toggle] = createSignal<boolean>(false);
