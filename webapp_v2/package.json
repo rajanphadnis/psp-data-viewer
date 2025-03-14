@@ -2,7 +2,7 @@
     "name": "webapp",
     "module": "src/index.ts",
     "type": "module",
-    "version": "0.10.4",
+    "version": "0.10.5",
     "description": "",
     "scripts": {
         "start": "vite",
@@ -17,6 +17,7 @@
     "license": "MIT",
     "devDependencies": {
         "@solidjs/testing-library": "^0.8.10",
+        "@tailwindcss/forms": "^0.5.10",
         "@testing-library/jest-dom": "^6.6.3",
         "@testing-library/user-event": "^14.5.2",
         "@types/bun": "^1.1.13",

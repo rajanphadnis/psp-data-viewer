@@ -1,3 +1,9 @@
+## v0.10.5
+finished testing for #13
+
+### Changed
+- bug fixes
+
 ## v0.10.4
 fixed modals not disappearing
 
