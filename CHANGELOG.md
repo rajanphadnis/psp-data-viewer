@@ -1,3 +1,9 @@
+## v0.10.3
+added annotation support
+
+### Changed
+- bug fixes
+
 ## v0.10.2
 added js-yaml package
 
