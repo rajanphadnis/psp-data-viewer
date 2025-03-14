@@ -1,3 +1,9 @@
+## v0.10.4
+fixed modals not disappearing
+
+### Changed
+- bug fixes
+
 ## v0.10.3
 added annotation support
 
