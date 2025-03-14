@@ -1,3 +1,9 @@
+## v0.10.7
+added annotation settings
+
+### Changed
+- bug fixes
+
 ## v0.10.6
 fixed annotation modal input styling
 
