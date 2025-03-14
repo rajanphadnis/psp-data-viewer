@@ -78,22 +78,24 @@ const AnnotationModal: Component<{ ref: any }> = (props) => {
             </Show>
           </Dialog.Label>
           <div class="flex flex-col p-3">
-            <p>Timestamp: {timestamp_ms()}</p>
-            <div class="flex flex-row">
+            <p class="mb-2">Timestamp: {timestamp_ms()}</p>
+            <div class="mb-2 flex flex-row items-center">
               <p>Label:</p>
               <input
                 type="text"
                 value={label()}
+                class="bg-bg border-rush-light focus:border-aged w-80 border-2 p-0 text-white outline-none focus:outline-hidden disabled:border-0 disabled:bg-transparent"
                 oninput={(e) => {
                   setLabel(e.target.value);
                 }}
               />
             </div>
-            <div class="flex flex-row">
+            <div class="mb-2 flex flex-row items-center">
               <p>Note:</p>
               <input
                 type="text"
                 value={notes()}
+                class="bg-bg border-rush-light focus:border-aged w-80 border-2 p-0 text-white outline-none focus:outline-hidden disabled:border-0 disabled:bg-transparent"
                 oninput={(e) => {
                   setNotes(e.target.value);
                 }}
