@@ -1,3 +1,9 @@
+## v0.10.8
+annotations complete and overhauled data export tools
+
+### Changed
+- bug fixes
+
 ## v0.10.7
 added annotation settings
 
