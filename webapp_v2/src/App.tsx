@@ -96,6 +96,7 @@ const App: Component = (params) => {
       const axesSets = sitePreferences().axesSets;
       const annotationWidth = sitePreferences().annotationWidth;
       const annotationColor = sitePreferences().annotationColor;
+      const annotationHeight = sitePreferences().annotationHeight;
       const measureData = measuring();
       const annotations_actual = annotations();
       setLoadingState({ isLoading: true, statusMessage: "Generating..." });
@@ -121,6 +122,7 @@ const App: Component = (params) => {
         setCurrentAnnotation,
         annotationColor,
         annotationWidth,
+        annotationHeight
       );
       setLoadingState({ isLoading: false, statusMessage: "" });
     } else {

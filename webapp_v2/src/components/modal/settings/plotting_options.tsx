@@ -3,6 +3,7 @@ import { Component, createSignal, Show } from "solid-js";
 import { StateType, useState } from "../../../state";
 import { MeasureData, Preferences } from "../../../types";
 import SettingsColorPicker from "../easter/color_picker";
+import { getSharelink } from "../../../browser/sharelink";
 
 const PlottingOptionsModal: Component<{
   children?: any;
@@ -52,6 +53,9 @@ const PlottingOptionsModal: Component<{
   );
   const [annotationColor, setAnnotationColor] = createSignal(
     sitePreferences().annotationColor,
+  );
+  const [annotationHeight, setAnnotationHeight] = createSignal(
+    sitePreferences().annotationHeight,
   );
 
   return (
@@ -151,13 +155,33 @@ const PlottingOptionsModal: Component<{
                 {annotationColor()}
               </p>
             </div>
+            <div class="flex flex-row items-center justify-start">
+              <p class="mx-2.5">Annotation Position above plot:</p>
+              <input
+                type="range"
+                min="0"
+                max="5"
+                value={annotationHeight()}
+                step="1"
+                on:input={(e) => {
+                  setAnnotationHeight(parseInt(e.target.value));
+                }}
+              />
+              <p class="mx-2.5">
+                {sitePreferences().annotationHeight != annotationHeight()
+                  ? `${sitePreferences().annotationHeight} --> `
+                  : ""}
+                {annotationHeight()}
+              </p>
+            </div>
             <Show
               when={
                 sitePreferences().axesSets / 2 != axesSets() ||
                 sitePreferences().displayedSamples != plotPoints() ||
                 (measuring() as MeasureData).toolColor != pointColor() ||
                 sitePreferences().annotationColor != annotationColor() ||
-                sitePreferences().annotationWidth != annotationWidth()
+                sitePreferences().annotationWidth != annotationWidth() ||
+                sitePreferences().annotationHeight != annotationHeight()
               }
             >
               <button
@@ -169,6 +193,7 @@ const PlottingOptionsModal: Component<{
                     axesSets: parseInt((axesSets() * 2).toString()),
                     annotationWidth: annotationWidth(),
                     annotationColor: annotationColor(),
+                    annotationHeight: annotationHeight(),
                   };
                   const new_measuring: MeasureData = {
                     x1: (measuring() as MeasureData).x1,
@@ -180,7 +205,14 @@ const PlottingOptionsModal: Component<{
                   setMeasuring(new_measuring);
                   setSitePreferences(new_pref);
                   setAppReadyState(true);
-                  location.reload();
+                  const [link, b64] = getSharelink(
+                    activeDatasets(),
+                    plotRange().start,
+                    plotRange().end,
+                    datasetsLegendSide(),
+                  );
+                  window.location.href = link;
+                  // location.reload();
                 }}
               >
                 Save Changes

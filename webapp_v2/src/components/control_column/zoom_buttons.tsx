@@ -69,6 +69,7 @@ const ZoomButtons: Component<{
             const axesSets = sitePreferences().axesSets;
             const annotationWidth = sitePreferences().annotationWidth;
             const annotationColor = sitePreferences().annotationColor;
+            const annotationHeight = sitePreferences().annotationHeight;
             await eventLoop(
               zoomRanges()[2],
               zoomRanges()[3],
@@ -91,6 +92,7 @@ const ZoomButtons: Component<{
               setCurrentAnnotation,
               annotationColor,
               annotationWidth,
+              annotationHeight,
             );
             setIsLoadingOut(false);
           }}
@@ -120,6 +122,7 @@ const ZoomButtons: Component<{
             const axesSets = sitePreferences().axesSets;
             const annotationWidth = sitePreferences().annotationWidth;
             const annotationColor = sitePreferences().annotationColor;
+            const annotationHeight = sitePreferences().annotationHeight;
             await eventLoop(
               zoomRanges()[0],
               zoomRanges()[1],
@@ -142,6 +145,7 @@ const ZoomButtons: Component<{
               setCurrentAnnotation,
               annotationColor,
               annotationWidth,
+              annotationHeight,
             );
             setIsLoadingIn(false);
           }}

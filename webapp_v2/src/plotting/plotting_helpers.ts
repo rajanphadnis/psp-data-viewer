@@ -43,6 +43,7 @@ export function plot(
   setLoadingState: Setter<LoadingStateType>,
   annotation_ref: HTMLButtonElement,
   setCurrentAnnotation: Setter<Annotation | undefined>,
+  annotation_height: number,
 ) {
   const axes = generateAllAxes(axes_sets);
   let seriestt: (HTMLDivElement | undefined)[];
@@ -225,7 +226,7 @@ export function plot(
               if (yVal! > 0.5) {
                 tt.innerHTML = get_annotation_label(xVal, annotations);
                 tt.style.left = Math.round(u.valToPos(xVal, "x")) + 10 + "px";
-                tt.style.top = "0px";
+                tt.style.top = `${annotation_height * -10}px`;
                 (tt.style.display as any) = null;
               } else {
                 (tt.style.display as any) = "none";

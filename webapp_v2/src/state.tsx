@@ -36,6 +36,7 @@ const init_Preferences: Preferences = {
   axesSets: 6,
   annotationColor: "#ffffff",
   annotationWidth: 2,
+  annotationHeight: 0,
 };
 const init_measuringTool: MeasureData = {
   x1: undefined,

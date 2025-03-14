@@ -71,6 +71,7 @@ export type Preferences = {
   axesSets: number;
   annotationWidth: number;
   annotationColor: string;
+  annotationHeight: number;
 };
 
 declare global {

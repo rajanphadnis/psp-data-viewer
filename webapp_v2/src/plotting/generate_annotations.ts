@@ -76,7 +76,7 @@ export function get_annotation_label(
   annotations: Annotation[],
 ) {
   const annotation = get_annotation(timestamp_s, annotations);
-  return `<div class="p-1 flex flex-col justify-start items-start"><p class="font-bold">${annotation.label}<p/><p>${annotation.notes}<p/></div>`;
+  return `<div class="p-1 flex flex-col justify-start items-start"><p class="font-bold text-start">${annotation.label}<p/><p class="text-start">${annotation.notes}<p/></div>`;
 }
 
 export function create_annotation(

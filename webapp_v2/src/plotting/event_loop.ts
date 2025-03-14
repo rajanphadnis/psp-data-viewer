@@ -38,6 +38,7 @@ export async function eventLoop(
   setCurrentAnnotation: Setter<Annotation | undefined>,
   annotationColor: string,
   annotationWidth: number,
+  annotationHeight: number,
 ) {
   const [generated_toPlot, generated_series] = await generatePlottedDatasets(
     datasets,
@@ -82,6 +83,7 @@ export async function eventLoop(
       setLoadingState,
       annotation_ref,
       setCurrentAnnotation,
+      annotationHeight,
     );
   }
 }
