@@ -27,8 +27,6 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
 initFirebase();
 
 render(() => {
-  onMount(async () => {});
-
   return (
     <AppStateProvider>
       <Router>

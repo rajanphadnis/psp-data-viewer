@@ -110,14 +110,16 @@ export function delete_annotation(
   const { left, top, idx } = uplot.cursor;
   let xVal = uplot.data[0][idx!];
   const target_ms = xVal * 1000;
-  const annotation = annotations.reduce((closest, event) =>
-    Math.abs(event.timestamp_ms - target_ms) <
-    Math.abs(closest.timestamp_ms - target_ms)
-      ? event
-      : closest,
-  );
-  setCurrentAnnotation(annotation);
-  annotation_ref.click();
+  if (annotations.length > 0) {
+    const annotation = annotations.reduce((closest, event) =>
+      Math.abs(event.timestamp_ms - target_ms) <
+      Math.abs(closest.timestamp_ms - target_ms)
+        ? event
+        : closest,
+    );
+    setCurrentAnnotation(annotation);
+    annotation_ref.click();
+  }
   // await delete_annotation_db(label.timestamp_ms, testID, setLoadingState);
 }
 

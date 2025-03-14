@@ -5,7 +5,7 @@
   --aged: #8e6f3e;
   --field: #ddb945;
   --cool-gray: #6f727b;
-  --background-color: #1D1D1D;
+  --background-color: #1d1d1d;
 }
 
 html,
@@ -253,3 +253,4 @@ body {
   justify-content: start;
   align-items: center;
 }
+@plugin '@tailwindcss/forms';

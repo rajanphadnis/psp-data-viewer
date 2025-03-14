@@ -87,6 +87,7 @@ const App: Component = (params) => {
   });
 
   createEffect(async () => {
+    // console.log(testBasics());
     if (appReadyState()) {
       const start = plotRange().start;
       const end = plotRange().end;
