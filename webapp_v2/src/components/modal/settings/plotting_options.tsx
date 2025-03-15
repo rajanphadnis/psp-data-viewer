@@ -57,6 +57,9 @@ const PlottingOptionsModal: Component<{
   const [annotationHeight, setAnnotationHeight] = createSignal(
     sitePreferences().annotationHeight,
   );
+  const [annotationsEnabled, setAnnotationsEnabled] = createSignal(
+    sitePreferences().annotationsEnabled,
+  );
 
   return (
     <Dialog>
@@ -196,6 +199,7 @@ const PlottingOptionsModal: Component<{
                     annotationWidth: annotationWidth(),
                     annotationColor: annotationColor(),
                     annotationHeight: annotationHeight(),
+                    annotationsEnabled: annotationsEnabled(),
                   };
                   const new_measuring: MeasureData = {
                     x1: (measuring() as MeasureData).x1,

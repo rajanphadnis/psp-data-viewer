@@ -39,6 +39,7 @@ export async function eventLoop(
   annotationColor: string,
   annotationWidth: number,
   annotationHeight: number,
+  annotationsEnabled: boolean,
 ) {
   const [generated_toPlot, generated_series] = await generatePlottedDatasets(
     datasets,
@@ -68,8 +69,9 @@ export async function eventLoop(
         generated_toPlot,
         annotations,
         calcAnnotationWidth(generated_toPlot[0], annotationWidth),
+        annotationsEnabled,
       ),
-      annotateSeries(generated_series, annotationColor),
+      annotateSeries(generated_series, annotationColor, annotationsEnabled),
       axesSets,
       setPlotRange,
       testBasics,
@@ -84,6 +86,7 @@ export async function eventLoop(
       annotation_ref,
       setCurrentAnnotation,
       annotationHeight,
+      annotationsEnabled,
     );
   }
 }

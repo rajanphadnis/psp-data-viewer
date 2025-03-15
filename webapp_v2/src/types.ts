@@ -72,6 +72,7 @@ export type Preferences = {
   annotationWidth: number;
   annotationColor: string;
   annotationHeight: number;
+  annotationsEnabled: boolean;
 };
 
 declare global {
@@ -90,5 +91,5 @@ export enum LoadingState {
   READY,
   LOADING,
   ERROR,
-  COMPLETE
+  COMPLETE,
 }

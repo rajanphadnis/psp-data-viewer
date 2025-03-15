@@ -6,6 +6,7 @@ export function annotateData(
   actual_data: number[][],
   annotations: Annotation[],
   annotation_width: number = 6,
+  annotationsEnabled: boolean,
 ) {
   if (actual_data.length > 0) {
     const annotation_data_length = actual_data[0].length;
@@ -32,8 +33,13 @@ export function annotateData(
         added = added_temp;
       }
     }
-    const annotated_data = [...actual_data, added];
-    return annotated_data as AlignedData;
+    if (annotationsEnabled) {
+      const annotated_data = [...actual_data, added];
+      return annotated_data as AlignedData;
+    } else {
+      // const annotated_data = [...actual_data, added];
+      return actual_data as AlignedData;
+    }
   } else {
     return [] as AlignedData;
   }
@@ -42,6 +48,7 @@ export function annotateData(
 export function annotateSeries(
   series: ({} | Series)[],
   annotationColor: string,
+  annotationsEnabled: boolean,
 ) {
   const annotated_series: Series[] = [
     ...series,
@@ -57,7 +64,11 @@ export function annotateSeries(
       class: "hiddenLegendItem",
     },
   ];
-  return annotated_series;
+  if (annotationsEnabled) {
+    return annotated_series;
+  } else {
+    return series;
+  }
 }
 
 export function get_annotation(timestamp_s: number, annotations: Annotation[]) {

@@ -44,6 +44,7 @@ export function plot(
   annotation_ref: HTMLButtonElement,
   setCurrentAnnotation: Setter<Annotation | undefined>,
   annotation_height: number,
+  annotationsEnabled: boolean,
 ) {
   const axes = generateAllAxes(axes_sets);
   let seriestt: (HTMLDivElement | undefined)[];
@@ -85,20 +86,26 @@ export function plot(
               }
             }
             if (e.shiftKey) {
-              create_annotation(uplot, annotation_ref, setCurrentAnnotation);
+              if (annotationsEnabled) {
+                create_annotation(uplot, annotation_ref, setCurrentAnnotation);
+              }
             }
           };
           uplot.over.oncontextmenu = async (e) => {
             e.preventDefault();
             if (e.shiftKey) {
-              delete_annotation(
-                uplot,
-                annotations,
-                annotation_ref,
-                setCurrentAnnotation,
-              );
+              if (annotationsEnabled) {
+                delete_annotation(
+                  uplot,
+                  annotations,
+                  annotation_ref,
+                  setCurrentAnnotation,
+                );
+              }
             } else {
-              create_annotation(uplot, annotation_ref, setCurrentAnnotation);
+              if (annotationsEnabled) {
+                create_annotation(uplot, annotation_ref, setCurrentAnnotation);
+              }
             }
           };
           seriestt = opts.series.map((s, i) => {
