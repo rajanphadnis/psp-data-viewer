@@ -1,6 +1,6 @@
 import moment from "moment";
 
-function fallbackCopyTextToClipboard(text: string) {
+export function fallbackCopyTextToClipboard(text: string) {
   var textArea = document.createElement("textarea");
   textArea.value = text;
 

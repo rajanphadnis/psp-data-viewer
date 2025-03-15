@@ -6,6 +6,7 @@ import DataExportButton from "./tools/data_export_button";
 import ToolEasterEgg from "./tools/easter";
 import ToolMeasure from "./tools/measure";
 import ToggleAnnotations from "./tools/toggle_annotations";
+import HelpModal from "../../modal/help/modal";
 
 const PanelTools: Component<{}> = (props) => {
   const [
@@ -59,6 +60,7 @@ const PanelTools: Component<{}> = (props) => {
         <DataExportButton />
         <ToolMeasure />
         <ToggleAnnotations />
+        <HelpModal />
         {/* <ToolCalcChannel /> */}
         <Show when={activeDatasets().length > 3}>
           <ToolEasterEgg />
