@@ -1,3 +1,9 @@
+## v0.10.9
+added global toggle for #13
+
+### Changed
+- bug fixes
+
 ## v0.10.8
 annotations complete and overhauled data export tools
 
