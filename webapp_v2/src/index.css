@@ -5,7 +5,7 @@
   --aged: #8e6f3e;
   --field: #ddb945;
   --cool-gray: #6f727b;
-  --background-color: #1D1D1D;
+  --background-color: #1d1d1d;
 }
 
 html,
@@ -187,6 +187,11 @@ body {
 
 @utility scrollbar-white {
   scrollbar-color: white transparent;
+}
+@layer utilities {
+  .striped tr:nth-child(even) {
+    @apply bg-cool-grey;
+  }
 }
 
 [data-corvu-dialog-overlay] {
