@@ -128,11 +128,11 @@ const PlottingOptionsModal: Component<{
             </div>
             <div class="mb-3 flex flex-row items-center justify-start">
               <p class="mx-2.5">
-                Annotation Width (set to zero to turn off annotations):
+                Annotation Width:
               </p>
               <input
                 type="range"
-                min="0"
+                min="1"
                 max="5"
                 value={annotationWidth()}
                 step="1"

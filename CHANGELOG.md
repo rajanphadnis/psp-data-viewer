@@ -1,3 +1,9 @@
+## v0.10.10
+added guidance modal and api access
+
+### Changed
+- bug fixes
+
 ## v0.10.9
 added global toggle for #13
 
