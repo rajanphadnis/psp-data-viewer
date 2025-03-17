@@ -1,5 +1,5 @@
 import { expect, test, vi } from "vitest";
-import { generateAllAxes, generateAxes, legendRound } from "../../src/plotting/plotting_helpers";
+import { generateAllAxes, generateAxes, getSize, legendRound, plot } from "../../src/plotting/plotting_helpers";
 
 vi.mock("uplot", () => ({
   default: vi.fn(),
