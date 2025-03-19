@@ -43,7 +43,11 @@ def createStripeAndFirebaseResources(req: https_fn.Request) -> https_fn.Response
     subscription = stripe.Subscription.create(
         customer=customerID,
         collection_method="charge_automatically",
-        items=[{"price": "price_1QvVZ7L6hziDD75ckYB4vBpB"}],
+        items=[
+            {"price": "price_1QvVZ7L6hziDD75ckYB4vBpB"},
+            {"price": "price_1R4W7IL6hziDD75clUvgLMXF"},
+            {"price": "price_1R4W8vL6hziDD75c3pCf3J76"},
+        ],
         payment_settings={"save_default_payment_method": "on_subscription"},
         automatic_tax={"enabled": True},
     )
