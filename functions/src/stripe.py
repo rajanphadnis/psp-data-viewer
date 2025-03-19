@@ -1,10 +1,12 @@
+from collections import Counter
 import json
+import time
 from firebase_functions import https_fn, options
 from firebase_admin import firestore
 import os
 import stripe
 from google.cloud.firestore_v1.base_query import FieldFilter
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from azure.cli.core import get_default_cli
 from firebase_functions import scheduler_fn
 
@@ -199,6 +201,122 @@ def createCustomerIntentAndCustomerSession(req: https_fn.CallableRequest) -> any
     )
     return {"client_secret": intent.client_secret, "customer_id": customer.id}
 
+
 @scheduler_fn.on_schedule(schedule="every day 00:00")
-def accountcleanup(event: scheduler_fn.ScheduledEvent) -> None:
+def sum_daily_instance_usage(event: scheduler_fn.ScheduledEvent) -> None:
     print("running")
+    # Logic: get docs in "accounts/{docID}/instance_history" from the last 24 hours.
+    # If none exist, sort by the stored time field ("setTime") and get the most recent
+    # doc. Multiply the value stored in "instances" of that most recent doc by 86400 (seconds per day)
+    # to get seconds used per day.
+
+    # If docs exist for the past day, do the following:
+    # - Get most recent doc before docs today (to get instance count at the start of the day)
+    # - get delta between each doc timestamp ("setTime") and/or start/end timestamps of the day
+    # - multiply each delta by the preceding doc's instance count (so it starts with the most recent doc before the 24hr period * delta)
+    # - sum each multiplied "seconds" calculation
+    #
+    # Finally, send the seconds used per day value to stripe with the meter name "machine_seconds" and "payload[stripe_customer_id]" and
+    # "payload[seconds]" set appropriately
+
+    # Do the above logic for each account:
+    db = firestore.client()
+    dayOldInstanceHistories = (
+        db.collection_group("instance_history")
+        .where(
+            filter=FieldFilter(
+                "setTime", ">=", datetime.now(timezone.utc) - timedelta(hours=24)
+            )
+        )
+        .order_by("setTime", direction=firestore.Query.DESCENDING)
+    )
+    docs = dayOldInstanceHistories.stream()
+    dayOldDocs: dict = []
+    for doc in docs:
+        print(f"{doc.id} => {doc.to_dict()}")
+        slug = doc.to_dict()["slug"]
+        dayOldDocs.append(doc.to_dict())
+
+    print(dayOldDocs)
+    # Extract all slug values
+    all_slugs = [doc["slug"] for doc in dayOldDocs]
+
+    # Get unique slugs
+    unique_slugs: list[str] = list(set(all_slugs))
+    print("Unique slugs:", unique_slugs)
+
+    # Count occurrences of each slug
+    slug_counts = Counter(all_slugs)
+    print("Slug counts:", dict(slug_counts))
+
+    now = datetime.now(timezone.utc)
+    # Create a new datetime object with the same date but time set to 00:00
+    today_midnight = datetime(now.year, now.month, now.day, 0, 0, 0)
+    today_night = datetime(now.year, now.month, now.day, 23, 59, 59)
+    # Convert to timestamp (seconds since epoch)
+    startOfDay_s = int(time.mktime(today_midnight.timetuple()))
+    endOfDay_s = int(time.mktime(today_night.timetuple()))
+
+    for slug in unique_slugs:
+        # Get dayOldDocs + 1
+        existingHistoryDocs = slug_counts[slug]
+        print(f"fetching {existingHistoryDocs} docs")
+        instanceHistories = (
+            db.collection_group("instance_history")
+            .where(filter=FieldFilter("slug", "==", slug))
+            .order_by("setTime", direction=firestore.Query.DESCENDING)
+            .limit(existingHistoryDocs + 1)
+            .stream()
+        )
+        lastDoc: dict[str, int] = {}
+        currentMachine_s = 0
+        for doc in instanceHistories:
+            data = doc.to_dict()
+            storedTime: datetime = data["setTime"]
+            epoch_s = int(storedTime.timestamp())
+            newInstances = int(data["instances"])
+
+            # If a doc hasn't been processed yet, either set the first doc
+            # as the current time or startOfDay, depending on when the first doc was written
+            if lastDoc == {}:
+                if epoch_s > startOfDay_s:
+                    print("first doc is today")
+                    timeDelta = epoch_s - startOfDay_s
+                    currentMachine_s += timeDelta * newInstances
+                    lastDoc["epoch_s"] = epoch_s
+                    lastDoc["instances"] = newInstances
+                else:
+                    print("first doc is before today")
+                    lastDoc["epoch_s"] = startOfDay_s
+                    lastDoc["instances"] = newInstances
+            else:
+                # If there's already been a doc processed, calculate the
+                # difference between the current doc and previous doc's time
+                # then multiply by instances of previous doc
+                print("next doc")
+                timeDelta = epoch_s - lastDoc["epoch_s"]
+                currentMachine_s += timeDelta * lastDoc["instances"]
+                lastDoc["epoch_s"] = epoch_s
+                lastDoc["instances"] = newInstances
+        print(lastDoc)
+        endTimeDelta = endOfDay_s - lastDoc["epoch_s"]
+        currentMachine_s += endTimeDelta * lastDoc["instances"]
+        print(f"{slug}: {currentMachine_s}")
+
+        # Get Stripe Customer ID:
+        docs = (
+            db.collection("accounts")
+            .where(filter=FieldFilter("slug", "==", slug))
+            .stream()
+        )
+        for doc in docs:
+            print(f"{doc.id} => {doc.to_dict()}")
+            stripeID = doc.to_dict()["stripe_customer_id"]
+        print(f"{slug}: {stripeID}")
+        stripe.api_key = os.environ.get("STRIPE_TEST")
+        stripe.billing.MeterEvent.create(
+            event_name="machine_seconds",
+            payload={"stripe_customer_id": stripeID, "seconds": currentMachine_s},
+        )
+
+    # return "True"

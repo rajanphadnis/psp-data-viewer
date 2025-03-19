@@ -28,7 +28,7 @@ def update_api_instance_count(req: https_fn.CallableRequest):
         print(f"{doc.id} => {doc.to_dict()}")
         docID = doc.id
     db.collection(f"accounts/{docID}/instance_history").add(
-        {"instances": instances, "setTime": datetime.now(timezone.utc)}
+        {"instances": instances, "setTime": datetime.now(timezone.utc), "slug": slug}
     )
 
     if f"{slug}:manage:instance" in perms:
