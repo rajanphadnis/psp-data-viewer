@@ -1,3 +1,9 @@
+## v0.10.11
+added permissions request emails and admin pages. Also added stripe metering to warm instances and new test creation events
+
+### Changed
+- bug fixes
+
 ## v0.10.10
 added guidance modal and api access
 
