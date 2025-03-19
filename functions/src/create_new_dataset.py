@@ -1,7 +1,9 @@
+import os
 from firebase_admin import firestore
 from firebase_functions import https_fn
 import requests
 import google.cloud.firestore as fs
+import stripe
 
 
 class optionsThing:
@@ -19,6 +21,7 @@ def create_new_dataset(req: https_fn.CallableRequest):
     test_article = req.data["test_article"]
     api_base_url = req.data["api_base_url"]
     db_id = req.data["db_id"]
+    stripeID = req.data["stripeID"]
 
     db = firestore.client(database_id=db_id)
 
@@ -57,5 +60,10 @@ def create_new_dataset(req: https_fn.CallableRequest):
                 ]
             )
         }
+    )
+    stripe.api_key = os.environ.get("STRIPE_TEST")
+    stripe.billing.MeterEvent.create(
+        event_name="tests_created",
+        payload={"stripe_customer_id": stripeID},
     )
     return {"status": "complete"}

@@ -11,7 +11,7 @@ export async function new_upload(
   name: string,
   gse: string,
   testArticle: string,
-  slug: string
+  slug: string,
 ) {
   const checks = true;
   if (!checks) {
@@ -26,7 +26,12 @@ export async function new_upload(
     sas = (sasResponse as any).data["sas_token"];
   } catch {
     console.error("Failed to get authentication token for file upload");
-    setStatus(["Failed to authenticate", "Failed to get authentication token for file upload", "0", "3"]);
+    setStatus([
+      "Failed to authenticate",
+      "Failed to get authentication token for file upload",
+      "0",
+      "3",
+    ]);
   }
   if (sas) {
     const url = `https://${(config as any)[slug].azure.storage_account}.file.core.windows.net?${sas}`;
@@ -46,11 +51,16 @@ export async function new_upload(
         setUploadPercent(progress.loadedBytes / file_size);
       },
     });
-    console.log(`Upload file range "${file_size}" to '${id}.hdf5' successfully`);
+    console.log(
+      `Upload file range "${file_size}" to '${id}.hdf5' successfully`,
+    );
   }
   console.log("writing database results");
   setStatus(["File Uploaded!", "Validating test...", "2", "3"]);
-  const completeTest = httpsCallable(globalThis.functions, "create_new_dataset");
+  const completeTest = httpsCallable(
+    globalThis.functions,
+    "create_new_dataset",
+  );
   completeTest({
     gse_article: gse,
     test_id: id,
@@ -58,6 +68,7 @@ export async function new_upload(
     test_article: testArticle,
     api_base_url: `${(config as any)[slug].urls.api_base_url}/api`,
     db_id: (config as any)[slug].firebase.databaseID,
+    stripeID: (config as any)[slug].stripe.customerID,
   })
     .then((result) => {
       console.log(result);
