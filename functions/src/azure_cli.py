@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 import os
 from firebase_functions import options, https_fn
 import json
@@ -18,6 +19,17 @@ def update_api_instance_count(req: https_fn.CallableRequest):
     perms = req.auth.token["permissions"]
     slug = req.data["slug"]
     instances = int(float(req.data["instances"]))
+    db = firestore.client()
+    docs = (
+        db.collection("accounts").where(filter=FieldFilter("slug", "==", slug)).stream()
+    )
+
+    for doc in docs:
+        print(f"{doc.id} => {doc.to_dict()}")
+        docID = doc.id
+    db.collection(f"accounts/{docID}/instance_history").add(
+        {"instances": instances, "setTime": datetime.now(timezone.utc)}
+    )
 
     if f"{slug}:manage:instance" in perms:
         db = firestore.client()

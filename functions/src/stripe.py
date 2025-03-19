@@ -6,6 +6,7 @@ import stripe
 from google.cloud.firestore_v1.base_query import FieldFilter
 from datetime import datetime, timezone
 from azure.cli.core import get_default_cli
+from firebase_functions import scheduler_fn
 
 
 class optionsThing:
@@ -197,3 +198,7 @@ def createCustomerIntentAndCustomerSession(req: https_fn.CallableRequest) -> any
         customer=customer.id,
     )
     return {"client_secret": intent.client_secret, "customer_id": customer.id}
+
+@scheduler_fn.on_schedule(schedule="every day 00:00")
+def accountcleanup(event: scheduler_fn.ScheduledEvent) -> None:
+    print("running")
