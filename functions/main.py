@@ -11,3 +11,4 @@ from src.azure_cli import *  # noqa: E402, F403
 from src.create_new_customer import *  # noqa: E402, F403
 from src.azure_auth import *  # noqa: E402, F403
 from src.create_new_dataset import *  # noqa: E402, F403
+from src.permissions_request import *  # noqa: E402, F403

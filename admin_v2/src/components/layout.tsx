@@ -17,6 +17,7 @@ import ManageTests from "./manage_tests/home";
 import NavBarItem from "./navbar_item";
 import NewTest from "./new/new";
 import SelectOrg from "./select_org/select_org";
+import ProcessRequest from "./process_request/process";
 
 const MainLayout: Component<{}> = (props) => {
   const [
@@ -38,7 +39,7 @@ const MainLayout: Component<{}> = (props) => {
   const permissions = createMemo(() => auth());
 
   return (
-    <div class="m-0 p-0 flex flex-row h-full w-full">
+    <div class="m-0 flex h-full w-full flex-row p-0">
       <Router>
         <Route path="/" component={() => <SelectOrg />}></Route>
         <Route
@@ -66,7 +67,10 @@ const MainLayout: Component<{}> = (props) => {
           component={() => (
             <PanelLayout>
               <Show
-                when={permissions()! && permissions()!.includes(`${org()}:manage:defaults`)}
+                when={
+                  permissions()! &&
+                  permissions()!.includes(`${org()}:manage:defaults`)
+                }
                 fallback={<LogInComponent />}
               >
                 <DefaultPage />
@@ -78,7 +82,13 @@ const MainLayout: Component<{}> = (props) => {
           path="/:org/new"
           component={() => (
             <PanelLayout>
-              <Show when={permissions()! && permissions()!.includes(`${org()}:manage:tests`)} fallback={<LogInComponent />}>
+              <Show
+                when={
+                  permissions()! &&
+                  permissions()!.includes(`${org()}:manage:tests`)
+                }
+                fallback={<LogInComponent />}
+              >
                 <NewTest />
               </Show>
             </PanelLayout>
@@ -88,7 +98,13 @@ const MainLayout: Component<{}> = (props) => {
           path="/:org/instances"
           component={() => (
             <PanelLayout>
-              <Show when={permissions()! && permissions()!.includes(`${org()}:manage:instance`)} fallback={<LogInComponent />}>
+              <Show
+                when={
+                  permissions()! &&
+                  permissions()!.includes(`${org()}:manage:instance`)
+                }
+                fallback={<LogInComponent />}
+              >
                 <Instances />
               </Show>
             </PanelLayout>
@@ -107,7 +123,10 @@ const MainLayout: Component<{}> = (props) => {
           component={() => (
             <PanelLayout>
               <Show
-                when={permissions()! && permissions()!.includes(`${org()}:manage:billing`)}
+                when={
+                  permissions()! &&
+                  permissions()!.includes(`${org()}:manage:billing`)
+                }
                 fallback={<LogInComponent />}
               >
                 <Billing />
@@ -121,6 +140,14 @@ const MainLayout: Component<{}> = (props) => {
             <PanelLayout>
               <AccountPage />
             </PanelLayout>
+          )}
+        ></Route>
+        <Route
+          path="/:org/permissionsRequest/:approve/:requestCode/"
+          component={() => (
+            // <PanelLayout>
+            <ProcessRequest />
+            // </PanelLayout>
           )}
         ></Route>
         <Route
@@ -189,35 +216,61 @@ const PanelLayout: Component<{ children?: any }> = (props) => {
   });
 
   return (
-    <div class="flex flex-col w-full h-full">
+    <div class="flex h-full w-full flex-col">
       <Header />
-      <div class="w-full h-[calc(100%-4rem)] m-0 p-0">
+      <div class="m-0 h-[calc(100%-4rem)] w-full p-0">
         <Resizable sizes={sizes()} onSizesChange={setSizes}>
           <Resizable.Panel initialSize={0.2} minSize={0.2} class="pt-3">
             <Show when={org()}>
-              <NavBarItem name={permissions() ? "Manage Tests" : "Tests"} route={`/${params.org}/tests`} />
+              <NavBarItem
+                name={permissions() ? "Manage Tests" : "Tests"}
+                route={`/${params.org}/tests`}
+              />
             </Show>
-            <Show when={permissions()! && permissions()!.includes(`${org()}:manage:tests`)}>
+            <Show
+              when={
+                permissions()! &&
+                permissions()!.includes(`${org()}:manage:tests`)
+              }
+            >
               <NavBarItem name="New Test" route={`/${params.org}/new`} />
             </Show>
-            <Show when={permissions()! && permissions()!.includes(`${org()}:manage:instance`)}>
+            <Show
+              when={
+                permissions()! &&
+                permissions()!.includes(`${org()}:manage:instance`)
+              }
+            >
               <NavBarItem name="Instances" route={`/${params.org}/instances`} />
             </Show>
             <Show when={org()!}>
               <NavBarItem name="Analytics" route={`/${params.org}/analytics`} />
             </Show>
-            <Show when={permissions()! && permissions()!.includes(`${org()}:manage:defaults`)}>
+            <Show
+              when={
+                permissions()! &&
+                permissions()!.includes(`${org()}:manage:defaults`)
+              }
+            >
               <NavBarItem name="Defaults" route={`/${params.org}/defaults`} />
             </Show>
-            <Show when={permissions()! && permissions()!.includes(`${org()}:manage:billing`)}>
+            <Show
+              when={
+                permissions()! &&
+                permissions()!.includes(`${org()}:manage:billing`)
+              }
+            >
               <NavBarItem name="Billing" route={`/${params.org}/billing`} />
             </Show>
             <Show when={permissions()!}>
               <NavBarItem name="Account" route={`/${params.org}/account`} />
             </Show>
           </Resizable.Panel>
-          <Resizable.Handle aria-label="Resize Handle" class="bg-transparent border-none px-2 py-2">
-            <div class="w-[2px] bg-white h-full" />
+          <Resizable.Handle
+            aria-label="Resize Handle"
+            class="border-none bg-transparent px-2 py-2"
+          >
+            <div class="h-full w-[2px] bg-white" />
           </Resizable.Handle>
           <Resizable.Panel initialSize={0.8} minSize={0.5} class="p-0">
             {props.children}

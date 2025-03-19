@@ -39,7 +39,7 @@ export function copyTextToClipboard(text: string) {
     },
     function (err) {
       console.error("Async: Could not copy text: ", err);
-    }
+    },
   );
 }
 
@@ -47,7 +47,8 @@ export const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 export function genId(length: number) {
   let result = "";
-  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   const charactersLength = characters.length;
   let counter = 0;
   while (counter < length) {
@@ -95,7 +96,14 @@ export function humanFileSize(bytes: number, si = true, dp = 1) {
   do {
     bytes /= thresh;
     ++u;
-  } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1);
+  } while (
+    Math.round(Math.abs(bytes) * r) / r >= thresh &&
+    u < units.length - 1
+  );
 
   return bytes.toFixed(dp) + " " + units[u];
 }
+
+export const decode = (str: string): string => atob(str);
+
+export const encode = (str: string): string => btoa(str);

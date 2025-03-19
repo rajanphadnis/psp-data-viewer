@@ -91,7 +91,7 @@ export const LogInComponent: Component<{}> = (props) => {
   return (
     <div class={styles.loginComponentDiv}>
       <p>Log In</p>
-      <SignInButton name="Google" provider={new GoogleAuthProvider()} svg={GoogleSVG} />
+      <SignInButton name="Google" provider={new GoogleAuthProvider().addScope("email")} svg={GoogleSVG} />
       <SignInButton name="Microsoft" provider={new OAuthProvider("microsoft.com")} svg={MicrosoftSVG} />
       <SignInButton name="GitHub" provider={new GithubAuthProvider().addScope("user:email")} svg={GitHubSVG} />
     </div>

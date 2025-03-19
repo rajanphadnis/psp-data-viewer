@@ -35,7 +35,7 @@ const PermissionsSection: Component<{}> = (props) => {
   onMount(async () => {
     if (org()) {
       if (globalThis.adminDB) {
-        const permsAndDescs = await fetchAvailablePermissions(org()!);
+        const permsAndDescs = await fetchAvailablePermissions();
         setAllPerms(permsAndDescs);
         onSnapshot(doc(globalThis.adminDB, "access_control", "users"), (doc) => {
           const dat = doc.data()! as AccessControlDoc;

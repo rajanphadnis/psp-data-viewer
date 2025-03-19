@@ -1,9 +1,8 @@
-import { createAsyncOptions, Select } from "@thisbeyond/solid-select";
-import { Accessor, Component, createEffect, createSignal, For, onMount, Show } from "solid-js";
-import { addPermission, fetchAvailablePermissions } from "../../db/db_interaction";
 import "@thisbeyond/solid-select/style.css";
-import "./dropdown_styling.css";
+import { Accessor, Component, createEffect, createSignal, For, Show } from "solid-js";
+import { addPermission } from "../../db/db_interaction";
 import { AccessControlDoc, PermissionType } from "../../types";
+import "./dropdown_styling.css";
 
 const AddPermission: Component<{
   org: Accessor<string | undefined>;

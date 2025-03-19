@@ -1,15 +1,26 @@
 import {
   DocumentData,
   DocumentSnapshot,
+  addDoc,
   arrayRemove,
   arrayUnion,
+  collection,
   deleteField,
   doc,
   getDoc,
-  setDoc
+  getDocs,
+  query,
+  setDoc,
+  where,
 } from "firebase/firestore";
 import { Setter } from "solid-js";
-import { AccessControlDoc, PermissionType, TestBasics, TestData } from "../types";
+import { encode } from "../browser_interactions";
+import {
+  AccessControlDoc,
+  PermissionType,
+  TestBasics,
+  TestData,
+} from "../types";
 
 /**
  * Contacts the Firestore database and gets the document specific to the currently selected test.
@@ -20,7 +31,10 @@ import { AccessControlDoc, PermissionType, TestBasics, TestData } from "../types
  * `starting_timestamp`, `ending_timestamp`
  *
  */
-export async function getTestInfo(test_ID: string, setTestBasics: Setter<TestData>): Promise<TestData> {
+export async function getTestInfo(
+  test_ID: string,
+  setTestBasics: Setter<TestData>,
+): Promise<TestData> {
   // Use the global (app state) database reference and currently selected test ID
   const docRef = doc(globalThis.db, test_ID, "general");
   let docSnap;
@@ -66,7 +80,7 @@ export async function getTestInfo(test_ID: string, setTestBasics: Setter<TestDat
  */
 export async function getGeneralTestInfo(
   setAllKnownTests: Setter<TestBasics[]>,
-  setDefaultTest: Setter<string>
+  setDefaultTest: Setter<string>,
 ): Promise<void> {
   const docRef = doc(globalThis.db, "general", "tests");
   let docSnap: DocumentSnapshot<DocumentData, DocumentData>;
@@ -109,7 +123,7 @@ export async function getGeneralTestInfo(
 
 export async function getDefaultArticles(
   setDefaultTestArticle: Setter<string>,
-  setDefaultGSE: Setter<string>
+  setDefaultGSE: Setter<string>,
 ): Promise<void> {
   const docRef = doc(globalThis.db, "general", "articles");
   let docSnap: DocumentSnapshot<DocumentData, DocumentData>;
@@ -173,9 +187,64 @@ export async function addPermission(email: string, permission: string) {
   return true;
 }
 
-export async function fetchAvailablePermissions(org: string) {
+export async function fetchAvailablePermissions() {
   const permsDoc = doc(globalThis.adminDB, "access_control", "permissions");
   const snap = await getDoc(permsDoc);
   const permissions = snap.data() as PermissionType;
   return permissions;
+}
+
+export function newPermissionRequest(
+  permissions: string[],
+  email: string,
+  slug: string,
+) {
+  const org = permissions[0].split(":")[0];
+  let toEmail: string[] = [];
+  return getDoc(doc(globalThis.adminDB, "access_control", "users"))
+    .then(async (doc) => {
+      const dat = doc.data()! as AccessControlDoc;
+      const emails = Object.keys(dat);
+      emails.forEach((email) => {
+        const list = dat[email].filter((perms) => {
+          return perms.includes(`${org}:manage:permissions`);
+        });
+        if (list.length > 0) {
+          toEmail.push(email);
+        }
+      });
+      const permsCollection = collection(
+        globalThis.adminDB,
+        "permissions_requests",
+      );
+      const b64String = encode(`${email}:::${permissions.join("::")}`);
+      await addDoc(permsCollection, {
+        requestCode: b64String,
+        email: email,
+        status: "Sending Request",
+        recipients: toEmail,
+        slug: slug,
+      });
+      return true;
+    })
+    .catch((err) => {
+      console.error(err);
+      return false;
+    });
+}
+
+export async function sendPermissionsFinalizedEmail(
+  recipient: string,
+  isApproved: boolean,
+  org: string,
+) {
+  await addDoc(collection(globalThis.adminDB, "email"), {
+    to: [recipient],
+    message: {
+      subject: isApproved
+        ? "Permissions Request Approved"
+        : "Permissions Request Denied",
+      html: `Your Dataviewer.Space permissions request for the "${org}" organization has been ${isApproved ? "approved. Please log out and log back in to use your new permissions." : "denied. If you think this was an error, go ahead and re-submit a permissions request. Make sure to request only the permissions you actually need."}<br/><br/>Best,<br/>The Dataviewer.Space Team<br/><br/>Note: This email was sent from an unmonitored account`,
+    },
+  });
 }
