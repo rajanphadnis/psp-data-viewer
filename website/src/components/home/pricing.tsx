@@ -32,6 +32,7 @@ const PricingSegment: Component<{}> = (props) => {
               <li>251-500: $0.005/req + $2/month</li>
               <li>501+: $0.01/req + $5/month</li>
             </ul>
+            <p>Always-Ready Servers: $0.00001 per CPU-second</p>
             <p>Create test: $1.00/test</p>
             <p>Data Storage: $0.03/GB</p>
           </div>
