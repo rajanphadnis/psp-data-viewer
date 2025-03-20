@@ -1,3 +1,9 @@
+## v0.10.12
+added instance_history pull to instance config page
+
+### Changed
+- bug fixes
+
 ## v0.10.11
 added permissions request emails and admin pages. Also added stripe metering to warm instances and new test creation events
 

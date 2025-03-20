@@ -6,7 +6,7 @@ import {
   createEffect,
   createMemo,
   createSignal,
-  Show
+  Show,
 } from "solid-js";
 import { useState } from "../../state";
 import ExistingRequest from "../request/existing";
@@ -48,7 +48,7 @@ const AccountPage: Component<{}> = (props) => {
       currentUserEmail == undefined || currentUserEmail == null
         ? providerDataEmail!
         : currentUserEmail;
-    console.log(auth());
+    console.debug(auth());
   });
 
   createEffect(async () => {
@@ -60,7 +60,7 @@ const AccountPage: Component<{}> = (props) => {
         currentUserEmail == undefined || currentUserEmail == null
           ? providerDataEmail!
           : currentUserEmail;
-      console.log(email);
+      console.debug(email);
       // let requestCode: string = "";
       // let status: string = "";
       onSnapshot(
@@ -71,7 +71,7 @@ const AccountPage: Component<{}> = (props) => {
         (querySnapshot) => {
           querySnapshot.forEach((doc) => {
             // doc.data() is never undefined for query doc snapshots
-            console.log(doc.id, " => ", doc.data());
+            // console.log(doc.id, " => ", doc.data());
             const requestCode = doc.data()["requestCode"];
             const status = doc.data()["status"];
             setCurrentPermissionRequest({

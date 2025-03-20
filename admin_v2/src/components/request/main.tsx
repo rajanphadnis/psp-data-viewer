@@ -74,8 +74,8 @@ const RequestPermissionsComponent: Component<{}> = (props) => {
   });
 
   const permsToShow = createMemo(() => {
-    console.debug(allPerms());
-    console.debug(existingUserPerms());
+    // console.debug(allPerms());
+    // console.debug(existingUserPerms());
     if (allPerms()) {
       const allPermissionsClauses = Object.keys(allPerms()!);
       const allPermissions = allPermissionsClauses.map(function (clause) {
@@ -87,7 +87,7 @@ const RequestPermissionsComponent: Component<{}> = (props) => {
       const toShow = allPermissions.filter((perm) => {
         if (existingUserPerms()) {
           const includes = existingUserPerms()!.includes(perm.perm);
-          console.log(includes);
+          console.debug(includes);
           return !includes;
         } else {
           return true;
