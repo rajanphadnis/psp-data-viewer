@@ -78,10 +78,10 @@ def send_permissions_request_email(event: Event[DocumentSnapshot]) -> None:
 
     message = f'Hi!<br/>As a manager of the Dataviewer.Space "{slug}" organization, you have the ability to approve/deny permissions requests from others in your organization. The following permissions request requires a response:<br/><br/>Requestor: {email}<br/>Requesting Permissions: {", ".join(requestedPermissions)}<br/>'
 
-    approveButton = f'<a href="{approveURL}"><button style="padding:12px;background-color:#00a63e;color:white;margin:10px;font-weight:bold;">Approve Request</button></a>'
-    denyButton = f'<a href="{denyURL}"><button style="padding:12px;background-color:#fb2c36;color:white;margin:10px;font-weight:bold;">Deny Request</button></a>'
+    approveButton = f'<a href="{approveURL}"><button style="padding:12px;background-color:#00a63e;color:white;margin:10px;font-weight:bold;border:none;cursor:pointer;">Approve Request</button></a>'
+    denyButton = f'<a href="{denyURL}"><button style="padding:12px;background-color:#fb2c36;color:white;margin:10px;font-weight:bold;border:none;cursor:pointer;">Deny Request</button></a>'
 
-    fullMessage = f'${message}<div style="display:flex;flex-direction:row;align-items:center;justify-content:evenly;width:100%;">{approveButton}{denyButton}</div>'
+    fullMessage = f'{message}<div style="display:flex;flex-direction:row;align-items:center;justify-content:evenly;width:100%;">{approveButton}{denyButton}</div>'
 
     docToWrite = {
         "to": recipients,
