@@ -1,3 +1,9 @@
+## v0.10.13
+updated api access URL
+
+### Changed
+- bug fixes
+
 ## v0.10.12
 added instance_history pull to instance config page
 

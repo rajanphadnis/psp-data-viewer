@@ -28,7 +28,7 @@ naming:
   slug: dev
 urls:
   admin_dashboard_url: https://admin.dataviewer.space/dev
-  api_base_url: https://psp-api.rajanphadnis.com
+  api_base_url: https://psp-data-viewer-api.azurewebsites.net
   docs_url: https://docs.dataviewer.space
   github_url: https://github.com/rajanphadnis/psp-data-viewer
   update_test_metadata_url: https://updatetestmetadata-w547ikcrwa-uc.a.run.app
