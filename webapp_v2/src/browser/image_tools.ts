@@ -1,55 +1,10 @@
 import { saveAs } from "file-saver";
+import { exportSVGOfPlot } from "./plot_svg_export";
 
 export async function plotSnapshot(type: string) {
-  let pxRatio = devicePixelRatio;
-
-  let rect = globalThis.uplot.root.getBoundingClientRect();
-  // rect of uPlot's canvas to get y shift due to title above it (if any)
-  let rect2 = globalThis.uplot.ctx.canvas.getBoundingClientRect();
-
-  let htmlContent = globalThis.uplot.root.outerHTML;
-
-  // let uPlotCssRules: any = document.styleSheets[2].cssRules;
-  // let uPlotCssOverrideRules: any = document.styleSheets[3].cssRules;
-  let cssContent = "";
-  // for (let { cssText } of uPlotCssRules) cssContent += `${cssText} `;
-  // for (let { cssText } of uPlotCssOverrideRules) cssContent += `${cssText} `;
-
-  let width = Math.ceil(rect.width * pxRatio);
-  let height = Math.ceil(rect.height * pxRatio);
-
-  let viewBox = `0 0 ${Math.ceil(rect.width)} ${Math.ceil(rect.height)}`;
-
-  let svgText = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="${viewBox}">
-            <style>
-                body { margin: 0; padding: 0; }
-                ${cssContent}
-            </style>
-            <foreignObject width="100%" height="100%">
-                <body xmlns="http://www.w3.org/1999/xhtml">${htmlContent}</body>
-            </foreignObject>
-        </svg>
-    `;
-
-  let can = document.createElement("canvas");
-  let ctx = can.getContext("2d")!;
-  can.width = width;
-  can.height = height;
-  can.style.width = Math.ceil(rect.width) + "px";
-  can.style.height = Math.ceil(rect.height) + "px";
-  // document.body.appendChild(can);
-
+  let [svgXml, can, ctx] = exportSVGOfPlot();
   let img = new Image();
   img.crossOrigin = "Anonymous";
-
-  ctx.drawImage(uplot.ctx.canvas, 0, (rect2.top - rect.top) * pxRatio);
-
-  let SVGContainer = document.createElement("div");
-  SVGContainer.style.display = "none";
-  SVGContainer.innerHTML = svgText;
-  let svgNode: any = SVGContainer.firstElementChild;
-  let svgXml = new XMLSerializer().serializeToString(svgNode);
   let svgBase64 = "data:image/svg+xml;base64," + btoa(svgXml);
 
   img.addEventListener("load", () => {
@@ -66,8 +21,39 @@ export async function plotSnapshot(type: string) {
         }
       },
       "image/png",
-      1
+      1,
     );
   });
   img.src = svgBase64;
+}
+
+export function plotSvgSnapshot() {
+  let [svgXml, can, ctx] = exportSVGOfPlot();
+
+  //add name spaces.
+  // if (!svgXml.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)) {
+  //   svgXml = svgXml.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+  // }
+  // if (!svgXml.match(/^<svg[^>]+"http\:\/\/www\.w3\.org\/1999\/xlink"/)) {
+  //   svgXml = svgXml.replace(
+  //     /^<svg/,
+  //     '<svg xmlns:xlink="http://www.w3.org/1999/xlink"',
+  //   );
+  // }
+
+  //add xml declaration
+  svgXml = '<?xml version="1.0" standalone="no"?>\r\n' + svgXml;
+  console.log(can);
+
+  //convert svg source to URI data scheme.
+  var url = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgXml);
+
+  //set url value to a element's href attribute.
+  const link = document.createElement("a");
+  link.href = url;
+  link.target = "_blank";
+  link.download = "plot";
+  link.click();
+  // document.getElementById("link").href = url;
+  //you can download svg file by right click menu.
 }
