@@ -1,3 +1,9 @@
+## v0.10.15
+added admin console tag
+
+### Changed
+- bug fixes
+
 ## v0.10.14
 added email oauth scope to msft auth
 

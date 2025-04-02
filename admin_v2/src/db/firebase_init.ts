@@ -1,12 +1,15 @@
 import { initializeApp } from "firebase/app";
-import { ReCaptchaEnterpriseProvider, initializeAppCheck } from "firebase/app-check";
-import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from "firebase/firestore";
-import { appCheckSecret, config } from "../generated_app_check_secret";
-import { getStorage } from "firebase/storage";
 import { getAuth } from "firebase/auth";
-import { connectFunctionsEmulator, getFunctions } from "firebase/functions";
+import {
+  initializeFirestore,
+  persistentLocalCache,
+  persistentMultipleTabManager,
+} from "firebase/firestore";
+import { getFunctions } from "firebase/functions";
+import { getStorage } from "firebase/storage";
+import { appCheckSecret, config } from "../generated_app_check_secret";
 
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: "AIzaSyDzZWBXQ5L9N92GRNUNGMse8AeUvbwFFyI",
   authDomain: "dataviewer-space.firebaseapp.com",
   projectId: "dataviewer-space",
@@ -29,15 +32,19 @@ export function initFirebase() {
   //   isTokenAutoRefreshEnabled: true,
   // });
   globalThis.adminDB = initializeFirestore(app, {
-    localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
+    localCache: persistentLocalCache({
+      tabManager: persistentMultipleTabManager(),
+    }),
   });
   Object.keys(config).forEach((slug) => {
     globalThis.availableDBs[slug] = initializeFirestore(
       app,
       {
-        localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
+        localCache: persistentLocalCache({
+          tabManager: persistentMultipleTabManager(),
+        }),
       },
-      (config as any)[slug]["firebase"]["databaseID"]
+      (config as any)[slug]["firebase"]["databaseID"],
     );
   });
   globalThis.storage = getStorage();
