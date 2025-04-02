@@ -1,3 +1,9 @@
+## v0.10.14
+added email oauth scope to msft auth
+
+### Changed
+- bug fixes
+
 ## v0.10.13
 updated api access URL
 

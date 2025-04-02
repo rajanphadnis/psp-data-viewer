@@ -72,3 +72,4 @@ desktop_app/**.hdf5
 functions/src/__pycache__/
 data_recovery/daq/**
 data_recovery/PSPC/**
+data_recovery/__pycache__/**
