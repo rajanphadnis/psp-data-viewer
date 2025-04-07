@@ -1,3 +1,9 @@
+## v0.10.16
+testing csv diag concat and delay additions
+
+### Changed
+- bug fixes
+
 ## v0.10.15
 added admin console tag
 

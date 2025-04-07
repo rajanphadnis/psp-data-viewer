@@ -35,7 +35,7 @@ pub struct DataChannel {
 
 #[derive(Clone, Debug, serde::Deserialize)]
 pub struct CsvFile {
-    // pub csv_delay: i64,
+    pub csv_delay: f64,
     pub file_path: String,
     // datasets: Vec<CsvDataset>,
 }

@@ -31,7 +31,8 @@ polars = { version = "0.46.0", features = [
     "csv",
     "dtype-datetime",
     # "regex",
-    "strings"
+    "strings",
+    "diagonal_concat"
 ] }
 rayon = "1.10.0"
 tokio = "1.43.0"
