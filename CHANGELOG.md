@@ -1,3 +1,9 @@
+## v0.10.17
+added csv delay
+
+### Changed
+- bug fixes
+
 ## v0.10.16
 testing csv diag concat and delay additions
 
