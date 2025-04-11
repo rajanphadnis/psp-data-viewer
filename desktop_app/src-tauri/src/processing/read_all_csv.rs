@@ -1,6 +1,6 @@
 use crate::{gen_csv_df, types::CsvFile};
 use polars::{
-    frame::DataFrame, functions::concat_df_diagonal, prelude::{col, lit, AsofJoinBy, AsofStrategy, Column}
+    frame::DataFrame, functions::concat_df_diagonal, prelude::Column
 };
 use tauri::{AppHandle, Emitter};
 
@@ -24,6 +24,30 @@ pub async fn read_all_csv(csv_files: Vec<CsvFile>, app: AppHandle) -> Result<Dat
         )
         .unwrap();
         let mut raw_df = gen_csv_df(file.file_path.clone()).await.map_err(|e| e)?;
+        let first_item: f64 = match raw_df.column("time").unwrap().head(Some(1)).get(0).unwrap() {
+            polars::prelude::AnyValue::Float64(val) => val,
+            _ => return Err(String::from("Unexpected data type in 'time' column")),
+        };
+        println!("{:?}", first_item);
+        if first_item >= 1e16 {
+            // divide by 1000000
+            app.emit(
+                "event-log",
+                format!("csv_gather::convert_from_ns::{}", &file.file_path),
+            )
+            .unwrap();
+        println!("DIVIDING FOR NANOSECONDS");
+            raw_df = match raw_df.apply("time", |t| t / 1000000){
+                Ok(d) => d.clone(),
+                Err(e) => {
+                    return Err(String::from(format!(
+                        "failed to add csv delay to file '{}': {}",
+                        file.file_path,
+                        e
+                    )))
+                }
+            }
+        }
         let df = match raw_df.apply("time", |t| t + file.csv_delay) {
             Ok(d) => d,
             Err(e) => {
